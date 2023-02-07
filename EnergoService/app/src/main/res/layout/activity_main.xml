@@ -62,6 +62,30 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     android:background="@drawable/toolbarborder"
                     tools:layout_editor_absoluteY="0dp">
+        <!--Здесь будут располагаться кнопки-->
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:columnCount="2"
+            android:orientation="horizontal" >
+            <!--Кнопка добавления светильника -->
+            <ImageView
+                android:id="@+id/addBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/addbtn"
+                />
+            <!--Кнопка включения/выключения перемещения светильников -->
+            <ImageView
+                android:layout_marginLeft="10dp"
+                android:id="@+id/moveBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="5dp"
+                android:src="@drawable/movebtn"
+                />
+
+        </GridLayout>
 
     </LinearLayout>
 

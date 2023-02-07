@@ -25,8 +25,6 @@ import com.example.myapplication.LampsList;
 import java.math.*;
 
 public class MainActivity extends AppCompatActivity {
-    Plan plan = new Plan();     //План этажа
-    RelativeLayout planLayout;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -34,15 +32,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);     //Установка ориентации на горизонтальную
         setContentView(R.layout.activity_main);
-        planLayout = findViewById(R.id.planLayout);
-        plan.startDetecting(planLayout, findViewById(R.id.imageWrap)); //Начало отслеживания перемещения на плане\
-        ListView listView=(ListView)findViewById(R.id.LampsListView);
-        LampsList customCountryList = new LampsList(this, plan.lampNames, plan.imageid);        //Заполнение списка светильников
+        Variables.activity = MainActivity.this;         //Сохранение activity
+        Variables.plan.startDetecting(); //Начало отслеживания перемещения на плане
+        ListView listView=(ListView)findViewById(R.id.LampsListView);           //Лист со списком светильников
+        LampsList customCountryList = new LampsList(this, Variables.plan.lampNames, Variables.plan.imageid);        //Заполнение списка светильников
         listView.setAdapter(customCountryList);
+        Buttons buttons = new Buttons();
+        buttons.startDetecting();       //Начало отслеживания нажатия кнопок
         listView.setOnItemClickListener((adapterView, view, position, l) -> {       //Обработка нажатия на один из элементов списка светильников
-            Integer itemSelected = plan.imageid[position];
-            ImageView imageView = new ImageView(MainActivity.this);
-            plan.spawnLamp(itemSelected,imageView,planLayout,position);         //Создание светильника
+            Integer itemSelected = Variables.plan.imageid[position];
+            Variables.plan.spawnLamp(itemSelected);         //Создание светильника
         });
     }
 }
