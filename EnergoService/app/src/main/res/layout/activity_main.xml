@@ -37,17 +37,19 @@
                     app:layout_constraintRight_toLeftOf="@id/secondToolbar"
                     tools:ignore="Deprecated">
                     <RelativeLayout
-                        android:layout_width="match_parent"
+                        android:layout_margin="0dp"
+                        android:padding="0dp"
+                        android:layout_width="wrap_content"
                         android:id="@+id/planLayout"
-                        android:layout_height="match_parent">
-
+                        android:layout_height="wrap_content">
 
                         <ImageView
-                        android:id="@+id/imageView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/plan"
-                            />
+                            android:adjustViewBounds="true"
+                            android:id="@+id/imageView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:cropToPadding="false"
+                            android:src="@drawable/plan" />
 
 
 

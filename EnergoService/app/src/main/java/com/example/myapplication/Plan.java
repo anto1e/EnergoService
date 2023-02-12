@@ -41,6 +41,7 @@ public class Plan {
         tempView=null;
     }
     //Включение слушателя нажатий на план для добавления светильников
+    @SuppressLint("ClickableViewAccessibility")
     public void setListenerToPlan(){
         Variables.planLay.setOnTouchListener(new View.OnTouchListener(){                 //Отслеживание нажатия для создания светильника в этой точке
             @Override
@@ -54,10 +55,24 @@ public class Plan {
                 }
                 tempView.setX(event.getX());
                 tempView.setY(event.getY());
+                Log.d("Touched at: ",Float.toString(event.getX())+" , " + Float.toString(event.getY()));
                 return false;
             }
         });
     }
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void setListenerToImage(){
+        Variables.image = Variables.activity.findViewById(R.id.imageView);
+        Variables.image.setOnTouchListener(new View.OnTouchListener(){                 //Отслеживание нажатия для создания светильника в этой точке
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                //Log.d("Touched at: ",Float.toString(event.getX())+" , " + Float.toString(event.getY()));
+                return false;
+            }
+        });
+    }
+
 
     @SuppressLint("ClickableViewAccessibility")
     //Отслеживание нажатий на план для перемещения/приближения
@@ -65,6 +80,7 @@ public class Plan {
         Variables.planLay = Variables.activity.findViewById(R.id.planLayout);
         LinearLayout imageWrap = Variables.activity.findViewById(R.id.imageWrap);
         setListenerToPlan();
+        setListenerToImage();
         imageWrap.setOnTouchListener(new View.OnTouchListener(){
             @Override
             public boolean onTouch(View v, MotionEvent event) {     //Отслеживание нажатий на план
@@ -82,8 +98,10 @@ public class Plan {
 
                             double dx = lenght - prevLength;
                             float currentScale = Variables.planLay.getScaleX();
-                            Variables.planLay.setScaleX(currentScale + (float) dx / (200-Variables.planLay.getScaleX()));
-                            Variables.planLay.setScaleY(currentScale + (float) dx / (200-Variables.planLay.getScaleX()));
+                            if (currentScale + (float) dx / (200 - Variables.planLay.getScaleX())>0.2) {
+                                Variables.planLay.setScaleX(currentScale + (float) dx / (200 - Variables.planLay.getScaleX()));
+                                Variables.planLay.setScaleY(currentScale + (float) dx / (200 - Variables.planLay.getScaleX()));
+                            }
                             prevLength = lenght;
                         }else {             //Задействован один палец - перемещение
                             float dx = (x - previousX);
@@ -113,7 +131,7 @@ public class Plan {
             Variables.planLay.addView(imageView);
             imageView.setX(tempView.getX());
             imageView.setY(tempView.getY());
-            //setListener(imageView);
+            setListener(imageView);
             Variables.planLay.removeView(tempView);
             lamps.add(imageView);
             tempView=null;
