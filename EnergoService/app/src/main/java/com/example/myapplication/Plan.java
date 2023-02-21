@@ -55,7 +55,7 @@ public class Plan {
                 }
                 tempView.setX(event.getX());
                 tempView.setY(event.getY());
-                Log.d("Touched at: ",Float.toString(event.getX())+" , " + Float.toString(event.getY()));
+               // Log.d("Touched at: ",Float.toString(event.getX())+" , " + Float.toString(event.getY()));
                 return false;
             }
         });
@@ -67,10 +67,21 @@ public class Plan {
         Variables.image.setOnTouchListener(new View.OnTouchListener(){                 //Отслеживание нажатия для создания светильника в этой точке
             @Override
             public boolean onTouch(View view, MotionEvent event) {
-                //Log.d("Touched at: ",Float.toString(event.getX())+" , " + Float.toString(event.getY()));
+                Log.d("Touched at: ",Float.toString(event.getX())+" , " + Float.toString(event.getY()));
+                detectRoomTouch(event.getX(),event.getY());
                 return false;
             }
         });
+    }
+
+    public void detectRoomTouch(float x, float y){
+        Room temp;
+        for (Room room:Variables.rooms){
+            if (room.detectTouch(x,y)) {
+                temp = room;
+                Log.d("Touch at number:", Double.toString(temp.getNumber()));
+            }
+        }
     }
 
 
@@ -101,6 +112,7 @@ public class Plan {
                             if (currentScale + (float) dx / (200 - Variables.planLay.getScaleX())>0.2) {
                                 Variables.planLay.setScaleX(currentScale + (float) dx / (200 - Variables.planLay.getScaleX()));
                                 Variables.planLay.setScaleY(currentScale + (float) dx / (200 - Variables.planLay.getScaleX()));
+
                             }
                             prevLength = lenght;
                         }else {             //Задействован один палец - перемещение
@@ -111,6 +123,7 @@ public class Plan {
 
                             Variables.planLay.setX(currentX + dx);
                             Variables.planLay.setY(currentY + dy);
+
                         }
                         break;
                 }

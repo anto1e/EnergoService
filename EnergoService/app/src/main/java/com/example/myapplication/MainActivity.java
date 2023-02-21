@@ -29,9 +29,12 @@ import com.example.myapplication.LampsList;
 import com.snatik.polygon.Point;
 import com.snatik.polygon.Polygon;
 
+import java.io.FileNotFoundException;
 import java.math.*;
 
 public class MainActivity extends AppCompatActivity {
+    BikExtensionParser parser = new BikExtensionParser();
+    String path;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -41,11 +44,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Variables.activity = MainActivity.this;         //Сохранение activity
+        path =  String.valueOf(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
         Variables.plan.startDetecting(); //Начало отслеживания перемещения на плане
+
+        Bitmap bmImg = BitmapFactory.decodeFile(path+"/plan.bik");
+
+        Variables.image.setImageBitmap(bmImg);
         ListView listView=(ListView)findViewById(R.id.LampsListView);           //Лист со списком светильников
         LampsList customCountryList = new LampsList(this, Variables.plan.lampNames, Variables.plan.imageid);        //Заполнение списка светильников
         listView.setAdapter(customCountryList);
         Buttons buttons = new Buttons();
+
         /*Polygon polygon = Polygon.Builder()
                 .addVertex(new Point(1, 1))
                 .addVertex(new Point(1, 6))
@@ -67,8 +76,6 @@ public class MainActivity extends AppCompatActivity {
         /*BitmapDrawable b = (BitmapDrawable)this.getResources().getDrawable(R.drawable.cake);
         Log.d("MainActivity", "Image Width: " + b.getBitmap().getWidth());
         */
-        //String path = String.valueOf(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
-        //Log.d("123",path);
         //Bitmap bmImg = BitmapFactory.decodeFile(path+"/plan.jpg");
         //Variables.image.setImageBitmap(bmImg);
 
@@ -80,6 +87,20 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     public void onWindowFocusChanged(boolean hasFocus){
+        try {
+            //Log.d("123", String.valueOf(Variables.image.getWidth()));
+            String path1 = String.valueOf(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
+            //Log.d("123",path1);
+            Variables.currentHeight = findViewById(R.id.imageView).getHeight();
+            Variables.currentWidth = findViewById(R.id.imageView).getWidth();
+            parser.parseFile(path,"/plan.bik");
+            Log.d("123", String.valueOf(Variables.rooms.elementAt(0).arrayX[0]));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        for (Room temp:Variables.rooms){
+            System.out.println(temp);
+        }
         /*Log.d("Image size:",Float.toString(this.findViewById(R.id.imageView).getWidth())+" , "+ Float.toString(this.findViewById(R.id.imageView).getHeight()));
         float[] mas1 = {402.09375f,507.09375f,507.09375f,402.09375f,293.09375f,346.09375f,347.09375f,292.09375f,293.09375f,394.09375f,394.09375f,293.09375f};
         float[] mas2 = {272,272,502,502,512,512,615,615,622,622,735,735};

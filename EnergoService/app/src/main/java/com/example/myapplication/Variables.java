@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import java.util.Vector;
+
 //Класс для хранения глобальных переменных
 public class Variables {
     static Activity activity=null;          //Главное activity
@@ -11,7 +13,30 @@ public class Variables {
     private static boolean moveFlag=true;      //Флаг активации режима перемещния светильника
     static Plan plan = new Plan();          //План этажа
     static RelativeLayout planLay;          //Layout плана
-    static ImageView image;
+    static ImageView image;                     //Изображение(план)
+    static Vector<Room> rooms = new Vector<Room>();     //Хранение размеченных помещений
+    static double lastWidth;
+    static double lastHeight;
+    static double currentWidth;
+    static double currentHeight;
+    static double resizeCoeffX;
+    static double resizeCoeffY;
+
+    public static void resizeCoeffs(){
+        resizeCoeffY = Math.abs(lastHeight/currentHeight);
+        resizeCoeffX = Math.abs(lastWidth/currentWidth);
+    }
+
+
+    public static void moveCoords(float dx, float dy){
+        for (Room room:Variables.rooms){
+            for (int i=0;i<room.arrayX.length;i++){
+                room.arrayX[i]+=dx;
+                room.arrayY[i]+=dy;
+            }
+            room.buildPoligon();
+        }
+    }
 
 
     //Геттеры, сеттеры, инверторы флагов
