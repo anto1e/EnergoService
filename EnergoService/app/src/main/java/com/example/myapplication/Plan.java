@@ -8,10 +8,12 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsoluteLayout;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Vector;
 
@@ -23,6 +25,7 @@ public class Plan {
     private float previousY;        //Предыдущая позиция пальца по У
     private double prevLength;      //Предыдущая длина отрезка между двумя пальцами
 
+    private Room touchedRoom;
     float x,y;                    //Текущая позиция пальца по Х,Y.
     double lenght;              //Текущая длина отрезка между двумя пальцами
 
@@ -62,26 +65,58 @@ public class Plan {
     }
 
     @SuppressLint("ClickableViewAccessibility")
+    public void setListenerSubmitBtn(){
+        Variables.submit.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                touchedRoom.setNumber(Double.parseDouble(String.valueOf(Variables.roomNumber.getText())));
+                touchedRoom.setHeight(Double.parseDouble(String.valueOf(Variables.roomHeight.getText())));
+                touchedRoom.setType(Variables.spinner.getSelectedItem().toString());
+                touchedRoom.setDays(Integer.parseInt(String.valueOf(Variables.daysPerWeek.getText())));
+                touchedRoom.setHoursPerDay(Float.parseFloat(String.valueOf(Variables.hoursPerDay.getText())));
+                touchedRoom.setHoursPerWeekend(Float.parseFloat(String.valueOf(Variables.hoursPerWeekend.getText())));
+                touchedRoom.setType_pos(Variables.spinner.getSelectedItemPosition());
+                return false;
+            }
+        });
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
     public void setListenerToImage(){
         Variables.image = Variables.activity.findViewById(R.id.imageView);
         Variables.image.setOnTouchListener(new View.OnTouchListener(){                 //Отслеживание нажатия для создания светильника в этой точке
             @Override
             public boolean onTouch(View view, MotionEvent event) {
-                Log.d("Touched at: ",Float.toString(event.getX())+" , " + Float.toString(event.getY()));
+                //Log.d("Touched at: ",Float.toString(event.getX())+" , " + Float.toString(event.getY()));
                 detectRoomTouch(event.getX(),event.getY());
                 return false;
             }
         });
     }
 
+    @SuppressLint("SetTextI18n")
     public void detectRoomTouch(float x, float y){
-        Room temp;
         for (Room room:Variables.rooms){
             if (room.detectTouch(x,y)) {
-                temp = room;
-                Log.d("Touch at number:", Double.toString(temp.getNumber()));
+                Variables.RoomInfo.setVisibility(View.VISIBLE);
+                touchedRoom = room;
+                    Variables.roomNumber.setText(Double.toString(touchedRoom.getNumber()));
+                    Variables.roomHeight.setText(Double.toString(touchedRoom.getHeight()));
+                    Variables.spinner.setSelection(touchedRoom.getType_pos());
+                    Variables.daysPerWeek.setText(Integer.toString(touchedRoom.getDays()));
+                    Variables.hoursPerDay.setText(Float.toString(touchedRoom.getHoursPerDay()));
+                    Variables.hoursPerWeekend.setText(Float.toString(touchedRoom.getHoursPerWeekend()));
+                    setListenerSubmitBtn();
+                    return;
+                    //CharSequence text = "Помещение номер: "+Double.toString(temp.getNumber());
+                //int duration = Toast.LENGTH_SHORT;
+
+                //Toast toast = Toast.makeText(Variables.activity, text, duration);
+                //toast.show();
+                //Log.d("Touch at number:", Double.toString(temp.getNumber()));
             }
         }
+        Variables.RoomInfo.setVisibility(View.GONE);
     }
 
 

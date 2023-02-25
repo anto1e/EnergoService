@@ -1,8 +1,13 @@
 package com.example.myapplication;
 
 import android.app.Activity;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.Spinner;
 
 import java.util.Vector;
 
@@ -14,6 +19,14 @@ public class Variables {
     static Plan plan = new Plan();          //План этажа
     static RelativeLayout planLay;          //Layout плана
     static ImageView image;                     //Изображение(план)
+    static EditText roomNumber=null;
+    static EditText roomHeight;
+    static EditText daysPerWeek;
+    static EditText hoursPerDay;
+    static EditText hoursPerWeekend;
+    static Button submit;
+    static Spinner spinner;
+    static ScrollView RoomInfo;
     static Vector<Room> rooms = new Vector<Room>();     //Хранение размеченных помещений
     static double lastWidth;
     static double lastHeight;
@@ -21,21 +34,25 @@ public class Variables {
     static double currentHeight;
     static double resizeCoeffX;
     static double resizeCoeffY;
+    static String[] typesOfRooms = { "Игровая", "Спальная", "Санузел", "Коридор", "Тамбур"};
 
     public static void resizeCoeffs(){
         resizeCoeffY = Math.abs(lastHeight/currentHeight);
         resizeCoeffX = Math.abs(lastWidth/currentWidth);
     }
 
-
-    public static void moveCoords(float dx, float dy){
-        for (Room room:Variables.rooms){
-            for (int i=0;i<room.arrayX.length;i++){
-                room.arrayX[i]+=dx;
-                room.arrayY[i]+=dy;
-            }
-            room.buildPoligon();
-        }
+    public static void init(){
+        roomNumber = activity.findViewById(R.id.roomNumber);
+        spinner = activity.findViewById(R.id.spinTypes);
+        ArrayAdapter<String> adapter = new ArrayAdapter(activity, R.layout.spinner_item, typesOfRooms);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        roomHeight = activity.findViewById(R.id.roomHigh);
+        daysPerWeek = activity.findViewById(R.id.roomDays);
+        hoursPerDay = activity.findViewById(R.id.roomHours);
+        hoursPerWeekend = activity.findViewById(R.id.roomHoursWeekends);
+        submit = activity.findViewById(R.id.submit);
+        RoomInfo = activity.findViewById(R.id.RoomInfoView);
     }
 
 

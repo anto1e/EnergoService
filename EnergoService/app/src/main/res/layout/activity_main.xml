@@ -56,7 +56,7 @@
                 </RelativeLayout>
                 </LinearLayout>
         <!--Второй тул-бар -->
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/secondToolbar"
                     android:layout_width="200dp"
                     android:layout_height="match_parent"
@@ -66,10 +66,13 @@
                     tools:layout_editor_absoluteY="0dp">
         <!--Здесь будут располагаться кнопки-->
         <GridLayout
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/toolsGrid"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:columnCount="2"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            tools:ignore="MissingConstraints">
             <!--Кнопка добавления светильника -->
             <ImageView
                 android:id="@+id/addBtn"
@@ -89,7 +92,98 @@
 
         </GridLayout>
 
-    </LinearLayout>
+        <ScrollView
+            android:id="@+id/RoomInfoView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/toolsGrid"
+            tools:layout_editor_absoluteX="10dp">
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="2"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:text="Номер помещения:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+                <EditText
+                    android:text="0"
+                    android:textSize="12dp"
+                    android:id="@+id/roomNumber"
+                    android:layout_width="wrap_content"
+                    />
+                <TextView
+                    android:text="Высота:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+                <EditText
+                    android:text="0.0"
+                    android:textSize="12dp"
+                    android:id="@+id/roomHigh"
+                    android:layout_width="wrap_content"
+                    />
+                <TextView
+                    android:text="Тип:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+
+                <Spinner
+                    android:verticalScrollbarPosition="right"
+                    android:id="@+id/spinTypes"
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown" />
+                <TextView
+                    android:text="Дней в неделю:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+                <EditText
+                    android:text="0"
+                    android:textSize="12dp"
+                    android:id="@+id/roomDays"
+                    android:layout_width="wrap_content"
+                    />
+                <TextView
+                    android:text="Часов в день:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+                <EditText
+                    android:text="0"
+                    android:textSize="12dp"
+                    android:id="@+id/roomHours"
+                    android:layout_width="wrap_content"
+                    />
+                <TextView
+                    android:text="Часов в выходные:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+                <EditText
+                    android:text="0"
+                    android:textSize="12dp"
+                    android:id="@+id/roomHoursWeekends"
+                    android:layout_width="wrap_content"
+                    />
+                <Button
+                    android:id="@+id/submit"
+                    android:text="Подтвердить"
+                    android:textColor="@color/black"
+                    android:backgroundTint="@color/white"
+                    />
+            </GridLayout>
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
