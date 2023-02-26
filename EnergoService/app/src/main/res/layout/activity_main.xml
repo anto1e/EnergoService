@@ -70,7 +70,7 @@
             android:id="@+id/toolsGrid"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:columnCount="2"
+            android:columnCount="4"
             android:orientation="horizontal"
             tools:ignore="MissingConstraints">
             <!--Кнопка добавления светильника -->
@@ -89,6 +89,15 @@
                 android:padding="5dp"
                 android:src="@drawable/movebtn"
                 />
+            <ImageButton
+                android:id="@+id/openFile"
+                android:scaleType="fitCenter"
+                android:src="@drawable/upload"
+                android:layout_width="30dp"
+                android:background="@color/teal_200"
+                android:layout_marginLeft="10dp"
+                android:layout_height="30dp">
+            </ImageButton>
 
         </GridLayout>
 

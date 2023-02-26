@@ -17,12 +17,13 @@ import java.io.IOException;
 
 public class BikExtensionParser {
     File currentFile;
-    public void parseFile(String path,String input_name) throws FileNotFoundException {
+    public void parseFile(String path) throws FileNotFoundException {
         currentFile = new File(path);
         BufferedReader reader;
         BufferedWriter writer;
         try {
-            reader = new BufferedReader(new FileReader(path+input_name));
+            Variables.rooms.clear();
+            reader = new BufferedReader(new FileReader(path));
             String line = reader.readLine();
 
             while (line != null) {

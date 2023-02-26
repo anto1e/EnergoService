@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -14,6 +15,8 @@ import java.util.Vector;
 //Класс для хранения глобальных переменных
 public class Variables {
     static Activity activity=null;          //Главное activity
+    static boolean opened = false;
+    static BikExtensionParser parser = new BikExtensionParser();
     private static boolean addFlag=true;       //Флаг активации режима добавления светильника
     private static boolean moveFlag=true;      //Флаг активации режима перемещния светильника
     static Plan plan = new Plan();          //План этажа

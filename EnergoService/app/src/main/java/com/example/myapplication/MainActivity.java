@@ -5,10 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.DisplayMetrics;
@@ -38,7 +40,7 @@ import java.io.IOException;
 import java.math.*;
 
 public class MainActivity extends AppCompatActivity {
-    BikExtensionParser parser = new BikExtensionParser();
+    String filePath="";
     String path;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -52,36 +54,39 @@ public class MainActivity extends AppCompatActivity {
         Variables.activity = MainActivity.this;         //Сохранение activity
         Variables.init();
         Variables.plan.startDetecting(); //Начало отслеживания перемещения на плане
-
-        Bitmap bmImg = BitmapFactory.decodeFile(path+"/plan.bik");
-
-        Variables.image.setImageBitmap(bmImg);
         ListView listView=(ListView)findViewById(R.id.LampsListView);           //Лист со списком светильников
         LampsList customCountryList = new LampsList(this, Variables.plan.lampNames, Variables.plan.imageid);        //Заполнение списка светильников
         listView.setAdapter(customCountryList);
         Buttons buttons = new Buttons();
+
 
         buttons.startDetecting();       //Начало отслеживания нажатия кнопок
         listView.setOnItemClickListener((adapterView, view, position, l) -> {       //Обработка нажатия на один из элементов списка светильников
             Integer itemSelected = Variables.plan.imageid[position];
             Variables.plan.spawnLamp(itemSelected);         //Создание светильника
         });
+        Variables.image.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            //
+            if (Variables.image.getWidth() > 0 && Variables.image.getHeight() > 0) {
+                Variables.currentHeight = findViewById(R.id.imageView).getHeight();
+                Variables.currentWidth = findViewById(R.id.imageView).getWidth();
+                try {
+                    Variables.parser.parseFile(filePath);
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+                Variables.opened=false;
+            }
+        });
     }
     @Override
-    public void onWindowFocusChanged(boolean hasFocus){
-        try {
-            //Log.d("123", String.valueOf(Variables.image.getWidth()));
-            //String path1 = String.valueOf(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
-            //Log.d("123",path1);
-            Variables.currentHeight = findViewById(R.id.imageView).getHeight();
-            Variables.currentWidth = findViewById(R.id.imageView).getWidth();
-            parser.parseFile(path,"/plan.bik");
-            Log.d("123", String.valueOf(Variables.rooms.elementAt(0).arrayX[0]));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        for (Room temp:Variables.rooms){
-            System.out.println(temp);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 123 && resultCode == RESULT_OK) {
+            Uri selectedfile = data.getData(); //The uri with the location of the file
+                final String[] split = selectedfile.getPath().split(":");//split the path.
+                filePath = split[1];
+                Variables.image.setImageURI(selectedfile);
         }
     }
 }
