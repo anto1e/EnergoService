@@ -15,36 +15,36 @@ import java.util.Vector;
 //Класс для хранения глобальных переменных
 public class Variables {
     static Activity activity=null;          //Главное activity
-    static boolean opened = false;
+    static boolean opened = false;          //Если файл был открыт
     static BikExtensionParser parser = new BikExtensionParser();
     private static boolean addFlag=true;       //Флаг активации режима добавления светильника
     private static boolean moveFlag=true;      //Флаг активации режима перемещния светильника
     static Plan plan = new Plan();          //План этажа
     static RelativeLayout planLay;          //Layout плана
     static ImageView image;                     //Изображение(план)
-    static EditText roomNumber=null;
-    static EditText roomHeight;
-    static EditText daysPerWeek;
-    static EditText hoursPerDay;
-    static EditText hoursPerWeekend;
-    static Button submit;
-    static Spinner spinner;
-    static ScrollView RoomInfo;
+    static EditText roomNumber=null;            //Поле для номера помещения
+    static EditText roomHeight;            //Поле для высоты помещения
+    static EditText daysPerWeek;            //Поле для дней работы помещения
+    static EditText hoursPerDay;            //Поле для часов работы в день помещения
+    static EditText hoursPerWeekend;            //Поле для часов работы в выходные помещения
+    static Button submit;            //Кнопка сохранения изменений в помещении
+    static Spinner spinner;            //Выпадающий список(спинер) с типами помещений
+    static ScrollView RoomInfo;            //Макет, где хранится информация о помещении
     static Vector<Room> rooms = new Vector<Room>();     //Хранение размеченных помещений
-    static double lastWidth;
-    static double lastHeight;
-    static double currentWidth;
-    static double currentHeight;
-    static double resizeCoeffX;
-    static double resizeCoeffY;
+    static double lastWidth;                //Ширина плана, при разметке на сайте
+    static double lastHeight;                //Высота плана, при разметке на сайте
+    static double currentWidth;                //Ширина плана в приложении
+    static double currentHeight;                //Высота плана в приложении
+    static double resizeCoeffX;                //Коэффициент ресайза по Х
+    static double resizeCoeffY;                //Коэффициент ресайза по У
     static String[] typesOfRooms = { "Игровая", "Спальная", "Санузел", "Коридор", "Тамбур"};
 
-    public static void resizeCoeffs(){
+    public static void resizeCoeffs(){              //Определение коэффициента ресайза
         resizeCoeffY = Math.abs(lastHeight/currentHeight);
         resizeCoeffX = Math.abs(lastWidth/currentWidth);
     }
 
-    public static void init(){
+    public static void init(){                //Инициализация переменных
         roomNumber = activity.findViewById(R.id.roomNumber);
         spinner = activity.findViewById(R.id.spinTypes);
         ArrayAdapter<String> adapter = new ArrayAdapter(activity, R.layout.spinner_item, typesOfRooms);

@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class BikExtensionParser {
     File currentFile;
-    public void parseFile(String path) throws FileNotFoundException {
+    public void parseFile(String path) throws FileNotFoundException {   //Парсинг файла
         currentFile = new File(path);
         BufferedReader reader;
         BufferedWriter writer;
@@ -26,15 +26,15 @@ public class BikExtensionParser {
             reader = new BufferedReader(new FileReader(path));
             String line = reader.readLine();
 
-            while (line != null) {
+            while (line != null) {  //Пока файл не закончился считываем строка за строкой
                 if (line.length()>3 && line.charAt(0)=='@' && line.charAt(1)=='%' && line.charAt(2)=='@') {
                     String temp = line.substring(3);
-                    if (temp.charAt(0)=='%') {
+                    if (temp.charAt(0)=='%') {  //Если это информация о размерах изображения
                         temp = temp.substring(1);
                         String[] subStr = temp.split("/");
                         Variables.lastHeight = Double.parseDouble(subStr[0]);
                         Variables.lastWidth = Double.parseDouble(subStr[1]);
-                    }else {
+                    }else {     //Иначе это информация о комнатах
                         JSONObject roomObj = new JSONObject(temp.substring(temp.indexOf("{"), temp.lastIndexOf("}") + 1));
                         JSONArray arrX = roomObj.getJSONArray("arrayX");
                         JSONArray arrY = roomObj.getJSONArray("arrayY");
@@ -45,16 +45,11 @@ public class BikExtensionParser {
                             tempX[i] = arrX.getDouble(i)/Variables.resizeCoeffX;
                             tempY[i] = arrY.getDouble(i)/Variables.resizeCoeffY;
                         }
-                        //ObjectMapper objectMapper = new ObjectMapper();
-                        //objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-                        //Room room = objectMapper.readValue(temp, Room.class);
-                        //Variables.rooms.add(room);
                         Room room = new Room(roomObj.getDouble("number"),tempX,tempY);
                         room.buildPoligon();
                         Variables.rooms.add(room);
                     }
                 }
-                // read next line
                 line = reader.readLine();
             }
 

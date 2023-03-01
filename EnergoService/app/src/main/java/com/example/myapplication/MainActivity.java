@@ -40,8 +40,7 @@ import java.io.IOException;
 import java.math.*;
 
 public class MainActivity extends AppCompatActivity {
-    String filePath="";
-    String path;
+    String filePath=""; //Путь файла для открытия
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -49,15 +48,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);     //Установка ориентации на горизонтальную
         setContentView(R.layout.activity_main);
-        path = String.valueOf(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
 
         Variables.activity = MainActivity.this;         //Сохранение activity
-        Variables.init();
+        Variables.init();                               //Инициализация переменныъ
         Variables.plan.startDetecting(); //Начало отслеживания перемещения на плане
         ListView listView=(ListView)findViewById(R.id.LampsListView);           //Лист со списком светильников
-        LampsList customCountryList = new LampsList(this, Variables.plan.lampNames, Variables.plan.imageid);        //Заполнение списка светильников
-        listView.setAdapter(customCountryList);
-        Buttons buttons = new Buttons();
+        LampsList lampsList = new LampsList(this, Variables.plan.lampNames, Variables.plan.imageid);        //Заполнение списка светильников
+        listView.setAdapter(lampsList);
+        Buttons buttons = new Buttons();        //Создание класса с кнопками
 
 
         buttons.startDetecting();       //Начало отслеживания нажатия кнопок
@@ -66,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
             Variables.plan.spawnLamp(itemSelected);         //Создание светильника
         });
 
-        Variables.image.addOnLayoutChangeListener( new View.OnLayoutChangeListener()
+        Variables.image.addOnLayoutChangeListener( new View.OnLayoutChangeListener()        //В момент изменения размеров изображения
+            //Т.е. загрузки его из файла мы парсим файл и определяем коэффициенты изменения размера изображения
         {
             public void onLayoutChange( View v,
                                         int left,    int top,    int right,    int bottom,
@@ -74,11 +73,11 @@ public class MainActivity extends AppCompatActivity {
             {
                 int widthWas = rightWas - leftWas; // Right exclusive, left inclusive
                 int heightWas = bottomWas - topWas; // Bottom exclusive, top inclusive
-                if( v.getHeight() != heightWas && v.getWidth() != widthWas )
+                if( v.getHeight() != heightWas && v.getWidth() != widthWas )    //Если размер изображения изменился
                 {
                     Variables.currentHeight = findViewById(R.id.imageView).getHeight();
                     Variables.currentWidth = findViewById(R.id.imageView).getWidth();
-                    try {
+                    try {   //Парсим файл
                         //Variables.parser.parseFile(filePath);
                         Variables.parser.parseFile("/storage/emulated/0/Download/plan.bik");
                     } catch (FileNotFoundException e) {
@@ -90,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) { //После выбора пользователем файла путем диалогового окна
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 123 && resultCode == RESULT_OK) {
             Uri selectedfile = data.getData(); //The uri with the location of the file

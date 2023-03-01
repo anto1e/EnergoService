@@ -10,9 +10,9 @@ import com.snatik.polygon.Polygon;
 import java.util.Vector;
 
 public class Room {
-    private double number;
-    private double height=0.0;
-    public Vector<ImageView> lamps = new Vector<ImageView>();
+    private double number;      //Номер помещения
+    private double height=0.0;      //Высота помещения
+    public Vector<ImageView> lamps = new Vector<ImageView>();       //Список светильников в помещении
 
 
 
@@ -36,10 +36,24 @@ public class Room {
         this.type_pos = type_pos;
     }
 
-    private String type="";
-    private int type_pos=0;
-    private int days=0;
-    private float hoursPerDay=0.0f;
+    private String type="";     //Тип помещения
+    private int type_pos=0;     //Индекс типа помещения в спиннере
+    private int days=0;         //Дни работы
+    private float hoursPerDay=0.0f;     //Часы работы по будням
+
+    private float hoursPerWeekend=0.0f;     //Часы работы по выходным
+    private Polygon polygon;                //Многоугольник, построенный по координатам точек помещения
+    public double[] arrayX;                 //Массив координат Х точек помещения
+    public double[] arrayY;                 //Массив координат У точек помещения
+    public Room()
+    {
+        super();
+    }
+
+    public double getNumber() {
+        return number;
+    }
+
 
     public void setNumber(double number) {
         this.number = number;
@@ -83,20 +97,6 @@ public class Room {
 
     public void setHoursPerWeekend(float hoursPerWeekend) {
         this.hoursPerWeekend = hoursPerWeekend;
-    }
-
-    private float hoursPerWeekend=0.0f;
-    private Polygon polygon;
-    public double[] arrayX;
-    public ImageView[] lamp = new ImageView[1];
-    public double[] arrayY;
-    public Room()
-    {
-        super();
-    }
-
-    public double getNumber() {
-        return number;
     }
 
 

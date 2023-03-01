@@ -25,8 +25,8 @@ public class Plan {
     private float previousY;        //Предыдущая позиция пальца по У
     private double prevLength;      //Предыдущая длина отрезка между двумя пальцами
 
-    private Room touchedRoom;
-    private Room lastRoom;
+    private Room touchedRoom;       //Текущая нажатая комната
+    private Room lastRoom;          //Предыдущая нажатая комната
     float x,y;                    //Текущая позиция пальца по Х,Y.
     double lenght;              //Текущая длина отрезка между двумя пальцами
 
@@ -41,7 +41,7 @@ public class Plan {
     @SuppressLint("ClickableViewAccessibility")
     public void disableListenerFromPlan(){              //Отключение слушателя нажатий на план для добавления светильников
         Variables.planLay.setOnTouchListener(null);
-        Variables.planLay.removeView(tempView);
+        Variables.planLay.removeView(tempView);             //Отключение маркера добавления светильника
         tempView=null;
     }
     //Включение слушателя нажатий на план для добавления светильников
@@ -50,15 +50,15 @@ public class Plan {
         Variables.planLay.setOnTouchListener(new View.OnTouchListener(){                 //Отслеживание нажатия для создания светильника в этой точке
             @Override
             public boolean onTouch(View view, MotionEvent event) {
-                if (tempView==null){
+                if (tempView==null){        //Если маркера появления светильника нет - отрисовываем его
                     tempView = new View(Variables.activity);
                     Variables.planLay.addView(tempView);
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(30, 30);
                     tempView.setLayoutParams(params);
                     tempView.setBackgroundColor(Color.parseColor("#808080"));
-                }
-                tempView.setX(event.getX());
-                tempView.setY(event.getY());
+                }       //Иначе устанавливаем ему координаты нажатия
+                tempView.setX(event.getX()-tempView.getWidth()/2);
+                tempView.setY(event.getY()-tempView.getHeight()/2);
                // Log.d("Touched at: ",Float.toString(event.getX())+" , " + Float.toString(event.getY()));
                 return false;
             }
@@ -66,10 +66,10 @@ public class Plan {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    public void setListenerSubmitBtn(){
+    public void setListenerSubmitBtn(){             //Слушатель нажатий на кнопку подтверждения
         Variables.submit.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(View v, MotionEvent event) {         //Установка данных для выбранной комнаты
                 touchedRoom.setNumber(Double.parseDouble(String.valueOf(Variables.roomNumber.getText())));
                 touchedRoom.setHeight(Double.parseDouble(String.valueOf(Variables.roomHeight.getText())));
                 touchedRoom.setType(Variables.spinner.getSelectedItem().toString());
@@ -83,11 +83,11 @@ public class Plan {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    public void setListenerToImage(){
+    public void setListenerToImage(){                   //Отслеживание нажатий на план(отслеживание помещений)
         Variables.image = Variables.activity.findViewById(R.id.imageView);
-        Variables.image.setOnTouchListener(new View.OnTouchListener(){                 //Отслеживание нажатия для создания светильника в этой точке
+        Variables.image.setOnTouchListener(new View.OnTouchListener(){
             @Override
-            public boolean onTouch(View view, MotionEvent event) {
+            public boolean onTouch(View view, MotionEvent event) {      //Ищем помещение, на которое нажал пользователь
                 //Log.d("Touched at: ",Float.toString(event.getX())+" , " + Float.toString(event.getY()));
                 detectRoomTouch(event.getX(),event.getY());
                 return false;
@@ -95,14 +95,14 @@ public class Plan {
         });
     }
 
-    public void setTouchedRoom(float x,float y,boolean type){
+    public void setTouchedRoom(float x,float y,boolean type){       //Функция для переопределения текущей выбранной комнаты и прошлой выбранной комнаты
         for (Room room:Variables.rooms){
             if (room.detectTouch(x,y)) {
-                if (type) {
+                if (type) { //Если нам нужно отследить положение при перемещении светильника
                     lastRoom = touchedRoom;
                     touchedRoom = room;
                     return;
-                }else{
+                }else{  //Если нужно отследить первое нажатие на светильник
                     touchedRoom = room;
                     lastRoom=touchedRoom;
                 }
@@ -111,10 +111,10 @@ public class Plan {
     }
 
     @SuppressLint("SetTextI18n")
-    public void detectRoomTouch(float x, float y){
+    public void detectRoomTouch(float x, float y){      //Функиця определения нажатия на комнату и вывода информации о ней
         for (Room room:Variables.rooms){
             if (room.detectTouch(x,y)) {
-                Variables.RoomInfo.setVisibility(View.VISIBLE);
+                Variables.RoomInfo.setVisibility(View.VISIBLE);     //Отображаем данные о комнате
                 touchedRoom = room;
                     Variables.roomNumber.setText(Double.toString(touchedRoom.getNumber()));
                     Variables.roomHeight.setText(Double.toString(touchedRoom.getHeight()));
@@ -126,15 +126,9 @@ public class Plan {
                     tempText.setText(Integer.toString(touchedRoom.lamps.size()));
                     setListenerSubmitBtn();
                     return;
-                    //CharSequence text = "Помещение номер: "+Double.toString(temp.getNumber());
-                //int duration = Toast.LENGTH_SHORT;
-
-                //Toast toast = Toast.makeText(Variables.activity, text, duration);
-                //toast.show();
-                //Log.d("Touch at number:", Double.toString(temp.getNumber()));
             }
         }
-        Variables.RoomInfo.setVisibility(View.GONE);
+        Variables.RoomInfo.setVisibility(View.GONE);        //Если комнат по данным координатам не нашлось - убираем блок с данными о комнате
     }
 
 
@@ -143,8 +137,8 @@ public class Plan {
     public void startDetecting(){     //Отслеживание нажатий на план
         Variables.planLay = Variables.activity.findViewById(R.id.planLayout);
         LinearLayout imageWrap = Variables.activity.findViewById(R.id.imageWrap);
-        setListenerToPlan();
-        setListenerToImage();
+        setListenerToPlan();    //Ставим слушатель для создания светильника
+        setListenerToImage();   //Ставим слушатель для получения информации о комнате
         imageWrap.setOnTouchListener(new View.OnTouchListener(){
             @Override
             public boolean onTouch(View v, MotionEvent event) {     //Отслеживание нажатий на план
@@ -195,8 +189,8 @@ public class Plan {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(30, 30);
             imageView.setLayoutParams(params);
             Variables.planLay.addView(imageView);
-            imageView.setX(tempView.getX());
-            imageView.setY(tempView.getY());
+            imageView.setX(tempView.getX()-imageView.getWidth()/2);
+            imageView.setY(tempView.getY()- imageView.getHeight()/2);
             setListener(imageView);
             Variables.planLay.removeView(tempView);
             touchedRoom.lampPush(imageView);
@@ -238,7 +232,7 @@ public class Plan {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_DOWN:
                         //prevLength = Math.sqrt(Math.pow((double) (event.getX(0)) - (double) (event.getX(1)), 2) + Math.pow((double) (event.getY(0)) - (double) (event.getY(1)), 2));
-                        setTouchedRoom(x, y,false);
+                        setTouchedRoom(x, y,false);   //Первичное нажатие на светильник
                         break;
                         case MotionEvent.ACTION_MOVE:
                         if (event.getPointerCount()>1){     //Задействовано два пальца - приближение
@@ -253,9 +247,9 @@ public class Plan {
                             //Log.d("current scale:",Float.toString(imageView.getScaleX())+" , "+Float.toString(imageView.getScaleY()));
                             prevLength = lenght;
                         }else {             //Иначе обычное перемещение
-                            setTouchedRoom(x, y,true);
-                            imageView.setX(imageView.getX() + (event.getX()));
-                            imageView.setY(imageView.getY() + (event.getY()));
+                            setTouchedRoom(x, y,true);  //Перемещение светильника
+                            imageView.setX((imageView.getX() + (event.getX()))-imageView.getWidth()/2);
+                            imageView.setY((imageView.getY() + (event.getY()))-imageView.getHeight()/2);
                         }
                         break;
                     case MotionEvent.ACTION_CANCEL:
@@ -265,7 +259,7 @@ public class Plan {
                         lastRoom=touchedRoom;
                         break;
                 }
-                if (touchedRoom!=lastRoom && lastRoom!=null){
+                if (touchedRoom!=lastRoom && lastRoom!=null){   //Если светильник в процессе перемещения оказался в другой комнате, то убираем его из старой комнаты и привязываем к новой
                     lastRoom.lampRemove(imageView);
                     touchedRoom.lampPush(imageView);
                 }

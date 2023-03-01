@@ -59,7 +59,7 @@ public class Buttons {
             }
         });
 
-        uploadBtn.setOnTouchListener(new View.OnTouchListener() {
+        uploadBtn.setOnTouchListener(new View.OnTouchListener() {   //Кнопка загрузки файла с планом
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (!Variables.opened) {
