@@ -65,17 +65,27 @@ public class MainActivity extends AppCompatActivity {
             Integer itemSelected = Variables.plan.imageid[position];
             Variables.plan.spawnLamp(itemSelected);         //Создание светильника
         });
-        Variables.image.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-            //
-            if (Variables.image.getWidth() > 0 && Variables.image.getHeight() > 0) {
-                Variables.currentHeight = findViewById(R.id.imageView).getHeight();
-                Variables.currentWidth = findViewById(R.id.imageView).getWidth();
-                try {
-                    Variables.parser.parseFile(filePath);
-                } catch (FileNotFoundException e) {
-                    throw new RuntimeException(e);
+
+        Variables.image.addOnLayoutChangeListener( new View.OnLayoutChangeListener()
+        {
+            public void onLayoutChange( View v,
+                                        int left,    int top,    int right,    int bottom,
+                                        int leftWas, int topWas, int rightWas, int bottomWas )
+            {
+                int widthWas = rightWas - leftWas; // Right exclusive, left inclusive
+                int heightWas = bottomWas - topWas; // Bottom exclusive, top inclusive
+                if( v.getHeight() != heightWas && v.getWidth() != widthWas )
+                {
+                    Variables.currentHeight = findViewById(R.id.imageView).getHeight();
+                    Variables.currentWidth = findViewById(R.id.imageView).getWidth();
+                    try {
+                        //Variables.parser.parseFile(filePath);
+                        Variables.parser.parseFile("/storage/emulated/0/Download/plan.bik");
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Variables.opened=false;
                 }
-                Variables.opened=false;
             }
         });
     }

@@ -183,6 +183,17 @@
                     android:id="@+id/roomHoursWeekends"
                     android:layout_width="wrap_content"
                     />
+                <TextView
+                    android:text="Cветильников:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+                <EditText
+                    android:text="0"
+                    android:textSize="12dp"
+                    android:id="@+id/roomLamps"
+                    android:layout_width="wrap_content"
+                    />
                 <Button
                     android:id="@+id/submit"
                     android:text="Подтвердить"

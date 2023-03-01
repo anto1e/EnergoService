@@ -1,15 +1,35 @@
 package com.example.myapplication;
+import android.annotation.SuppressLint;
+import android.widget.ImageView;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.snatik.polygon.Point;
 import com.snatik.polygon.Polygon;
 
+import java.util.Vector;
+
 public class Room {
     private double number;
     private double height=0.0;
+    public Vector<ImageView> lamps = new Vector<ImageView>();
+
+
 
     public int getType_pos() {
         return type_pos;
+    }
+
+    public void lampPush(ImageView img){
+        lamps.add(img);
+    }
+
+    public void lampRemove(ImageView img){
+        lamps.remove(img);
+    }
+
+    public Vector<ImageView> getLamps(){
+        return lamps;
     }
 
     public void setType_pos(int type_pos) {
@@ -68,6 +88,7 @@ public class Room {
     private float hoursPerWeekend=0.0f;
     private Polygon polygon;
     public double[] arrayX;
+    public ImageView[] lamp = new ImageView[1];
     public double[] arrayY;
     public Room()
     {
@@ -110,4 +131,5 @@ public class Room {
         Point temp = new Point(x,y);
         return polygon.contains(temp);
     }
+
 }
