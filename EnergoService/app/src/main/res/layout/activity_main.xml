@@ -101,11 +101,91 @@
 
         </GridLayout>
 
+        <TextView
+            android:id="@id/buildingInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/toolsGrid"
+            android:text="Информация о плане"
+            android:backgroundTint="@color/teal_200"
+            android:background="@drawable/txtviewborder"
+            />
+
+        <ScrollView
+            android:id="@+id/BuildingInfoView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            app:layout_constraintTop_toBottomOf="@+id/buildingInfo"
+            tools:layout_editor_absoluteX="10dp">
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="2"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:text="Название:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+                <EditText
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="100dp"
+                    android:textSize="12dp"
+                    android:id="@+id/buildingName"
+                    />
+                <TextView
+                    android:text="Этаж:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+                <EditText
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="100dp"
+                    android:textSize="12dp"
+                    android:id="@+id/floorNumber"
+                    />
+                <TextView
+                    android:text="Адрес:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+
+                <EditText
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="100dp"
+                    android:textSize="12dp"
+                    android:id="@+id/adress"
+                    />
+                <Button
+                    android:id="@+id/submitBuilding"
+                    android:text="Подтвердить"
+                    android:textColor="@color/black"
+                    android:backgroundTint="@color/white"
+                    />
+            </GridLayout>
+        </ScrollView>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:id="@id/roomInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/BuildingInfoView"
+            android:text="Информация о помещении"
+            android:backgroundTint="@color/teal_200"
+            android:background="@drawable/txtviewborder"
+            />
+
+
         <ScrollView
             android:id="@+id/RoomInfoView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/toolsGrid"
+            android:animateLayoutChanges="true"
+            app:layout_constraintTop_toBottomOf="@+id/roomInfo"
             tools:layout_editor_absoluteX="10dp">
 
             <GridLayout

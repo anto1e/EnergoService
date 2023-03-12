@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +15,11 @@ import java.util.Vector;
 
 //Класс для хранения глобальных переменных
 public class Variables {
+    static ScrollView roomInfoView;
+
+    static ScrollView buildingInfoView;
+    static String filePath="";
+    static Uri selectedfile;
     static Activity activity=null;          //Главное activity
     static boolean opened = false;          //Если файл был открыт
     static BikExtensionParser parser = new BikExtensionParser();
@@ -30,7 +36,8 @@ public class Variables {
     static Button submit;            //Кнопка сохранения изменений в помещении
     static Spinner spinner;            //Выпадающий список(спинер) с типами помещений
     static ScrollView RoomInfo;            //Макет, где хранится информация о помещении
-    static Vector<Room> rooms = new Vector<Room>();     //Хранение размеченных помещений
+
+    static Building building;
     static double lastWidth;                //Ширина плана, при разметке на сайте
     static double lastHeight;                //Высота плана, при разметке на сайте
     static double currentWidth;                //Ширина плана в приложении
@@ -45,6 +52,10 @@ public class Variables {
     }
 
     public static void init(){                //Инициализация переменных
+        roomInfoView = activity.findViewById(R.id.RoomInfoView);
+        buildingInfoView = activity.findViewById(R.id.BuildingInfoView);
+        building = new Building();
+        image = activity.findViewById(R.id.imageView);
         roomNumber = activity.findViewById(R.id.roomNumber);
         spinner = activity.findViewById(R.id.spinTypes);
         ArrayAdapter<String> adapter = new ArrayAdapter(activity, R.layout.spinner_item, typesOfRooms);

@@ -40,7 +40,6 @@ import java.io.IOException;
 import java.math.*;
 
 public class MainActivity extends AppCompatActivity {
-    String filePath=""; //Путь файла для открытия
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -73,17 +72,20 @@ public class MainActivity extends AppCompatActivity {
             {
                 int widthWas = rightWas - leftWas; // Right exclusive, left inclusive
                 int heightWas = bottomWas - topWas; // Bottom exclusive, top inclusive
-                if( v.getHeight() != heightWas && v.getWidth() != widthWas )    //Если размер изображения изменился
+                if(v.getHeight() != heightWas && v.getWidth() != widthWas)    //Если размер изображения изменился
                 {
-                    Variables.currentHeight = findViewById(R.id.imageView).getHeight();
-                    Variables.currentWidth = findViewById(R.id.imageView).getWidth();
-                    try {   //Парсим файл
-                        //Variables.parser.parseFile(filePath);
-                        Variables.parser.parseFile("/storage/emulated/0/Download/plan.bik");
-                    } catch (FileNotFoundException e) {
-                        throw new RuntimeException(e);
+                    if (Variables.filePath!="") {
+                        while (Variables.currentHeight==0 || Variables.currentWidth==0) {
+                            Variables.currentHeight = findViewById(R.id.imageView).getHeight();
+                            Variables.currentWidth = findViewById(R.id.imageView).getWidth();
+                        }
+                        try {   //Парсим файл
+                            Variables.parser.parseFile(Variables.filePath);
+                            //Variables.parser.parseFile("/storage/emulated/0/Download/plan.bik");
+                        } catch (FileNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
-                    Variables.opened=false;
                 }
             }
         });
@@ -92,11 +94,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) { //После выбора пользователем файла путем диалогового окна
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 123 && resultCode == RESULT_OK) {
-            Uri selectedfile = data.getData(); //The uri with the location of the file
-                final String[] split = selectedfile.getPath().split(":");//split the path.
-                filePath = split[1];
-                Variables.image.setImageURI(selectedfile);
+            for (int i = Variables.planLay.getChildCount()-1; i >= 0; i--) {
+                View v = Variables.planLay.getChildAt(i);
+                if (v!=Variables.image) {
+                    Variables.planLay.removeView(v);
+                }
+            }
+            Variables.selectedfile = data.getData(); //The uri with the location of the file
+                final String[] split = Variables.selectedfile.getPath().split(":");//split the path.
+                Variables.filePath = split[1];
+                Variables.image.setImageURI(Variables.selectedfile);
         }
+        else {
+            Variables.image.setImageURI(Variables.selectedfile);
+        }
+            Variables.opened = false;
     }
 }
 
