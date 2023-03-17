@@ -52,15 +52,15 @@ public class MainActivity extends AppCompatActivity {
         Variables.init();                               //Инициализация переменныъ
         Variables.plan.startDetecting(); //Начало отслеживания перемещения на плане
         ListView listView=(ListView)findViewById(R.id.LampsListView);           //Лист со списком светильников
-        LampsList lampsList = new LampsList(this, Variables.plan.lampNames, Variables.plan.imageid);        //Заполнение списка светильников
+        LampsList lampsList = new LampsList(this, Variables.lampNames, Variables.plan.imageid);        //Заполнение списка светильников
         listView.setAdapter(lampsList);
         Buttons buttons = new Buttons();        //Создание класса с кнопками
 
 
         buttons.startDetecting();       //Начало отслеживания нажатия кнопок
         listView.setOnItemClickListener((adapterView, view, position, l) -> {       //Обработка нажатия на один из элементов списка светильников
-            Integer itemSelected = Variables.plan.imageid[position];
-            Variables.plan.spawnLamp(itemSelected);         //Создание светильника
+            //Integer itemSelected = Variables.plan.imageid[position];
+            Variables.plan.spawnLamp(Variables.plan.imageid[position],position,1);         //Создание светильника
         });
 
         Variables.image.addOnLayoutChangeListener( new View.OnLayoutChangeListener()        //В момент изменения размеров изображения

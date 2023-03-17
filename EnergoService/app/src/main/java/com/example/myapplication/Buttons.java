@@ -31,6 +31,44 @@ public class Buttons {
         ImageButton uploadBtn = Variables.activity.findViewById(R.id.openFile);
         TextView roomInfo = Variables.activity.findViewById(R.id.roomInfo);
         TextView buildingInfo = Variables.activity.findViewById(R.id.buildingInfo);
+        TextView lampInfo = Variables.activity.findViewById(R.id.lampInfo);
+
+        Variables.submit.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {         //Установка данных для выбранной комнаты
+                        if (Variables.plan!=null) {
+                            Variables.plan.touchedRoom.setNumber(Double.parseDouble(String.valueOf(Variables.roomNumber.getText())));
+                            Variables.plan.touchedRoom.setHeight(Double.parseDouble(String.valueOf(Variables.roomHeight.getText())));
+                            Variables.plan.touchedRoom.setDays(Variables.daysPerWeek.getSelectedItemPosition());
+                            Variables.plan.touchedRoom.setHoursPerDay(Variables.hoursPerDay.getSelectedItemPosition());
+                            Variables.plan.touchedRoom.setHoursPerWeekend(Variables.hoursPerWeekend.getSelectedItemPosition());
+                            Variables.plan.touchedRoom.setType_pos(Variables.type.getSelectedItemPosition());
+                        }
+                        return false;
+            }
+        });
+
+        Variables.submitLampInfo.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {         //Установка данных для выбранной комнаты
+                        if (Variables.plan.touchedLamp!=null) {
+                            Variables.plan.touchedLamp.setType(String.valueOf(Variables.lampType.getText()));
+                            Variables.plan.touchedLamp.setPower(String.valueOf(Variables.lampPower.getText()));
+                            Variables.plan.touchedLamp.setComments(String.valueOf(Variables.lampComments.getText()));
+                        }
+                return false;
+            }
+        });
+            Variables.submitBuildingInfo.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {         //Установка данных для выбранной комнаты
+                            Variables.building.setAdress(String.valueOf(Variables.buildingAdress.getText()));
+                            Variables.building.setFloor(String.valueOf(Variables.buidlingFloor.getText()));
+                            Variables.building.setAdress(String.valueOf(Variables.buildingAdress.getText()));
+                    return false;
+                }
+            });
+
         roomInfo.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -51,6 +89,25 @@ public class Buttons {
             }
         });
 
+        lampInfo.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (Variables.lampInfoView.getHeight() > 1) {
+                            ViewGroup.LayoutParams params = Variables.lampInfoView.getLayoutParams();
+                            params.height = 1;
+                            Variables.lampInfoView.setLayoutParams(params);
+                        } else {
+                            ViewGroup.LayoutParams params = Variables.lampInfoView.getLayoutParams();
+                            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                            Variables.lampInfoView.setLayoutParams(params);
+                        }
+                        break;
+                }
+                return true;
+            }
+        });
 
         buildingInfo.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -96,10 +153,10 @@ public class Buttons {
                 Variables.invertMoveFlag();
                 if (Variables.getMoveFlag()){                                       //Активация перемещения
                     moveBtn.setBackgroundColor(Color.parseColor("#ff0f0f"));
-                    Variables.plan.setLampsTouchListener();
+                    Variables.plan.moveType=true;
                 }else{                                                              //Деактивация перемещения
                     moveBtn.setBackgroundColor(Color.parseColor("#858585"));
-                    Variables.plan.stopLampsTouchListener();
+                    Variables.plan.moveType=false;
                 }
                 return false;
             }

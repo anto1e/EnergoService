@@ -12,36 +12,35 @@ import java.util.Vector;
 public class Room {
     private double number;      //Номер помещения
     private double height=0.0;      //Высота помещения
-    public Vector<ImageView> lamps = new Vector<ImageView>();       //Список светильников в помещении
+    public Vector<Lamp> lamps = new Vector<>();       //Список светильников в помещении
 
 
 
     public int getType_pos() {
-        return type_pos;
+        return type;
     }
 
-    public void lampPush(ImageView img){
-        lamps.add(img);
+    public void lampPush(Lamp lamp){
+        lamps.add(lamp);
     }
 
-    public void lampRemove(ImageView img){
-        lamps.remove(img);
+    public void lampRemove(Lamp lamp){
+        lamps.remove(lamp);
     }
 
-    public Vector<ImageView> getLamps(){
+    public Vector<Lamp> getLamps(){
         return lamps;
     }
 
     public void setType_pos(int type_pos) {
-        this.type_pos = type_pos;
+        this.type = type_pos;
     }
 
-    private String type="";     //Тип помещения
-    private int type_pos=0;     //Индекс типа помещения в спиннере
+    private int type=0;     //Индекс типа помещения в спиннере
     private int days=0;         //Дни работы
-    private float hoursPerDay=0.0f;     //Часы работы по будням
+    private int hoursPerDay=0;     //Часы работы по будням
 
-    private float hoursPerWeekend=0.0f;     //Часы работы по выходным
+    private int hoursPerWeekend=0;     //Часы работы по выходным
     private Polygon polygon;                //Многоугольник, построенный по координатам точек помещения
     public double[] arrayX;                 //Массив координат Х точек помещения
     public double[] arrayY;                 //Массив координат У точек помещения
@@ -67,13 +66,6 @@ public class Room {
         this.height = height;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public int getDays() {
         return days;
@@ -83,19 +75,19 @@ public class Room {
         this.days = days;
     }
 
-    public float getHoursPerDay() {
+    public int getHoursPerDay() {
         return hoursPerDay;
     }
 
-    public void setHoursPerDay(float hoursPerDay) {
+    public void setHoursPerDay(int hoursPerDay) {
         this.hoursPerDay = hoursPerDay;
     }
 
-    public float getHoursPerWeekend() {
+    public int getHoursPerWeekend() {
         return hoursPerWeekend;
     }
 
-    public void setHoursPerWeekend(float hoursPerWeekend) {
+    public void setHoursPerWeekend(int hoursPerWeekend) {
         this.hoursPerWeekend = hoursPerWeekend;
     }
 

@@ -101,15 +101,25 @@
 
         </GridLayout>
 
-        <TextView
-            android:id="@id/buildingInfo"
-            android:layout_width="match_parent"
+        <ScrollView
+            android:id="@+id/globalScroll"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/toolsGrid"
-            android:text="Информация о плане"
-            android:backgroundTint="@color/teal_200"
-            android:background="@drawable/txtviewborder"
-            />
+            tools:ignore="MissingConstraints">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@id/buildingInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/globalScroll"
+                android:text="Информация о плане"
+                android:backgroundTint="@color/teal_200"
+                android:background="@drawable/txtviewborder"
+                />
 
         <ScrollView
             android:id="@+id/BuildingInfoView"
@@ -226,43 +236,52 @@
                     android:verticalScrollbarPosition="right"
                     android:id="@+id/spinTypes"
                     android:layout_marginLeft="-80dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
                     android:background="@android:drawable/btn_dropdown"
                     android:spinnerMode="dropdown" />
                 <TextView
-                    android:text="Дней в неделю:"
+                    android:text="Дней:"
                     android:textColor="@color/black"
                     android:textSize="12dp"
                     />
-                <EditText
-                    android:text="0"
-                    android:textSize="12dp"
+
+                <Spinner
+                    android:verticalScrollbarPosition="right"
                     android:id="@+id/roomDays"
-                    android:layout_width="wrap_content"
-                    />
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown" />
                 <TextView
-                    android:text="Часов в день:"
+                    android:text="Часы:"
                     android:textColor="@color/black"
                     android:textSize="12dp"
                     />
-                <EditText
-                    android:text="0"
-                    android:textSize="12dp"
+
+                <Spinner
+                    android:verticalScrollbarPosition="right"
                     android:id="@+id/roomHours"
-                    android:layout_width="wrap_content"
-                    />
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown" />
                 <TextView
-                    android:text="Часов в выходные:"
+                    android:text="В выходные:"
                     android:textColor="@color/black"
                     android:textSize="12dp"
                     />
-                <EditText
-                    android:text="0"
-                    android:textSize="12dp"
+
+                <Spinner
+                    android:verticalScrollbarPosition="right"
                     android:id="@+id/roomHoursWeekends"
-                    android:layout_width="wrap_content"
-                    />
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown" />
                 <TextView
                     android:text="Cветильников:"
                     android:textColor="@color/black"
@@ -282,6 +301,77 @@
                     />
             </GridLayout>
         </ScrollView>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:id="@id/lampInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/RoomInfoView"
+            android:text="Информация о светильнике"
+            android:backgroundTint="@color/teal_200"
+            android:background="@drawable/txtviewborder"
+            />
+        <ScrollView
+            android:id="@+id/lampInfoView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            app:layout_constraintTop_toBottomOf="@+id/lampInfo"
+            tools:layout_editor_absoluteX="10dp">
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="2"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:text="Тип:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+                <EditText
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="100dp"
+                    android:textSize="12dp"
+                    android:id="@+id/lampType"
+                    />
+                <TextView
+                    android:text="Мощность:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+                <EditText
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="100dp"
+                    android:textSize="12dp"
+                    android:id="@+id/lampPower"
+                    />
+                <TextView
+                    android:text="Комментарии:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+
+                <EditText
+                    android:id="@+id/lampComments"
+                    android:layout_marginLeft="-60dp"
+                    android:layout_width="80dp"
+                    android:textSize="12dp"
+                    />
+                <Button
+                    android:id="@+id/submitLamp"
+                    android:text="Подтвердить"
+                    android:textColor="@color/black"
+                    android:layout_marginBottom="60dp"
+                    android:backgroundTint="@color/white"
+                    />
+            </GridLayout>
+        </ScrollView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
