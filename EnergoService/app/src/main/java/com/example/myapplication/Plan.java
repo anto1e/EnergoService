@@ -119,6 +119,8 @@ public class Plan {
                     Variables.daysPerWeek.setSelection(touchedRoom.getDays());
                     Variables.hoursPerDay.setSelection(touchedRoom.getHoursPerDay());
                     Variables.hoursPerWeekend.setSelection(touchedRoom.getHoursPerWeekend());
+                    Variables.roofType.setSelection(touchedRoom.getRoofType());
+                    Variables.roomComments.setText(touchedRoom.getComments());
                     EditText tempText = Variables.activity.findViewById(R.id.roomLamps);
                     tempText.setText(Integer.toString(touchedRoom.lamps.size()));
                     return;
@@ -211,6 +213,16 @@ public class Plan {
                 touchedRoom.lampPush(lamp);
                 lamp.setView();
             }
+            else{
+                Lamp lamp = new Lamp();
+                if (typeLamp==1){
+                    lamp.setType("Люминисцентный");
+                }
+                lamp.setPower(Variables.lampNames[pos]);
+                lamp.setImage(imageView);
+                unusedLamps.add(lamp);
+                lamp.setView();
+            }
                 tempView = null;
         }
     }
@@ -251,17 +263,18 @@ public class Plan {
                     setInfoLamp(touchedLamp);
                 }
                 else{
-                    touchedLamp = getLampByTouch(imageView);
                     setInfoLamp(touchedLamp);
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_POINTER_DOWN:
                         prevLength = Math.sqrt(Math.pow((double) (event.getX(0)) - (double) (event.getX(1)), 2) + Math.pow((double) (event.getY(0)) - (double) (event.getY(1)), 2));
                         break;
                     case MotionEvent.ACTION_DOWN:
+                        touchedLamp = getLampByTouch(imageView);
                         setTouchedRoom(x + imageView.getWidth() / 2, y + imageView.getHeight() / 2, false);   //Первичное нажатие на светильник
                         break;
                     case MotionEvent.ACTION_MOVE:
                         if (event.getPointerCount() > 1) {     //Задействовано два пальца - приближение
+                            touchedLamp = getLampByTouch(imageView);
                             lenght = Math.sqrt(Math.pow((double) (event.getX(0)) - (double) (event.getX(1)), 2) + Math.pow((double) (event.getY(0)) - (double) (event.getY(1)), 2));
                             double dx = lenght - prevLength;
                             float currentScale = imageView.getScaleX();
@@ -319,13 +332,17 @@ public class Plan {
     private Lamp getLampByTouch(ImageView image){
         if (touchedRoom!=null) {
             for (int i = 0; i < touchedRoom.lamps.size(); i++) {
-                if (touchedRoom.lamps.elementAt(i).getImage() == image)
-                    return touchedRoom.lamps.elementAt(i);
+                if (touchedRoom.lamps.elementAt(i)!=null) {
+                    if (touchedRoom.lamps.elementAt(i).getImage() == image)
+                        return touchedRoom.lamps.elementAt(i);
+                }
             }
         }
         for (int i=0;i<unusedLamps.size();i++){
-            if (unusedLamps.elementAt(i).getImage()==image)
-                return unusedLamps.elementAt(i);
+            if (unusedLamps.elementAt(i)!=null) {
+                if (unusedLamps.elementAt(i).getImage() == image)
+                    return unusedLamps.elementAt(i);
+            }
         }
         return null;
     }

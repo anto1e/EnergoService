@@ -12,6 +12,25 @@ import java.util.Vector;
 public class Room {
     private double number;      //Номер помещения
     private double height=0.0;      //Высота помещения
+    private int roofType=0;
+    private String comments="";
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    public int getRoofType() {
+        return roofType;
+    }
+
+    public void setRoofType(int roofType) {
+        this.roofType = roofType;
+    }
+
     public Vector<Lamp> lamps = new Vector<>();       //Список светильников в помещении
 
 

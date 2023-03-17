@@ -283,6 +283,32 @@
                     android:background="@android:drawable/btn_dropdown"
                     android:spinnerMode="dropdown" />
                 <TextView
+                    android:text="Потолок:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+
+                <Spinner
+                    android:verticalScrollbarPosition="right"
+                    android:id="@+id/roofType"
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown" />
+                <TextView
+                    android:text="Комментарии:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+
+                <EditText
+                    android:id="@+id/roomComments"
+                    android:layout_marginLeft="-60dp"
+                    android:layout_width="80dp"
+                    android:textSize="12dp"
+                    />
+                <TextView
                     android:text="Cветильников:"
                     android:textColor="@color/black"
                     android:textSize="12dp"

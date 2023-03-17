@@ -37,6 +37,7 @@ public class Variables {
     static Spinner daysPerWeek;            //Поле для дней работы помещения
     static Spinner hoursPerDay;            //Поле для часов работы в день помещения
     static Spinner hoursPerWeekend;            //Поле для часов работы в выходные помещения
+    static Spinner roofType;
     static Button submit;            //Кнопка сохранения изменений в помещении
     static Button submitBuildingInfo;
     static Button submitLampInfo;
@@ -45,6 +46,8 @@ public class Variables {
     static EditText lampType;
     static EditText lampPower;
     static EditText lampComments;
+
+    static EditText roomComments;
 
     static Building building;
     static double lastWidth;                //Ширина плана, при разметке на сайте
@@ -56,6 +59,8 @@ public class Variables {
     public static final String[] lampNames = {             //Названия светильников
             "4*18Вт","2*36Вт","ЛН 60Вт"
     };
+
+    static String[] roofTypes = {"Бетон","Армстронг","ПВХ"};
     static String[] typesOfRooms = { "Игровая", "Спальная", "Санузел", "Коридор", "Тамбур"};
     static String[] daysPerWeekArr = {"0","1","2","3","4","5","6","7"};
     static String[] hoursPerDayArr = {"0","0.5","1","2","4","6","8","12","16","20","24"};
@@ -72,6 +77,7 @@ public class Variables {
         buildingInfoView = activity.findViewById(R.id.BuildingInfoView);
         lampInfoView = activity.findViewById(R.id.lampInfoView);
         lampType = activity.findViewById(R.id.lampType);
+        roomComments = activity.findViewById(R.id.roomComments);
         lampPower = activity.findViewById(R.id.lampPower);
         lampComments = activity.findViewById(R.id.lampComments);
         building = new Building();
@@ -82,6 +88,7 @@ public class Variables {
         daysPerWeek = activity.findViewById(R.id.roomDays);
         hoursPerDay = activity.findViewById(R.id.roomHours);
         hoursPerWeekend = activity.findViewById(R.id.roomHoursWeekends);
+        roofType = activity.findViewById(R.id.roofType);
         submit = activity.findViewById(R.id.submit);
         submitBuildingInfo = activity.findViewById(R.id.submitBuilding);
         submitLampInfo = activity.findViewById(R.id.submitLamp);
@@ -105,6 +112,9 @@ public class Variables {
         adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,hoursPerDayArr);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         hoursPerDay.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,roofTypes);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        roofType.setAdapter(adapter);
     }
 
 

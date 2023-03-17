@@ -3,11 +3,11 @@ package com.example.myapplication;
 import android.widget.ImageView;
 
 public class Lamp {
-    private String type="";
+    private String type="";     //Тип светильника
 
 
-    private String power="";
-    private ImageView image=null;
+    private String power="";        //Мощность светильника
+    private ImageView image=null;       //Картинка светильника
     private String comments;
 
 

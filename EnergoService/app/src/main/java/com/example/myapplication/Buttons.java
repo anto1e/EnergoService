@@ -3,6 +3,8 @@ package com.example.myapplication;
 import static android.app.Activity.RESULT_OK;
 
 import android.animation.LayoutTransition;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -10,12 +12,17 @@ import android.graphics.Color;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Property;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import java.io.FileNotFoundException;
 
@@ -36,12 +43,14 @@ public class Buttons {
         Variables.submit.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {         //Установка данных для выбранной комнаты
-                        if (Variables.plan!=null) {
+                        if (Variables.plan!=null && Variables.plan.touchedRoom!=null) {
                             Variables.plan.touchedRoom.setNumber(Double.parseDouble(String.valueOf(Variables.roomNumber.getText())));
                             Variables.plan.touchedRoom.setHeight(Double.parseDouble(String.valueOf(Variables.roomHeight.getText())));
                             Variables.plan.touchedRoom.setDays(Variables.daysPerWeek.getSelectedItemPosition());
                             Variables.plan.touchedRoom.setHoursPerDay(Variables.hoursPerDay.getSelectedItemPosition());
+                            Variables.plan.touchedRoom.setRoofType(Variables.roofType.getSelectedItemPosition());
                             Variables.plan.touchedRoom.setHoursPerWeekend(Variables.hoursPerWeekend.getSelectedItemPosition());
+                            Variables.plan.touchedRoom.setComments(String.valueOf(Variables.roomComments.getText()));
                             Variables.plan.touchedRoom.setType_pos(Variables.type.getSelectedItemPosition());
                         }
                         return false;
@@ -59,29 +68,38 @@ public class Buttons {
                 return false;
             }
         });
-            Variables.submitBuildingInfo.setOnTouchListener(new View.OnTouchListener() {
+
+        Variables.submitBuildingInfo.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {         //Установка данных для выбранной комнаты
-                            Variables.building.setAdress(String.valueOf(Variables.buildingAdress.getText()));
-                            Variables.building.setFloor(String.valueOf(Variables.buidlingFloor.getText()));
-                            Variables.building.setAdress(String.valueOf(Variables.buildingAdress.getText()));
+                    if (Variables.plan!=null) {
+                        Variables.building.setAdress(String.valueOf(Variables.buildingAdress.getText()));
+                        Variables.building.setFloor(String.valueOf(Variables.buidlingFloor.getText()));
+                        Variables.building.setAdress(String.valueOf(Variables.buildingAdress.getText()));
+                    }
                     return false;
                 }
             });
 
         roomInfo.setOnTouchListener(new View.OnTouchListener() {
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_DOWN:
                         if (Variables.roomInfoView.getHeight() > 1) {
-                            ViewGroup.LayoutParams params = Variables.roomInfoView.getLayoutParams();
+                            animateHeightTo(Variables.roomInfoView,1);
+                            /*ViewGroup.LayoutParams params = Variables.roomInfoView.getLayoutParams();
                             params.height = 1;
-                            Variables.roomInfoView.setLayoutParams(params);
+                            Variables.roomInfoView.setLayoutParams(params);*/
                         } else {
-                            ViewGroup.LayoutParams params = Variables.roomInfoView.getLayoutParams();
+                            Variables.roomInfoView.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                            int height = Variables.roomInfoView.getMeasuredHeight();
+                            animateHeightTo(Variables.roomInfoView,height);
+                            /*ViewGroup.LayoutParams params = Variables.roomInfoView.getLayoutParams();
                             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                            Variables.roomInfoView.setLayoutParams(params);
+                            Variables.roomInfoView.setLayoutParams(params);*/
                         }
                         break;
                 }
@@ -95,13 +113,17 @@ public class Buttons {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_DOWN:
                         if (Variables.lampInfoView.getHeight() > 1) {
-                            ViewGroup.LayoutParams params = Variables.lampInfoView.getLayoutParams();
+                            animateHeightTo(Variables.lampInfoView,1);
+                            /*ViewGroup.LayoutParams params = Variables.lampInfoView.getLayoutParams();
                             params.height = 1;
-                            Variables.lampInfoView.setLayoutParams(params);
+                            Variables.lampInfoView.setLayoutParams(params);*/
                         } else {
-                            ViewGroup.LayoutParams params = Variables.lampInfoView.getLayoutParams();
+                            Variables.lampInfoView.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                            int height = Variables.lampInfoView.getMeasuredHeight();
+                            animateHeightTo(Variables.lampInfoView,height);
+                            /*ViewGroup.LayoutParams params = Variables.lampInfoView.getLayoutParams();
                             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                            Variables.lampInfoView.setLayoutParams(params);
+                            Variables.lampInfoView.setLayoutParams(params);*/
                         }
                         break;
                 }
@@ -115,13 +137,17 @@ public class Buttons {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_DOWN:
                         if (Variables.buildingInfoView.getHeight() > 1) {
-                            ViewGroup.LayoutParams params = Variables.buildingInfoView.getLayoutParams();
+                            animateHeightTo(Variables.buildingInfoView,1);
+                            /*ViewGroup.LayoutParams params = Variables.buildingInfoView.getLayoutParams();
                             params.height = 1;
-                            Variables.buildingInfoView.setLayoutParams(params);
+                            Variables.buildingInfoView.setLayoutParams(params);*/
                         } else {
-                            ViewGroup.LayoutParams params = Variables.buildingInfoView.getLayoutParams();
+                            Variables.buildingInfoView.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                            int height = Variables.buildingInfoView.getMeasuredHeight();
+                            animateHeightTo(Variables.buildingInfoView,height);
+                            /*ViewGroup.LayoutParams params = Variables.buildingInfoView.getLayoutParams();
                             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                            Variables.buildingInfoView.setLayoutParams(params);
+                            Variables.buildingInfoView.setLayoutParams(params);*/
                         }
                         break;
                 }
@@ -178,5 +204,30 @@ public class Buttons {
             }
         });
 
+    }
+
+    private void animateHeightTo(@NonNull View view, int height) {
+        final int currentHeight = view.getHeight();
+        ObjectAnimator animator = ObjectAnimator.ofInt(view, new HeightProperty(), currentHeight, height);
+        animator.setDuration(200);
+        animator.setInterpolator(new DecelerateInterpolator());
+        animator.start();
+    }
+
+
+    static class HeightProperty extends Property<View, Integer> {
+
+        public HeightProperty() {
+            super(Integer.class, "height");
+        }
+
+        @Override public Integer get(View view) {
+            return view.getHeight();
+        }
+
+        @Override public void set(View view, Integer value) {
+            view.getLayoutParams().height = value;
+            view.setLayoutParams(view.getLayoutParams());
+        }
     }
 }
