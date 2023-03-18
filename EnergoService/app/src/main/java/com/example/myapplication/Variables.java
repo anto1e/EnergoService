@@ -15,6 +15,7 @@ import java.util.Vector;
 
 //Класс для хранения глобальных переменных
 public class Variables {
+    static ExcelExporter exporter;
     static ScrollView roomInfoView;
 
     static ScrollView buildingInfoView;
@@ -97,6 +98,7 @@ public class Variables {
         buidlingFloor = activity.findViewById(R.id.floorNumber);
         buildingAdress = activity.findViewById(R.id.adress);
         setSpinners();
+        exporter = new ExcelExporter();
     }
 
     public static void setSpinners(){

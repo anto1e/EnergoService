@@ -36,9 +36,23 @@ public class Buttons {
         ImageView moveBtn = Variables.activity.findViewById(R.id.moveBtn);      //Нажата кнопка активации перемещения светильникв
         moveBtn.setBackgroundColor(Color.parseColor("#ff0f0f"));
         ImageButton uploadBtn = Variables.activity.findViewById(R.id.openFile);
+        ImageButton exportExel = Variables.activity.findViewById(R.id.excelExport);
         TextView roomInfo = Variables.activity.findViewById(R.id.roomInfo);
         TextView buildingInfo = Variables.activity.findViewById(R.id.buildingInfo);
         TextView lampInfo = Variables.activity.findViewById(R.id.lampInfo);
+
+        exportExel.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_DOWN:
+                        SaveExcelThread thread = new SaveExcelThread();
+                        thread.start();
+                        break;
+                }
+                return false;
+            }
+        });
 
         Variables.submit.setOnTouchListener(new View.OnTouchListener() {
             @Override

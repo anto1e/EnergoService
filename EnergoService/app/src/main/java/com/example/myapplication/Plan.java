@@ -206,7 +206,7 @@ public class Plan {
             if (touchedRoom!=null) {
                 Lamp lamp = new Lamp();
                 if (typeLamp==1){
-                    lamp.setType("Люминисцентный");
+                    lamp.setType("Люминесцентный");
                 }
                 lamp.setPower(Variables.lampNames[pos]);
                 lamp.setImage(imageView);
@@ -216,7 +216,7 @@ public class Plan {
             else{
                 Lamp lamp = new Lamp();
                 if (typeLamp==1){
-                    lamp.setType("Люминисцентный");
+                    lamp.setType("Люминесцентный");
                 }
                 lamp.setPower(Variables.lampNames[pos]);
                 lamp.setImage(imageView);
@@ -298,6 +298,10 @@ public class Plan {
                         lastRoom = touchedRoom;
                         break;
                 }
+                if (event.getPointerCount()>1){
+                    touchedRoom=lastRoom;
+                }
+                if (event.getPointerCount()==1){
                 if (touchedRoom != lastRoom) {   //Если светильник в процессе перемещения оказался в другой комнате, то убираем его из старой комнаты и привязываем к новой
                     if (lastRoom != null) {
 
@@ -310,6 +314,7 @@ public class Plan {
                             touchedRoom.lampPush(touchedLamp);
                         }
                     }
+                }
                 }/*else if (touchedRoom==null){
                     if (lastRoom!=null) {
                         lastRoom.lampRemove(imageView);
