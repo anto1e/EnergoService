@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.myapplication.R;
@@ -49,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Variables.activity = MainActivity.this;         //Сохранение activity
+        //ScrollView sv = (ScrollView)findViewById(R.id.scroll);
+        //sv.setEnabled(false);
         Variables.init();                               //Инициализация переменныъ
         Variables.plan.startDetecting(); //Начало отслеживания перемещения на плане
         ListView listView=(ListView)findViewById(R.id.LampsListView);           //Лист со списком светильников
@@ -62,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             //Integer itemSelected = Variables.plan.imageid[position];
             Variables.plan.spawnLamp(Variables.plan.imageid[position],position,1);         //Создание светильника
         });
+
 
         Variables.image.addOnLayoutChangeListener( new View.OnLayoutChangeListener()        //В момент изменения размеров изображения
             //Т.е. загрузки его из файла мы парсим файл и определяем коэффициенты изменения размера изображения
@@ -89,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) { //После выбора пользователем файла путем диалогового окна

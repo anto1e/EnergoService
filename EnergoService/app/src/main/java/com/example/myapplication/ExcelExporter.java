@@ -38,7 +38,7 @@ public class ExcelExporter {
     }
     public void exportToExel() throws Exception {
         init();
-        for (int i = 0; i < Variables.building.rooms.size(); i++) {
+        /*for (int i = 0; i < Variables.building.rooms.size(); i++) {
             int count=0;
             Vector<String> types = new Vector<String>();
             Room room = Variables.building.rooms.elementAt(i);
@@ -58,7 +58,59 @@ public class ExcelExporter {
                         }
                     }
                 }
-                writeToFile(room, types.elementAt(j),count,"");
+                if (count>0) {
+                    writeToFile(room, types.elementAt(j), count, "");
+                }
+                count=0;
+            }
+        }*/
+        /*for (int i = 0; i < Variables.building.rooms.size(); i++) {
+            Vector<String> types = new Vector<String>();
+            int count=0;
+            Room room = Variables.building.rooms.elementAt(i);
+            Vector<Lamp> lamps = room.getLamps();
+            for (int j=0;j<lamps.size();j++){
+                if (!types.contains(lamps.elementAt(j).getType()+"/"+lamps.elementAt(j).getPower()+"/"+lamps.elementAt(j).getComments())){
+                    count++;
+                    for (int z=1;z<lamps.size()-1;z++){
+                        if ((lamps.elementAt(z).getType() + "/" + lamps.elementAt(z).getPower() + "/" + lamps.elementAt(z).getComments()).equals(lamps.elementAt(j).getType() + "/" + lamps.elementAt(j).getPower() + "/" + lamps.elementAt(j).getComments())){
+                            count++;
+                        }
+                    }
+                    types.add(lamps.elementAt(j).getType()+"/"+lamps.elementAt(j).getPower()+"/"+lamps.elementAt(j).getComments());
+                    if (count>0){
+                        writeToFile(room, lamps.elementAt(j).getType()+" "+lamps.elementAt(j).getPower(),count,lamps.elementAt(j).getComments());
+                    }
+                    count=0;
+                }
+            }
+        }*/
+        for (int i = 0; i < Variables.building.rooms.size(); i++) {
+            int count=0;
+            Vector<String> types = new Vector<String>();
+            Room room = Variables.building.rooms.elementAt(i);
+            Vector<Lamp> lamps = room.getLamps();
+            for (int j = 0; j < lamps.size(); j++) {
+                if (!types.contains(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower()+" "+ lamps.elementAt(j).getComments())){
+                    types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower()+" "+ lamps.elementAt(j).getComments());
+                }
+            }
+            for (int j=0;j<types.size();j++){
+                String type="";
+                String comm="";
+                for (int z=0;z<lamps.size();z++){
+                    if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower()+" "+ lamps.elementAt(z).getComments())){
+                        //if (lamps.elementAt(z).getComments()==null){
+                            count++;
+                            type = lamps.elementAt(z).getType()+" "+lamps.elementAt(z).getPower();
+                            comm=lamps.elementAt(z).getComments();
+                        //}else{
+                            //writeToFile(room,types.elementAt(j),1,lamps.elementAt(z).getComments());
+                        //}
+                    }
+                }if (count>0) {
+                    writeToFile(room, type, count, comm);
+                }
                 count=0;
             }
         }
@@ -82,11 +134,11 @@ public class ExcelExporter {
         cell = cells.get("G"+Integer.toString(rowCount));
         cell.setValue(Integer.valueOf((String) Variables.daysPerWeek.getItemAtPosition(room.getDays())));
         cell = cells.get("H"+Integer.toString(rowCount));
-        cell.setValue(Integer.valueOf((String) Variables.hoursPerDay.getItemAtPosition(room.getHoursPerDay())));
+        cell.setValue(Float.valueOf((String) Variables.hoursPerDay.getItemAtPosition(room.getHoursPerDay())));
         cell = cells.get("I"+Integer.toString(rowCount));
-        cell.setValue(Integer.valueOf((String) Variables.hoursPerWeekend.getItemAtPosition(room.getHoursPerWeekend())));
+        cell.setValue(Float.valueOf((String) Variables.hoursPerWeekend.getItemAtPosition(room.getHoursPerWeekend())));
         cell = cells.get("J"+Integer.toString(rowCount));
-        cell.setValue(Integer.valueOf((String) Variables.hoursPerWeekend.getItemAtPosition(room.getHoursPerWeekend())));
+        cell.setValue(Float.valueOf((String) Variables.hoursPerWeekend.getItemAtPosition(room.getHoursPerWeekend())));
         cell = cells.get("K"+Integer.toString(rowCount));
         cell.setValue(type);
         cell = cells.get("M"+Integer.toString(rowCount));
@@ -95,6 +147,21 @@ public class ExcelExporter {
         cell.setValue(Variables.roofType.getItemAtPosition(room.getRoofType()));
         cell = cells.get("Q"+Integer.toString(rowCount));
         cell.setValue(comments);
+        cell = cells.get("L"+Integer.toString(rowCount));
+        String value = cell.getFormula();
+        cell.setFormula(value);
+        cell = cells.get("R"+Integer.toString(rowCount));
+        value = cell.getFormula();
+        cell.setFormula(value);
+        cell = cells.get("AA"+Integer.toString(rowCount));
+        value = cell.getFormula();
+        cell.setFormula(value);
+        cell = cells.get("AD"+Integer.toString(rowCount));
+        value = cell.getFormula();
+        cell.setFormula(value);
+        cell = cells.get("Z"+Integer.toString(rowCount));
+        value = cell.getFormula();
+        cell.setFormula(value);
         rowCount++;
 
 // Write the Excel file

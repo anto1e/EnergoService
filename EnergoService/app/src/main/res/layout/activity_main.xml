@@ -10,6 +10,17 @@
         android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal" >
+        <ImageView
+            android:id="@+id/LoadingImage"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="0dp"
+            android:layout_margin="5dp"
+            app:layout_constraintEnd_toStartOf="@id/secondToolbar"
+            app:layout_constraintBottom_toBottomOf="@id/secondToolbar"
+            android:visibility="gone"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/loading"/>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="200dp"
@@ -36,6 +47,7 @@
                     app:layout_constraintLeft_toRightOf="@id/firstToolbar"
                     app:layout_constraintRight_toLeftOf="@id/secondToolbar"
                     tools:ignore="Deprecated">
+
                     <RelativeLayout
                         android:layout_margin="0dp"
                         android:padding="0dp"
@@ -50,7 +62,6 @@
                             android:layout_height="wrap_content"
                             android:cropToPadding="false"
                             />
-
 
 
                 </RelativeLayout>
@@ -101,7 +112,7 @@
             <ImageButton
                 android:id="@+id/excelExport"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_launcher_background"
+                android:src="@drawable/excel"
                 android:layout_width="30dp"
                 android:background="@color/teal_200"
                 android:layout_marginLeft="10dp"
@@ -130,7 +141,7 @@
                 android:background="@drawable/txtviewborder"
                 />
 
-        <ScrollView
+        <RelativeLayout
             android:id="@+id/BuildingInfoView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -185,7 +196,7 @@
                     android:backgroundTint="@color/white"
                     />
             </GridLayout>
-        </ScrollView>
+        </RelativeLayout>
 
         <TextView
             android:layout_marginTop="10dp"
@@ -199,7 +210,7 @@
             />
 
 
-        <ScrollView
+        <RelativeLayout
             android:id="@+id/RoomInfoView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -335,7 +346,7 @@
                     android:backgroundTint="@color/white"
                     />
             </GridLayout>
-        </ScrollView>
+        </RelativeLayout>
 
         <TextView
             android:layout_marginTop="10dp"
@@ -347,7 +358,7 @@
             android:backgroundTint="@color/teal_200"
             android:background="@drawable/txtviewborder"
             />
-        <ScrollView
+        <RelativeLayout
             android:id="@+id/lampInfoView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -403,7 +414,7 @@
                     android:backgroundTint="@color/white"
                     />
             </GridLayout>
-        </ScrollView>
+        </RelativeLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 

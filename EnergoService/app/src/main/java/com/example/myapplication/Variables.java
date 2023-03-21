@@ -15,11 +15,12 @@ import java.util.Vector;
 
 //Класс для хранения глобальных переменных
 public class Variables {
+    static boolean isExpotedExcel=true;
     static ExcelExporter exporter;
-    static ScrollView roomInfoView;
+    static RelativeLayout roomInfoView;
 
-    static ScrollView buildingInfoView;
-    static ScrollView lampInfoView;
+    static RelativeLayout buildingInfoView;
+    static RelativeLayout lampInfoView;
     static EditText buildingName;
     static EditText buidlingFloor;
     static EditText buildingAdress;
@@ -30,6 +31,7 @@ public class Variables {
     static BikExtensionParser parser = new BikExtensionParser();
     private static boolean addFlag=true;       //Флаг активации режима добавления светильника
     private static boolean moveFlag=true;      //Флаг активации режима перемещния светильника
+    static ImageView loadingImage;
     static Plan plan = new Plan();          //План этажа
     static RelativeLayout planLay;          //Layout плана
     static ImageView image;                     //Изображение(план)
@@ -43,7 +45,7 @@ public class Variables {
     static Button submitBuildingInfo;
     static Button submitLampInfo;
     static Spinner type;            //Выпадающий список(спинер) с типами помещений
-    static ScrollView RoomInfo;            //Макет, где хранится информация о помещении
+    static RelativeLayout RoomInfo;            //Макет, где хранится информация о помещении
     static EditText lampType;
     static EditText lampPower;
     static EditText lampComments;
@@ -62,7 +64,7 @@ public class Variables {
     };
 
     static String[] roofTypes = {"Бетон","Армстронг","ПВХ"};
-    static String[] typesOfRooms = { "Игровая", "Спальная", "Санузел", "Коридор", "Тамбур"};
+    static String[] typesOfRooms = { "Игровая", "Спальная", "Санузел", "Коридор", "Тамбур","Лестница","Кабинет","Пищеблок"};
     static String[] daysPerWeekArr = {"0","1","2","3","4","5","6","7"};
     static String[] hoursPerDayArr = {"0","0.5","1","2","4","6","8","12","16","20","24"};
     static String[] hoursPerWeekendArr = {"0","0.5","1","2","4","6","8","12","16","20","24"};
@@ -74,6 +76,8 @@ public class Variables {
     }
 
     public static void init(){                //Инициализация переменных
+        loadingImage = activity.findViewById(R.id.LoadingImage);
+        loadingImage.bringToFront();
         roomInfoView = activity.findViewById(R.id.RoomInfoView);
         buildingInfoView = activity.findViewById(R.id.BuildingInfoView);
         lampInfoView = activity.findViewById(R.id.lampInfoView);

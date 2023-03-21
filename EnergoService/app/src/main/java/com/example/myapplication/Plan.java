@@ -58,8 +58,10 @@ public class Plan {
                         if (tempView == null) {        //Если маркера появления светильника нет - отрисовываем его
                             tempView = new View(Variables.activity);
                             Variables.planLay.addView(tempView);
-                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(30, 30);
+                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
                             tempView.setLayoutParams(params);
+                            tempView.setScaleX(1.5f);
+                            tempView.setScaleY(1.5f);
                             tempView.setBackgroundColor(Color.parseColor("#808080"));
                         }       //Иначе устанавливаем ему координаты нажатия
                         tempView.setX(event.getX() - tempView.getWidth() / 2);
@@ -199,8 +201,8 @@ public class Plan {
                 imageView.setLayoutParams(params);
                 imageView.setX(tempView.getX());
                 imageView.setY(tempView.getY());
-                imageView.setScaleX(2);
-                imageView.setScaleY(2);
+                imageView.setScaleX(1.5f);
+                imageView.setScaleY(1.5f);
                 setListener(imageView);
                 Variables.planLay.removeView(tempView);
             if (touchedRoom!=null) {

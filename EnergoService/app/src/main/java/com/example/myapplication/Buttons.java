@@ -44,11 +44,14 @@ public class Buttons {
         exportExel.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_DOWN:
-                        SaveExcelThread thread = new SaveExcelThread();
-                        thread.start();
-                        break;
+                if (Variables.isExpotedExcel) {
+                    switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
+                        case MotionEvent.ACTION_DOWN:
+                            Variables.isExpotedExcel=false;
+                            SaveExcelThread thread = new SaveExcelThread();
+                            thread.start();
+                            break;
+                    }
                 }
                 return false;
             }
