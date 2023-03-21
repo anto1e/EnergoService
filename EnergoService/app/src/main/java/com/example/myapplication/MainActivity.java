@@ -57,10 +57,10 @@ public class MainActivity extends AppCompatActivity {
         ListView listView=(ListView)findViewById(R.id.LampsListView);           //Лист со списком светильников
         LampsList lampsList = new LampsList(this, Variables.lampNames, Variables.plan.imageid);        //Заполнение списка светильников
         listView.setAdapter(lampsList);
-        Buttons buttons = new Buttons();        //Создание класса с кнопками
 
 
-        buttons.startDetecting();       //Начало отслеживания нажатия кнопок
+
+        Variables.buttons.startDetecting();       //Начало отслеживания нажатия кнопок
         listView.setOnItemClickListener((adapterView, view, position, l) -> {       //Обработка нажатия на один из элементов списка светильников
             //Integer itemSelected = Variables.plan.imageid[position];
             Variables.plan.spawnLamp(Variables.plan.imageid[position],position,1);         //Создание светильника

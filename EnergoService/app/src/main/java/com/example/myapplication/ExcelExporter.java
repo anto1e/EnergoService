@@ -29,14 +29,14 @@ public class ExcelExporter {
     Worksheet sheet;
     Cells cells;
     int rowCount = 4;
-    public void init() throws Exception {
+    public void init() throws Exception {       //Инициализация Эксель файла
         rowCount=4;
         workbook = new Workbook(path + "/bdr.xlsx");
         worksheets = workbook.getWorksheets();
         sheet = worksheets.get(1);
         cells = sheet.getCells();
     }
-    public void exportToExel() throws Exception {
+    public void exportToExel() throws Exception {           //Функция экспорта в Эксель(дорабатывается)
         init();
         /*for (int i = 0; i < Variables.building.rooms.size(); i++) {
             int count=0;
@@ -85,17 +85,17 @@ public class ExcelExporter {
                 }
             }
         }*/
-        for (int i = 0; i < Variables.building.rooms.size(); i++) {
+        for (int i = 0; i < Variables.current_floor.rooms.size(); i++) {
             int count=0;
             Vector<String> types = new Vector<String>();
-            Room room = Variables.building.rooms.elementAt(i);
+            Room room = Variables.current_floor.rooms.elementAt(i);
             Vector<Lamp> lamps = room.getLamps();
-            for (int j = 0; j < lamps.size(); j++) {
+            for (int j = 0; j < lamps.size(); j++) {        //Типы светильников
                 if (!types.contains(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower()+" "+ lamps.elementAt(j).getComments())){
                     types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower()+" "+ lamps.elementAt(j).getComments());
                 }
             }
-            for (int j=0;j<types.size();j++){
+            for (int j=0;j<types.size();j++){       //Находим и считаем светильники, чьи типы есть в Векторе
                 String type="";
                 String comm="";
                 for (int z=0;z<lamps.size();z++){
@@ -109,7 +109,7 @@ public class ExcelExporter {
                         //}
                     }
                 }if (count>0) {
-                    writeToFile(room, type, count, comm);
+                    writeToFile(room, type, count, comm);       //Запись данных в файл
                 }
                 count=0;
             }
@@ -117,18 +117,18 @@ public class ExcelExporter {
         save();
     }
 
-    public void writeToFile(Room room,String type, int amount,String comments) throws Exception {
+    public void writeToFile(Room room,String type, int amount,String comments) throws Exception {       //Запись в файл по ячейкам
 
 // Obtaining the reference of the first worksheet
 // Adding some sample value to cells
         Cell cell = cells.get("A"+Integer.toString(rowCount));
-        cell.setValue(Variables.building.getFloor());
+        cell.setValue(Variables.current_floor.getFloor());
         cell = cells.get("B"+Integer.toString(rowCount));
         cell.setValue(room.getNumber());
         cell = cells.get("C"+Integer.toString(rowCount));
         cell.setValue(room.getHeight());
         cell = cells.get("D"+Integer.toString(rowCount));
-        cell.setValue(Variables.building.getAdress());
+        cell.setValue(Variables.current_floor.getAdress());
         cell = cells.get("F"+Integer.toString(rowCount));
         cell.setValue(Variables.type.getItemAtPosition(room.getType_pos()));
         cell = cells.get("G"+Integer.toString(rowCount));
@@ -167,17 +167,17 @@ public class ExcelExporter {
 // Write the Excel file
 
     }
-    public void save() throws Exception {
-        workbook.save(path + "/"+Variables.building.getName()+".xlsx");
+    public void save() throws Exception {       //Сохранение в новый файл
+        workbook.save(path + "/"+Variables.current_floor.getName()+".xlsx");
         //Open file
-        FileInputStream inputStream = new FileInputStream(new File(path + "/"+Variables.building.getName()+".xlsx"));
+        FileInputStream inputStream = new FileInputStream(new File(path + "/"+Variables.current_floor.getName()+".xlsx"));
         XSSFWorkbook workBook = new XSSFWorkbook(inputStream);
 
 //Delete Sheet
         workBook.removeSheetAt(7);
 
 //Save the file
-        FileOutputStream outFile = new FileOutputStream(new File(path + "/"+Variables.building.getName()+".xlsx"));
+        FileOutputStream outFile = new FileOutputStream(new File(path + "/"+Variables.current_floor.getName()+".xlsx"));
         workBook.write(outFile);
         outFile.close();
     }

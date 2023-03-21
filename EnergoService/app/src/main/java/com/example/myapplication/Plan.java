@@ -25,11 +25,11 @@ public class Plan {
     private float previousY;        //Предыдущая позиция пальца по У
     private double prevLength;      //Предыдущая длина отрезка между двумя пальцами
 
-    boolean moveType=true;
+    boolean moveType=true;      //Вкл. или выкл. перемещение светильников
 
      Room touchedRoom;       //Текущая нажатая комната
     private Room lastRoom;          //Предыдущая нажатая комната
-     Lamp touchedLamp;
+     Lamp touchedLamp;          //Последний нажатый светильник
     float x,y;                    //Текущая позиция пальца по Х,Y.
     double lenght;              //Текущая длина отрезка между двумя пальцами
     boolean isReleased=true;
@@ -93,7 +93,7 @@ public class Plan {
     }
 
     public void setTouchedRoom(float x,float y,boolean type){       //Функция для переопределения текущей выбранной комнаты и прошлой выбранной комнаты
-        for (Room room:Variables.building.rooms){
+        for (Room room:Variables.current_floor.rooms){
             if (room.detectTouch(x,y)) {
                 if (type) { //Если нам нужно отследить положение при перемещении светильника
                     lastRoom = touchedRoom;
@@ -111,7 +111,7 @@ public class Plan {
 
     @SuppressLint("SetTextI18n")
     public void detectRoomTouch(float x, float y){      //Функиця определения нажатия на комнату и вывода информации о ней
-        for (Room room:Variables.building.rooms){
+        for (Room room:Variables.current_floor.rooms){
             if (room.detectTouch(x,y)) {
                 Variables.RoomInfo.setVisibility(View.VISIBLE);     //Отображаем данные о комнате
                 touchedRoom = room;
@@ -232,7 +232,7 @@ public class Plan {
     @SuppressLint("ClickableViewAccessibility")
     //Деактивация всех слушателей нажатий у ламп
     public void stopLampsTouchListener(){
-        for (Room room:Variables.building.rooms){
+        for (Room room:Variables.current_floor.rooms){
             Vector<Lamp> temp = room.getLamps();
             for (int i=0;i<temp.size();i++){
                 temp.elementAt(i).getImage().setOnTouchListener(null);
@@ -242,7 +242,7 @@ public class Plan {
 
     //Активация всех слушателей нажатий у ламп
     public void setLampsTouchListener(){
-        for (Room room:Variables.building.rooms){
+        for (Room room:Variables.current_floor.rooms){
             Vector<Lamp> temp = room.getLamps();
             for (int i=0;i<temp.size();i++){
                 setListener(temp.elementAt(i).getImage());

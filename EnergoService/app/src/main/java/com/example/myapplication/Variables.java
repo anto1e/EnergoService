@@ -5,10 +5,9 @@ import android.net.Uri;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 
 import java.util.Vector;
@@ -16,6 +15,9 @@ import java.util.Vector;
 //Класс для хранения глобальных переменных
 public class Variables {
     static boolean isExpotedExcel=true;
+
+    static int typeOpening=0;
+    static Vector<LinearLayout> FloorPanelsVec = new Vector<LinearLayout>();
     static ExcelExporter exporter;
     static RelativeLayout roomInfoView;
 
@@ -32,6 +34,7 @@ public class Variables {
     private static boolean addFlag=true;       //Флаг активации режима добавления светильника
     private static boolean moveFlag=true;      //Флаг активации режима перемещния светильника
     static ImageView loadingImage;
+    static LinearLayout floorsPanels;
     static Plan plan = new Plan();          //План этажа
     static RelativeLayout planLay;          //Layout плана
     static ImageView image;                     //Изображение(план)
@@ -44,6 +47,8 @@ public class Variables {
     static Button submit;            //Кнопка сохранения изменений в помещении
     static Button submitBuildingInfo;
     static Button submitLampInfo;
+
+    static Buttons buttons = new Buttons();        //Создание класса с кнопками
     static Spinner type;            //Выпадающий список(спинер) с типами помещений
     static RelativeLayout RoomInfo;            //Макет, где хранится информация о помещении
     static EditText lampType;
@@ -52,13 +57,15 @@ public class Variables {
 
     static EditText roomComments;
 
-    static Building building;
+    static Vector<Floor> floors= new Vector<Floor>();
+
+    static Floor current_floor=null;
+
+    //static Floor building;
     static double lastWidth;                //Ширина плана, при разметке на сайте
     static double lastHeight;                //Высота плана, при разметке на сайте
     static double currentWidth;                //Ширина плана в приложении
     static double currentHeight;                //Высота плана в приложении
-    static double resizeCoeffX;                //Коэффициент ресайза по Х
-    static double resizeCoeffY;                //Коэффициент ресайза по У
     public static final String[] lampNames = {             //Названия светильников
             "4*18Вт","2*36Вт","ЛН 60Вт"
     };
@@ -70,12 +77,10 @@ public class Variables {
     static String[] hoursPerWeekendArr = {"0","0.5","1","2","4","6","8","12","16","20","24"};
 
 
-    public static void resizeCoeffs(){              //Определение коэффициента ресайза
-        resizeCoeffY = Math.abs(lastHeight/currentHeight);
-        resizeCoeffX = Math.abs(lastWidth/currentWidth);
-    }
+
 
     public static void init(){                //Инициализация переменных
+        floorsPanels = activity.findViewById(R.id.floorPanelsLay);
         loadingImage = activity.findViewById(R.id.LoadingImage);
         loadingImage.bringToFront();
         roomInfoView = activity.findViewById(R.id.RoomInfoView);
@@ -85,7 +90,6 @@ public class Variables {
         roomComments = activity.findViewById(R.id.roomComments);
         lampPower = activity.findViewById(R.id.lampPower);
         lampComments = activity.findViewById(R.id.lampComments);
-        building = new Building();
         image = activity.findViewById(R.id.imageView);
         roomNumber = activity.findViewById(R.id.roomNumber);
         type = activity.findViewById(R.id.spinTypes);

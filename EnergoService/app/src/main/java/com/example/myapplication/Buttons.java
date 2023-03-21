@@ -13,6 +13,8 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Property;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,15 +22,75 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+
+import org.apache.poi.hssf.util.HSSFColor;
 
 import java.io.FileNotFoundException;
 
 //Класс, обрабатывающий нажатия кнопок из правого тулбара
 
 public class Buttons {
+    static LinearLayout active=null;
+
+
+
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void addPanel(String txt1){
+        LinearLayout lay = new LinearLayout(Variables.activity);
+        lay.setLayoutParams(new ViewGroup.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, Variables.activity.getResources().getDisplayMetrics()), ViewGroup.LayoutParams.MATCH_PARENT));
+        lay.setBackgroundResource(R.drawable.txtviewborder);
+        TextView txt = new TextView(Variables.activity);
+        txt.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        txt.setTextSize(15);
+        txt.setGravity(Gravity.CENTER);
+        txt.setTextColor(Variables.activity.getResources().getColor(R.color.black));
+        lay.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
+        txt.setText(txt1);
+        lay.addView(txt);
+        Variables.floorsPanels.addView(lay);
+        Variables.FloorPanelsVec.add(lay);
+        if (active==null) {
+            active = lay;
+            active.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+        }else{
+            active.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
+            active=lay;
+            active.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+        }
+        lay.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (active!=v){
+                    active.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
+                    v.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                    for (int i = Variables.planLay.getChildCount()-1; i >= 0; i--) {
+                        View view = Variables.planLay.getChildAt(i);
+                        if (view!=Variables.image) {
+                            Variables.activity.runOnUiThread(() -> {           //Выключаем вращение
+                                Variables.planLay.removeView(view);
+                            });
+                        }
+                    }
+                    active= (LinearLayout) v;
+                    Variables.current_floor = Variables.floors.elementAt(Variables.FloorPanelsVec.indexOf(active));
+                    Variables.image.setImageURI(Variables.current_floor.getImage());
+                    drawLamps();
+                    Variables.buildingName.setText(Variables.current_floor.getName());
+                    Variables.buidlingFloor.setText(Variables.current_floor.getFloor());
+                    Variables.buildingAdress.setText(Variables.current_floor.getAdress());
+                }
+                return false;
+            }
+        });
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     public void startDetecting(){   //Начало отслеживания нажатия кнопок
         ImageView addBtn = Variables.activity.findViewById(R.id.addBtn);        //Нажата кнопка добавления светильника
@@ -40,6 +102,60 @@ public class Buttons {
         TextView roomInfo = Variables.activity.findViewById(R.id.roomInfo);
         TextView buildingInfo = Variables.activity.findViewById(R.id.buildingInfo);
         TextView lampInfo = Variables.activity.findViewById(R.id.lampInfo);
+        ImageButton addPanel = Variables.activity.findViewById(R.id.addPanelBtn);
+        ImageButton removePanel = Variables.activity.findViewById(R.id.closePanelBtn);
+
+
+
+        removePanel.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_UP:
+                        int index = Variables.FloorPanelsVec.indexOf(active);
+                        LinearLayout lay = Variables.FloorPanelsVec.get(index);
+                        if (Variables.FloorPanelsVec.size()>1) {
+                            if (index>0) {
+                                active = Variables.FloorPanelsVec.get(index - 1);
+                            }
+                            else {
+                                active = Variables.FloorPanelsVec.get(index + 1);
+                            }
+                            active.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                        }else {
+                            active = null;
+                        }
+                        Variables.floorsPanels.removeView(lay);
+                        Variables.FloorPanelsVec.remove(lay);
+                        break;
+                }
+                return false;
+            }
+        });
+
+
+        addPanel.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_UP:
+                        Variables.typeOpening=1;
+                    case MotionEvent.ACTION_DOWN:
+                        if (!Variables.opened) {
+                            Variables.image.setImageResource(0);
+                            Variables.filePath = "";
+                            Variables.opened = true;
+                            Intent intent = new Intent()
+                                    .setType("*/*")
+                                    .setAction(Intent.ACTION_GET_CONTENT);
+                            Variables.activity.startActivityForResult(Intent.createChooser(intent, "Select a file"), 123);
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
 
         exportExel.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -90,9 +206,9 @@ public class Buttons {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {         //Установка данных для выбранной комнаты
                     if (Variables.plan!=null) {
-                        Variables.building.setAdress(String.valueOf(Variables.buildingAdress.getText()));
-                        Variables.building.setFloor(String.valueOf(Variables.buidlingFloor.getText()));
-                        Variables.building.setAdress(String.valueOf(Variables.buildingAdress.getText()));
+                        Variables.current_floor.setAdress(String.valueOf(Variables.buildingAdress.getText()));
+                        Variables.current_floor.setFloor(String.valueOf(Variables.buidlingFloor.getText()));
+                        Variables.current_floor.setAdress(String.valueOf(Variables.buildingAdress.getText()));
                     }
                     return false;
                 }
@@ -208,14 +324,19 @@ public class Buttons {
         uploadBtn.setOnTouchListener(new View.OnTouchListener() {   //Кнопка загрузки файла с планом
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (!Variables.opened) {
-                    Variables.image.setImageResource(0);
-                    Variables.filePath="";
-                    Variables.opened=true;
-                Intent intent = new Intent()
-                        .setType("*/*")
-                        .setAction(Intent.ACTION_GET_CONTENT);
-                    Variables.activity.startActivityForResult(Intent.createChooser(intent, "Select a file"), 123);
+                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (!Variables.opened) {
+                            Variables.typeOpening=0;
+                            Variables.image.setImageResource(0);
+                            Variables.filePath = "";
+                            Variables.opened = true;
+                            Intent intent = new Intent()
+                                    .setType("*/*")
+                                    .setAction(Intent.ACTION_GET_CONTENT);
+                            Variables.activity.startActivityForResult(Intent.createChooser(intent, "Select a file"), 123);
+                        }
+                        break;
                 }
                 return false;
             }
@@ -245,6 +366,14 @@ public class Buttons {
         @Override public void set(View view, Integer value) {
             view.getLayoutParams().height = value;
             view.setLayoutParams(view.getLayoutParams());
+        }
+    }
+
+    public void drawLamps(){
+        for (int i=0;i<Variables.current_floor.rooms.size();i++){
+            for (int j=0;j<Variables.current_floor.rooms.elementAt(i).lamps.size();j++){
+                Variables.planLay.addView(Variables.current_floor.rooms.elementAt(i).lamps.elementAt(j).getImage());
+            }
         }
     }
 }
