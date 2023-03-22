@@ -42,8 +42,8 @@ public class Buttons {
 
 
     @SuppressLint("ClickableViewAccessibility")
-    public void addPanel(String txt1){
-        LinearLayout lay = new LinearLayout(Variables.activity);
+    public void addPanel(String txt1){          //Функция добавления новой панели
+        LinearLayout lay = new LinearLayout(Variables.activity);    //Задаем стили
         lay.setLayoutParams(new ViewGroup.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, Variables.activity.getResources().getDisplayMetrics()), ViewGroup.LayoutParams.MATCH_PARENT));
         lay.setBackgroundResource(R.drawable.txtviewborder);
         TextView txt = new TextView(Variables.activity);
@@ -54,26 +54,26 @@ public class Buttons {
         lay.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
         txt.setText(txt1);
         lay.addView(txt);
-        Variables.floorsPanels.addView(lay);
-        Variables.FloorPanelsVec.add(lay);
-        if (active==null) {
+        Variables.floorsPanels.addView(lay);        //Присоединяем панель к layout
+        Variables.FloorPanelsVec.add(lay);          //Добавляем панель в вектор с панелями
+        if (active==null) {                         //Если панелей не было - создаем и устанавливаем текующую активно
             active = lay;
             active.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-        }else{
+        }else{          //Иначе предыдущую делаем неактивной, новую - активной
             active.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
             active=lay;
             active.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
         }
-        lay.setOnTouchListener(new View.OnTouchListener() {
+        lay.setOnTouchListener(new View.OnTouchListener() {         //Обработчик нажатий на панели
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (active!=v){
+                if (active!=v){             //Если нажата неактивная, делаем ее активной, предыдущую неактивной
                     active.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
                     v.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                     for (int i = Variables.planLay.getChildCount()-1; i >= 0; i--) {
                         View view = Variables.planLay.getChildAt(i);
-                        if (view!=Variables.image) {
-                            Variables.activity.runOnUiThread(() -> {           //Выключаем вращение
+                        if (view!=Variables.image) {                //Очищаем светильники с экрана
+                            Variables.activity.runOnUiThread(() -> {
                                 Variables.planLay.removeView(view);
                             });
                         }
@@ -81,7 +81,7 @@ public class Buttons {
                     active= (LinearLayout) v;
                     Variables.current_floor = Variables.floors.elementAt(Variables.FloorPanelsVec.indexOf(active));
                     Variables.image.setImageURI(Variables.current_floor.getImage());
-                    drawLamps();
+                    drawLamps();     //Рисуем светильники текущей комнаты
                     Variables.buildingName.setText(Variables.current_floor.getName());
                     Variables.buidlingFloor.setText(Variables.current_floor.getFloor());
                     Variables.buildingAdress.setText(Variables.current_floor.getAdress());
@@ -97,36 +97,36 @@ public class Buttons {
         addBtn.setBackgroundColor(Color.parseColor("#ff0f0f"));
         ImageView moveBtn = Variables.activity.findViewById(R.id.moveBtn);      //Нажата кнопка активации перемещения светильникв
         moveBtn.setBackgroundColor(Color.parseColor("#ff0f0f"));
-        ImageButton uploadBtn = Variables.activity.findViewById(R.id.openFile);
-        ImageButton exportExel = Variables.activity.findViewById(R.id.excelExport);
-        TextView roomInfo = Variables.activity.findViewById(R.id.roomInfo);
-        TextView buildingInfo = Variables.activity.findViewById(R.id.buildingInfo);
-        TextView lampInfo = Variables.activity.findViewById(R.id.lampInfo);
-        ImageButton addPanel = Variables.activity.findViewById(R.id.addPanelBtn);
-        ImageButton removePanel = Variables.activity.findViewById(R.id.closePanelBtn);
+        ImageButton uploadBtn = Variables.activity.findViewById(R.id.openFile);     //Кнопка загрузки файла
+        ImageButton exportExel = Variables.activity.findViewById(R.id.excelExport); //Кнопка экспорта в Эксель
+        TextView roomInfo = Variables.activity.findViewById(R.id.roomInfo);         //Панель информации о комнате
+        TextView buildingInfo = Variables.activity.findViewById(R.id.buildingInfo); //Панель информации о здании
+        TextView lampInfo = Variables.activity.findViewById(R.id.lampInfo);         //Панель информации о светильнике
+        ImageButton addPanel = Variables.activity.findViewById(R.id.addPanelBtn);   //Кнопка добавления вкладки
+        ImageButton removePanel = Variables.activity.findViewById(R.id.closePanelBtn);  //Кнока удаления вкладки
 
 
 
-        removePanel.setOnTouchListener(new View.OnTouchListener() {
+        removePanel.setOnTouchListener(new View.OnTouchListener() {     //Обработчик нажатий на кнопку удаления вкладки
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_UP:
                         int index = Variables.FloorPanelsVec.indexOf(active);
                         LinearLayout lay = Variables.FloorPanelsVec.get(index);
-                        if (Variables.FloorPanelsVec.size()>1) {
-                            if (index>0) {
+                        if (Variables.FloorPanelsVec.size()>1) {        //Если на экране больше одной вкладки
+                            if (index>0) {      //Если она не первая - ставим активной вкладку слева
                                 active = Variables.FloorPanelsVec.get(index - 1);
                             }
-                            else {
+                            else {      //Иначе вкладку справа
                                 active = Variables.FloorPanelsVec.get(index + 1);
                             }
                             active.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-                        }else {
+                        }else {     //Иначе, если вкладка была последняя - активных вкладок нет
                             active = null;
                         }
-                        Variables.floorsPanels.removeView(lay);
-                        Variables.FloorPanelsVec.remove(lay);
+                        Variables.floorsPanels.removeView(lay);     //Удаление вкладки из интерфейса
+                        Variables.FloorPanelsVec.remove(lay);   //Удаление вкладки из вектора вкладок
                         break;
                 }
                 return false;
@@ -134,15 +134,14 @@ public class Buttons {
         });
 
 
-        addPanel.setOnTouchListener(new View.OnTouchListener() {
+        addPanel.setOnTouchListener(new View.OnTouchListener() {            //Обработчик нажатий на кнопку добавления вкладок
             @SuppressLint("ResourceAsColor")
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_UP:
                         Variables.typeOpening=1;
-                    case MotionEvent.ACTION_DOWN:
-                        if (!Variables.opened) {
+                        if (!Variables.opened) {            //Открываем меню выбора файла
                             Variables.image.setImageResource(0);
                             Variables.filePath = "";
                             Variables.opened = true;
@@ -157,23 +156,23 @@ public class Buttons {
             }
         });
 
-        exportExel.setOnTouchListener(new View.OnTouchListener() {
+        exportExel.setOnTouchListener(new View.OnTouchListener() {          //Обработчик нажатий на кнопку экспорта в Эксель
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (Variables.isExpotedExcel) {
                     switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                         case MotionEvent.ACTION_DOWN:
                             Variables.isExpotedExcel=false;
-                            SaveExcelThread thread = new SaveExcelThread();
-                            thread.start();
+                            SaveExcelThread thread = new SaveExcelThread(); //Создаем новый поток для сохранения в Эксель
+                            thread.start();     //Запускаем поток
                             break;
                     }
                 }
                 return false;
             }
         });
-
-        Variables.submit.setOnTouchListener(new View.OnTouchListener() {
+        //////////////////Переделать на автоматическое сохранение при изменении данных!!!/////////////////////
+        Variables.submit.setOnTouchListener(new View.OnTouchListener() {        //Нажатие на кнопку подтверждения изменений комнаты
             @Override
             public boolean onTouch(View v, MotionEvent event) {         //Установка данных для выбранной комнаты
                         if (Variables.plan!=null && Variables.plan.touchedRoom!=null) {
@@ -190,7 +189,7 @@ public class Buttons {
             }
         });
 
-        Variables.submitLampInfo.setOnTouchListener(new View.OnTouchListener() {
+        Variables.submitLampInfo.setOnTouchListener(new View.OnTouchListener() {    //Обработчик нажатий на кнопку подтверждения изменений данных светильника
             @Override
             public boolean onTouch(View v, MotionEvent event) {         //Установка данных для выбранной комнаты
                         if (Variables.plan.touchedLamp!=null) {
@@ -202,7 +201,7 @@ public class Buttons {
             }
         });
 
-        Variables.submitBuildingInfo.setOnTouchListener(new View.OnTouchListener() {
+        Variables.submitBuildingInfo.setOnTouchListener(new View.OnTouchListener() {   //Обработчик нажатий на кнопку подтверждения изменений информации о здании
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {         //Установка данных для выбранной комнаты
                     if (Variables.plan!=null) {
@@ -214,25 +213,19 @@ public class Buttons {
                 }
             });
 
-        roomInfo.setOnTouchListener(new View.OnTouchListener() {
+        roomInfo.setOnTouchListener(new View.OnTouchListener() {  //Обработчик нажатий на панель раскрытия информации о комнате
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_UP:
                         if (Variables.roomInfoView.getHeight() > 1) {
                             animateHeightTo(Variables.roomInfoView,1);
-                            /*ViewGroup.LayoutParams params = Variables.roomInfoView.getLayoutParams();
-                            params.height = 1;
-                            Variables.roomInfoView.setLayoutParams(params);*/
                         } else {
                             Variables.roomInfoView.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                             int height = Variables.roomInfoView.getMeasuredHeight();
                             animateHeightTo(Variables.roomInfoView,height);
-                            /*ViewGroup.LayoutParams params = Variables.roomInfoView.getLayoutParams();
-                            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                            Variables.roomInfoView.setLayoutParams(params);*/
                         }
                         break;
                 }
@@ -240,23 +233,17 @@ public class Buttons {
             }
         });
 
-        lampInfo.setOnTouchListener(new View.OnTouchListener() {
+        lampInfo.setOnTouchListener(new View.OnTouchListener() {    //Обработчик нажатий на панель раскрытия информации о светильнике
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_UP:
                         if (Variables.lampInfoView.getHeight() > 1) {
                             animateHeightTo(Variables.lampInfoView,1);
-                            /*ViewGroup.LayoutParams params = Variables.lampInfoView.getLayoutParams();
-                            params.height = 1;
-                            Variables.lampInfoView.setLayoutParams(params);*/
                         } else {
                             Variables.lampInfoView.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                             int height = Variables.lampInfoView.getMeasuredHeight();
                             animateHeightTo(Variables.lampInfoView,height);
-                            /*ViewGroup.LayoutParams params = Variables.lampInfoView.getLayoutParams();
-                            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                            Variables.lampInfoView.setLayoutParams(params);*/
                         }
                         break;
                 }
@@ -264,23 +251,17 @@ public class Buttons {
             }
         });
 
-        buildingInfo.setOnTouchListener(new View.OnTouchListener() {
+        buildingInfo.setOnTouchListener(new View.OnTouchListener() {    //Обработчик нажатий на панель раскрытия информации о здании
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_UP:
                         if (Variables.buildingInfoView.getHeight() > 1) {
                             animateHeightTo(Variables.buildingInfoView,1);
-                            /*ViewGroup.LayoutParams params = Variables.buildingInfoView.getLayoutParams();
-                            params.height = 1;
-                            Variables.buildingInfoView.setLayoutParams(params);*/
                         } else {
                             Variables.buildingInfoView.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                             int height = Variables.buildingInfoView.getMeasuredHeight();
                             animateHeightTo(Variables.buildingInfoView,height);
-                            /*ViewGroup.LayoutParams params = Variables.buildingInfoView.getLayoutParams();
-                            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                            Variables.buildingInfoView.setLayoutParams(params);*/
                         }
                         break;
                 }
@@ -344,7 +325,7 @@ public class Buttons {
 
     }
 
-    private void animateHeightTo(@NonNull View view, int height) {
+    private void animateHeightTo(@NonNull View view, int height) {      //Функция анимирования изменения высота элемента
         final int currentHeight = view.getHeight();
         ObjectAnimator animator = ObjectAnimator.ofInt(view, new HeightProperty(), currentHeight, height);
         animator.setDuration(200);
@@ -353,7 +334,7 @@ public class Buttons {
     }
 
 
-    static class HeightProperty extends Property<View, Integer> {
+    static class HeightProperty extends Property<View, Integer> {   //Класс для анимации изменения размера элемента
 
         public HeightProperty() {
             super(Integer.class, "height");
@@ -369,7 +350,7 @@ public class Buttons {
         }
     }
 
-    public void drawLamps(){
+    public void drawLamps(){            //Функция отрисовки ламп на экране
         for (int i=0;i<Variables.current_floor.rooms.size();i++){
             for (int j=0;j<Variables.current_floor.rooms.elementAt(i).lamps.size();j++){
                 Variables.planLay.addView(Variables.current_floor.rooms.elementAt(i).lamps.elementAt(j).getImage());

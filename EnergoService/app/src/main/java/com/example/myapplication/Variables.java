@@ -14,27 +14,27 @@ import java.util.Vector;
 
 //Класс для хранения глобальных переменных
 public class Variables {
-    static boolean isExpotedExcel=true;
+    static boolean isExpotedExcel=true;     //Флаг экспорта в эксель
 
-    static int typeOpening=0;
-    static Vector<LinearLayout> FloorPanelsVec = new Vector<LinearLayout>();
-    static ExcelExporter exporter;
-    static RelativeLayout roomInfoView;
+    static int typeOpening=0;           //Тип открытия нового файла
+    static Vector<LinearLayout> FloorPanelsVec = new Vector<LinearLayout>();        //Вектор вкладок на экране
+    static ExcelExporter exporter;                  //Экспортер данных в эксель
+    static RelativeLayout roomInfoView;             //Панель инфрмации о комнате
 
-    static RelativeLayout buildingInfoView;
-    static RelativeLayout lampInfoView;
-    static EditText buildingName;
-    static EditText buidlingFloor;
-    static EditText buildingAdress;
-    static String filePath="";
-    static Uri selectedfile;
+    static RelativeLayout buildingInfoView;             //Панель инфрмации о здании
+    static RelativeLayout lampInfoView;             //Панель инфрмации о светильнике
+    static EditText buildingName;             //Поле наименования здания
+    static EditText buidlingFloor;             //Поле номера этажа
+    static EditText buildingAdress;             //Поле адреса здания
+    static String filePath="";             //Путь к текущему открытому файлу
+    static Uri selectedfile;             //Выбранный текущий файл
     static Activity activity=null;          //Главное activity
     static boolean opened = false;          //Если файл был открыт
-    static BikExtensionParser parser = new BikExtensionParser();
+    static BikExtensionParser parser = new BikExtensionParser();        //Парсер данных из .bik
     private static boolean addFlag=true;       //Флаг активации режима добавления светильника
     private static boolean moveFlag=true;      //Флаг активации режима перемещния светильника
-    static ImageView loadingImage;
-    static LinearLayout floorsPanels;
+    static ImageView loadingImage;              //Колесо вращения при сохранении
+    static LinearLayout floorsPanels;           //Layout для хранения вкладок
     static Plan plan = new Plan();          //План этажа
     static RelativeLayout planLay;          //Layout плана
     static ImageView image;                     //Изображение(план)
@@ -43,23 +43,23 @@ public class Variables {
     static Spinner daysPerWeek;            //Поле для дней работы помещения
     static Spinner hoursPerDay;            //Поле для часов работы в день помещения
     static Spinner hoursPerWeekend;            //Поле для часов работы в выходные помещения
-    static Spinner roofType;
-    static Button submit;            //Кнопка сохранения изменений в помещении
-    static Button submitBuildingInfo;
-    static Button submitLampInfo;
+    static Spinner roofType;                //Поле типа потолка
+    static Button submit;            //Кнопка сохранения изменений в информации о помещении
+    static Button submitBuildingInfo;       //Кнопка сохранения изменений в информации о здании
+    static Button submitLampInfo;       //Кнопка сохранения изменений в информации о светильнике
 
     static Buttons buttons = new Buttons();        //Создание класса с кнопками
     static Spinner type;            //Выпадающий список(спинер) с типами помещений
     static RelativeLayout RoomInfo;            //Макет, где хранится информация о помещении
-    static EditText lampType;
-    static EditText lampPower;
-    static EditText lampComments;
+    static EditText lampType;                  //Поле типа светильника
+    static EditText lampPower;                  //Поле мощности светильника
+    static EditText lampComments;              //Поле комментариев к светильнику
 
-    static EditText roomComments;
+    static EditText roomComments;               //Поле комментариев к комнате
 
-    static Vector<Floor> floors= new Vector<Floor>();
+    static Vector<Floor> floors= new Vector<Floor>();       //Вектор, хранящий открытые этаж
 
-    static Floor current_floor=null;
+    static Floor current_floor=null;            //Текущий открытый этаж
 
     //static Floor building;
     static double lastWidth;                //Ширина плана, при разметке на сайте
@@ -70,11 +70,11 @@ public class Variables {
             "4*18Вт","2*36Вт","ЛН 60Вт"
     };
 
-    static String[] roofTypes = {"Бетон","Армстронг","ПВХ"};
-    static String[] typesOfRooms = { "Игровая", "Спальная", "Санузел", "Коридор", "Тамбур","Лестница","Кабинет","Пищеблок"};
-    static String[] daysPerWeekArr = {"0","1","2","3","4","5","6","7"};
-    static String[] hoursPerDayArr = {"0","0.5","1","2","4","6","8","12","16","20","24"};
-    static String[] hoursPerWeekendArr = {"0","0.5","1","2","4","6","8","12","16","20","24"};
+    static String[] roofTypes = {"Бетон","Армстронг","ПВХ"};        //Типы потолков
+    static String[] typesOfRooms = { "Игровая", "Спальная", "Санузел", "Коридор", "Тамбур","Лестница","Кабинет","Пищеблок"};            //Типы помещений
+    static String[] daysPerWeekArr = {"0","1","2","3","4","5","6","7"};         //Дней работы в неделю
+    static String[] hoursPerDayArr = {"0","0.5","1","2","4","6","8","12","16","20","24"};       //Часов работы по будням
+    static String[] hoursPerWeekendArr = {"0","0.5","1","2","4","6","8","12","16","20","24"};       //Часов работы по выходным
 
 
 
@@ -109,7 +109,7 @@ public class Variables {
         exporter = new ExcelExporter();
     }
 
-    public static void setSpinners(){
+    public static void setSpinners(){       //Инициализация спиннеров
         ArrayAdapter<String> adapter = new ArrayAdapter(activity, R.layout.spinner_item, typesOfRooms);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         type.setAdapter(adapter);

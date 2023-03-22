@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.myapplication.R;
 public class LampsList extends ArrayAdapter {
-    private String[] lampNames;
-    private Integer[] imageid;
+    private String[] lampNames;     //Названия светильников
+    private Integer[] imageid;      //Изображение светильника
     private Activity context;
     public LampsList(Activity context, String[] lampNames, Integer[] imageid) {
         super(context, R.layout.row_lamp, lampNames);

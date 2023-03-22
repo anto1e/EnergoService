@@ -32,10 +32,10 @@ public class Plan {
      Lamp touchedLamp;          //Последний нажатый светильник
     float x,y;                    //Текущая позиция пальца по Х,Y.
     double lenght;              //Текущая длина отрезка между двумя пальцами
-    boolean isReleased=true;
-    float pivotX=0.f;
-    float pivotY=0.f;
-    Vector<Lamp> unusedLamps = new Vector<Lamp>();
+    boolean isReleased=true;    //Разрешено ли перемещение пальцем по плану(Если было приближение, функция заблокирована пока все пальцы не оторвутся от экрана)
+    float pivotX=0.f;           //Пивот Х для корректного приближения плана(Не работает)
+    float pivotY=0.f;           //Пивот У для корректного приближения плана(Не работает)
+    Vector<Lamp> unusedLamps = new Vector<Lamp>();      //Вектор непривязанных никуда ламп
 
     public final Integer[] imageid = {              //Изображения светильников
             R.drawable.lum4_18, R.drawable.lum2_36,R.drawable.lampnakal
@@ -205,25 +205,25 @@ public class Plan {
                 imageView.setScaleY(1.5f);
                 setListener(imageView);
                 Variables.planLay.removeView(tempView);
-            if (touchedRoom!=null) {
-                Lamp lamp = new Lamp();
+            if (touchedRoom!=null) {        //Если нажатая комната размечена
+                Lamp lamp = new Lamp();     //Создаем новый светильник
                 if (typeLamp==1){
                     lamp.setType("Люминесцентный");
                 }
                 lamp.setPower(Variables.lampNames[pos]);
                 lamp.setImage(imageView);
-                touchedRoom.lampPush(lamp);
-                lamp.setView();
+                touchedRoom.lampPush(lamp);     //Добавляем светильник в вектор светильников нажатой комнаты
+                lamp.setView();                 //Добавляем картинку светильника на экран
             }
-            else{
+            else{                           //Иначе, если нажатая комната не размечена
                 Lamp lamp = new Lamp();
                 if (typeLamp==1){
                     lamp.setType("Люминесцентный");
                 }
                 lamp.setPower(Variables.lampNames[pos]);
                 lamp.setImage(imageView);
-                unusedLamps.add(lamp);
-                lamp.setView();
+                unusedLamps.add(lamp);          //Добавляем светильник в вектор непривязанных светильников
+                lamp.setView();                 //Добавляем картинку светильника на экран
             }
                 tempView = null;
         }
@@ -267,10 +267,10 @@ public class Plan {
                 else{
                     setInfoLamp(touchedLamp);
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_POINTER_DOWN:
+                    case MotionEvent.ACTION_POINTER_DOWN:       //Расчет расстояния между двумя пальцами
                         prevLength = Math.sqrt(Math.pow((double) (event.getX(0)) - (double) (event.getX(1)), 2) + Math.pow((double) (event.getY(0)) - (double) (event.getY(1)), 2));
                         break;
-                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_DOWN:       //Получаем нажатый светильнк
                         touchedLamp = getLampByTouch(imageView);
                         setTouchedRoom(x + imageView.getWidth() / 2, y + imageView.getHeight() / 2, false);   //Первичное нажатие на светильник
                         break;
@@ -317,18 +317,14 @@ public class Plan {
                         }
                     }
                 }
-                }/*else if (touchedRoom==null){
-                    if (lastRoom!=null) {
-                        lastRoom.lampRemove(imageView);
-                    }
-                }*/
+                }
             }
                 return true;
             }
         });
     }
 
-    private void setInfoLamp(Lamp lamp){
+    private void setInfoLamp(Lamp lamp){        //Функция установки информации о светильнке
         if (lamp!=null) {
             Variables.lampType.setText(lamp.getType());
             Variables.lampPower.setText(lamp.getPower());
@@ -336,21 +332,21 @@ public class Plan {
         }
     }
 
-    private Lamp getLampByTouch(ImageView image){
+    private Lamp getLampByTouch(ImageView image){       //Функция получения информации о светильнике по нажатию на него
         if (touchedRoom!=null) {
-            for (int i = 0; i < touchedRoom.lamps.size(); i++) {
+            for (int i = 0; i < touchedRoom.lamps.size(); i++) {    //Сначала ищем в размеченных комнатах
                 if (touchedRoom.lamps.elementAt(i)!=null) {
                     if (touchedRoom.lamps.elementAt(i).getImage() == image)
                         return touchedRoom.lamps.elementAt(i);
                 }
             }
         }
-        for (int i=0;i<unusedLamps.size();i++){
+        for (int i=0;i<unusedLamps.size();i++){         //Если не нашли - в непривязанных светильниках
             if (unusedLamps.elementAt(i)!=null) {
                 if (unusedLamps.elementAt(i).getImage() == image)
                     return unusedLamps.elementAt(i);
             }
         }
-        return null;
+        return null;            //Иначе - светильник не найден
     }
 }

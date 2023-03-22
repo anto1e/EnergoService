@@ -22,7 +22,7 @@ public class SaveExcelThread extends Thread{        //Поток для сохр
             });
             Variables.exporter.exportToExel();          //Экспорт в эксель
             Variables.isExpotedExcel=true;
-            Variables.activity.runOnUiThread(() -> {           //Выключаем вращение
+            Variables.activity.runOnUiThread(() -> {           //Выключаем вращение и выводим текст об удачном экспорте в эксель
                 rotationElement.clearAnimation();
                 rotationElement.setVisibility(View.GONE);
                 Toast.makeText(Variables.activity.getApplicationContext(),"Экспортировано в Excel!",Toast.LENGTH_SHORT).show();

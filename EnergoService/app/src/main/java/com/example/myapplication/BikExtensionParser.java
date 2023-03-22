@@ -21,14 +21,14 @@ import java.io.IOException;
 public class BikExtensionParser {
     File currentFile;
     public void parseFile(String path) throws FileNotFoundException {   //Парсинг файла
-        Floor floor = new Floor();
-        if (Variables.typeOpening==0 && Variables.current_floor!=null) {
+        Floor floor = new Floor();          //Создание нового этажа
+        if (Variables.typeOpening==0 && Variables.current_floor!=null) {        //Если открываем в текущей вкладке - переназначаем текущий этаж
             Variables.floors.set(Variables.floors.indexOf(Variables.current_floor), floor);
         }
         currentFile = new File(path);
         BufferedReader reader;
         BufferedWriter writer;
-        try {
+        try {           //Если открываем в текущей вкладке - очищаем все комнаты текущео этажа
             if (Variables.current_floor!=null && Variables.floors.size()>0 && Variables.typeOpening==0) {
                 {
                     Variables.current_floor.rooms.clear();
@@ -60,7 +60,7 @@ public class BikExtensionParser {
                         Room room = new Room(roomObj.getDouble("number"),tempX,tempY);
                         room.buildPoligon();
                         floor.rooms.add(room);
-                    }else if (line.charAt(0)=='H'){
+                    }else if (line.charAt(0)=='H'){     //Информация о зданиии
                         String temp = line.substring(2);
                         String[] subStr = temp.split("@");
                         floor.setName(subStr[0]);
@@ -76,9 +76,9 @@ public class BikExtensionParser {
                 }
                 line = reader.readLine();
             }
-            floor.setImage(Variables.selectedfile);
+            floor.setImage(Variables.selectedfile);     //Передаем картинку этажа в созданный этаж
             Variables.floors.add(floor);
-            if (Variables.typeOpening==0){
+            if (Variables.typeOpening==0){      //Если открываем в текущей вкладке - меняем вкладку
             if (Buttons.active==null){
                 Variables.buttons.addPanel(floor.getFloor());
             }else{
@@ -86,7 +86,7 @@ public class BikExtensionParser {
                 Variables.floorsPanels.removeView(Buttons.active);
                 Variables.buttons.addPanel(floor.getFloor());
             }
-            }else{
+            }else{              //Если создаем новую вкладку - добавляем новую вкладку
                 Variables.buttons.addPanel(floor.getFloor());
             }
             reader.close();

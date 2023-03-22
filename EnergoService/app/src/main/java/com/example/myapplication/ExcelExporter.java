@@ -167,9 +167,9 @@ public class ExcelExporter {
 // Write the Excel file
 
     }
-    public void save() throws Exception {       //Сохранение в новый файл
+    public void save() throws Exception {       //Сохранение в новый файл(Aspose Cells)
         workbook.save(path + "/"+Variables.current_floor.getName()+".xlsx");
-        //Open file
+        //Пересохранение файла, с удалением страницы о пробной лицензии(Apache POI Excel)
         FileInputStream inputStream = new FileInputStream(new File(path + "/"+Variables.current_floor.getName()+".xlsx"));
         XSSFWorkbook workBook = new XSSFWorkbook(inputStream);
 

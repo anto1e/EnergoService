@@ -50,8 +50,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Variables.activity = MainActivity.this;         //Сохранение activity
-        //ScrollView sv = (ScrollView)findViewById(R.id.scroll);
-        //sv.setEnabled(false);
         Variables.init();                               //Инициализация переменныъ
         Variables.plan.startDetecting(); //Начало отслеживания перемещения на плане
         ListView listView=(ListView)findViewById(R.id.LampsListView);           //Лист со списком светильников
@@ -62,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
         Variables.buttons.startDetecting();       //Начало отслеживания нажатия кнопок
         listView.setOnItemClickListener((adapterView, view, position, l) -> {       //Обработка нажатия на один из элементов списка светильников
-            //Integer itemSelected = Variables.plan.imageid[position];
             Variables.plan.spawnLamp(Variables.plan.imageid[position],position,1);         //Создание светильника
         });
 

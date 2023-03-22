@@ -12,8 +12,24 @@ import java.util.Vector;
 public class Room {
     private double number;      //Номер помещения
     private double height=0.0;      //Высота помещения
-    private int roofType=0;
-    private String comments="";
+    private int roofType=0;         //Тип потолка
+    private String comments="";     //Комментарии
+
+    private int type=0;     //Индекс типа помещения в спиннере
+    private int days=0;         //Дни работы
+    private int hoursPerDay=0;     //Часы работы по будням
+
+    private int hoursPerWeekend=0;     //Часы работы по выходным
+    private Polygon polygon;                //Многоугольник, построенный по координатам точек помещения
+    public double[] arrayX;                 //Массив координат Х точек помещения
+    public double[] arrayY;                 //Массив координат У точек помещения
+    public Room()
+    {
+        super();
+    }
+
+
+    ////Геттеры и сеттеры////
 
     public String getComments() {
         return comments;
@@ -55,18 +71,6 @@ public class Room {
         this.type = type_pos;
     }
 
-    private int type=0;     //Индекс типа помещения в спиннере
-    private int days=0;         //Дни работы
-    private int hoursPerDay=0;     //Часы работы по будням
-
-    private int hoursPerWeekend=0;     //Часы работы по выходным
-    private Polygon polygon;                //Многоугольник, построенный по координатам точек помещения
-    public double[] arrayX;                 //Массив координат Х точек помещения
-    public double[] arrayY;                 //Массив координат У точек помещения
-    public Room()
-    {
-        super();
-    }
 
     public double getNumber() {
         return number;
@@ -110,8 +114,10 @@ public class Room {
         this.hoursPerWeekend = hoursPerWeekend;
     }
 
+    ////Конец геттеров и сеттеров////
 
 
+    //Конструктор комнаты
     public Room(double number, double[] arrayX, double[] arrayY){
         this.number=number;
         this.arrayX=arrayX;
@@ -119,26 +125,14 @@ public class Room {
 
     }
 
-    public void buildPoligon(){
+    public void buildPoligon(){     //Постройка полигона комнаты по размеченным координатам
         Polygon.Builder builder = new Polygon.Builder();
-        /*polygon= Polygon.Builder()
-                .addVertex(new Point(1, 1))
-                .addVertex(new Point(1, 6))
-                .addVertex(new Point(5, 6))
-                .addVertex(new Point(5, 3))
-                .addVertex(new Point(6, 3))
-                .addVertex(new Point(6, 2))
-                .addVertex(new Point(5, 2))
-                .addVertex(new Point(5, 0))
-                .addVertex(new Point(4, 0))
-                .addVertex(new Point(4, 1))
-                .build();*/
         for (int i=0;i<arrayX.length;i++){
            builder =  builder.addVertex(new Point(arrayX[i],arrayY[i]));
         }
         polygon = builder.build();
     }
-    public boolean detectTouch(double x, double y){
+    public boolean detectTouch(double x, double y){     //Определение попадания точки в полигон
         Point temp = new Point(x,y);
         return polygon.contains(temp);
     }

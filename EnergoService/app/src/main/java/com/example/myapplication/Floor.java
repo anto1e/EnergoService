@@ -6,17 +6,18 @@ import java.net.URI;
 import java.util.Vector;
 
 public class Floor {
-    private String name;
+    private String name;                //Наименование здания
 
     double resizeCoeffX;                //Коэффициент ресайза по Х
     double resizeCoeffY;                //Коэффициент ресайза по У
 
 
-    private Uri image;
-    private String floor;
-    private String adress;
+    private Uri image;                  //Путь к плану этажа
+    private String floor;               //Название этажа
+    private String adress;              //Адрес здания
     public Vector<Room> rooms = new Vector<Room>();     //Хранение размеченных помещений
 
+    ////Геттеры и сеттеры////
     public String getName() {
         return name;
     }
@@ -48,6 +49,8 @@ public class Floor {
     public void setImage(Uri image) {
         this.image = image;
     }
+
+    ////Конец геттеров и сеттеров////
 
     public void resizeCoeffs(){              //Определение коэффициента ресайза
         resizeCoeffY = Math.abs(Variables.lastHeight/Variables.currentHeight);

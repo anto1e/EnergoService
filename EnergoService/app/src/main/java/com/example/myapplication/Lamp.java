@@ -8,9 +8,9 @@ public class Lamp {
 
     private String power="";        //Мощность светильника
     private ImageView image=null;       //Картинка светильника
-    private String comments;
+    private String comments;            //Комментарии к светильнику
 
-
+    ////Геттеры и сеттеры////
     public String getType() {
         return type;
     }
@@ -46,4 +46,5 @@ public class Lamp {
         Variables.planLay.addView(image);
     }
 
+    ////Конец геттеров и сеттеров////
 }
