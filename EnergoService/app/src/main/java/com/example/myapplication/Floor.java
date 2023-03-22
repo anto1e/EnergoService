@@ -11,6 +11,10 @@ public class Floor {
     double resizeCoeffX;                //Коэффициент ресайза по Х
     double resizeCoeffY;                //Коэффициент ресайза по У
 
+    float cordX=0;          //Позиция по Х
+    float cordY=0;          //Позиция по У
+    float scale=1;          //Масштаб
+
 
     private Uri image;                  //Путь к плану этажа
     private String floor;               //Название этажа

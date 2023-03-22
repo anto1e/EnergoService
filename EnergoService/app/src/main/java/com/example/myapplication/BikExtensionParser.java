@@ -22,6 +22,15 @@ public class BikExtensionParser {
     File currentFile;
     public void parseFile(String path) throws FileNotFoundException {   //Парсинг файла
         Floor floor = new Floor();          //Создание нового этажа
+        if (Variables.current_floor!=null) {        //Если есть предыдущий этаж - записываем в него текущие позицию и приближение
+            Variables.current_floor.cordX = Variables.planLay.getX();
+            Variables.current_floor.cordY = Variables.planLay.getY();
+            Variables.current_floor.scale = Variables.planLay.getScaleX();
+        }
+        Variables.planLay.setX(floor.cordX);        //Задаем этажу позицию Х
+        Variables.planLay.setY(floor.cordY);        //Задаем этажу позицию У
+        Variables.planLay.setScaleX(floor.scale);   //Задаем этажу приближение
+        Variables.planLay.setScaleY(floor.scale);   //Задаем этажу приближение
         if (Variables.typeOpening==0 && Variables.current_floor!=null) {        //Если открываем в текущей вкладке - переназначаем текущий этаж
             Variables.floors.set(Variables.floors.indexOf(Variables.current_floor), floor);
         }

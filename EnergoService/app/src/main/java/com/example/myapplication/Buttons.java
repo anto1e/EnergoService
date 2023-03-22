@@ -69,6 +69,9 @@ public class Buttons {
             public boolean onTouch(View v, MotionEvent event) {
                 if (active!=v){             //Если нажата неактивная, делаем ее активной, предыдущую неактивной
                     active.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
+                    Variables.current_floor.cordX = Variables.planLay.getX();
+                    Variables.current_floor.cordY = Variables.planLay.getY();
+                    Variables.current_floor.scale = Variables.planLay.getScaleX();
                     v.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                     for (int i = Variables.planLay.getChildCount()-1; i >= 0; i--) {
                         View view = Variables.planLay.getChildAt(i);
@@ -81,6 +84,10 @@ public class Buttons {
                     active= (LinearLayout) v;
                     Variables.current_floor = Variables.floors.elementAt(Variables.FloorPanelsVec.indexOf(active));
                     Variables.image.setImageURI(Variables.current_floor.getImage());
+                    Variables.planLay.setX(Variables.current_floor.cordX);
+                    Variables.planLay.setY(Variables.current_floor.cordY);
+                    Variables.planLay.setScaleX(Variables.current_floor.scale);
+                    Variables.planLay.setScaleY(Variables.current_floor.scale);
                     drawLamps();     //Рисуем светильники текущей комнаты
                     Variables.buildingName.setText(Variables.current_floor.getName());
                     Variables.buidlingFloor.setText(Variables.current_floor.getFloor());
