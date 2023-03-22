@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +26,9 @@ public class Variables {
     static RelativeLayout lampInfoView;             //Панель инфрмации о светильнике
     static EditText buildingName;             //Поле наименования здания
     static EditText buidlingFloor;             //Поле номера этажа
+    static boolean scalemode = false;
+
+    static float lastScaletype=1.5f;
     static EditText buildingAdress;             //Поле адреса здания
     static String filePath="";             //Путь к текущему открытому файлу
     static Uri selectedfile;             //Выбранный текущий файл
@@ -125,6 +129,13 @@ public class Variables {
         adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,roofTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roofType.setAdapter(adapter);
+    }
+
+    public static void clearFields(){           //Очистка полей при переключении плана
+        roomInfoView.setVisibility(View.GONE);
+        lampType.setText("");
+        lampPower.setText("");
+        lampComments.setText("");
     }
 
 

@@ -25,6 +25,8 @@ public class Plan {
     private float previousY;        //Предыдущая позиция пальца по У
     private double prevLength;      //Предыдущая длина отрезка между двумя пальцами
 
+    private double sumXY=0;
+
     boolean moveType=true;      //Вкл. или выкл. перемещение светильников
 
      Room touchedRoom;       //Текущая нажатая комната
@@ -98,15 +100,30 @@ public class Plan {
                 if (type) { //Если нам нужно отследить положение при перемещении светильника
                     lastRoom = touchedRoom;
                     touchedRoom = room;
+                    setTouchedRoomInfo();
                     return;
                 }else{  //Если нужно отследить первое нажатие на светильник
                     touchedRoom = room;
                     lastRoom=touchedRoom;
+                    setTouchedRoomInfo();
                     return;
                 }
             }
         }
         touchedRoom=null;
+    }
+
+    public void setTouchedRoomInfo(){
+        Variables.roomNumber.setText(Double.toString(touchedRoom.getNumber()));
+        Variables.roomHeight.setText(Double.toString(touchedRoom.getHeight()));
+        Variables.type.setSelection(touchedRoom.getType_pos());
+        Variables.daysPerWeek.setSelection(touchedRoom.getDays());
+        Variables.hoursPerDay.setSelection(touchedRoom.getHoursPerDay());
+        Variables.hoursPerWeekend.setSelection(touchedRoom.getHoursPerWeekend());
+        Variables.roofType.setSelection(touchedRoom.getRoofType());
+        Variables.roomComments.setText(touchedRoom.getComments());
+        EditText tempText = Variables.activity.findViewById(R.id.roomLamps);
+        tempText.setText(Integer.toString(touchedRoom.lamps.size()));
     }
 
     @SuppressLint("SetTextI18n")
@@ -201,8 +218,8 @@ public class Plan {
                 imageView.setLayoutParams(params);
                 imageView.setX(tempView.getX());
                 imageView.setY(tempView.getY());
-                imageView.setScaleX(1.5f);
-                imageView.setScaleY(1.5f);
+                imageView.setScaleX(Variables.lastScaletype);
+                imageView.setScaleY(Variables.lastScaletype);
                 setListener(imageView);
                 Variables.planLay.removeView(tempView);
             if (touchedRoom!=null) {        //Если нажатая комната размечена
@@ -259,24 +276,28 @@ public class Plan {
             public boolean onTouch(View v, MotionEvent event) {
                 float x = imageView.getX();
                 float y = imageView.getY();
-                if (!moveType) {
-                     detectRoomTouch(x,y);
+                setTouchedRoom(x , y, false);   //Первичное нажатие на светильник
                     touchedLamp = getLampByTouch(imageView);
                     setInfoLamp(touchedLamp);
-                }
-                else{
-                    setInfoLamp(touchedLamp);
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_POINTER_DOWN:       //Расчет расстояния между двумя пальцами
-                        prevLength = Math.sqrt(Math.pow((double) (event.getX(0)) - (double) (event.getX(1)), 2) + Math.pow((double) (event.getY(0)) - (double) (event.getY(1)), 2));
-                        break;
                     case MotionEvent.ACTION_DOWN:       //Получаем нажатый светильнк
+                        sumXY = (imageView.getX() + (event.getX())) + (imageView.getY() + (event.getY()));
                         touchedLamp = getLampByTouch(imageView);
-                        setTouchedRoom(x + imageView.getWidth() / 2, y + imageView.getHeight() / 2, false);   //Первичное нажатие на светильник
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        if (event.getPointerCount() > 1) {     //Задействовано два пальца - приближение
-                            touchedLamp = getLampByTouch(imageView);
+                            if (Variables.scalemode) {
+                                float currentScale = imageView.getScaleX();
+                                double newSumXY = (imageView.getX() + (event.getX())) + (imageView.getY() + (event.getY()));
+                                double dx = newSumXY - sumXY;
+                                imageView.setPivotX(imageView.getWidth());
+                                imageView.setPivotY(imageView.getHeight());
+                                if ((currentScale + (float) dx / 100) > 0.5) {
+                                    imageView.setScaleX(currentScale + (float) dx / 500);
+                                    imageView.setScaleY(currentScale + (float) dx / 500);
+                                    Variables.lastScaletype=currentScale + (float) dx / 400;
+                                    //sumXY = newSumXY;
+                                }
+                            /*touchedLamp = getLampByTouch(imageView);
                             lenght = Math.sqrt(Math.pow((double) (event.getX(0)) - (double) (event.getX(1)), 2) + Math.pow((double) (event.getY(0)) - (double) (event.getY(1)), 2));
                             double dx = lenght - prevLength;
                             float currentScale = imageView.getScaleX();
@@ -287,7 +308,7 @@ public class Plan {
                             } else {
                                 Log.d("current scale:", Float.toString(imageView.getScaleX()) + " , " + Float.toString(imageView.getScaleY()));
 
-                            }
+                            }*/
                         } else {
                             //Иначе обычное перемещение
                             setTouchedRoom(x + imageView.getWidth() / 2, y + imageView.getHeight() / 2, true);  //Перемещение светильника
@@ -300,25 +321,22 @@ public class Plan {
                         lastRoom = touchedRoom;
                         break;
                 }
-                if (event.getPointerCount()>1){
-                    touchedRoom=lastRoom;
-                }
-                if (event.getPointerCount()==1){
-                if (touchedRoom != lastRoom) {   //Если светильник в процессе перемещения оказался в другой комнате, то убираем его из старой комнаты и привязываем к новой
-                    if (lastRoom != null) {
+                if (!Variables.scalemode) {
+                    if (touchedRoom != lastRoom) {   //Если светильник в процессе перемещения оказался в другой комнате, то убираем его из старой комнаты и привязываем к новой
+                        if (lastRoom != null) {
 
-                        lastRoom.lampRemove(touchedLamp);
-                        unusedLamps.add(touchedLamp);
-                    }
-                    if (touchedRoom != null) {
-                        if (!touchedRoom.lamps.contains(imageView)) {
-                            unusedLamps.remove(touchedLamp);
-                            touchedRoom.lampPush(touchedLamp);
+                            lastRoom.lampRemove(touchedLamp);
+                            unusedLamps.add(touchedLamp);
+                        }
+                        if (touchedRoom != null) {
+                            if (!touchedRoom.lamps.contains(imageView)) {
+                                unusedLamps.remove(touchedLamp);
+                                touchedRoom.lampPush(touchedLamp);
+                            }
                         }
                     }
                 }
-                }
-            }
+
                 return true;
             }
         });

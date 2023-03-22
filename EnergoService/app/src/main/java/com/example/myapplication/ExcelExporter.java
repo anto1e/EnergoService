@@ -85,50 +85,56 @@ public class ExcelExporter {
                 }
             }
         }*/
-        for (int i = 0; i < Variables.current_floor.rooms.size(); i++) {
-            int count=0;
-            Vector<String> types = new Vector<String>();
-            Room room = Variables.current_floor.rooms.elementAt(i);
-            Vector<Lamp> lamps = room.getLamps();
-            for (int j = 0; j < lamps.size(); j++) {        //Типы светильников
-                if (!types.contains(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower()+" "+ lamps.elementAt(j).getComments())){
-                    types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower()+" "+ lamps.elementAt(j).getComments());
-                }
-            }
-            for (int j=0;j<types.size();j++){       //Находим и считаем светильники, чьи типы есть в Векторе
-                String type="";
-                String comm="";
-                for (int z=0;z<lamps.size();z++){
-                    if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower()+" "+ lamps.elementAt(z).getComments())){
-                        //if (lamps.elementAt(z).getComments()==null){
-                            count++;
-                            type = lamps.elementAt(z).getType()+" "+lamps.elementAt(z).getPower();
-                            comm=lamps.elementAt(z).getComments();
-                        //}else{
-                            //writeToFile(room,types.elementAt(j),1,lamps.elementAt(z).getComments());
-                        //}
+        for (int l=0;l<Variables.floors.size();l++) {
+            if (Objects.equals(Variables.floors.elementAt(l).getName(), Variables.current_floor.getName())) {
+                Floor temp = Variables.floors.elementAt(l);
+                for (int i = 0; i < Variables.current_floor.rooms.size(); i++) {
+                    int count = 0;
+                    Vector<String> types = new Vector<String>();
+                    Room room = temp.rooms.elementAt(i);
+                    Vector<Lamp> lamps = room.getLamps();
+                    for (int j = 0; j < lamps.size(); j++) {        //Типы светильников
+                        if (!types.contains(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getComments())) {
+                            types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getComments());
+                        }
                     }
-                }if (count>0) {
-                    writeToFile(room, type, count, comm);       //Запись данных в файл
+                    for (int j = 0; j < types.size(); j++) {       //Находим и считаем светильники, чьи типы есть в Векторе
+                        String type = "";
+                        String comm = "";
+                        for (int z = 0; z < lamps.size(); z++) {
+                            if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " " + lamps.elementAt(z).getComments())) {
+                                //if (lamps.elementAt(z).getComments()==null){
+                                count++;
+                                type = lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower();
+                                comm = lamps.elementAt(z).getComments();
+                                //}else{
+                                //writeToFile(room,types.elementAt(j),1,lamps.elementAt(z).getComments());
+                                //}
+                            }
+                        }
+                        if (count > 0) {
+                            writeToFile(temp,room, type, count, comm);       //Запись данных в файл
+                        }
+                        count = 0;
+                    }
                 }
-                count=0;
             }
         }
         save();
     }
 
-    public void writeToFile(Room room,String type, int amount,String comments) throws Exception {       //Запись в файл по ячейкам
+    public void writeToFile(Floor floor ,Room room,String type, int amount,String comments) throws Exception {       //Запись в файл по ячейкам
 
 // Obtaining the reference of the first worksheet
 // Adding some sample value to cells
         Cell cell = cells.get("A"+Integer.toString(rowCount));
-        cell.setValue(Variables.current_floor.getFloor());
+        cell.setValue(floor.getFloor());
         cell = cells.get("B"+Integer.toString(rowCount));
         cell.setValue(room.getNumber());
         cell = cells.get("C"+Integer.toString(rowCount));
         cell.setValue(room.getHeight());
         cell = cells.get("D"+Integer.toString(rowCount));
-        cell.setValue(Variables.current_floor.getAdress());
+        cell.setValue(floor.getAdress());
         cell = cells.get("F"+Integer.toString(rowCount));
         cell.setValue(Variables.type.getItemAtPosition(room.getType_pos()));
         cell = cells.get("G"+Integer.toString(rowCount));

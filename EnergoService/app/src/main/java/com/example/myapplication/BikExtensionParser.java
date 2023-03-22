@@ -19,6 +19,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class BikExtensionParser {
+    boolean buildingInfo=false;
     File currentFile;
     public void parseFile(String path) throws FileNotFoundException {   //Парсинг файла
         Floor floor = new Floor();          //Создание нового этажа
@@ -48,41 +49,46 @@ public class BikExtensionParser {
 
             while (line != null) {  //Пока файл не закончился считываем строка за строкой
                 Variables.current_floor = floor;
-                if (line.length()>2 && (line.charAt(0)=='H' || line.charAt(0)=='S' || line.charAt(0)=='R') && line.charAt(1)=='@') {
-                    if (line.charAt(0)=='S') {  //Если это информация о размерах изображения
-                        String temp = line.substring(2);
-                        String[] subStr = temp.split("/");
-                        Variables.lastHeight = Double.parseDouble(subStr[0]);
-                        Variables.lastWidth = Double.parseDouble(subStr[1]);
-                    }else if (line.charAt(0)=='R') {     //Иначе это информация о комнатах
-                        String temp = line.substring(2);
-                        JSONObject roomObj = new JSONObject(temp.substring(temp.indexOf("{"), temp.lastIndexOf("}") + 1));
-                        JSONArray arrX = roomObj.getJSONArray("arrayX");
-                        JSONArray arrY = roomObj.getJSONArray("arrayY");
-                        double[] tempX = new double[arrX.length()];
-                        double[] tempY = new double[arrY.length()];
-                        floor.resizeCoeffs();
-                        for (int i=0;i<arrX.length();i++){
-                            tempX[i] = arrX.getDouble(i)/floor.resizeCoeffX;
-                            tempY[i] = arrY.getDouble(i)/floor.resizeCoeffY;
-                        }
-                        Room room = new Room(roomObj.getDouble("number"),tempX,tempY);
-                        room.buildPoligon();
-                        floor.rooms.add(room);
-                    }else if (line.charAt(0)=='H'){     //Информация о зданиии
-                        String temp = line.substring(2);
-                        String[] subStr = temp.split("@");
-                        floor.setName(subStr[0]);
-                        floor.setFloor(subStr[1]);
-                        floor.setAdress(subStr[2]);
-                        EditText buildingName = Variables.activity.findViewById(R.id.buildingName);
-                        EditText floor1 = Variables.activity.findViewById(R.id.floorNumber);
-                        EditText adress = Variables.activity.findViewById(R.id.adress);
-                        buildingName.setText(floor.getName());
-                        floor1.setText(floor.getFloor());
-                        adress.setText(floor.getAdress());
-                    }
+                if (line.equals("///INFORMATION ABOUT BUILDING AND ROOMS///")) {
+                    buildingInfo = true;
                 }
+                if (buildingInfo){
+                    if (line.length() > 2 && (line.charAt(0) == 'H' || line.charAt(0) == 'S' || line.charAt(0) == 'R') && line.charAt(1) == '@') {
+                        if (line.charAt(0) == 'S') {  //Если это информация о размерах изображения
+                            String temp = line.substring(2);
+                            String[] subStr = temp.split("/");
+                            Variables.lastHeight = Double.parseDouble(subStr[0]);
+                            Variables.lastWidth = Double.parseDouble(subStr[1]);
+                        } else if (line.charAt(0) == 'R') {     //Иначе это информация о комнатах
+                            String temp = line.substring(2);
+                            JSONObject roomObj = new JSONObject(temp.substring(temp.indexOf("{"), temp.lastIndexOf("}") + 1));
+                            JSONArray arrX = roomObj.getJSONArray("arrayX");
+                            JSONArray arrY = roomObj.getJSONArray("arrayY");
+                            double[] tempX = new double[arrX.length()];
+                            double[] tempY = new double[arrY.length()];
+                            floor.resizeCoeffs();
+                            for (int i = 0; i < arrX.length(); i++) {
+                                tempX[i] = arrX.getDouble(i) / floor.resizeCoeffX;
+                                tempY[i] = arrY.getDouble(i) / floor.resizeCoeffY;
+                            }
+                            Room room = new Room(roomObj.getDouble("number"), tempX, tempY);
+                            room.buildPoligon();
+                            floor.rooms.add(room);
+                        } else if (line.charAt(0) == 'H') {     //Информация о зданиии
+                            String temp = line.substring(2);
+                            String[] subStr = temp.split("@");
+                            floor.setName(subStr[0]);
+                            floor.setFloor(subStr[1]);
+                            floor.setAdress(subStr[2]);
+                            EditText buildingName = Variables.activity.findViewById(R.id.buildingName);
+                            EditText floor1 = Variables.activity.findViewById(R.id.floorNumber);
+                            EditText adress = Variables.activity.findViewById(R.id.adress);
+                            buildingName.setText(floor.getName());
+                            floor1.setText(floor.getFloor());
+                            adress.setText(floor.getAdress());
+                        }
+                    }
+            }
                 line = reader.readLine();
             }
             floor.setImage(Variables.selectedfile);     //Передаем картинку этажа в созданный этаж
@@ -104,5 +110,8 @@ public class BikExtensionParser {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
+    }
+    public void saveFile(String path){
+
     }
 }

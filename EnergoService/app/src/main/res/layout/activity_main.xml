@@ -57,7 +57,8 @@
                     <LinearLayout
                         android:id="@+id/floorPanelsLay"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
                     </LinearLayout>
                 </HorizontalScrollView>
                 <ImageButton
@@ -124,7 +125,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:id="@+id/toolsGrid"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:columnCount="4"
             android:orientation="horizontal"
             tools:ignore="MissingConstraints">
@@ -147,6 +148,16 @@
                 android:background="@color/white"
                 android:src="@drawable/movebtn"
                 />
+
+            <ImageButton
+                android:layout_marginLeft="10dp"
+                android:id="@+id/scaleBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="5dp"
+                android:background="@color/white"
+                />
+
             <ImageButton
                 android:id="@+id/openFile"
                 android:scaleType="fitCenter"
@@ -162,7 +173,8 @@
                 android:src="@drawable/excel"
                 android:layout_width="30dp"
                 android:background="@color/white"
-                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_height="30dp">
             </ImageButton>
 

@@ -10,7 +10,7 @@ public class SaveExcelThread extends Thread{        //Поток для сохр
     public void run() {
         try {
             ImageView rotationElement = Variables.loadingImage;     //Колесо вращения
-                Animation an = new RotateAnimation(0.0f, 360.0f,40,40); //Анимация
+                Animation an = new RotateAnimation(0.0f, 360.0f,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f); //Анимация
                 an.setDuration(1000);               // duration in ms
                 an.setRepeatCount(-1);                // -1 = infinite repeated
                 an.setFillAfter(true);               // keep rotation after animation

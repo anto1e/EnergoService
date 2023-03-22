@@ -68,6 +68,7 @@ public class Buttons {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (active!=v){             //Если нажата неактивная, делаем ее активной, предыдущую неактивной
+                    Variables.clearFields();
                     active.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
                     Variables.current_floor.cordX = Variables.planLay.getX();
                     Variables.current_floor.cordY = Variables.planLay.getY();
@@ -111,7 +112,23 @@ public class Buttons {
         TextView lampInfo = Variables.activity.findViewById(R.id.lampInfo);         //Панель информации о светильнике
         ImageButton addPanel = Variables.activity.findViewById(R.id.addPanelBtn);   //Кнопка добавления вкладки
         ImageButton removePanel = Variables.activity.findViewById(R.id.closePanelBtn);  //Кнока удаления вкладки
+        ImageButton scaleBtn = Variables.activity.findViewById(R.id.scaleBtn);
 
+        scaleBtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_UP:
+                        if (!Variables.scalemode) {
+                            Variables.scalemode = true;
+                        }else{
+                            Variables.scalemode=false;
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
 
 
         removePanel.setOnTouchListener(new View.OnTouchListener() {     //Обработчик нажатий на кнопку удаления вкладки
@@ -119,21 +136,48 @@ public class Buttons {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_UP:
-                        int index = Variables.FloorPanelsVec.indexOf(active);
-                        LinearLayout lay = Variables.FloorPanelsVec.get(index);
-                        if (Variables.FloorPanelsVec.size()>1) {        //Если на экране больше одной вкладки
-                            if (index>0) {      //Если она не первая - ставим активной вкладку слева
-                                active = Variables.FloorPanelsVec.get(index - 1);
+                        if (Variables.floors.size()>0) {
+                            int index = Variables.FloorPanelsVec.indexOf(active);
+                            LinearLayout lay = Variables.FloorPanelsVec.get(index);
+                            if (Variables.FloorPanelsVec.size() > 1) {        //Если на экране больше одной вкладки
+                                if (index > 0) {      //Если она не первая - ставим активной вкладку слева
+                                    active = Variables.FloorPanelsVec.get(index - 1);
+                                } else {      //Иначе вкладку справа
+                                    active = Variables.FloorPanelsVec.get(index + 1);
+                                }
+                                active.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                            } else {     //Иначе, если вкладка была последняя - активных вкладок нет
+                                active = null;
                             }
-                            else {      //Иначе вкладку справа
-                                active = Variables.FloorPanelsVec.get(index + 1);
+                            for (int i = Variables.planLay.getChildCount() - 1; i >= 0; i--) {
+                                View view = Variables.planLay.getChildAt(i);
+                                if (view != Variables.image) {                //Очищаем светильники с экрана
+                                    Variables.activity.runOnUiThread(() -> {
+                                        Variables.planLay.removeView(view);
+                                    });
+                                }
                             }
-                            active.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-                        }else {     //Иначе, если вкладка была последняя - активных вкладок нет
-                            active = null;
+                            Variables.activity.runOnUiThread(() -> {
+                                Variables.floorsPanels.removeView(lay); //Удаление вкладки из интерфейса
+                            });
+                            Variables.FloorPanelsVec.remove(lay);   //Удаление вкладки из вектора вкладок
+                            Variables.floors.remove(Variables.current_floor);
+                            if (active != null) {
+                                Variables.current_floor = Variables.floors.elementAt(Variables.FloorPanelsVec.indexOf(active));
+                                Variables.image.setImageURI(Variables.current_floor.getImage());
+                                Variables.planLay.setX(Variables.current_floor.cordX);
+                                Variables.planLay.setY(Variables.current_floor.cordY);
+                                Variables.planLay.setScaleX(Variables.current_floor.scale);
+                                Variables.planLay.setScaleY(Variables.current_floor.scale);
+                                drawLamps();     //Рисуем светильники текущей комнаты
+                                Variables.buildingName.setText(Variables.current_floor.getName());
+                                Variables.buidlingFloor.setText(Variables.current_floor.getFloor());
+                                Variables.buildingAdress.setText(Variables.current_floor.getAdress());
+                            } else {
+                                Variables.image.setImageResource(0);
+                                Variables.current_floor=null;
+                            }
                         }
-                        Variables.floorsPanels.removeView(lay);     //Удаление вкладки из интерфейса
-                        Variables.FloorPanelsVec.remove(lay);   //Удаление вкладки из вектора вкладок
                         break;
                 }
                 return false;
@@ -182,7 +226,9 @@ public class Buttons {
         Variables.submit.setOnTouchListener(new View.OnTouchListener() {        //Нажатие на кнопку подтверждения изменений комнаты
             @Override
             public boolean onTouch(View v, MotionEvent event) {         //Установка данных для выбранной комнаты
-                        if (Variables.plan!=null && Variables.plan.touchedRoom!=null) {
+                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_UP:
+                        if (Variables.plan != null && Variables.plan.touchedRoom != null) {
                             Variables.plan.touchedRoom.setNumber(Double.parseDouble(String.valueOf(Variables.roomNumber.getText())));
                             Variables.plan.touchedRoom.setHeight(Double.parseDouble(String.valueOf(Variables.roomHeight.getText())));
                             Variables.plan.touchedRoom.setDays(Variables.daysPerWeek.getSelectedItemPosition());
@@ -192,6 +238,8 @@ public class Buttons {
                             Variables.plan.touchedRoom.setComments(String.valueOf(Variables.roomComments.getText()));
                             Variables.plan.touchedRoom.setType_pos(Variables.type.getSelectedItemPosition());
                         }
+                        break;
+                }
                         return false;
             }
         });
@@ -199,11 +247,15 @@ public class Buttons {
         Variables.submitLampInfo.setOnTouchListener(new View.OnTouchListener() {    //Обработчик нажатий на кнопку подтверждения изменений данных светильника
             @Override
             public boolean onTouch(View v, MotionEvent event) {         //Установка данных для выбранной комнаты
-                        if (Variables.plan.touchedLamp!=null) {
+                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_UP:
+                        if (Variables.plan.touchedLamp != null) {
                             Variables.plan.touchedLamp.setType(String.valueOf(Variables.lampType.getText()));
                             Variables.plan.touchedLamp.setPower(String.valueOf(Variables.lampPower.getText()));
                             Variables.plan.touchedLamp.setComments(String.valueOf(Variables.lampComments.getText()));
                         }
+                        break;
+                }
                 return false;
             }
         });
@@ -211,10 +263,14 @@ public class Buttons {
         Variables.submitBuildingInfo.setOnTouchListener(new View.OnTouchListener() {   //Обработчик нажатий на кнопку подтверждения изменений информации о здании
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {         //Установка данных для выбранной комнаты
-                    if (Variables.plan!=null) {
-                        Variables.current_floor.setAdress(String.valueOf(Variables.buildingAdress.getText()));
-                        Variables.current_floor.setFloor(String.valueOf(Variables.buidlingFloor.getText()));
-                        Variables.current_floor.setAdress(String.valueOf(Variables.buildingAdress.getText()));
+                    switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
+                        case MotionEvent.ACTION_UP:
+                            if (Variables.plan != null) {
+                                Variables.current_floor.setName(String.valueOf(Variables.buildingName.getText()));
+                                Variables.current_floor.setFloor(String.valueOf(Variables.buidlingFloor.getText()));
+                                Variables.current_floor.setAdress(String.valueOf(Variables.buildingAdress.getText()));
+                            }
+                            break;
                     }
                     return false;
                 }
