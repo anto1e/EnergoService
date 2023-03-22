@@ -38,6 +38,7 @@
 
 
     </LinearLayout>
+        <!-- Панель с вкладками этажей-->
         <LinearLayout
             android:id="@+id/floorPanelLay"
             android:layout_width="0dp"
@@ -63,15 +64,18 @@
                     android:id="@+id/closePanelBtn"
                     android:layout_width="25dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/movebtn"
+                    android:src="@drawable/close"
+                    android:layout_marginRight="5dp"
                     android:background="@color/red"
                     android:layout_height="25dp"/>
                 <ImageButton
                     android:id="@+id/addPanelBtn"
                     android:layout_width="25dp"
+                    android:layout_marginRight="0dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/addbtn"
-                    android:background="@color/white"
+                    android:src="@drawable/addfolder"
+                    android:padding="2dp"
+                    android:background="@color/blue"
                     android:layout_height="25dp"/>
             </LinearLayout>
         </LinearLayout>
@@ -108,6 +112,7 @@
         <!--Второй тул-бар -->
     <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/secondToolbar"
+                    android:backgroundTint="@color/bc_layout"
                     android:layout_width="200dp"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
@@ -129,6 +134,8 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/addbtn"
+                android:background="@color/white"
+                android:padding="2dp"
                 />
             <!--Кнопка включения/выключения перемещения светильников -->
             <ImageView
@@ -137,6 +144,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:padding="5dp"
+                android:background="@color/white"
                 android:src="@drawable/movebtn"
                 />
             <ImageButton
@@ -144,7 +152,7 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/upload"
                 android:layout_width="30dp"
-                android:background="@color/teal_200"
+                android:background="@color/white"
                 android:layout_marginLeft="10dp"
                 android:layout_height="30dp">
             </ImageButton>
@@ -153,7 +161,7 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/excel"
                 android:layout_width="30dp"
-                android:background="@color/teal_200"
+                android:background="@color/white"
                 android:layout_marginLeft="10dp"
                 android:layout_height="30dp">
             </ImageButton>
@@ -171,16 +179,17 @@
                 android:layout_height="wrap_content">
 
             <TextView
+                android:layout_marginRight="5dp"
                 android:id="@id/buildingInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/globalScroll"
                 android:text="Информация о плане"
-                android:backgroundTint="@color/teal_200"
                 android:background="@drawable/txtviewborder"
                 />
 
         <RelativeLayout
+            android:background="@color/white"
             android:id="@+id/BuildingInfoView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -232,7 +241,7 @@
                     android:id="@+id/submitBuilding"
                     android:text="Подтвердить"
                     android:textColor="@color/black"
-                    android:backgroundTint="@color/white"
+                    android:backgroundTint="@color/grey"
                     />
             </GridLayout>
         </RelativeLayout>
@@ -244,12 +253,12 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/BuildingInfoView"
             android:text="Информация о помещении"
-            android:backgroundTint="@color/teal_200"
             android:background="@drawable/txtviewborder"
             />
 
 
         <RelativeLayout
+            android:background="@color/white"
             android:id="@+id/RoomInfoView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -382,7 +391,7 @@
                     android:id="@+id/submit"
                     android:text="Подтвердить"
                     android:textColor="@color/black"
-                    android:backgroundTint="@color/white"
+                    android:backgroundTint="@color/grey"
                     />
             </GridLayout>
         </RelativeLayout>
@@ -394,10 +403,10 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/RoomInfoView"
             android:text="Информация о светильнике"
-            android:backgroundTint="@color/teal_200"
             android:background="@drawable/txtviewborder"
             />
         <RelativeLayout
+            android:background="@color/white"
             android:id="@+id/lampInfoView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -450,7 +459,7 @@
                     android:text="Подтвердить"
                     android:textColor="@color/black"
                     android:layout_marginBottom="60dp"
-                    android:backgroundTint="@color/white"
+                    android:backgroundTint="@color/grey"
                     />
             </GridLayout>
         </RelativeLayout>

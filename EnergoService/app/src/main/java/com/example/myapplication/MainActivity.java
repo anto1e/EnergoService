@@ -81,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
                             Variables.currentWidth = findViewById(R.id.imageView).getWidth();
                         }
                         try {   //Парсим файл
-                            Variables.parser.parseFile(Variables.filePath);
-                            //Variables.parser.parseFile("/storage/emulated/0/Download/planTemp-6.bik");
+                            //Variables.parser.parseFile(Variables.filePath);
+                            Variables.parser.parseFile("/storage/emulated/0/Download/planTemp-6.bik");
                         } catch (FileNotFoundException e) {
                             throw new RuntimeException(e);
                         }

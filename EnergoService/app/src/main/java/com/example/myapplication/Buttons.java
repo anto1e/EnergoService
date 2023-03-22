@@ -278,7 +278,7 @@ public class Buttons {
                        addBtn.setBackgroundColor(Color.parseColor("#ff0f0f"));
                        Variables.plan.setListenerToPlan();
                    }else{                                                       //Деактивация добавления
-                       addBtn.setBackgroundColor(Color.parseColor("#858585"));
+                       addBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                        Variables.plan.disableListenerFromPlan();
                    }
                    return false;
@@ -295,7 +295,7 @@ public class Buttons {
                     moveBtn.setBackgroundColor(Color.parseColor("#ff0f0f"));
                     Variables.plan.moveType=true;
                 }else{                                                              //Деактивация перемещения
-                    moveBtn.setBackgroundColor(Color.parseColor("#858585"));
+                    moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                     Variables.plan.moveType=false;
                 }
                 return false;
