@@ -32,15 +32,30 @@ import android.widget.TextView;
 
 import com.example.myapplication.R;
 import com.example.myapplication.LampsList;
+import com.google.gson.Gson;
 import com.snatik.polygon.Point;
 import com.snatik.polygon.Polygon;
 
+import org.apache.commons.codec.Encoder;
+import org.apache.commons.codec.binary.Base64;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_STORAGE = 101;
@@ -93,9 +108,24 @@ public class MainActivity extends AppCompatActivity {
                         }
                         try {   //Парсим файл
                             Variables.parser.parseFile(Variables.filePath);
+                            Runnable myThread = () ->
+                            {
+
+                                Variables.buttons.drawLamps();
+                            };
+
+                            // Instantiating Thread class by passing Runnable
+                            // reference to Thread constructor
+                            Thread run = new Thread(myThread);
+
+                            // Starting the thread
+                            run.start();
+                            //Variables.buttons.drawLamps();
                             //Variables.filePath="";
                             //Variables.parser.parseFile(String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS))+"/planTemp-6.bik");
                         } catch (FileNotFoundException e) {
+                            throw new RuntimeException(e);
+                        } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
                     }
@@ -125,48 +155,7 @@ public class MainActivity extends AppCompatActivity {
         }
             Variables.opened = false;
     }
+
 }
 
 
-
-/*        path =  String.valueOf(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
-        String path1 = path+"/plan.bik";
-        String filename = "/output.jpg";
-        String path2 = path;
-
-        File oldFile = new File( path1);
-        File newFile = new File( path2, filename );
-
-        try
-        {
-            FileInputStream fis = new FileInputStream( oldFile );
-            FileOutputStream fos = new FileOutputStream( newFile );
-
-            try
-            {
-                int currentByte = fis.read();
-                while( currentByte != -1 )
-                {
-                    fos.write( currentByte );
-                    currentByte = fis.read();
-                }
-            }
-            catch( IOException exception )
-            {
-                System.err.println( "IOException occurred!" );
-                exception.printStackTrace();
-            }
-            finally
-            {
-                fis.close();
-                fos.close();
-                System.out.println( "Copied file!" );
-            }
-        }
-        catch( IOException exception )
-        {
-            System.err.println( "Problems with files!" );
-            exception.printStackTrace();
-        }
-
- */

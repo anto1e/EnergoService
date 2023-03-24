@@ -1,11 +1,16 @@
 package com.example.myapplication;
 
+import android.os.Environment;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,12 +19,19 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class BikExtensionParser {
     boolean buildingInfo=false;
+    boolean lampsInfo = false;
     File currentFile;
     public void parseFile(String path) throws FileNotFoundException {   //Парсинг файла
         Floor floor = new Floor();          //Создание нового этажа
@@ -51,6 +63,9 @@ public class BikExtensionParser {
                 Variables.current_floor = floor;
                 if (line.equals("///INFORMATION ABOUT BUILDING AND ROOMS///")) {
                     buildingInfo = true;
+                }else if (line.equals("///INFORMATION ABOUT LAMPS///")){
+                    buildingInfo=false;
+                    lampsInfo=true;
                 }
                 if (buildingInfo){
                     if (line.length() > 2 && (line.charAt(0) == 'H' || line.charAt(0) == 'S' || line.charAt(0) == 'R') && line.charAt(1) == '@') {
@@ -89,8 +104,48 @@ public class BikExtensionParser {
                         }
                     }
             }
+                else if (lampsInfo){
+                    if (line.length()>7 && line.charAt(0) != '/'){
+                        String[] split_number = line.split("%");
+                        if (split_number.length>1){
+                            float number = Float.parseFloat(split_number[0]);
+                            String[] split_room_info = split_number[1].split("@");
+                            String type = split_room_info[0];
+                            String power = split_room_info[1];
+                            int type_image = Integer.parseInt(split_room_info[2]);
+                            String comments = split_room_info[3];
+                            if (comments==null)
+                                comments="";
+                            float cordX = Float.parseFloat(split_room_info[4]);
+                            float cordY = Float.parseFloat(split_room_info[5]);
+                            float scale = Float.parseFloat(split_room_info[6]);
+                            Room room = Variables.getRoomByNumber(number);
+                            if (room!=null){
+                                Lamp lamp = new Lamp();
+                                lamp.setType(type);
+                                lamp.setPower(power);
+                                lamp.setTypeImage(type_image);
+                                lamp.setComments(comments);
+                                ImageView imageView = new ImageView(Variables.activity);
+                                imageView.setImageResource(type_image);
+                                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
+                                imageView.setLayoutParams(params);
+                                imageView.setX(cordX);
+                                imageView.setY(cordY);
+                                imageView.setScaleX(scale);
+                                imageView.setScaleY(scale);
+                                Variables.plan.setListener(imageView);
+                                lamp.setImage(imageView);
+                                //lamp.setView();
+                                room.lamps.add(lamp);
+                            }
+                        }
+                    }
+                }
                 line = reader.readLine();
             }
+            buildingInfo=false;
+            lampsInfo=false;
             floor.setImage(Variables.selectedfile);     //Передаем картинку этажа в созданный этаж
             Variables.floors.add(floor);
             if (Variables.typeOpening==0){      //Если открываем в текущей вкладке - меняем вкладку
@@ -111,7 +166,65 @@ public class BikExtensionParser {
             throw new RuntimeException(e);
         }
     }
-    public void saveFile(String path){
+    public void saveFile(String pathFile) throws IOException {
+        String filename = pathFile;
 
+        File oldFile = new File( pathFile);
+        File newFile = new File( pathFile );
+
+        try {
+            String str1= "///INFORMATION ABOUT LAMPS///";
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                byte[] b1 = Files.readAllBytes(Paths.get(pathFile));
+                byte[] b2 = str1.getBytes();
+                long bytesCount=0;
+                long countMatches=0;
+                for (int i=0;i<b1.length;i++){
+                    if (b1[i]==b2[0]){
+                        if (i+b2.length<=b1.length){
+                            for (int j=0;j<b2.length;j++){
+                                if (b1[i+j]==b2[j])
+                                    countMatches++;
+                            }
+                        }
+                    }
+                    if (countMatches==b2.length)
+                        break;
+                    bytesCount++;
+                    countMatches=0;
+                }
+                byte[] temp_ar = new byte[(int) bytesCount];
+                for (int i=0;i<temp_ar.length;i++){
+                    temp_ar[i] = b1[i];
+                }
+                FileOutputStream fos = new FileOutputStream(newFile);
+
+                fos.write(temp_ar);
+                fos.close();
+                //str1 = Base64.encodeBase64URLSafeString(b);
+                try(FileWriter fw = new FileWriter(pathFile, true);
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    PrintWriter out = new PrintWriter(bw))
+
+                {
+                    out.println("\n///INFORMATION ABOUT LAMPS///");
+                    Floor tempFloor = Variables.current_floor;
+                    for (int i=0;i<tempFloor.rooms.size();i++){
+                        for (int j=0;j<tempFloor.rooms.elementAt(i).lamps.size();j++){
+                            Lamp temp = tempFloor.rooms.elementAt(i).lamps.elementAt(j);
+                            out.println(tempFloor.rooms.elementAt(i).getNumber()+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX());
+                        }
+                    }
+                } catch (IOException e) {
+                    //exception handling left as an exercise for the reader
+                }
+            }
+            //writer.write(str);
+            //fos.write(temp);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

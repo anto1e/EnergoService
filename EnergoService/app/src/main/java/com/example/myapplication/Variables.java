@@ -165,4 +165,11 @@ public class Variables {
         else
             moveFlag=true;
     }
+    public static Room getRoomByNumber(float number){
+        for (int i=0;i<current_floor.rooms.size();i++){
+            if (current_floor.rooms.elementAt(i).getNumber() == number)
+                return current_floor.rooms.elementAt(i);
+        }
+        return null;
+    }
 }

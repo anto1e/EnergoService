@@ -32,6 +32,7 @@ import androidx.annotation.NonNull;
 import org.apache.poi.hssf.util.HSSFColor;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 //Класс, обрабатывающий нажатия кнопок из правого тулбара
 
@@ -113,6 +114,24 @@ public class Buttons {
         ImageButton addPanel = Variables.activity.findViewById(R.id.addPanelBtn);   //Кнопка добавления вкладки
         ImageButton removePanel = Variables.activity.findViewById(R.id.closePanelBtn);  //Кнока удаления вкладки
         ImageButton scaleBtn = Variables.activity.findViewById(R.id.scaleBtn);
+        ImageButton saveFile = Variables.activity.findViewById(R.id.saveFile);
+
+        saveFile.setOnTouchListener(new View.OnTouchListener() {
+            String str1="";
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_UP:
+                        try {
+                            Variables.parser.saveFile(Variables.filePath);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
 
         scaleBtn.setOnTouchListener(new View.OnTouchListener() {
             @Override

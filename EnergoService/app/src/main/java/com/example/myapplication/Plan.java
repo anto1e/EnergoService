@@ -227,6 +227,7 @@ public class Plan {
                 if (typeLamp==1){
                     lamp.setType("Люминесцентный");
                 }
+                lamp.setTypeImage(type);
                 lamp.setPower(Variables.lampNames[pos]);
                 lamp.setImage(imageView);
                 touchedRoom.lampPush(lamp);     //Добавляем светильник в вектор светильников нажатой комнаты
@@ -237,6 +238,7 @@ public class Plan {
                 if (typeLamp==1){
                     lamp.setType("Люминесцентный");
                 }
+                lamp.setTypeImage(type);
                 lamp.setPower(Variables.lampNames[pos]);
                 lamp.setImage(imageView);
                 unusedLamps.add(lamp);          //Добавляем светильник в вектор непривязанных светильников
@@ -276,13 +278,12 @@ public class Plan {
             public boolean onTouch(View v, MotionEvent event) {
                 float x = imageView.getX();
                 float y = imageView.getY();
-                setTouchedRoom(x , y, false);   //Первичное нажатие на светильник
-                    touchedLamp = getLampByTouch(imageView);
-                    setInfoLamp(touchedLamp);
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_DOWN:       //Получаем нажатый светильнк
                         sumXY = (imageView.getX() + (event.getX())) + (imageView.getY() + (event.getY()));
+                        setTouchedRoom(x , y, false);   //Первичное нажатие на светильник
                         touchedLamp = getLampByTouch(imageView);
+                        setInfoLamp(touchedLamp);
                         break;
                     case MotionEvent.ACTION_MOVE:
                             if (Variables.scalemode) {

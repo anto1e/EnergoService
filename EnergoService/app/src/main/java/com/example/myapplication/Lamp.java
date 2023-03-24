@@ -8,9 +8,21 @@ public class Lamp {
 
     private String power="";        //Мощность светильника
     private ImageView image=null;       //Картинка светильника
+
+    private int typeImage;
     private String comments;            //Комментарии к светильнику
 
     ////Геттеры и сеттеры////
+
+
+    public int getTypeImage() {
+        return typeImage;
+    }
+
+    public void setTypeImage(int typeImage) {
+        this.typeImage = typeImage;
+    }
+
     public String getType() {
         return type;
     }
@@ -43,7 +55,9 @@ public class Lamp {
     }
 
     public void setView(){
-        Variables.planLay.addView(image);
+        Variables.activity.runOnUiThread(() -> {
+            Variables.planLay.addView(image);
+        });
     }
 
     ////Конец геттеров и сеттеров////
