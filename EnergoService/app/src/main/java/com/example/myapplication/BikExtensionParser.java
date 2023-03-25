@@ -28,10 +28,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 public class BikExtensionParser {
     boolean buildingInfo=false;
     boolean lampsInfo = false;
+    boolean roomInfo = false;
     File currentFile;
     public void parseFile(String path) throws FileNotFoundException {   //Парсинг файла
         Floor floor = new Floor();          //Создание нового этажа
@@ -63,8 +65,14 @@ public class BikExtensionParser {
                 Variables.current_floor = floor;
                 if (line.equals("///INFORMATION ABOUT BUILDING AND ROOMS///")) {
                     buildingInfo = true;
-                }else if (line.equals("///INFORMATION ABOUT LAMPS///")){
+                }else if (line.equals("///INFORMATION ABOUT ROOMS///")){
                     buildingInfo=false;
+                    roomInfo=true;
+                }
+
+                else if (line.equals("///INFORMATION ABOUT LAMPS///")){
+                    buildingInfo=false;
+                    roomInfo=false;
                     lampsInfo=true;
                 }
                 if (buildingInfo){
@@ -104,6 +112,38 @@ public class BikExtensionParser {
                         }
                     }
             }
+                else if (roomInfo){
+                    if (line.length()>7 && line.charAt(0) != '/'){
+                        String[] split_number = line.split("%");
+                        if (split_number.length>1){
+                            float number = Float.parseFloat(split_number[0]);
+                            String[] split_room_info = split_number[1].split("@");
+                            float height = Float.parseFloat(split_room_info[0]);
+                            int typeRoom = Integer.parseInt(split_room_info[1]);
+                            int days = Integer.parseInt(split_room_info[2]);
+                            int hours = Integer.parseInt(split_room_info[3]);
+                            int hoursPerWeekend = Integer.parseInt(split_room_info[4]);
+                            int roofType = Integer.parseInt(split_room_info[5]);
+                            String comments;
+                            if (split_room_info.length==6){
+                                comments="";
+                            }else {
+                                comments = split_room_info[6];
+
+                                if (Objects.equals(comments, "null"))
+                                    comments = "";
+                            }
+                            Room room = Variables.getRoomByNumber(number);
+                            room.setHeight(height);
+                            room.setType_pos(typeRoom);
+                            room.setDays(days);
+                            room.setHoursPerDay(hours);
+                            room.setHoursPerWeekend(hoursPerWeekend);
+                            room.setRoofType(roofType);
+                            room.setComments(comments);
+                        }
+                    }
+                }
                 else if (lampsInfo){
                     if (line.length()>7 && line.charAt(0) != '/'){
                         String[] split_number = line.split("%");
@@ -114,7 +154,7 @@ public class BikExtensionParser {
                             String power = split_room_info[1];
                             int type_image = Integer.parseInt(split_room_info[2]);
                             String comments = split_room_info[3];
-                            if (comments==null)
+                            if (Objects.equals(comments, "null"))
                                 comments="";
                             float cordX = Float.parseFloat(split_room_info[4]);
                             float cordY = Float.parseFloat(split_room_info[5]);
@@ -145,6 +185,7 @@ public class BikExtensionParser {
                 line = reader.readLine();
             }
             buildingInfo=false;
+            roomInfo=false;
             lampsInfo=false;
             floor.setImage(Variables.selectedfile);     //Передаем картинку этажа в созданный этаж
             Variables.floors.add(floor);
@@ -173,7 +214,7 @@ public class BikExtensionParser {
         File newFile = new File( pathFile );
 
         try {
-            String str1= "///INFORMATION ABOUT LAMPS///";
+            String str1= "///INFORMATION ABOUT ROOMS///";
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 byte[] b1 = Files.readAllBytes(Paths.get(pathFile));
                 byte[] b2 = str1.getBytes();
@@ -207,8 +248,14 @@ public class BikExtensionParser {
                     PrintWriter out = new PrintWriter(bw))
 
                 {
-                    out.println("\n///INFORMATION ABOUT LAMPS///");
                     Floor tempFloor = Variables.current_floor;
+                    out.println("///INFORMATION ABOUT ROOMS///");
+                    for (int i=0;i<tempFloor.rooms.size();i++){
+                        out.println(tempFloor.rooms.elementAt(i).getNumber()+"%"+tempFloor.rooms.elementAt(i).getHeight()+"@"+tempFloor.rooms.elementAt(i).getType_pos()+"@"+tempFloor.rooms.elementAt(i).getDays()+"@"+tempFloor.rooms.elementAt(i).getHoursPerDay()+"@"+tempFloor.rooms.elementAt(i).getHoursPerWeekend()+"@"+tempFloor.rooms.elementAt(i).getRoofType()+"@"+tempFloor.rooms.elementAt(i).getComments());
+                    }
+
+
+                    out.println("///INFORMATION ABOUT LAMPS///");
                     for (int i=0;i<tempFloor.rooms.size();i++){
                         for (int j=0;j<tempFloor.rooms.elementAt(i).lamps.size();j++){
                             Lamp temp = tempFloor.rooms.elementAt(i).lamps.elementAt(j);
