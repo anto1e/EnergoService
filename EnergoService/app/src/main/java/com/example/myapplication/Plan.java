@@ -3,10 +3,15 @@ package com.example.myapplication;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.AbsoluteLayout;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -208,6 +213,18 @@ public class Plan {
             }
         });
     }
+
+    public void rotateImg(float angle,ImageView imageView,int type){
+        Bitmap myImg = BitmapFactory.decodeResource(Variables.activity.getResources(), type);
+
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+
+        Bitmap rotated = Bitmap.createBitmap(myImg, 0, 0, myImg.getWidth(), myImg.getHeight(),
+                matrix, true);
+
+        imageView.setImageBitmap(rotated);
+    }
     @SuppressLint("ResourceAsColor")
     //Функция создания и отображения светильника на плане
     public void spawnLamp(Integer type, int pos,int typeLamp){
@@ -269,6 +286,29 @@ public class Plan {
         }
     }
 
+
+
+
+    private float getDegreesFromTouchEvent(MotionEvent event,ImageView view,float x, float y){
+        double var = Math.atan2((view.getY() + (event.getY()))-y, (view.getX() + (event.getX()))-x);
+        float degrees = (float) Math.toDegrees(var);
+        if (degrees>80 && degrees <100)
+            degrees=90;
+        else if (degrees>170 && degrees<-170)
+            degrees=170;
+        else if (degrees>-10 && degrees<10)
+            degrees=0;
+        System.out.println(degrees);
+        return degrees;
+        /*double delta_x = (view.getX() + (event.getX())) - (view.getWidth())/2;
+        double delta_y = view.getHeight()/2 - (view.getY() + (event.getY()));
+        double radians = Math.atan2(delta_y, delta_x);
+        System.out.println(Math.toDegrees(radians));
+        return Math.toDegrees(radians);*/
+    }
+
+
+
     @SuppressLint("ClickableViewAccessibility")
         //Отслеживание нажатий на светильники
     void setListener(ImageView imageView){
@@ -278,26 +318,36 @@ public class Plan {
             public boolean onTouch(View v, MotionEvent event) {
                 float x = imageView.getX();
                 float y = imageView.getY();
+                if (Variables.removeMode) {
+                    setTouchedRoom(x, y, false);   //Первичное нажатие на светильник
+                    touchedLamp = getLampByTouch(imageView);
+                    if (touchedLamp!=null) {
+                        Variables.activity.runOnUiThread(() -> {        //Включаем вращение
+                            Variables.planLay.removeView(touchedLamp.getImage());
+                        });
+                        touchedRoom.lamps.remove(touchedLamp);
+                    }
+                }else{
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_DOWN:       //Получаем нажатый светильнк
                         sumXY = (imageView.getX() + (event.getX())) + (imageView.getY() + (event.getY()));
-                        setTouchedRoom(x , y, false);   //Первичное нажатие на светильник
+                        setTouchedRoom(x, y, false);   //Первичное нажатие на светильник
                         touchedLamp = getLampByTouch(imageView);
                         setInfoLamp(touchedLamp);
                         break;
                     case MotionEvent.ACTION_MOVE:
-                            if (Variables.scalemode) {
-                                float currentScale = imageView.getScaleX();
-                                double newSumXY = (imageView.getX() + (event.getX())) + (imageView.getY() + (event.getY()));
-                                double dx = newSumXY - sumXY;
-                                imageView.setPivotX(imageView.getWidth());
-                                imageView.setPivotY(imageView.getHeight());
-                                if ((currentScale + (float) dx / 100) > 0.5) {
-                                    imageView.setScaleX(currentScale + (float) dx / 500);
-                                    imageView.setScaleY(currentScale + (float) dx / 500);
-                                    Variables.lastScaletype=currentScale + (float) dx / 400;
-                                    //sumXY = newSumXY;
-                                }
+                        if (Variables.scalemode) {
+                            float currentScale = imageView.getScaleX();
+                            double newSumXY = (imageView.getX() + (event.getX())) + (imageView.getY() + (event.getY()));
+                            double dx = newSumXY - sumXY;
+                            imageView.setPivotX(imageView.getWidth());
+                            imageView.setPivotY(imageView.getHeight());
+                            if ((currentScale + (float) dx / 50) > 0.5) {
+                                imageView.setScaleX(currentScale + (float) dx / 50);
+                                imageView.setScaleY(currentScale + (float) dx / 50);
+                                Variables.lastScaletype = currentScale + (float) dx / 50;
+                                sumXY = newSumXY;
+                            }
                             /*touchedLamp = getLampByTouch(imageView);
                             lenght = Math.sqrt(Math.pow((double) (event.getX(0)) - (double) (event.getX(1)), 2) + Math.pow((double) (event.getY(0)) - (double) (event.getY(1)), 2));
                             double dx = lenght - prevLength;
@@ -310,11 +360,19 @@ public class Plan {
                                 Log.d("current scale:", Float.toString(imageView.getScaleX()) + " , " + Float.toString(imageView.getScaleY()));
 
                             }*/
+                        } else if (Variables.rotateMode) {
+                            float angle = getDegreesFromTouchEvent(event, imageView, x, y);
+                            touchedLamp.setRotationAngle(angle);
+                            rotateImg(angle, imageView, touchedLamp.getTypeImage());
+                            //imageView.setRotation((float) angle);
                         } else {
                             //Иначе обычное перемещение
+                            //angle=imageView.getRotation();
+                            //imageView.setRotation(0);
                             setTouchedRoom(x + imageView.getWidth() / 2, y + imageView.getHeight() / 2, true);  //Перемещение светильника
                             imageView.setX((imageView.getX() + (event.getX())) - imageView.getWidth() / 2);
                             imageView.setY((imageView.getY() + (event.getY())) - imageView.getHeight() / 2);
+                            //imageView.setRotation((float) angle);
                         }
                         break;
                     case MotionEvent.ACTION_CANCEL:
@@ -322,6 +380,7 @@ public class Plan {
                         lastRoom = touchedRoom;
                         break;
                 }
+
                 if (!Variables.scalemode) {
                     if (touchedRoom != lastRoom) {   //Если светильник в процессе перемещения оказался в другой комнате, то убираем его из старой комнаты и привязываем к новой
                         if (lastRoom != null) {
@@ -337,6 +396,7 @@ public class Plan {
                         }
                     }
                 }
+            }
 
                 return true;
             }

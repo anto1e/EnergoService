@@ -18,6 +18,7 @@ public class Variables {
     static boolean isExpotedExcel=true;     //Флаг экспорта в эксель
 
     static int typeOpening=0;           //Тип открытия нового файла
+    static boolean planLayCleared=false;
     static Vector<LinearLayout> FloorPanelsVec = new Vector<LinearLayout>();        //Вектор вкладок на экране
     static ExcelExporter exporter;                  //Экспортер данных в эксель
     static RelativeLayout roomInfoView;             //Панель инфрмации о комнате
@@ -27,6 +28,8 @@ public class Variables {
     static EditText buildingName;             //Поле наименования здания
     static EditText buidlingFloor;             //Поле номера этажа
     static boolean scalemode = false;
+    static boolean rotateMode=false;
+    static boolean removeMode=false;
 
     static float lastScaletype=1.5f;
     static EditText buildingAdress;             //Поле адреса здания

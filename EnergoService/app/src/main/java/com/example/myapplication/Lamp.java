@@ -4,6 +4,7 @@ import android.widget.ImageView;
 
 public class Lamp {
     private String type="";     //Тип светильника
+    private float rotationAngle=0;
 
 
     private String power="";        //Мощность светильника
@@ -14,6 +15,13 @@ public class Lamp {
 
     ////Геттеры и сеттеры////
 
+    public float getRotationAngle() {
+        return rotationAngle;
+    }
+
+    public void setRotationAngle(float rotationAngle) {
+        this.rotationAngle = rotationAngle;
+    }
 
     public int getTypeImage() {
         return typeImage;

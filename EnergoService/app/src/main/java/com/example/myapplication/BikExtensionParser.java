@@ -159,6 +159,7 @@ public class BikExtensionParser {
                             float cordX = Float.parseFloat(split_room_info[4]);
                             float cordY = Float.parseFloat(split_room_info[5]);
                             float scale = Float.parseFloat(split_room_info[6]);
+                            float rotationAngle = Float.parseFloat(split_room_info[7]);
                             Room room = Variables.getRoomByNumber(number);
                             if (room!=null){
                                 Lamp lamp = new Lamp();
@@ -166,6 +167,7 @@ public class BikExtensionParser {
                                 lamp.setPower(power);
                                 lamp.setTypeImage(type_image);
                                 lamp.setComments(comments);
+                                lamp.setRotationAngle(rotationAngle);
                                 ImageView imageView = new ImageView(Variables.activity);
                                 imageView.setImageResource(type_image);
                                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
@@ -176,6 +178,7 @@ public class BikExtensionParser {
                                 imageView.setScaleY(scale);
                                 Variables.plan.setListener(imageView);
                                 lamp.setImage(imageView);
+                                Variables.plan.rotateImg(rotationAngle,imageView,type_image);
                                 //lamp.setView();
                                 room.lamps.add(lamp);
                             }
@@ -259,7 +262,7 @@ public class BikExtensionParser {
                     for (int i=0;i<tempFloor.rooms.size();i++){
                         for (int j=0;j<tempFloor.rooms.elementAt(i).lamps.size();j++){
                             Lamp temp = tempFloor.rooms.elementAt(i).lamps.elementAt(j);
-                            out.println(tempFloor.rooms.elementAt(i).getNumber()+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX());
+                            out.println(tempFloor.rooms.elementAt(i).getNumber()+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle());
                         }
                     }
                 } catch (IOException e) {

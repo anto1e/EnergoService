@@ -188,6 +188,27 @@
                 android:layout_marginBottom="5dp"
                 android:layout_height="30dp">
             </ImageButton>
+            <ImageButton
+                android:id="@+id/rotateLamp"
+                android:scaleType="fitCenter"
+                android:layout_marginLeft="10dp"
+                android:layout_width="30dp"
+                android:background="@color/white"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_height="30dp">
+            </ImageButton>
+            <ImageButton
+                android:id="@+id/removeLamp"
+                android:scaleType="fitCenter"
+                android:layout_marginLeft="10dp"
+                android:layout_width="30dp"
+                android:background="@color/white"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_height="30dp">
+            </ImageButton>
+
 
         </GridLayout>
 

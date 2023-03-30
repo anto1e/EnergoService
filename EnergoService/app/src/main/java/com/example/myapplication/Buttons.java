@@ -115,9 +115,29 @@ public class Buttons {
         ImageButton removePanel = Variables.activity.findViewById(R.id.closePanelBtn);  //Кнока удаления вкладки
         ImageButton scaleBtn = Variables.activity.findViewById(R.id.scaleBtn);
         ImageButton saveFile = Variables.activity.findViewById(R.id.saveFile);
+        ImageButton rotateLamp = Variables.activity.findViewById(R.id.rotateLamp);
+        ImageView removeLamp = Variables.activity.findViewById(R.id.removeLamp);
+
+        removeLamp.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_UP:
+                        if (!Variables.removeMode){
+                            Variables.removeMode=true;
+                            Variables.scalemode=false;
+                            Variables.rotateMode=false;
+                        }else{
+                            Variables.removeMode=false;
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
+
 
         saveFile.setOnTouchListener(new View.OnTouchListener() {
-            String str1="";
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
@@ -142,6 +162,24 @@ public class Buttons {
                             Variables.scalemode = true;
                         }else{
                             Variables.scalemode=false;
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
+
+        rotateLamp.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_UP:
+                        if (!Variables.rotateMode){
+                            Variables.rotateMode=true;
+                            Variables.scalemode=false;
+                        }
+                        else{
+                            Variables.rotateMode=false;
                         }
                         break;
                 }
@@ -193,6 +231,8 @@ public class Buttons {
                                 Variables.buidlingFloor.setText(Variables.current_floor.getFloor());
                                 Variables.buildingAdress.setText(Variables.current_floor.getAdress());
                             } else {
+                                Variables.floorsPanels.removeAllViews();
+                                Variables.planLayCleared=true;
                                 Variables.image.setImageResource(0);
                                 Variables.current_floor=null;
                             }
@@ -210,7 +250,12 @@ public class Buttons {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_UP:
-                        Variables.typeOpening=1;
+                        Variables.planLayCleared=false;
+                        if (Variables.FloorPanelsVec.size()==0 || active==null){
+                            Variables.typeOpening=0;
+                        }else {
+                            Variables.typeOpening = 1;
+                        }
                         if (!Variables.opened) {            //Открываем меню выбора файла
                             Variables.image.setImageResource(0);
                             Variables.filePath = "";
@@ -390,6 +435,7 @@ public class Buttons {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_DOWN:
                         if (!Variables.opened) {
+                            Variables.planLayCleared=false;
                             Variables.typeOpening=0;
                             Variables.image.setImageResource(0);
                             Variables.filePath = "";
@@ -432,11 +478,15 @@ public class Buttons {
         }
     }
 
+
     public void drawLamps(){            //Функция отрисовки ламп на экране
         for (int i=0;i<Variables.current_floor.rooms.size();i++){
             for (int j=0;j<Variables.current_floor.rooms.elementAt(i).lamps.size();j++){
-                Variables.planLay.addView(Variables.current_floor.rooms.elementAt(i).lamps.elementAt(j).getImage());
-            }
+                ImageView img = Variables.current_floor.rooms.elementAt(i).lamps.elementAt(j).getImage();
+                Variables.activity.runOnUiThread(() -> {        //Включаем вращение
+                    Variables.planLay.addView(img);
+                });
+                }
         }
     }
 }

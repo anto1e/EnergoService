@@ -107,19 +107,21 @@ public class MainActivity extends AppCompatActivity {
                             Variables.currentWidth = findViewById(R.id.imageView).getWidth();
                         }
                         try {   //Парсим файл
-                            Variables.parser.parseFile(Variables.filePath);
-                            Runnable myThread = () ->
-                            {
+                            if (!Variables.planLayCleared) {
+                                Variables.parser.parseFile(Variables.filePath);
+                                Runnable myThread = () ->
+                                {
 
-                                Variables.buttons.drawLamps();
-                            };
+                                    Variables.buttons.drawLamps();
+                                };
 
-                            // Instantiating Thread class by passing Runnable
-                            // reference to Thread constructor
-                            Thread run = new Thread(myThread);
+                                // Instantiating Thread class by passing Runnable
+                                // reference to Thread constructor
+                                Thread run = new Thread(myThread);
 
-                            // Starting the thread
-                            run.start();
+                                // Starting the thread
+                                run.start();
+                            }
                             //Variables.buttons.drawLamps();
                             //Variables.filePath="";
                             //Variables.parser.parseFile(String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS))+"/planTemp-6.bik");
