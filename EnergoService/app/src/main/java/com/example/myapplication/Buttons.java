@@ -120,6 +120,8 @@ public class Buttons {
                     rotateLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                     Variables.removeMode=false;
                     removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                    Variables.plan.touchedRoom=null;
+                    Variables.plan.lastRoom=null;
                 }
                 return false;
             }
@@ -627,9 +629,15 @@ public class Buttons {
 
             @Override
             public void afterTextChanged(Editable s) {
+                //double lastNumber=-1;
                 if (Variables.plan.touchedLamp != null) {
+                    //lastNumber=Variables.plan.touchedLamp.getLampRoom();
                     if (Variables.lampRoom.getText().length()>0) {
-                        Variables.plan.touchedLamp.setLampRoom(Double.parseDouble(String.valueOf(Variables.lampRoom.getText())));
+                        try {
+                            Variables.plan.touchedLamp.setLampRoom(Double.parseDouble(String.valueOf(Variables.lampRoom.getText())));
+                        }catch(NumberFormatException e){
+
+                        }
                     }
                     if (Variables.plan.touchedLamp.getLampRoom()!=-1){
                                 /*Room room = Variables.getRoomByNumber((float) Double.parseDouble(String.valueOf(Variables.lampRoom.getText())));
@@ -638,6 +646,8 @@ public class Buttons {
                                     room.lamps.add(Variables.plan.touchedLamp);
                                 }*/
                         Variables.plan.touchedLamp.getImage().setBackgroundResource(0);
+                    }else{
+                        Variables.plan.touchedLamp.getImage().setBackgroundResource(R.color.blue);
                     }
                 }
             }

@@ -34,7 +34,7 @@ public class Plan {
 
 
      Room touchedRoom=null;       //Текущая нажатая комната
-    private Room lastRoom=null;          //Предыдущая нажатая комната
+     Room lastRoom=null;          //Предыдущая нажатая комната
      Lamp touchedLamp;          //Последний нажатый светильник
     float x,y;                    //Текущая позиция пальца по Х,Y.
     double lenght;              //Текущая длина отрезка между двумя пальцами

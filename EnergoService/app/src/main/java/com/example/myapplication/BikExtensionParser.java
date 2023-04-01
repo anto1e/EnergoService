@@ -47,6 +47,8 @@ public class BikExtensionParser {
         Variables.buttons.rotateLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
         Variables.removeMode=false;
         Variables.buttons.removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+        Variables.plan.touchedRoom=null;
+        Variables.plan.lastRoom=null;
         Floor floor = new Floor();          //Создание нового этажа
         if (Variables.current_floor!=null) {        //Если есть предыдущий этаж - записываем в него текущие позицию и приближение
             Variables.current_floor.cordX = Variables.planLay.getX();
@@ -197,13 +199,25 @@ public class BikExtensionParser {
                                 Variables.plan.setListener(imageView);
                                 lamp.setImage(imageView);
                                 Variables.plan.rotateImg(rotationAngle,imageView,type_image);
+                                Room detectedRoom=null;
+                                for (Room temp:Variables.current_floor.rooms){
+                                if (temp.detectTouch(cordX,cordY)) {
+                                        detectedRoom=temp;
+                                    }
+                                }
                                 //lamp.setView();
-                                if (Objects.equals(usedOrNot, "unused") || room==null){
+                                if (detectedRoom==null){
                                     Variables.current_floor.unusedLamps.add(lamp);
                                     if (lampRoom==-1) {
                                         imageView.setBackgroundResource(R.color.blue);
                                     }
                                 }else {
+                                    if (detectedRoom!=room){
+                                        room=detectedRoom;
+                                    }
+                                    if (lamp.getLampRoom()!=room.getNumber()){
+                                        lamp.setLampRoom(room.getNumber());
+                                    }
                                     room.lamps.add(lamp);
                                 }
                         }
