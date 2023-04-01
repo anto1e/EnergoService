@@ -88,7 +88,7 @@ public class ExcelExporter {
         for (int l=0;l<Variables.floors.size();l++) {
             if (Objects.equals(Variables.floors.elementAt(l).getName(), Variables.current_floor.getName())) {
                 Floor temp = Variables.floors.elementAt(l);
-                for (int i = 0; i < Variables.current_floor.rooms.size(); i++) {
+                for (int i = 0; i < temp.rooms.size(); i++) {
                     int count = 0;
                     Vector<String> types = new Vector<String>();
                     Room room = temp.rooms.elementAt(i);
@@ -113,7 +113,38 @@ public class ExcelExporter {
                             }
                         }
                         if (count > 0) {
-                            writeToFile(temp,room, type, count, comm);       //Запись данных в файл
+                            writeToFile(temp,room, type, count, comm,0);       //Запись данных в файл
+                        }
+                        count = 0;
+                    }
+                }
+                if (temp.unusedLamps.size()>0) {
+                    int count = 0;
+                    Vector<String> types = new Vector<String>();
+                    Vector<Lamp> lamps = temp.unusedLamps;
+                    for (int j = 0; j < lamps.size(); j++) {        //Типы светильников
+                        if (!types.contains(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getComments()+" "+lamps.elementAt(j).getLampRoom())) {
+                            types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getComments()+" "+lamps.elementAt(j).getLampRoom());
+                        }
+                    }
+                    for (int j = 0; j < types.size(); j++) {       //Находим и считаем светильники, чьи типы есть в Векторе
+                        String type = "";
+                        String comm = "";
+                        double number=0.0;
+                        for (int z = 0; z < lamps.size(); z++) {
+                            if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " " + lamps.elementAt(z).getComments()+" "+lamps.elementAt(z).getLampRoom())) {
+                                //if (lamps.elementAt(z).getComments()==null){
+                                count++;
+                                type = lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower();
+                                comm = lamps.elementAt(z).getComments();
+                                number=lamps.elementAt(z).getLampRoom();
+                                //}else{
+                                //writeToFile(room,types.elementAt(j),1,lamps.elementAt(z).getComments());
+                                //}
+                            }
+                        }
+                        if (count > 0) {
+                            writeToFile(temp,null, type, count, comm,number);       //Запись данных в файл
                         }
                         count = 0;
                     }
@@ -123,34 +154,57 @@ public class ExcelExporter {
         save();
     }
 
-    public void writeToFile(Floor floor ,Room room,String type, int amount,String comments) throws Exception {       //Запись в файл по ячейкам
+    public void writeToFile(Floor floor ,Room room,String type, int amount,String comments,double number) throws Exception {       //Запись в файл по ячейкам
 
 // Obtaining the reference of the first worksheet
 // Adding some sample value to cells
         Cell cell = cells.get("A"+Integer.toString(rowCount));
         cell.setValue(floor.getFloor());
         cell = cells.get("B"+Integer.toString(rowCount));
-        cell.setValue(room.getNumber());
+        if (room!=null) {
+            cell.setValue(room.getNumber());
+        }
+        else {
+            if (number==-1){
+                cell.setValue("б/н");
+            }else {
+                cell.setValue(number);
+            }
+        }
         cell = cells.get("C"+Integer.toString(rowCount));
-        cell.setValue(room.getHeight());
+        if (room!=null) {
+            cell.setValue(room.getHeight());
+        }
         cell = cells.get("D"+Integer.toString(rowCount));
         cell.setValue(floor.getAdress());
         cell = cells.get("F"+Integer.toString(rowCount));
-        cell.setValue(Variables.type.getItemAtPosition(room.getType_pos()));
+        if (room!=null) {
+            cell.setValue(Variables.type.getItemAtPosition(room.getType_pos()));
+        }
         cell = cells.get("G"+Integer.toString(rowCount));
-        cell.setValue(Integer.valueOf((String) Variables.daysPerWeek.getItemAtPosition(room.getDays())));
+        if (room!=null) {
+            cell.setValue(Integer.valueOf((String) Variables.daysPerWeek.getItemAtPosition(room.getDays())));
+        }
         cell = cells.get("H"+Integer.toString(rowCount));
-        cell.setValue(Float.valueOf((String) Variables.hoursPerDay.getItemAtPosition(room.getHoursPerDay())));
+        if (room!=null) {
+            cell.setValue(Float.valueOf((String) Variables.hoursPerDay.getItemAtPosition(room.getHoursPerDay())));
+        }
         cell = cells.get("I"+Integer.toString(rowCount));
-        cell.setValue(Float.valueOf((String) Variables.hoursPerWeekend.getItemAtPosition(room.getHoursPerWeekend())));
+        if (room!=null) {
+            cell.setValue(Float.valueOf((String) Variables.hoursPerWeekend.getItemAtPosition(room.getHoursPerWeekend())));
+        }
         cell = cells.get("J"+Integer.toString(rowCount));
-        cell.setValue(Float.valueOf((String) Variables.hoursPerWeekend.getItemAtPosition(room.getHoursPerWeekend())));
+        if (room!=null) {
+            cell.setValue(Float.valueOf((String) Variables.hoursPerWeekend.getItemAtPosition(room.getHoursPerWeekend())));
+        }
         cell = cells.get("K"+Integer.toString(rowCount));
         cell.setValue(type);
         cell = cells.get("M"+Integer.toString(rowCount));
         cell.setValue(amount);
         cell = cells.get("P"+Integer.toString(rowCount));
-        cell.setValue(Variables.roofType.getItemAtPosition(room.getRoofType()));
+        if (room!=null) {
+            cell.setValue(Variables.roofType.getItemAtPosition(room.getRoofType()));
+        }
         cell = cells.get("Q"+Integer.toString(rowCount));
         cell.setValue(comments);
         cell = cells.get("L"+Integer.toString(rowCount));

@@ -12,6 +12,8 @@ import android.graphics.Color;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Property;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -20,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,7 +42,18 @@ import java.io.IOException;
 public class Buttons {
     static LinearLayout active=null;
 
-
+    ImageView addBtn;
+    ImageView moveBtn;
+    ImageButton uploadBtn;
+    TextView roomInfo;
+    TextView buildingInfo;
+    TextView lampInfo;
+    ImageButton addPanel;
+    ImageButton removePanel;
+    ImageView scaleBtn;
+    ImageButton saveFile;
+    ImageButton rotateLamp;
+    ImageView removeLamp;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -90,10 +104,22 @@ public class Buttons {
                     Variables.planLay.setY(Variables.current_floor.cordY);
                     Variables.planLay.setScaleX(Variables.current_floor.scale);
                     Variables.planLay.setScaleY(Variables.current_floor.scale);
+                    Variables.filePath = FileHelper.getRealPathFromURI(Variables.activity,Variables.current_floor.getImage());
                     drawLamps();     //Рисуем светильники текущей комнаты
                     Variables.buildingName.setText(Variables.current_floor.getName());
                     Variables.buidlingFloor.setText(Variables.current_floor.getFloor());
                     Variables.buildingAdress.setText(Variables.current_floor.getAdress());
+                    Variables.setAddFlag(false);
+                    addBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                    Variables.plan.disableListenerFromPlan();
+                    Variables.setMoveFlag(false);
+                    moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                    Variables.scalemode=false;
+                    scaleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                    Variables.rotateMode=false;
+                    rotateLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                    Variables.removeMode=false;
+                    removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                 }
                 return false;
             }
@@ -102,36 +128,36 @@ public class Buttons {
 
     @SuppressLint("ClickableViewAccessibility")
     public void startDetecting(){   //Начало отслеживания нажатия кнопок
-        ImageView addBtn = Variables.activity.findViewById(R.id.addBtn);        //Нажата кнопка добавления светильника
-        addBtn.setBackgroundColor(Color.parseColor("#ff0f0f"));
-        ImageView moveBtn = Variables.activity.findViewById(R.id.moveBtn);      //Нажата кнопка активации перемещения светильникв
-        moveBtn.setBackgroundColor(Color.parseColor("#ff0f0f"));
-        ImageButton uploadBtn = Variables.activity.findViewById(R.id.openFile);     //Кнопка загрузки файла
+        addBtn = Variables.activity.findViewById(R.id.addBtn);        //Нажата кнопка добавления светильника
+        addBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+        moveBtn = Variables.activity.findViewById(R.id.moveBtn);      //Нажата кнопка активации перемещения светильникв
+        moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+        uploadBtn = Variables.activity.findViewById(R.id.openFile);     //Кнопка загрузки файла
         ImageButton exportExel = Variables.activity.findViewById(R.id.excelExport); //Кнопка экспорта в Эксель
-        TextView roomInfo = Variables.activity.findViewById(R.id.roomInfo);         //Панель информации о комнате
-        TextView buildingInfo = Variables.activity.findViewById(R.id.buildingInfo); //Панель информации о здании
-        TextView lampInfo = Variables.activity.findViewById(R.id.lampInfo);         //Панель информации о светильнике
-        ImageButton addPanel = Variables.activity.findViewById(R.id.addPanelBtn);   //Кнопка добавления вкладки
-        ImageButton removePanel = Variables.activity.findViewById(R.id.closePanelBtn);  //Кнока удаления вкладки
-        ImageButton scaleBtn = Variables.activity.findViewById(R.id.scaleBtn);
-        ImageButton saveFile = Variables.activity.findViewById(R.id.saveFile);
-        ImageButton rotateLamp = Variables.activity.findViewById(R.id.rotateLamp);
-        ImageView removeLamp = Variables.activity.findViewById(R.id.removeLamp);
+        roomInfo = Variables.activity.findViewById(R.id.roomInfo);         //Панель информации о комнате
+        buildingInfo = Variables.activity.findViewById(R.id.buildingInfo); //Панель информации о здании
+        lampInfo = Variables.activity.findViewById(R.id.lampInfo);         //Панель информации о светильнике
+        addPanel = Variables.activity.findViewById(R.id.addPanelBtn);   //Кнопка добавления вкладки
+        removePanel = Variables.activity.findViewById(R.id.closePanelBtn);  //Кнока удаления вкладки
+        scaleBtn = Variables.activity.findViewById(R.id.scaleBtn);
+        saveFile = Variables.activity.findViewById(R.id.saveFile);
+        rotateLamp = Variables.activity.findViewById(R.id.rotateLamp);
+        removeLamp = Variables.activity.findViewById(R.id.removeLamp);
 
         removeLamp.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_UP:
                         if (!Variables.removeMode){
                             Variables.removeMode=true;
+                            removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
                             Variables.scalemode=false;
+                            scaleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                             Variables.rotateMode=false;
+                            rotateLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                         }else{
                             Variables.removeMode=false;
+                            removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                         }
-                        break;
-                }
                 return false;
             }
         });
@@ -142,10 +168,10 @@ public class Buttons {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_UP:
-                        try {
-                            Variables.parser.saveFile(Variables.filePath);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
+                        if (Variables.fileSaved) {
+                            Variables.fileSaved = false;
+                            SaveFileThread thread = new SaveFileThread(); //Создаем новый поток для сохранения в Эксель
+                            thread.start();     //Запускаем поток
                         }
                         break;
                 }
@@ -156,15 +182,17 @@ public class Buttons {
         scaleBtn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_UP:
                         if (!Variables.scalemode) {
                             Variables.scalemode = true;
+                            scaleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                            Variables.rotateMode=false;
+                            rotateLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                            Variables.removeMode=false;
+                            removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                         }else{
                             Variables.scalemode=false;
+                            scaleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                         }
-                        break;
-                }
                 return false;
             }
         });
@@ -176,10 +204,15 @@ public class Buttons {
                     case MotionEvent.ACTION_UP:
                         if (!Variables.rotateMode){
                             Variables.rotateMode=true;
+                            rotateLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
                             Variables.scalemode=false;
+                            scaleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                            Variables.removeMode=false;
+                            removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                         }
                         else{
                             Variables.rotateMode=false;
+                            rotateLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                         }
                         break;
                 }
@@ -277,68 +310,17 @@ public class Buttons {
                 if (Variables.isExpotedExcel) {
                     switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                         case MotionEvent.ACTION_DOWN:
-                            Variables.isExpotedExcel=false;
-                            SaveExcelThread thread = new SaveExcelThread(); //Создаем новый поток для сохранения в Эксель
-                            thread.start();     //Запускаем поток
-                            break;
-                    }
-                }
-                return false;
-            }
-        });
-        //////////////////Переделать на автоматическое сохранение при изменении данных!!!/////////////////////
-        Variables.submit.setOnTouchListener(new View.OnTouchListener() {        //Нажатие на кнопку подтверждения изменений комнаты
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {         //Установка данных для выбранной комнаты
-                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_UP:
-                        if (Variables.plan != null && Variables.plan.touchedRoom != null) {
-                            Variables.plan.touchedRoom.setNumber(Double.parseDouble(String.valueOf(Variables.roomNumber.getText())));
-                            Variables.plan.touchedRoom.setHeight(Double.parseDouble(String.valueOf(Variables.roomHeight.getText())));
-                            Variables.plan.touchedRoom.setDays(Variables.daysPerWeek.getSelectedItemPosition());
-                            Variables.plan.touchedRoom.setHoursPerDay(Variables.hoursPerDay.getSelectedItemPosition());
-                            Variables.plan.touchedRoom.setRoofType(Variables.roofType.getSelectedItemPosition());
-                            Variables.plan.touchedRoom.setHoursPerWeekend(Variables.hoursPerWeekend.getSelectedItemPosition());
-                            Variables.plan.touchedRoom.setComments(String.valueOf(Variables.roomComments.getText()));
-                            Variables.plan.touchedRoom.setType_pos(Variables.type.getSelectedItemPosition());
-                        }
-                        break;
-                }
-                        return false;
-            }
-        });
-
-        Variables.submitLampInfo.setOnTouchListener(new View.OnTouchListener() {    //Обработчик нажатий на кнопку подтверждения изменений данных светильника
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {         //Установка данных для выбранной комнаты
-                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_UP:
-                        if (Variables.plan.touchedLamp != null) {
-                            Variables.plan.touchedLamp.setType(String.valueOf(Variables.lampType.getText()));
-                            Variables.plan.touchedLamp.setPower(String.valueOf(Variables.lampPower.getText()));
-                            Variables.plan.touchedLamp.setComments(String.valueOf(Variables.lampComments.getText()));
-                        }
-                        break;
-                }
-                return false;
-            }
-        });
-
-        Variables.submitBuildingInfo.setOnTouchListener(new View.OnTouchListener() {   //Обработчик нажатий на кнопку подтверждения изменений информации о здании
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {         //Установка данных для выбранной комнаты
-                    switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
-                        case MotionEvent.ACTION_UP:
-                            if (Variables.plan != null) {
-                                Variables.current_floor.setName(String.valueOf(Variables.buildingName.getText()));
-                                Variables.current_floor.setFloor(String.valueOf(Variables.buidlingFloor.getText()));
-                                Variables.current_floor.setAdress(String.valueOf(Variables.buildingAdress.getText()));
+                            if (Variables.isExpotedExcel) {
+                                Variables.isExpotedExcel = false;
+                                SaveExcelThread thread = new SaveExcelThread(); //Создаем новый поток для сохранения в Эксель
+                                thread.start();     //Запускаем поток
                             }
                             break;
                     }
-                    return false;
                 }
-            });
+                return false;
+            }
+        });
 
         roomInfo.setOnTouchListener(new View.OnTouchListener() {  //Обработчик нажатий на панель раскрытия информации о комнате
 
@@ -402,7 +384,7 @@ public class Buttons {
             {
                    Variables.invertAddFlag();
                    if (Variables.getAddFlag()){                                 //Активация добавления
-                       addBtn.setBackgroundColor(Color.parseColor("#ff0f0f"));
+                       addBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
                        Variables.plan.setListenerToPlan();
                    }else{                                                       //Деактивация добавления
                        addBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
@@ -419,11 +401,11 @@ public class Buttons {
             {
                 Variables.invertMoveFlag();
                 if (Variables.getMoveFlag()){                                       //Активация перемещения
-                    moveBtn.setBackgroundColor(Color.parseColor("#ff0f0f"));
-                    Variables.plan.moveType=true;
+                    moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                    Variables.setMoveFlag(true);
                 }else{                                                              //Деактивация перемещения
                     moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-                    Variables.plan.moveType=false;
+                    Variables.setMoveFlag(false);
                 }
                 return false;
             }
@@ -450,7 +432,270 @@ public class Buttons {
                 return false;
             }
         });
+        Variables.buildingName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Variables.plan != null) {
+                    Variables.current_floor.setName(String.valueOf(Variables.buildingName.getText()));
+                }
+            }
+        });
+        Variables.buidlingFloor.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Variables.plan != null) {
+                    Variables.current_floor.setFloor(String.valueOf(Variables.buidlingFloor.getText()));
+                }
+            }
+        });
+        Variables.buildingAdress.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Variables.plan != null) {
+                    Variables.current_floor.setAdress(String.valueOf(Variables.buildingAdress.getText()));
+                }
+            }
+        });
+        Variables.roomNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Variables.plan != null && Variables.plan.touchedRoom != null) {
+                    Variables.plan.touchedRoom.setNumber(Double.parseDouble(String.valueOf(Variables.roomNumber.getText())));
+                }
+            }
+        });
+        Variables.roomHeight.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Variables.plan != null && Variables.plan.touchedRoom != null) {
+                    if (Variables.roomHeight.getText().length()>0)
+                    Variables.plan.touchedRoom.setHeight(Double.parseDouble(String.valueOf(Variables.roomHeight.getText())));
+                    else
+                        Variables.plan.touchedRoom.setHeight(0.0);
+                }
+            }
+        });
+        Variables.roomComments.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Variables.plan != null && Variables.plan.touchedRoom != null) {
+                    Variables.plan.touchedRoom.setComments(String.valueOf(Variables.roomComments.getText()));
+                }
+            }
+        });
+        Variables.type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if(Variables.plan.touchedRoom!=null) {
+                    Variables.plan.touchedRoom.setType_pos(Variables.type.getSelectedItemPosition());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+        Variables.daysPerWeek.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if(Variables.plan.touchedRoom!=null) {
+                    Variables.plan.touchedRoom.setDays(Variables.daysPerWeek.getSelectedItemPosition());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+        Variables.hoursPerDay.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if(Variables.plan.touchedRoom!=null) {
+                    Variables.plan.touchedRoom.setHoursPerDay(Variables.hoursPerDay.getSelectedItemPosition());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+        Variables.hoursPerWeekend.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if(Variables.plan.touchedRoom!=null) {
+                    Variables.plan.touchedRoom.setHoursPerWeekend(Variables.hoursPerWeekend.getSelectedItemPosition());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+        Variables.roofType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if(Variables.plan.touchedRoom!=null) {
+                    Variables.plan.touchedRoom.setRoofType(Variables.roofType.getSelectedItemPosition());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
+        Variables.lampRoom.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Variables.plan.touchedLamp != null) {
+                    if (Variables.lampRoom.getText().length()>0) {
+                        Variables.plan.touchedLamp.setLampRoom(Double.parseDouble(String.valueOf(Variables.lampRoom.getText())));
+                    }
+                    if (Variables.plan.touchedLamp.getLampRoom()!=-1){
+                                /*Room room = Variables.getRoomByNumber((float) Double.parseDouble(String.valueOf(Variables.lampRoom.getText())));
+                                if (room!=null) {
+                                    Variables.current_floor.unusedLamps.remove(Variables.plan.touchedLamp);
+                                    room.lamps.add(Variables.plan.touchedLamp);
+                                }*/
+                        Variables.plan.touchedLamp.getImage().setBackgroundResource(0);
+                    }
+                }
+            }
+        });
+        Variables.lampType.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Variables.plan.touchedLamp != null) {
+                    Variables.plan.touchedLamp.setType(String.valueOf(Variables.lampType.getText()));
+                }
+            }
+        });
+        Variables.lampPower.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Variables.plan.touchedLamp != null) {
+                    Variables.plan.touchedLamp.setPower(String.valueOf(Variables.lampPower.getText()));
+                }
+            }
+        });
+        Variables.lampComments.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Variables.plan.touchedLamp != null) {
+                    Variables.plan.touchedLamp.setComments(String.valueOf(Variables.lampComments.getText()));
+                }
+            }
+        });
     }
 
     private void animateHeightTo(@NonNull View view, int height) {      //Функция анимирования изменения высота элемента
@@ -483,10 +728,16 @@ public class Buttons {
         for (int i=0;i<Variables.current_floor.rooms.size();i++){
             for (int j=0;j<Variables.current_floor.rooms.elementAt(i).lamps.size();j++){
                 ImageView img = Variables.current_floor.rooms.elementAt(i).lamps.elementAt(j).getImage();
-                Variables.activity.runOnUiThread(() -> {        //Включаем вращение
+                Variables.activity.runOnUiThread(() -> {        //Отрисовка ламп
                     Variables.planLay.addView(img);
                 });
                 }
+        }
+        for (int i=0;i<Variables.current_floor.unusedLamps.size();i++){
+            ImageView img = Variables.current_floor.unusedLamps.elementAt(i).getImage();
+            Variables.activity.runOnUiThread(() -> {        //Отрисовка ламп
+                Variables.planLay.addView(img);
+            });
         }
     }
 }

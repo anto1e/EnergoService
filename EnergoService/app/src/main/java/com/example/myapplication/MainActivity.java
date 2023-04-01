@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.AbsoluteLayout;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -55,6 +56,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity {
@@ -140,17 +142,27 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) { //После выбора пользователем файла путем диалогового окна
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 123 && resultCode == RESULT_OK) {
-            for (int i = Variables.planLay.getChildCount()-1; i >= 0; i--) {
-                View v = Variables.planLay.getChildAt(i);
-                if (v!=Variables.image) {
-                    Variables.planLay.removeView(v);
-                }
+            boolean isOpened=false;
+            for (int i=0;i<Variables.floors.size();i++){
+                if (Objects.equals(FileHelper.getRealPathFromURI(this, Variables.floors.elementAt(i).getImage()), FileHelper.getRealPathFromURI(this, data.getData())))
+                    isOpened=true;
             }
-            Variables.selectedfile = data.getData(); //The uri with the location of the file
+            if (!isOpened) {
+                for (int i = Variables.planLay.getChildCount()-1; i >= 0; i--) {
+                    View v = Variables.planLay.getChildAt(i);
+                    if (v!=Variables.image) {
+                        Variables.planLay.removeView(v);
+                    }
+                }
+                Variables.selectedfile = data.getData(); //The uri with the location of the file
+
                 //final String[] split = Variables.selectedfile.getPath().split(":");//split the path.
-               // Variables.filePath = split[1];
-            Variables.filePath = FileHelper.getRealPathFromURI(this,Variables.selectedfile);
-            Variables.image.setImageURI(Variables.selectedfile);
+                // Variables.filePath = split[1];
+                Variables.filePath = FileHelper.getRealPathFromURI(this, Variables.selectedfile);
+                Variables.image.setImageURI(Variables.selectedfile);
+            }else{
+                Variables.image.setImageURI(Variables.selectedfile);
+            }
         }
         else {
             Variables.image.setImageURI(Variables.selectedfile);

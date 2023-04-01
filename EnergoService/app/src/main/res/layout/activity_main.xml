@@ -28,8 +28,10 @@
         app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/firstToolbar"
         android:orientation="horizontal"
+        android:backgroundTint="@color/bc_layout"
         android:background="@drawable/toolbarborder">
         <ListView
+            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/LampsListView"
@@ -149,20 +151,47 @@
                 android:src="@drawable/movebtn"
                 />
 
-            <ImageButton
+            <ImageView
                 android:layout_marginLeft="10dp"
                 android:id="@+id/scaleBtn"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:padding="5dp"
+                android:padding="1dp"
                 android:background="@color/white"
+                android:src="@drawable/scalebtn"
                 />
+            <ImageButton
+                android:id="@+id/rotateLamp"
+                android:scaleType="fitCenter"
+                android:layout_marginLeft="10dp"
+                android:layout_width="30dp"
+                android:background="@color/white"
+                android:src="@drawable/rotate"
+                android:layout_marginBottom="5dp"
+                android:layout_height="30dp">
+            </ImageButton>
+
+            <ImageView
+                android:id="@+id/removeLamp"
+                android:padding="5dp"
+                android:src="@drawable/delete"
+                android:scaleType="fitCenter"
+                android:layout_marginLeft="0dp"
+                android:layout_width="30dp"
+                android:background="@color/white"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_height="30dp">
+            </ImageView>
+
+
 
             <ImageButton
                 android:id="@+id/openFile"
                 android:scaleType="fitCenter"
                 android:src="@drawable/upload"
                 android:layout_width="30dp"
+                android:layout_marginTop="5dp"
                 android:background="@color/white"
                 android:layout_marginLeft="10dp"
                 android:layout_height="30dp">
@@ -170,7 +199,8 @@
             <ImageButton
                 android:id="@+id/saveFile"
                 android:scaleType="fitCenter"
-                android:layout_marginLeft="0dp"
+                android:src="@drawable/save"
+                android:layout_marginLeft="10dp"
                 android:layout_width="30dp"
                 android:background="@color/white"
                 android:layout_marginTop="5dp"
@@ -188,27 +218,6 @@
                 android:layout_marginBottom="5dp"
                 android:layout_height="30dp">
             </ImageButton>
-            <ImageButton
-                android:id="@+id/rotateLamp"
-                android:scaleType="fitCenter"
-                android:layout_marginLeft="10dp"
-                android:layout_width="30dp"
-                android:background="@color/white"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_height="30dp">
-            </ImageButton>
-            <ImageButton
-                android:id="@+id/removeLamp"
-                android:scaleType="fitCenter"
-                android:layout_marginLeft="10dp"
-                android:layout_width="30dp"
-                android:background="@color/white"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_height="30dp">
-            </ImageButton>
-
 
         </GridLayout>
 
@@ -282,7 +291,9 @@
                     android:id="@+id/adress"
                     />
                 <Button
+                    android:visibility="invisible"
                     android:id="@+id/submitBuilding"
+                    android:layout_height="20dp"
                     android:text="Подтвердить"
                     android:textColor="@color/black"
                     android:backgroundTint="@color/grey"
@@ -322,6 +333,7 @@
                     android:textSize="12dp"
                     />
                 <EditText
+                    android:layout_marginLeft="-15dp"
                     android:text="0"
                     android:textSize="12dp"
                     android:id="@+id/roomNumber"
@@ -333,6 +345,7 @@
                     android:textSize="12dp"
                     />
                 <EditText
+                    android:layout_marginLeft="-15dp"
                     android:text="0.0"
                     android:textSize="12dp"
                     android:id="@+id/roomHigh"
@@ -432,7 +445,9 @@
                     android:layout_width="wrap_content"
                     />
                 <Button
+                    android:visibility="invisible"
                     android:id="@+id/submit"
+                    android:layout_height="20dp"
                     android:text="Подтвердить"
                     android:textColor="@color/black"
                     android:backgroundTint="@color/grey"
@@ -464,6 +479,17 @@
                 android:columnCount="2"
                 android:orientation="horizontal">
 
+                <TextView
+                    android:text="Привязан к:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+                <EditText
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="100dp"
+                    android:textSize="12dp"
+                    android:id="@+id/lampRoom"
+                    />
                 <TextView
                     android:text="Тип:"
                     android:textColor="@color/black"
@@ -499,6 +525,8 @@
                     android:textSize="12dp"
                     />
                 <Button
+                    android:layout_height="20dp"
+                    android:visibility="invisible"
                     android:id="@+id/submitLamp"
                     android:text="Подтвердить"
                     android:textColor="@color/black"

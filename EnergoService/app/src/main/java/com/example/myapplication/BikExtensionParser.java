@@ -36,6 +36,17 @@ public class BikExtensionParser {
     boolean roomInfo = false;
     File currentFile;
     public void parseFile(String path) throws FileNotFoundException {   //Парсинг файла
+        Variables.setAddFlag(false);
+        Variables.plan.disableListenerFromPlan();
+        Variables.buttons.addBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+        Variables.setMoveFlag(false);
+        Variables.buttons.moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+        Variables.scalemode=false;
+        Variables.buttons.scaleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+        Variables.rotateMode=false;
+        Variables.buttons.rotateLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+        Variables.removeMode=false;
+        Variables.buttons.removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
         Floor floor = new Floor();          //Создание нового этажа
         if (Variables.current_floor!=null) {        //Если есть предыдущий этаж - записываем в него текущие позицию и приближение
             Variables.current_floor.cordX = Variables.planLay.getX();
@@ -134,18 +145,20 @@ public class BikExtensionParser {
                                     comments = "";
                             }
                             Room room = Variables.getRoomByNumber(number);
-                            room.setHeight(height);
-                            room.setType_pos(typeRoom);
-                            room.setDays(days);
-                            room.setHoursPerDay(hours);
-                            room.setHoursPerWeekend(hoursPerWeekend);
-                            room.setRoofType(roofType);
-                            room.setComments(comments);
+                            if (room!=null) {
+                                room.setHeight(height);
+                                room.setType_pos(typeRoom);
+                                room.setDays(days);
+                                room.setHoursPerDay(hours);
+                                room.setHoursPerWeekend(hoursPerWeekend);
+                                room.setRoofType(roofType);
+                                room.setComments(comments);
+                            }
                         }
                     }
                 }
                 else if (lampsInfo){
-                    if (line.length()>7 && line.charAt(0) != '/'){
+                    if (line.length()>9 && line.charAt(0) != '/'){
                         String[] split_number = line.split("%");
                         if (split_number.length>1){
                             float number = Float.parseFloat(split_number[0]);
@@ -160,12 +173,17 @@ public class BikExtensionParser {
                             float cordY = Float.parseFloat(split_room_info[5]);
                             float scale = Float.parseFloat(split_room_info[6]);
                             float rotationAngle = Float.parseFloat(split_room_info[7]);
-                            Room room = Variables.getRoomByNumber(number);
-                            if (room!=null){
+                            double lampRoom = Double.parseDouble(split_room_info[8]);
+                            String usedOrNot = split_room_info[9];
+                            Room room=null;
+                            if (number!=-1) {
+                                room = Variables.getRoomByNumber(number);
+                            }
                                 Lamp lamp = new Lamp();
                                 lamp.setType(type);
                                 lamp.setPower(power);
                                 lamp.setTypeImage(type_image);
+                                lamp.setLampRoom(lampRoom);
                                 lamp.setComments(comments);
                                 lamp.setRotationAngle(rotationAngle);
                                 ImageView imageView = new ImageView(Variables.activity);
@@ -180,8 +198,14 @@ public class BikExtensionParser {
                                 lamp.setImage(imageView);
                                 Variables.plan.rotateImg(rotationAngle,imageView,type_image);
                                 //lamp.setView();
-                                room.lamps.add(lamp);
-                            }
+                                if (Objects.equals(usedOrNot, "unused") || room==null){
+                                    Variables.current_floor.unusedLamps.add(lamp);
+                                    if (lampRoom==-1) {
+                                        imageView.setBackgroundResource(R.color.blue);
+                                    }
+                                }else {
+                                    room.lamps.add(lamp);
+                                }
                         }
                     }
                 }
@@ -262,8 +286,12 @@ public class BikExtensionParser {
                     for (int i=0;i<tempFloor.rooms.size();i++){
                         for (int j=0;j<tempFloor.rooms.elementAt(i).lamps.size();j++){
                             Lamp temp = tempFloor.rooms.elementAt(i).lamps.elementAt(j);
-                            out.println(tempFloor.rooms.elementAt(i).getNumber()+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle());
+                            out.println(tempFloor.rooms.elementAt(i).getNumber()+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle()+"@"+temp.getLampRoom()+"@"+"used");
                         }
+                    }
+                    for (int i=0;i<tempFloor.unusedLamps.size();i++){
+                            Lamp temp = tempFloor.unusedLamps.elementAt(i);
+                            out.println("-1"+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle()+"@"+temp.getLampRoom()+"@"+"unused");
                     }
                 } catch (IOException e) {
                     //exception handling left as an exercise for the reader

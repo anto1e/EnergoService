@@ -23,6 +23,7 @@ public class Room {
     private Polygon polygon;                //Многоугольник, построенный по координатам точек помещения
     public double[] arrayX;                 //Массив координат Х точек помещения
     public double[] arrayY;                 //Массив координат У точек помещения
+
     public Room()
     {
         super();

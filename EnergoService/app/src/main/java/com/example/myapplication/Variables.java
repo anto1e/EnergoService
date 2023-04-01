@@ -24,6 +24,7 @@ public class Variables {
     static RelativeLayout roomInfoView;             //Панель инфрмации о комнате
 
     static RelativeLayout buildingInfoView;             //Панель инфрмации о здании
+    static boolean fileSaved=true;
     static RelativeLayout lampInfoView;             //Панель инфрмации о светильнике
     static EditText buildingName;             //Поле наименования здания
     static EditText buidlingFloor;             //Поле номера этажа
@@ -38,22 +39,20 @@ public class Variables {
     static Activity activity=null;          //Главное activity
     static boolean opened = false;          //Если файл был открыт
     static BikExtensionParser parser = new BikExtensionParser();        //Парсер данных из .bik
-    private static boolean addFlag=true;       //Флаг активации режима добавления светильника
-    private static boolean moveFlag=true;      //Флаг активации режима перемещния светильника
+    private static boolean addFlag=false;       //Флаг активации режима добавления светильника
+    private static boolean moveFlag=false;      //Флаг активации режима перемещния светильника
     static ImageView loadingImage;              //Колесо вращения при сохранении
     static LinearLayout floorsPanels;           //Layout для хранения вкладок
     static Plan plan = new Plan();          //План этажа
     static RelativeLayout planLay;          //Layout плана
     static ImageView image;                     //Изображение(план)
+    static EditText lampRoom;
     static EditText roomNumber=null;            //Поле для номера помещения
     static EditText roomHeight;            //Поле для высоты помещения
     static Spinner daysPerWeek;            //Поле для дней работы помещения
     static Spinner hoursPerDay;            //Поле для часов работы в день помещения
     static Spinner hoursPerWeekend;            //Поле для часов работы в выходные помещения
     static Spinner roofType;                //Поле типа потолка
-    static Button submit;            //Кнопка сохранения изменений в информации о помещении
-    static Button submitBuildingInfo;       //Кнопка сохранения изменений в информации о здании
-    static Button submitLampInfo;       //Кнопка сохранения изменений в информации о светильнике
 
     static Buttons buttons = new Buttons();        //Создание класса с кнопками
     static Spinner type;            //Выпадающий список(спинер) с типами помещений
@@ -87,6 +86,7 @@ public class Variables {
 
 
     public static void init(){                //Инициализация переменных
+        lampRoom = activity.findViewById(R.id.lampRoom);
         floorsPanels = activity.findViewById(R.id.floorPanelsLay);
         loadingImage = activity.findViewById(R.id.LoadingImage);
         loadingImage.bringToFront();
@@ -105,9 +105,6 @@ public class Variables {
         hoursPerDay = activity.findViewById(R.id.roomHours);
         hoursPerWeekend = activity.findViewById(R.id.roomHoursWeekends);
         roofType = activity.findViewById(R.id.roofType);
-        submit = activity.findViewById(R.id.submit);
-        submitBuildingInfo = activity.findViewById(R.id.submitBuilding);
-        submitLampInfo = activity.findViewById(R.id.submitLamp);
         RoomInfo = activity.findViewById(R.id.RoomInfoView);
         buildingName = activity.findViewById(R.id.buildingName);
         buidlingFloor = activity.findViewById(R.id.floorNumber);
