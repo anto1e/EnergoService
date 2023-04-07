@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.Objects;
 
 public class BikExtensionParser {
@@ -107,7 +108,7 @@ public class BikExtensionParser {
                                 tempX[i] = arrX.getDouble(i) / floor.resizeCoeffX;
                                 tempY[i] = arrY.getDouble(i) / floor.resizeCoeffY;
                             }
-                            Room room = new Room(roomObj.getDouble("number"), tempX, tempY);
+                            Room room = new Room(roomObj.getString("number"), tempX, tempY);
                             room.buildPoligon();
                             floor.rooms.add(room);
                         } else if (line.charAt(0) == 'H') {     //Информация о зданиии
@@ -129,9 +130,9 @@ public class BikExtensionParser {
                     if (line.length()>7 && line.charAt(0) != '/'){
                         String[] split_number = line.split("%");
                         if (split_number.length>1){
-                            float number = Float.parseFloat(split_number[0]);
+                            String number = split_number[0];
                             String[] split_room_info = split_number[1].split("@");
-                            float height = Float.parseFloat(split_room_info[0]);
+                            String height = split_room_info[0];
                             int typeRoom = Integer.parseInt(split_room_info[1]);
                             int days = Integer.parseInt(split_room_info[2]);
                             int hours = Integer.parseInt(split_room_info[3]);
@@ -163,7 +164,7 @@ public class BikExtensionParser {
                     if (line.length()>9 && line.charAt(0) != '/'){
                         String[] split_number = line.split("%");
                         if (split_number.length>1){
-                            float number = Float.parseFloat(split_number[0]);
+                            String number = split_number[0];
                             String[] split_room_info = split_number[1].split("@");
                             String type = split_room_info[0];
                             String power = split_room_info[1];
@@ -175,10 +176,10 @@ public class BikExtensionParser {
                             float cordY = Float.parseFloat(split_room_info[5]);
                             float scale = Float.parseFloat(split_room_info[6]);
                             float rotationAngle = Float.parseFloat(split_room_info[7]);
-                            double lampRoom = Double.parseDouble(split_room_info[8]);
+                            String lampRoom = split_room_info[8];
                             String usedOrNot = split_room_info[9];
                             Room room=null;
-                            if (number!=-1) {
+                            if (!Objects.equals(number, "-1")) {
                                 room = Variables.getRoomByNumber(number);
                             }
                                 Lamp lamp = new Lamp();
@@ -208,7 +209,7 @@ public class BikExtensionParser {
                                 //lamp.setView();
                                 if (detectedRoom==null){
                                     Variables.current_floor.unusedLamps.add(lamp);
-                                    if (lampRoom==-1) {
+                                    if (Objects.equals(lampRoom, "-1")) {
                                         imageView.setBackgroundResource(R.color.blue);
                                     }
                                 }else {
@@ -290,6 +291,7 @@ public class BikExtensionParser {
 
                 {
                     Floor tempFloor = Variables.current_floor;
+                    out.println();
                     out.println("///INFORMATION ABOUT ROOMS///");
                     for (int i=0;i<tempFloor.rooms.size();i++){
                         out.println(tempFloor.rooms.elementAt(i).getNumber()+"%"+tempFloor.rooms.elementAt(i).getHeight()+"@"+tempFloor.rooms.elementAt(i).getType_pos()+"@"+tempFloor.rooms.elementAt(i).getDays()+"@"+tempFloor.rooms.elementAt(i).getHoursPerDay()+"@"+tempFloor.rooms.elementAt(i).getHoursPerWeekend()+"@"+tempFloor.rooms.elementAt(i).getRoofType()+"@"+tempFloor.rooms.elementAt(i).getComments());

@@ -6,7 +6,7 @@ public class Lamp {
     private String type="";     //Тип светильника
     private float rotationAngle=0;
 
-    private double lampRoom=-1;
+    private String lampRoom="-1";
 
     private String power="";        //Мощность светильника
     private ImageView image=null;       //Картинка светильника
@@ -15,11 +15,11 @@ public class Lamp {
     private String comments;            //Комментарии к светильнику
 
     ////Геттеры и сеттеры////
-    public double getLampRoom() {
+    public String getLampRoom() {
         return lampRoom;
     }
 
-    public void setLampRoom(double lampRoom) {
+    public void setLampRoom(String lampRoom) {
         this.lampRoom = lampRoom;
     }
     public float getRotationAngle() {

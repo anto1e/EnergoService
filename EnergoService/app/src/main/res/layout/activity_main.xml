@@ -140,6 +140,15 @@
                 android:background="@color/white"
                 android:padding="2dp"
                 />
+            <ImageView
+                android:id="@+id/addMultipleBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/addmultiplebtn"
+                android:background="@color/white"
+                android:padding="2dp"
+                />
             <!--Кнопка включения/выключения перемещения светильников -->
             <ImageView
                 android:layout_marginLeft="10dp"
@@ -163,11 +172,11 @@
             <ImageButton
                 android:id="@+id/rotateLamp"
                 android:scaleType="fitCenter"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="5dp"
                 android:layout_width="30dp"
                 android:background="@color/white"
                 android:src="@drawable/rotate"
-                android:layout_marginBottom="5dp"
                 android:layout_height="30dp">
             </ImageButton>
 
@@ -176,13 +185,25 @@
                 android:padding="5dp"
                 android:src="@drawable/delete"
                 android:scaleType="fitCenter"
-                android:layout_marginLeft="0dp"
+                android:layout_marginLeft="10dp"
                 android:layout_width="30dp"
                 android:background="@color/white"
                 android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
+
                 android:layout_height="30dp">
             </ImageView>
+
+
+            <ImageButton
+                android:id="@+id/addMultipleRowsBtn"
+                android:scaleType="fitCenter"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="30dp"
+                android:background="@color/white"
+                android:src="@drawable/addmultiplerowbtn"
+                android:layout_height="30dp">
+            </ImageButton>
 
 
 
@@ -196,11 +217,12 @@
                 android:layout_marginLeft="10dp"
                 android:layout_height="30dp">
             </ImageButton>
+
             <ImageButton
                 android:id="@+id/saveFile"
                 android:scaleType="fitCenter"
                 android:src="@drawable/save"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="0dp"
                 android:layout_width="30dp"
                 android:background="@color/white"
                 android:layout_marginTop="5dp"
@@ -213,8 +235,8 @@
                 android:src="@drawable/excel"
                 android:layout_width="30dp"
                 android:layout_marginLeft="10dp"
-                android:background="@color/white"
                 android:layout_marginTop="5dp"
+                android:background="@color/white"
                 android:layout_marginBottom="5dp"
                 android:layout_height="30dp">
             </ImageButton>
@@ -231,12 +253,86 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <RelativeLayout
+                    android:id="@+id/multipleRowsInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/txtviewborder"
+                    app:layout_constraintTop_toBottomOf="@+id/globalScroll">
+                    <GridLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:columnCount="3"
+                        android:orientation="horizontal">
+                    <TextView
+                        android:text="Рядов:"
+                        android:textColor="@color/black"
+                        android:textSize="12dp"
+                        />
+                        <Spinner
+                            android:verticalScrollbarPosition="right"
+                            android:id="@+id/spinColumns"
+                            android:layout_marginLeft="-50dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_width="60dp"
+                            android:layout_height="30dp"
+                            android:background="@android:drawable/btn_dropdown"
+                            android:spinnerMode="dropdown" />
+                    <EditText
+                        android:layout_marginLeft="-40dp"
+                        android:layout_width="wrap_content"
+                        android:textSize="12dp"
+                        android:id="@+id/columnAmount"
+                        />
+                        <TextView
+                            android:text="Линий:"
+                            android:textColor="@color/black"
+                            android:textSize="12dp"
+                            />
+                        <Spinner
+                            android:verticalScrollbarPosition="right"
+                            android:id="@+id/spinRows"
+                            android:layout_marginLeft="-50dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_width="60dp"
+                            android:layout_height="30dp"
+                            android:background="@android:drawable/btn_dropdown"
+                            android:spinnerMode="dropdown" />
+                        <EditText
+                            android:layout_marginLeft="-40dp"
+                            android:layout_width="wrap_content"
+                            android:textSize="12dp"
+                            android:id="@+id/rowsAmount"
+                            />
+                        <TextView
+                            android:text="Развернуть на 90:"
+                            android:textColor="@color/black"
+                            android:textSize="12dp"
+                            />
+                        <CheckBox
+                            android:id="@+id/angleCheckbox"
+                            />
+                        <TextView/>
+                        <Button
+                            android:id="@+id/multipleRowsSubmit"
+                            android:layout_height="30dp"
+                            android:text="Подтвердить"
+                            android:textSize="8sp"
+                            android:layout_marginLeft="10dp"
+                            android:textColor="@color/black"
+                            android:backgroundTint="@color/grey"
+                            />
+                    </GridLayout>
+                </RelativeLayout>
+
+
             <TextView
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="5dp"
                 android:id="@id/buildingInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/globalScroll"
+                app:layout_constraintTop_toBottomOf="@+id/multipleRowsInfo"
                 android:text="Информация о плане"
                 android:background="@drawable/txtviewborder"
                 />

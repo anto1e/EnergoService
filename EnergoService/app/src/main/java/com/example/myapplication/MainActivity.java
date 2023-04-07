@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -74,9 +75,9 @@ public class MainActivity extends AppCompatActivity {
         Variables.activity = MainActivity.this;         //Сохранение activity
         Variables.init();                               //Инициализация переменныъ
         Variables.plan.startDetecting(); //Начало отслеживания перемещения на плане
-        ListView listView=(ListView)findViewById(R.id.LampsListView);           //Лист со списком светильников
+        Variables.listView=(ListView)findViewById(R.id.LampsListView);           //Лист со списком светильников
         LampsList lampsList = new LampsList(this, Variables.lampNames, Variables.plan.imageid);        //Заполнение списка светильников
-        listView.setAdapter(lampsList);
+        Variables.listView.setAdapter(lampsList);
         if (Build.VERSION.SDK_INT >= 30){
             if (!Environment.isExternalStorageManager()){
                 Intent getpermission = new Intent();
@@ -87,9 +88,18 @@ public class MainActivity extends AppCompatActivity {
 
 
         Variables.buttons.startDetecting();       //Начало отслеживания нажатия кнопок
-        listView.setOnItemClickListener((adapterView, view, position, l) -> {       //Обработка нажатия на один из элементов списка светильников
-            Variables.plan.spawnLamp(Variables.plan.imageid[position],position,1);         //Создание светильника
+        Variables.listView.setOnItemClickListener((adapterView, view, position, l) -> {       //Обработка нажатия на один из элементов списка светильников
+            if (Variables.getAddFlag()) {
+                Variables.plan.spawnLamp(Variables.plan.imageid[position], position, 1,0,0,false,0);         //Создание светильника
+            }else if (Variables.addMultiple_flag || Variables.addMultipleRowsFlag){
+                Variables.resetListColor();
+                view.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                Variables.multipleType = Variables.plan.imageid[position];
+                Variables.multiplepos = position;
+                Variables.multiplelampType = 1;
+            }
         });
+
 
 
         Variables.image.addOnLayoutChangeListener( new View.OnLayoutChangeListener()        //В момент изменения размеров изображения
@@ -138,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) { //После выбора пользователем файла путем диалогового окна
         super.onActivityResult(requestCode, resultCode, data);

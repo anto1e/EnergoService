@@ -3,22 +3,27 @@ package com.example.myapplication;
 import android.app.Activity;
 import android.net.Uri;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
+import java.util.Objects;
 import java.util.Vector;
 
 //Класс для хранения глобальных переменных
 public class Variables {
     static boolean isExpotedExcel=true;     //Флаг экспорта в эксель
+    static ListView listView=null;
 
     static int typeOpening=0;           //Тип открытия нового файла
     static boolean planLayCleared=false;
+    static float lastLampWidth=15;
     static Vector<LinearLayout> FloorPanelsVec = new Vector<LinearLayout>();        //Вектор вкладок на экране
     static ExcelExporter exporter;                  //Экспортер данных в эксель
     static RelativeLayout roomInfoView;             //Панель инфрмации о комнате
@@ -28,9 +33,15 @@ public class Variables {
     static RelativeLayout lampInfoView;             //Панель инфрмации о светильнике
     static EditText buildingName;             //Поле наименования здания
     static EditText buidlingFloor;             //Поле номера этажа
+    static RelativeLayout multipleRowsInfo;
     static boolean scalemode = false;
     static boolean rotateMode=false;
     static boolean removeMode=false;
+    static boolean addMultipleRowsFlag=false;
+    static boolean firstTouch=false;
+    static float firstPointX=0;
+    static float firstPointY=0;
+    static boolean disableMovingPlan=false;
 
     static float lastScaletype=1.5f;
     static EditText buildingAdress;             //Поле адреса здания
@@ -40,10 +51,16 @@ public class Variables {
     static boolean opened = false;          //Если файл был открыт
     static BikExtensionParser parser = new BikExtensionParser();        //Парсер данных из .bik
     private static boolean addFlag=false;       //Флаг активации режима добавления светильника
+    static boolean addMultiple_flag=false;       //Флаг активации режима добавления светильника
+    static Integer multipleType=-1;
+    static int multiplepos=-1;
+    static int multiplelampType=-1;
     private static boolean moveFlag=false;      //Флаг активации режима перемещния светильника
     static ImageView loadingImage;              //Колесо вращения при сохранении
     static LinearLayout floorsPanels;           //Layout для хранения вкладок
     static Plan plan = new Plan();          //План этажа
+    static Spinner spinRows;
+    static Spinner spinLines;
     static RelativeLayout planLay;          //Layout плана
     static ImageView image;                     //Изображение(план)
     static EditText lampRoom;
@@ -82,10 +99,13 @@ public class Variables {
     static String[] hoursPerDayArr = {"0","0.5","1","2","4","6","8","12","16","20","24"};       //Часов работы по будням
     static String[] hoursPerWeekendArr = {"0","0.5","1","2","4","6","8","12","16","20","24"};       //Часов работы по выходным
 
+    static String[] spinRowsArr = {"2","3","4","5","6","7","8","9","10"};       //Часов работы по выходным
+    static String[] spinLinesArr = {"2","3","4","5","6","7","8","9","10"};       //Часов работы по выходным
 
 
 
     public static void init(){                //Инициализация переменных
+        multipleRowsInfo = activity.findViewById(R.id.multipleRowsInfo);
         lampRoom = activity.findViewById(R.id.lampRoom);
         floorsPanels = activity.findViewById(R.id.floorPanelsLay);
         loadingImage = activity.findViewById(R.id.LoadingImage);
@@ -109,10 +129,23 @@ public class Variables {
         buildingName = activity.findViewById(R.id.buildingName);
         buidlingFloor = activity.findViewById(R.id.floorNumber);
         buildingAdress = activity.findViewById(R.id.adress);
+        spinRows=activity.findViewById(R.id.spinColumns);
+        spinLines=activity.findViewById(R.id.spinRows);
         setSpinners();
         exporter = new ExcelExporter();
     }
 
+    public static void resetListColor(){
+        if (Variables.listView!=null) {
+            int count = Variables.listView.getCount();
+            for (int i = 0; i < count; i++) {
+                ViewGroup row = (ViewGroup) Variables.listView.getChildAt(i);
+                row.setBackgroundResource(0);
+                //  Get your controls from this ViewGroup and perform your task on them =)
+
+            }
+        }
+    }
     public static void setSpinners(){       //Инициализация спиннеров
         ArrayAdapter<String> adapter = new ArrayAdapter(activity, R.layout.spinner_item, typesOfRooms);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -129,6 +162,12 @@ public class Variables {
         adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,roofTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roofType.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,spinRowsArr);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinRows.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,spinLinesArr);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinLines.setAdapter(adapter);
     }
 
     public static void clearFields(){           //Очистка полей при переключении плана
@@ -165,9 +204,9 @@ public class Variables {
         else
             moveFlag=true;
     }
-    public static Room getRoomByNumber(float number){
+    public static Room getRoomByNumber(String number){
         for (int i=0;i<current_floor.rooms.size();i++){
-            if (current_floor.rooms.elementAt(i).getNumber() == number)
+            if (Objects.equals(current_floor.rooms.elementAt(i).getNumber(), number))
                 return current_floor.rooms.elementAt(i);
         }
         return null;

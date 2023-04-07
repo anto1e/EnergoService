@@ -23,6 +23,9 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,6 +39,7 @@ import org.apache.poi.hssf.util.HSSFColor;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Objects;
 
 //Класс, обрабатывающий нажатия кнопок из правого тулбара
 
@@ -54,6 +58,9 @@ public class Buttons {
     ImageButton saveFile;
     ImageButton rotateLamp;
     ImageView removeLamp;
+    ImageView addMultipleBtn;
+    ImageView addMultipleRows;
+    Button multipleRowsSubmit;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -122,6 +129,7 @@ public class Buttons {
                     removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                     Variables.plan.touchedRoom=null;
                     Variables.plan.lastRoom=null;
+                    Variables.selectedfile = Variables.current_floor.getImage();
                 }
                 return false;
             }
@@ -145,6 +153,101 @@ public class Buttons {
         saveFile = Variables.activity.findViewById(R.id.saveFile);
         rotateLamp = Variables.activity.findViewById(R.id.rotateLamp);
         removeLamp = Variables.activity.findViewById(R.id.removeLamp);
+        addMultipleBtn = Variables.activity.findViewById(R.id.addMultipleBtn);
+        addMultipleRows = Variables.activity.findViewById(R.id.addMultipleRowsBtn);
+        multipleRowsSubmit = Variables.activity.findViewById(R.id.multipleRowsSubmit);
+
+
+        multipleRowsSubmit.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                        if (Variables.addMultipleRowsFlag) {
+                            EditText column = Variables.activity.findViewById(R.id.columnAmount);
+                            EditText rows = Variables.activity.findViewById(R.id.rowsAmount);
+                            int column_amount;
+                            int rows_amount;
+                            if (rows.getText().length()==0 || column.getText().length()==0){
+                                column_amount= Integer.parseInt(Variables.spinRows.getSelectedItem().toString());
+                                rows_amount = Integer.parseInt(Variables.spinLines.getSelectedItem().toString());
+                            }else{
+                                column_amount = Integer.parseInt(String.valueOf(column.getText()));
+                                rows_amount = Integer.parseInt(String.valueOf(rows.getText()));
+                            }
+                            CheckBox check = Variables.activity.findViewById(R.id.angleCheckbox);
+                            float cordX = Variables.plan.selectionZone.getX();
+                            float cordY = Variables.plan.selectionZone.getY();
+                            float height = (Variables.plan.selectionZone.getHeight())-(15*Variables.lastScaletype);
+                            float width = Variables.plan.selectionZone.getWidth()-(15*Variables.lastScaletype);
+                            float height_step = (height / (rows_amount-1));
+                            float width_step = (width / (column_amount-1));
+                            float angle = 0;
+                            while ((cordX+15*Variables.lastScaletype)+2 > cordX+width_step){
+                                Variables.lastScaletype-=0.1f;
+                            }
+                            while ((cordY+15*Variables.lastScaletype)+2 > cordY+height_step){
+                                Variables.lastScaletype-=0.1f;
+                            }
+                            if (check.isChecked())
+                                angle = 90;
+                            if (column_amount > 0 && column != null && rows_amount > 0 && rows != null && Variables.multipleType != -1) {
+                                for (int i = 0; i < rows_amount; i++) {
+                                    for (int j = 0; j < column_amount; j++) {
+                                        Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, cordX + j * width_step, cordY + i * height_step, true, angle);
+                                    }
+                                }
+                            }
+                            disableMultipleRowsAddBtn();
+                            column.setText("");
+                            check.setChecked(false);
+                            rows.setText("");
+                        }
+                return false;
+            }
+        });
+
+
+
+
+
+        addMultipleRows.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_UP:
+                        if (!Variables.addMultipleRowsFlag) {
+                            Variables.multipleRowsInfo.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                            int height = Variables.multipleRowsInfo.getMeasuredHeight();
+                            animateHeightTo(Variables.multipleRowsInfo,height);
+                            Variables.addMultipleRowsFlag = true;
+                            disableAddBtn();
+                            disableMultipleAddBtn();
+                            Variables.plan.setListenerToPlan();
+                            Variables.disableMovingPlan=true;
+                            addMultipleRows.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                        } else {
+                            disableMultipleRowsAddBtn();
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
+
+        addMultipleBtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                        if (!Variables.addMultiple_flag){
+                            Variables.addMultiple_flag=true;
+                            disableAddBtn();
+                            disableMultipleRowsAddBtn();
+                            Variables.plan.setListenerToPlan();
+                            addMultipleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                        }else {
+                            disableMultipleAddBtn();
+                        }
+                return false;
+            }
+        });
 
         removeLamp.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -152,13 +255,10 @@ public class Buttons {
                         if (!Variables.removeMode){
                             Variables.removeMode=true;
                             removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
-                            Variables.scalemode=false;
-                            scaleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-                            Variables.rotateMode=false;
-                            rotateLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                            disableScaleBtn();
+                            disableRotateBtn();
                         }else{
-                            Variables.removeMode=false;
-                            removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                            disableRemoveBtn();
                         }
                 return false;
             }
@@ -187,13 +287,10 @@ public class Buttons {
                         if (!Variables.scalemode) {
                             Variables.scalemode = true;
                             scaleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
-                            Variables.rotateMode=false;
-                            rotateLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-                            Variables.removeMode=false;
-                            removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                            disableRemoveBtn();
+                            disableRotateBtn();
                         }else{
-                            Variables.scalemode=false;
-                            scaleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                            disableScaleBtn();
                         }
                 return false;
             }
@@ -207,14 +304,11 @@ public class Buttons {
                         if (!Variables.rotateMode){
                             Variables.rotateMode=true;
                             rotateLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
-                            Variables.scalemode=false;
-                            scaleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-                            Variables.removeMode=false;
-                            removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                            disableScaleBtn();
+                            disableRemoveBtn();
                         }
                         else{
-                            Variables.rotateMode=false;
-                            rotateLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                            disableRotateBtn();
                         }
                         break;
                 }
@@ -387,10 +481,11 @@ public class Buttons {
                    Variables.invertAddFlag();
                    if (Variables.getAddFlag()){                                 //Активация добавления
                        addBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                       disableMultipleAddBtn();
+                       disableMultipleRowsAddBtn();
                        Variables.plan.setListenerToPlan();
                    }else{                                                       //Деактивация добавления
-                       addBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-                       Variables.plan.disableListenerFromPlan();
+                       disableAddBtn();
                    }
                    return false;
             }
@@ -406,8 +501,7 @@ public class Buttons {
                     moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
                     Variables.setMoveFlag(true);
                 }else{                                                              //Деактивация перемещения
-                    moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-                    Variables.setMoveFlag(false);
+                    disableMoveBtn();
                 }
                 return false;
             }
@@ -502,7 +596,7 @@ public class Buttons {
             @Override
             public void afterTextChanged(Editable s) {
                 if (Variables.plan != null && Variables.plan.touchedRoom != null) {
-                    Variables.plan.touchedRoom.setNumber(Double.parseDouble(String.valueOf(Variables.roomNumber.getText())));
+                    Variables.plan.touchedRoom.setNumber(String.valueOf(Variables.roomNumber.getText()));
                 }
             }
         });
@@ -521,9 +615,9 @@ public class Buttons {
             public void afterTextChanged(Editable s) {
                 if (Variables.plan != null && Variables.plan.touchedRoom != null) {
                     if (Variables.roomHeight.getText().length()>0)
-                    Variables.plan.touchedRoom.setHeight(Double.parseDouble(String.valueOf(Variables.roomHeight.getText())));
+                    Variables.plan.touchedRoom.setHeight(String.valueOf(Variables.roomHeight.getText()));
                     else
-                        Variables.plan.touchedRoom.setHeight(0.0);
+                        Variables.plan.touchedRoom.setHeight("0.0");
                 }
             }
         });
@@ -634,12 +728,12 @@ public class Buttons {
                     //lastNumber=Variables.plan.touchedLamp.getLampRoom();
                     if (Variables.lampRoom.getText().length()>0) {
                         try {
-                            Variables.plan.touchedLamp.setLampRoom(Double.parseDouble(String.valueOf(Variables.lampRoom.getText())));
+                            Variables.plan.touchedLamp.setLampRoom(String.valueOf(Variables.lampRoom.getText()));
                         }catch(NumberFormatException e){
 
                         }
                     }
-                    if (Variables.plan.touchedLamp.getLampRoom()!=-1){
+                    if (!Objects.equals(Variables.plan.touchedLamp.getLampRoom(), "-1")){
                                 /*Room room = Variables.getRoomByNumber((float) Double.parseDouble(String.valueOf(Variables.lampRoom.getText())));
                                 if (room!=null) {
                                     Variables.current_floor.unusedLamps.remove(Variables.plan.touchedLamp);
@@ -749,5 +843,51 @@ public class Buttons {
                 Variables.planLay.addView(img);
             });
         }
+    }
+    private void disableAddBtn(){
+        addBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+        Variables.setAddFlag(false);
+        Variables.plan.disableListenerFromPlan();
+    }
+    private void disableMultipleAddBtn(){
+        Variables.addMultiple_flag = false;
+        Variables.plan.disableListenerFromPlan();
+        addMultipleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+        Variables.resetListColor();
+        Variables.multipleType=-1;
+        Variables.multiplepos=-1;
+        Variables.multiplelampType=-1;
+    }
+    private void disableMultipleRowsAddBtn(){
+        Variables.addMultipleRowsFlag = false;
+        addMultipleRows.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+        Variables.plan.disableListenerFromPlan();
+        Variables.disableMovingPlan=false;
+        if (Variables.plan.selectionZone!=null) {
+            Variables.planLay.removeView(Variables.plan.selectionZone);
+            Variables.plan.selectionZone = null;
+        }
+        Variables.resetListColor();
+        Variables.firstTouch=false;
+        Variables.multiplepos=-1;
+        Variables.multiplelampType=-1;
+        Variables.multipleType=-1;
+        animateHeightTo(Variables.multipleRowsInfo,1);
+    }
+    private void disableScaleBtn(){
+        Variables.scalemode=false;
+        scaleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+    }
+    private void disableRotateBtn(){
+        Variables.rotateMode=false;
+        rotateLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+    }
+    private void disableRemoveBtn(){
+        Variables.removeMode=false;
+        removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+    }
+    private void disableMoveBtn(){
+        moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+        Variables.setMoveFlag(false);
     }
 }

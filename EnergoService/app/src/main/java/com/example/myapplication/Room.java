@@ -10,8 +10,8 @@ import com.snatik.polygon.Polygon;
 import java.util.Vector;
 
 public class Room {
-    private double number;      //Номер помещения
-    private double height=0.0;      //Высота помещения
+    private String number;      //Номер помещения
+    private String height="0.0";      //Высота помещения
     private int roofType=0;         //Тип потолка
     private String comments="";     //Комментарии
 
@@ -73,20 +73,20 @@ public class Room {
     }
 
 
-    public double getNumber() {
+    public String getNumber() {
         return number;
     }
 
 
-    public void setNumber(double number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 
-    public double getHeight() {
+    public String getHeight() {
         return height;
     }
 
-    public void setHeight(double height) {
+    public void setHeight(String height) {
         this.height = height;
     }
 
@@ -119,7 +119,7 @@ public class Room {
 
 
     //Конструктор комнаты
-    public Room(double number, double[] arrayX, double[] arrayY){
+    public Room(String number, double[] arrayX, double[] arrayY){
         this.number=number;
         this.arrayX=arrayX;
         this.arrayY=arrayY;

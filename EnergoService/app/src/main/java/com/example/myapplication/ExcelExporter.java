@@ -113,7 +113,7 @@ public class ExcelExporter {
                             }
                         }
                         if (count > 0) {
-                            writeToFile(temp,room, type, count, comm,0);       //Запись данных в файл
+                            writeToFile(temp,room, type, count, comm,"0");       //Запись данных в файл
                         }
                         count = 0;
                     }
@@ -130,7 +130,7 @@ public class ExcelExporter {
                     for (int j = 0; j < types.size(); j++) {       //Находим и считаем светильники, чьи типы есть в Векторе
                         String type = "";
                         String comm = "";
-                        double number=0.0;
+                        String number="0.0";
                         for (int z = 0; z < lamps.size(); z++) {
                             if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " " + lamps.elementAt(z).getComments()+" "+lamps.elementAt(z).getLampRoom())) {
                                 //if (lamps.elementAt(z).getComments()==null){
@@ -154,7 +154,7 @@ public class ExcelExporter {
         save();
     }
 
-    public void writeToFile(Floor floor ,Room room,String type, int amount,String comments,double number) throws Exception {       //Запись в файл по ячейкам
+    public void writeToFile(Floor floor ,Room room,String type, int amount,String comments,String number) throws Exception {       //Запись в файл по ячейкам
 
 // Obtaining the reference of the first worksheet
 // Adding some sample value to cells
@@ -165,7 +165,7 @@ public class ExcelExporter {
             cell.setValue(room.getNumber());
         }
         else {
-            if (number==-1){
+            if (Objects.equals(number, "-1")){
                 cell.setValue("б/н");
             }else {
                 cell.setValue(number);

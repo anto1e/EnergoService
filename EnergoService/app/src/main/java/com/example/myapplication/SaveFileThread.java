@@ -15,7 +15,7 @@ public class SaveFileThread extends Thread {
             an.setRepeatCount(-1);                // -1 = infinite repeated
             an.setFillAfter(true);               // keep rotation after animation
 
-            // Aply animation to image view
+            // Apply animation to image view
             Variables.activity.runOnUiThread(() -> {        //Включаем вращение
                 rotationElement.setVisibility(View.VISIBLE);
                 rotationElement.setAnimation(an);
