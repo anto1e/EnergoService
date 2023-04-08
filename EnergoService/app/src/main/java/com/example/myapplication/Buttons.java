@@ -40,6 +40,7 @@ import org.apache.poi.hssf.util.HSSFColor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Vector;
 
 //Класс, обрабатывающий нажатия кнопок из правого тулбара
 
@@ -61,6 +62,14 @@ public class Buttons {
     ImageView addMultipleBtn;
     ImageView addMultipleRows;
     Button multipleRowsSubmit;
+    ImageView copyBtn;
+    ImageView confirmBtn;
+    ImageButton cancelBtn;
+    ImageButton selectZone;
+    ImageButton copyToBufBtn;
+    ImageButton pasteBtn;
+
+
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -156,6 +165,348 @@ public class Buttons {
         addMultipleBtn = Variables.activity.findViewById(R.id.addMultipleBtn);
         addMultipleRows = Variables.activity.findViewById(R.id.addMultipleRowsBtn);
         multipleRowsSubmit = Variables.activity.findViewById(R.id.multipleRowsSubmit);
+        copyBtn = Variables.activity.findViewById(R.id.copyBtn);
+        confirmBtn = Variables.activity.findViewById(R.id.confirmBtn);
+        cancelBtn = Variables.activity.findViewById(R.id.cancelBtn);
+        selectZone = Variables.activity.findViewById(R.id.selectZone);
+        copyToBufBtn = Variables.activity.findViewById(R.id.copyToBuf);
+        pasteBtn = Variables.activity.findViewById(R.id.pasteBtn);
+
+        pasteBtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_UP:
+                        if (Variables.copyBuffer.size()>0 && Variables.getAddFlag() && Variables.plan.tempView!=null){
+                            Variables.moveCopiedBufVector(Variables.plan.tempView.getX(),Variables.plan.tempView.getY());
+                            for (Lamp lamp:Variables.copyBuffer){
+                                lamp.setView();
+                            }
+                            for (Lamp lamp : Variables.copyBuffer) {
+                                boolean found = false;
+                                for (Room room : Variables.current_floor.rooms) {
+                                    if (room.detectTouch(lamp.getImage().getX(), lamp.getImage().getY())) {
+                                        room.lamps.add(lamp);
+                                        lamp.setLampRoom(room.getNumber());
+                                        found = true;
+                                    }
+                                }
+                                if (!found) {
+                                    Variables.current_floor.unusedLamps.add(lamp);
+                                    lamp.getImage().setBackgroundColor(Variables.activity.getResources().getColor(R.color.blue));
+                                }
+                            }
+                            Variables.copyBuffer.clear();
+                            copyToBufBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
+                            pasteBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
+
+        copyToBufBtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_UP:
+                        if (Variables.selectZoneFlag && Variables.copyVector.size()>0){
+                            Variables.copyBuffer.clear();
+                            for (Lamp lamp:Variables.copyVector){
+                                Lamp tempLamp = new Lamp();
+                                tempLamp.setType(lamp.getType());
+                                tempLamp.setRotationAngle(lamp.getRotationAngle());
+                                tempLamp.setLampRoom("-1");
+                                tempLamp.setPower(lamp.getPower());
+                                tempLamp.setTypeImage(lamp.getTypeImage());
+                                tempLamp.setComments(lamp.getComments());
+
+                                ImageView imageView = new ImageView(Variables.activity);
+                                imageView.setImageResource(lamp.getTypeImage());
+                                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
+                                imageView.setLayoutParams(params);
+                                imageView.setScaleX(Variables.lastScaletype);
+                                imageView.setScaleY(Variables.lastScaletype);
+                                Variables.plan.setListener(imageView);
+                                imageView.setX(lamp.getImage().getX());
+                                imageView.setY(lamp.getImage().getY());
+                                tempLamp.setImage(imageView);
+                                Variables.copyBuffer.add(tempLamp);
+                            }
+                            float minCordX=Float.MAX_VALUE;
+                            for (Lamp lamp:Variables.copyBuffer){
+                                if (lamp.getImage().getX()<minCordX){
+                                    minCordX=lamp.getImage().getX();
+                                    Variables.tempCopiedBufLamp=lamp;
+                                }
+                            }
+                            for (Lamp lamp:Variables.copyBuffer){
+                                if (Variables.tempCopiedBufLamp!=null && lamp.getImage().getX()==Variables.tempCopiedBufLamp.getImage().getX()){
+                                    if (lamp.getImage().getY()<Variables.tempCopiedBufLamp.getImage().getY()){
+                                        Variables.tempCopiedBufLamp=lamp;
+                                    }
+                                }
+                            }
+
+                            for (int i=0;i<Variables.copyBuffer.size();i++){
+                                //if (Variables.copyBuffer.elementAt(i)!=Variables.tempCopiedBufLamp){
+                                    float temp1 = Variables.copyBuffer.elementAt(i).getImage().getX()-Variables.tempCopiedBufLamp.getImage().getX();
+                                    float temp2 = Variables.copyBuffer.elementAt(i).getImage().getY()-Variables.tempCopiedBufLamp.getImage().getY();
+                                    Variables.distBufX.add(temp1);
+                                    Variables.distBufY.add(temp2);
+                                //}
+                            }
+                        }else
+                            if(Variables.plan.touchedLamp!=null){
+                            Variables.copyBuffer.clear();
+                                Lamp tempLamp = new Lamp();
+                                tempLamp.setType(Variables.plan.touchedLamp.getType());
+                                tempLamp.setRotationAngle(Variables.plan.touchedLamp.getRotationAngle());
+                                tempLamp.setLampRoom("-1");
+                                tempLamp.setPower(Variables.plan.touchedLamp.getPower());
+                                tempLamp.setTypeImage(Variables.plan.touchedLamp.getTypeImage());
+                                tempLamp.setComments(Variables.plan.touchedLamp.getComments());
+
+                                ImageView imageView = new ImageView(Variables.activity);
+                                imageView.setImageResource(Variables.plan.touchedLamp.getTypeImage());
+                                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
+                                imageView.setLayoutParams(params);
+                                imageView.setScaleX(Variables.lastScaletype);
+                                imageView.setScaleY(Variables.lastScaletype);
+                                Variables.plan.setListener(imageView);
+                                imageView.setX(Variables.plan.touchedLamp.getImage().getX());
+                                imageView.setY(Variables.plan.touchedLamp.getImage().getY());
+                                tempLamp.setImage(imageView);
+                                Variables.copyBuffer.add(tempLamp);
+                                Variables.tempCopiedBufLamp = tempLamp;
+                        }
+                        if (Variables.copyBuffer.size()==0){
+                            copyToBufBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
+                            pasteBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
+                        }else {
+                            copyToBufBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
+
+        selectZone.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_UP:
+                        if (!Variables.selectZoneFlag) {
+                            Variables.selectZoneFlag=true;
+                            selectZone.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                            Variables.plan.setListenerToPlan();
+                            activateConfirmBtn();
+                            Variables.lampRoom.setText("");
+                            Variables.lampType.setText("");
+                            Variables.lampPower.setText("");
+                            Variables.lampComments.setText("");
+                        }else{
+                            if (!Variables.moveOnlySelectedZone) {
+                                disableConfirmBtn();
+                                disableSelectZone();
+                            }else{
+                                Variables.selectZoneFlag=false;
+                                selectZone.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                                Variables.plan.disableListenerFromPlan();
+                            }
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
+
+        cancelBtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_UP:
+                        if (Variables.moveOnlySelectedZone){
+                            Variables.resetCordsCopiedVector();
+                            Variables.tempCopiedLamp.getImage().setBackgroundResource(0);
+                            Variables.moveOnlySelectedZone=false;
+                            Variables.copyVector.clear();
+                            Variables.tempCopiedLamp=null;
+                            if (Variables.getMoveFlag())
+                                moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                            else
+                                moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                        }else
+                        if (Variables.copyFlag){
+                            disableConfirmBtn();
+                            disableCancelBtn();
+                            disableCopyBtn();
+                            Variables.copyType=0;
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
+
+        confirmBtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                        if (Variables.moveOnlySelectedZone){
+                            for (Room room:Variables.current_floor.rooms){
+                                for (Lamp lamp: Variables.copyVector){
+                                    if (room.lamps.contains(lamp)){
+                                        room.lamps.remove(lamp);
+                                    }
+                                }
+                            }
+                            for (Lamp lamp : Variables.copyVector) {
+                                boolean found = false;
+                                for (Room room : Variables.current_floor.rooms) {
+                                    if (room.detectTouch(lamp.getImage().getX(), lamp.getImage().getY())) {
+                                        room.lamps.add(lamp);
+                                        lamp.setLampRoom(room.getNumber());
+                                        found = true;
+                                    }
+                                }
+                                if (!found) {
+                                    Variables.current_floor.unusedLamps.add(lamp);
+                                    lamp.getImage().setBackgroundColor(Variables.activity.getResources().getColor(R.color.blue));
+                                }
+                            }
+                            Variables.moveOnlySelectedZone=false;
+                            Variables.copyVector.clear();
+                            Variables.tempCopiedLamp.getImage().setBackgroundResource(0);
+                            Variables.tempCopiedLamp=null;
+                            if (Variables.getMoveFlag())
+                            moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                            else
+                                moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                            disableConfirmBtn();
+                            disableCancelBtn();
+                        }
+                        else if (Variables.selectZoneFlag){
+                            String txt = Variables.lampComments.getText().toString();
+                            for (Lamp lamp:Variables.copyVector){
+                                String old_comments = lamp.getComments();
+                                if (old_comments.length()>0) {
+                                    lamp.setComments(old_comments + " "+txt);
+                                }else{
+                                    lamp.setComments(txt);
+                                }
+                            }
+                        }
+                        else if (Variables.copyFlag){
+                            if (Variables.copyType==0 && Variables.copyVector.size()>0){
+                                Vector<Lamp> temp = new Vector(Variables.copyVector);
+                                for (Lamp lamp1:Variables.copyVector){
+                                    lamp1.getImage().setBackgroundResource(0);
+                                }
+                                Variables.copyVector.clear();
+
+                                for (Lamp lamp:temp){
+                                    Lamp tempLamp = new Lamp();
+                                    tempLamp.setType(lamp.getType());
+                                    tempLamp.setRotationAngle(lamp.getRotationAngle());
+                                    Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),lamp.getTypeImage());
+                                    tempLamp.setLampRoom("-1");
+                                    tempLamp.setPower(lamp.getPower());
+                                    tempLamp.setTypeImage(lamp.getTypeImage());
+                                    tempLamp.setComments(lamp.getComments());
+
+                                    ImageView imageView = new ImageView(Variables.activity);
+                                    imageView.setImageResource(lamp.getTypeImage());
+                                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
+                                    imageView.setLayoutParams(params);
+                                    imageView.setScaleX(Variables.lastScaletype);
+                                    imageView.setScaleY(Variables.lastScaletype);
+                                    Variables.plan.setListener(imageView);
+                                    imageView.setX(lamp.getImage().getX());
+                                    imageView.setY(lamp.getImage().getY());
+                                    tempLamp.setImage(imageView);
+                                    tempLamp.setView();
+                                    Variables.copyVector.add(tempLamp);
+                                }
+
+                                float minCordX=Float.MAX_VALUE;
+                                for (Lamp lamp:Variables.copyVector){
+                                    if (lamp.getImage().getX()<minCordX){
+                                        minCordX=lamp.getImage().getX();
+                                        Variables.tempCopiedLamp=lamp;
+                                    }
+                                }
+                                for (Lamp lamp:Variables.copyVector){
+                                    if (Variables.tempCopiedLamp!=null && lamp.getImage().getX()==Variables.tempCopiedLamp.getImage().getX()){
+                                        if (lamp.getImage().getY()<Variables.tempCopiedLamp.getImage().getY()){
+                                            Variables.tempCopiedLamp=lamp;
+                                        }
+                                    }
+                                }
+
+                                for (int i=0;i<Variables.copyVector.size();i++){
+                                    //if (Variables.copyVector.elementAt(i)!=Variables.tempCopiedLamp){
+                                        float temp1 = Variables.copyVector.elementAt(i).getImage().getX()-Variables.tempCopiedLamp.getImage().getX();
+                                        float temp2 = Variables.copyVector.elementAt(i).getImage().getY()-Variables.tempCopiedLamp.getImage().getY();
+                                        Variables.distX.add(temp1);
+                                        Variables.distY.add(temp2);
+                                    //}
+                                }
+
+                                Variables.moveCopiedVector(-1,-1);
+                                Variables.copyType=1;
+                            }else if (Variables.copyType==1){
+                                if (Variables.tempCopiedLamp.getImage().getX()==-1 || Variables.tempCopiedLamp.getImage().getY()==-1){
+                                    Variables.copyType=0;
+                                    disableConfirmBtn();
+                                    disableCancelBtn();
+                                    disableCopyBtn();
+                                }else {
+                                    for (Lamp lamp : Variables.copyVector) {
+                                        boolean found = false;
+                                        for (Room room : Variables.current_floor.rooms) {
+                                            if (room.detectTouch(lamp.getImage().getX(), lamp.getImage().getY())) {
+                                                room.lamps.add(lamp);
+                                                lamp.setLampRoom(room.getNumber());
+                                                found = true;
+                                            }
+                                        }
+                                        if (!found) {
+                                            Variables.current_floor.unusedLamps.add(lamp);
+                                            lamp.getImage().setBackgroundColor(Variables.activity.getResources().getColor(R.color.blue));
+                                        }
+                                    }
+                                    Variables.copyType = 0;
+                                    disableCopyBtn();
+                                    disableConfirmBtn();
+                                    disableCancelBtn();
+                                }
+                            }
+                        }
+                return false;
+            }
+        });
+
+        copyBtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                        if (!Variables.copyFlag) {
+                            Variables.copyFlag=true;
+                            Variables.copyType = 0;
+                            copyBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                            activateConfirmBtn();
+                            activateCancelBtn();
+                            Variables.plan.setListenerToPlan();
+                        }else{
+                            disableConfirmBtn();
+                            disableCancelBtn();
+                            disableCopyBtn();
+                            Variables.copyType=0;
+                        }
+                return false;
+            }
+        });
 
 
         multipleRowsSubmit.setOnTouchListener(new View.OnTouchListener() {
@@ -215,9 +566,7 @@ public class Buttons {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_UP:
                         if (!Variables.addMultipleRowsFlag) {
-                            Variables.multipleRowsInfo.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                            int height = Variables.multipleRowsInfo.getMeasuredHeight();
-                            animateHeightTo(Variables.multipleRowsInfo,height);
+                            Variables.multipleRowsInfo.setVisibility(View.VISIBLE);
                             Variables.addMultipleRowsFlag = true;
                             disableAddBtn();
                             disableMultipleAddBtn();
@@ -481,6 +830,11 @@ public class Buttons {
                    Variables.invertAddFlag();
                    if (Variables.getAddFlag()){                                 //Активация добавления
                        addBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                       if (Variables.copyBuffer.size()>0) {
+                           pasteBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                       }else{
+                           pasteBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
+                       }
                        disableMultipleAddBtn();
                        disableMultipleRowsAddBtn();
                        Variables.plan.setListenerToPlan();
@@ -496,12 +850,47 @@ public class Buttons {
             @Override
             public boolean onTouch(View v, MotionEvent event)
             {
-                Variables.invertMoveFlag();
-                if (Variables.getMoveFlag()){                                       //Активация перемещения
-                    moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
-                    Variables.setMoveFlag(true);
-                }else{                                                              //Деактивация перемещения
-                    disableMoveBtn();
+                if (!Variables.selectZoneFlag) {
+                    Variables.invertMoveFlag();
+                    if (Variables.getMoveFlag()) {                                       //Активация перемещения
+                        moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                        Variables.setMoveFlag(true);
+                    } else {                                                              //Деактивация перемещения
+                        disableMoveBtn();
+                    }
+                }else{
+                    activateCancelBtn();
+                    moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.blue));
+                    Variables.moveOnlySelectedZone=true;
+                    float minCordX=Float.MAX_VALUE;
+                    for (Lamp lamp:Variables.copyVector){
+                            lamp.getImage().setBackgroundResource(0);
+                            Variables.lastMovePosX.add(lamp.getImage().getX());
+                            Variables.lastMovePosY.add(lamp.getImage().getY());
+                    }
+                    for (Lamp lamp:Variables.copyVector){
+                        if (lamp.getImage().getX()<minCordX){
+                            minCordX=lamp.getImage().getX();
+                            Variables.tempCopiedLamp=lamp;
+                        }
+                    }
+                    for (Lamp lamp:Variables.copyVector){
+                        if (Variables.tempCopiedLamp!=null && lamp.getImage().getX()==Variables.tempCopiedLamp.getImage().getX()){
+                            if (lamp.getImage().getY()<Variables.tempCopiedLamp.getImage().getY()){
+                                Variables.tempCopiedLamp=lamp;
+                            }
+                        }
+                    }
+                    Variables.tempCopiedLamp.getImage().setBackgroundColor(Variables.activity.getResources().getColor(R.color.blue));
+
+                    for (int i=0;i<Variables.copyVector.size();i++){
+                        //if (Variables.copyVector.elementAt(i)!=Variables.tempCopiedLamp){
+                            float temp1 = Variables.copyVector.elementAt(i).getImage().getX()-Variables.tempCopiedLamp.getImage().getX();
+                            float temp2 = Variables.copyVector.elementAt(i).getImage().getY()-Variables.tempCopiedLamp.getImage().getY();
+                            Variables.distX.add(temp1);
+                            Variables.distY.add(temp2);
+                       // }
+                    }
                 }
                 return false;
             }
@@ -795,8 +1184,10 @@ public class Buttons {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (Variables.plan.touchedLamp != null) {
-                    Variables.plan.touchedLamp.setComments(String.valueOf(Variables.lampComments.getText()));
+                if (!Variables.selectZoneFlag) {
+                    if (Variables.plan.touchedLamp != null) {
+                        Variables.plan.touchedLamp.setComments(String.valueOf(Variables.lampComments.getText()));
+                    }
                 }
             }
         });
@@ -872,7 +1263,7 @@ public class Buttons {
         Variables.multiplepos=-1;
         Variables.multiplelampType=-1;
         Variables.multipleType=-1;
-        animateHeightTo(Variables.multipleRowsInfo,1);
+        Variables.multipleRowsInfo.setVisibility(View.GONE);
     }
     private void disableScaleBtn(){
         Variables.scalemode=false;
@@ -889,5 +1280,44 @@ public class Buttons {
     private void disableMoveBtn(){
         moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
         Variables.setMoveFlag(false);
+    }
+    private void activateConfirmBtn(){
+        Variables.confirmBtnActive=true;
+        confirmBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.green));
+    }
+    private void activateCancelBtn(){
+        Variables.cancelBtnActive=true;
+        cancelBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+    }
+    private void disableConfirmBtn(){
+        Variables.confirmBtnActive=false;
+        confirmBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
+    }
+    private void disableCancelBtn(){
+        Variables.cancelBtnActive=false;
+        cancelBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
+    }
+    private void disableCopyBtn(){
+        Variables.copyFlag=false;
+        copyBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+        Variables.copyVector.clear();
+        if (Variables.copyType==1) {
+            for (Lamp lamp : Variables.copyVector) {
+                if (lamp.getImage() != null)
+                    Variables.planLay.removeView(lamp.getImage());
+            }
+        }
+        Variables.plan.disableListenerFromPlan();
+        Variables.distX.clear();
+        Variables.distY.clear();
+    }
+    private void disableSelectZone(){
+        Variables.selectZoneFlag=false;
+        selectZone.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+        for (Lamp lamp : Variables.copyVector) {
+                lamp.getImage().setBackgroundResource(0);
+        }
+        Variables.copyVector.clear();
+        Variables.plan.disableListenerFromPlan();
     }
 }

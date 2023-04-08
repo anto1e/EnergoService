@@ -20,8 +20,24 @@ import java.util.Vector;
 public class Variables {
     static boolean isExpotedExcel=true;     //Флаг экспорта в эксель
     static ListView listView=null;
+    static Vector<Lamp> copyBuffer = new Vector<Lamp>();
 
     static int typeOpening=0;           //Тип открытия нового файла
+    static boolean selectZoneFlag=false;
+    static Vector<Lamp> copyVector = new Vector<Lamp>();
+    static Vector<Float> distX = new Vector<Float>();
+    static Vector<Float> distY = new Vector<Float>();
+    static Lamp tempCopiedLamp;
+    static Lamp tempCopiedBufLamp;
+    static Vector<Float> distBufX = new Vector<Float>();
+    static Vector<Float> distBufY = new Vector<Float>();
+    static Vector<Float> lastMovePosX = new Vector<Float>();
+    static Vector<Float> lastMovePosY = new Vector<Float>();
+    static int copyType=0;
+    static boolean confirmBtnActive=false;
+    static boolean moveOnlySelectedZone=false;
+    static boolean cancelBtnActive=false;
+    static boolean copyFlag=false;
     static boolean planLayCleared=false;
     static float lastLampWidth=15;
     static Vector<LinearLayout> FloorPanelsVec = new Vector<LinearLayout>();        //Вектор вкладок на экране
@@ -210,5 +226,33 @@ public class Variables {
                 return current_floor.rooms.elementAt(i);
         }
         return null;
+    }
+    public static void moveCopiedVector(float cordX,float cordY){
+        tempCopiedLamp.getImage().setX(cordX);
+        tempCopiedLamp.getImage().setY(cordY);
+        for (int i=0;i<copyVector.size();i++){
+            if (copyVector.elementAt(i)!=tempCopiedLamp){
+                copyVector.elementAt(i).getImage().setX(cordX+distX.elementAt(i));
+                copyVector.elementAt(i).getImage().setY(cordY+distY.elementAt(i));
+            }
+        }
+    }
+    public static void moveCopiedBufVector(float cordX,float cordY){
+        tempCopiedBufLamp.getImage().setX(cordX);
+        tempCopiedBufLamp.getImage().setY(cordY);
+        for (int i=0;i<copyBuffer.size();i++){
+            if (copyBuffer.elementAt(i)!=tempCopiedBufLamp){
+                copyBuffer.elementAt(i).getImage().setX(cordX+distBufX.elementAt(i));
+                copyBuffer.elementAt(i).getImage().setY(cordY+distBufY.elementAt(i));
+            }
+        }
+    }
+    public static void resetCordsCopiedVector(){
+        for (int i=0;i<copyVector.size();i++){
+            copyVector.elementAt(i).getImage().setX(lastMovePosX.elementAt(i));
+            copyVector.elementAt(i).getImage().setY(lastMovePosY.elementAt(i));
+        }
+        lastMovePosX.clear();
+        lastMovePosY.clear();
     }
 }

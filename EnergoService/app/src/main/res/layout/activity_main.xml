@@ -205,6 +205,51 @@
                 android:layout_height="30dp">
             </ImageButton>
 
+            <ImageView
+                android:id="@+id/copyBtn"
+                android:scaleType="fitCenter"
+                android:src="@drawable/copynmove"
+                android:layout_width="30dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:layout_marginLeft="10dp"
+                android:padding="2dp"
+                android:layout_height="30dp">
+            </ImageView>
+
+            <ImageButton
+                android:id="@+id/copyToBuf"
+                android:scaleType="fitCenter"
+                android:src="@drawable/copybtn"
+                android:padding="2dp"
+                android:layout_width="30dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/grey"
+                android:layout_marginLeft="0dp"
+                android:layout_height="30dp">
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/pasteBtn"
+                android:scaleType="fitCenter"
+                android:src="@drawable/pastebtn"
+                android:layout_width="30dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/grey"
+                android:layout_marginLeft="10dp"
+                android:layout_height="30dp">
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/selectZone"
+                android:scaleType="fitCenter"
+                android:src="@drawable/selectzone"
+                android:layout_width="30dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:layout_marginLeft="10dp"
+                android:layout_height="30dp">
+            </ImageButton>
 
 
             <ImageButton
@@ -240,6 +285,29 @@
                 android:layout_marginBottom="5dp"
                 android:layout_height="30dp">
             </ImageButton>
+            <ImageButton
+                android:id="@+id/cancelBtn"
+                android:scaleType="fitCenter"
+                android:src="@drawable/close"
+                android:layout_width="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/grey"
+                android:layout_marginBottom="5dp"
+                android:layout_height="30dp">
+            </ImageButton>
+            <ImageView
+                android:id="@+id/confirmBtn"
+                android:scaleType="fitCenter"
+                android:src="@drawable/comfirmbtn"
+                android:layout_width="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:padding="2dp"
+                android:background="@color/grey"
+                android:layout_marginBottom="5dp"
+                android:layout_height="30dp">
+            </ImageView>
 
         </GridLayout>
 
@@ -247,8 +315,10 @@
             android:id="@+id/globalScroll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/toolsGrid"
-            tools:ignore="MissingConstraints">
+            android:paddingBottom="100dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolsGrid">
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -256,14 +326,16 @@
                 <RelativeLayout
                     android:id="@+id/multipleRowsInfo"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/txtviewborder"
                     app:layout_constraintTop_toBottomOf="@+id/globalScroll">
                     <GridLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:columnCount="3"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        tools:ignore="UselessParent">
                     <TextView
                         android:text="Рядов:"
                         android:textColor="@color/black"
