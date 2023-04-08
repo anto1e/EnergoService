@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.res.Resources;
 import android.os.Environment;
 import android.view.View;
 import android.widget.EditText;
@@ -168,7 +169,7 @@ public class BikExtensionParser {
                             String[] split_room_info = split_number[1].split("@");
                             String type = split_room_info[0];
                             String power = split_room_info[1];
-                            int type_image = Integer.parseInt(split_room_info[2]);
+                            String type_image = split_room_info[2];
                             String comments = split_room_info[3];
                             if (Objects.equals(comments, "null"))
                                 comments="";
@@ -190,7 +191,10 @@ public class BikExtensionParser {
                                 lamp.setComments(comments);
                                 lamp.setRotationAngle(rotationAngle);
                                 ImageView imageView = new ImageView(Variables.activity);
-                                imageView.setImageResource(type_image);
+                                Resources resources = Variables.activity.getResources();
+                                final int resourceId = resources.getIdentifier(type, "drawable",
+                                    Variables.activity.getPackageName());
+                                imageView.setImageResource(resourceId);
                                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
                                 imageView.setLayoutParams(params);
                                 imageView.setX(cordX);

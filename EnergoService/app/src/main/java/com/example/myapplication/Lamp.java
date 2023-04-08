@@ -11,7 +11,7 @@ public class Lamp {
     private String power="";        //Мощность светильника
     private ImageView image=null;       //Картинка светильника
 
-    private int typeImage;
+    private String typeImage;
     private String comments;            //Комментарии к светильнику
 
     ////Геттеры и сеттеры////
@@ -30,11 +30,11 @@ public class Lamp {
         this.rotationAngle = rotationAngle;
     }
 
-    public int getTypeImage() {
+    public String getTypeImage() {
         return typeImage;
     }
 
-    public void setTypeImage(int typeImage) {
+    public void setTypeImage(String typeImage) {
         this.typeImage = typeImage;
     }
 

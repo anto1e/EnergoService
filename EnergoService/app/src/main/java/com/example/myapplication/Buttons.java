@@ -8,6 +8,7 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.media.Image;
 import android.net.Uri;
@@ -99,6 +100,7 @@ public class Buttons {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (active!=v){             //Если нажата неактивная, делаем ее активной, предыдущую неактивной
+                    Variables.planLayCleared=true;
                     Variables.clearFields();
                     active.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
                     Variables.current_floor.cordX = Variables.planLay.getX();
@@ -221,9 +223,11 @@ public class Buttons {
                                 tempLamp.setPower(lamp.getPower());
                                 tempLamp.setTypeImage(lamp.getTypeImage());
                                 tempLamp.setComments(lamp.getComments());
-
                                 ImageView imageView = new ImageView(Variables.activity);
-                                imageView.setImageResource(lamp.getTypeImage());
+                                Resources resources = Variables.activity.getResources();
+                                final int resourceId = resources.getIdentifier(lamp.getTypeImage(), "drawable",
+                                        Variables.activity.getPackageName());
+                                imageView.setImageResource(resourceId);
                                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
                                 imageView.setLayoutParams(params);
                                 imageView.setScaleX(Variables.lastScaletype);
@@ -267,9 +271,11 @@ public class Buttons {
                                 tempLamp.setPower(Variables.plan.touchedLamp.getPower());
                                 tempLamp.setTypeImage(Variables.plan.touchedLamp.getTypeImage());
                                 tempLamp.setComments(Variables.plan.touchedLamp.getComments());
-
                                 ImageView imageView = new ImageView(Variables.activity);
-                                imageView.setImageResource(Variables.plan.touchedLamp.getTypeImage());
+                                Resources resources = Variables.activity.getResources();
+                                final int resourceId = resources.getIdentifier(Variables.plan.touchedLamp.getTypeImage(), "drawable",
+                                        Variables.activity.getPackageName());
+                                imageView.setImageResource(resourceId);
                                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
                                 imageView.setLayoutParams(params);
                                 imageView.setScaleX(Variables.lastScaletype);
@@ -391,7 +397,7 @@ public class Buttons {
                             String txt = Variables.lampComments.getText().toString();
                             for (Lamp lamp:Variables.copyVector){
                                 String old_comments = lamp.getComments();
-                                if (old_comments.length()>0) {
+                                if (old_comments!=null && old_comments.length()>0) {
                                     lamp.setComments(old_comments + " "+txt);
                                 }else{
                                     lamp.setComments(txt);
@@ -410,23 +416,25 @@ public class Buttons {
                                     Lamp tempLamp = new Lamp();
                                     tempLamp.setType(lamp.getType());
                                     tempLamp.setRotationAngle(lamp.getRotationAngle());
-                                    Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),lamp.getTypeImage());
                                     tempLamp.setLampRoom("-1");
                                     tempLamp.setPower(lamp.getPower());
                                     tempLamp.setTypeImage(lamp.getTypeImage());
                                     tempLamp.setComments(lamp.getComments());
-
                                     ImageView imageView = new ImageView(Variables.activity);
-                                    imageView.setImageResource(lamp.getTypeImage());
+                                    Resources resources = Variables.activity.getResources();
+                                    final int resourceId = resources.getIdentifier(lamp.getTypeImage(), "drawable",
+                                            Variables.activity.getPackageName());
+                                    imageView.setImageResource(resourceId);
                                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
                                     imageView.setLayoutParams(params);
-                                    imageView.setScaleX(Variables.lastScaletype);
-                                    imageView.setScaleY(Variables.lastScaletype);
+                                    imageView.setScaleX(lamp.getImage().getScaleX());
+                                    imageView.setScaleY(lamp.getImage().getScaleY());
                                     Variables.plan.setListener(imageView);
                                     imageView.setX(lamp.getImage().getX());
                                     imageView.setY(lamp.getImage().getY());
                                     tempLamp.setImage(imageView);
                                     tempLamp.setView();
+                                    Variables.plan.rotateImg(tempLamp.getRotationAngle(),tempLamp.getImage(),tempLamp.getTypeImage());
                                     Variables.copyVector.add(tempLamp);
                                 }
 
@@ -543,7 +551,7 @@ public class Buttons {
                             if (column_amount > 0 && column != null && rows_amount > 0 && rows != null && Variables.multipleType != -1) {
                                 for (int i = 0; i < rows_amount; i++) {
                                     for (int j = 0; j < column_amount; j++) {
-                                        Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, cordX + j * width_step, cordY + i * height_step, true, angle);
+                                        Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.plan.lampsName[Variables.multiplepos],cordX + j * width_step, cordY + i * height_step, true, angle);
                                     }
                                 }
                             }

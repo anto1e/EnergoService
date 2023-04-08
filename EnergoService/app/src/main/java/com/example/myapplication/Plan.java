@@ -3,6 +3,7 @@ package com.example.myapplication;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -47,6 +48,8 @@ public class Plan {
     public final Integer[] imageid = {              //Изображения светильников
             R.drawable.lum4_18, R.drawable.lum2_36,R.drawable.lampnakal
     };
+
+    public final String[] lampsName = {"lum4_18","lum2_36","lampnakal"};
 
     @SuppressLint("ClickableViewAccessibility")
     public void disableListenerFromPlan(){              //Отключение слушателя нажатий на план для добавления светильников
@@ -93,7 +96,7 @@ public class Plan {
                                 }       //Иначе устанавливаем ему координаты нажатия
                                 tempView.setX(event.getX() - tempView.getWidth() / 2);
                                 tempView.setY(event.getY() - tempView.getHeight() / 2);
-                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, 0, 0, false, 0);
+                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, lampsName[Variables.multiplepos], 0, 0, false, 0);
                             } else if (Variables.addMultipleRowsFlag || (Variables.copyFlag && Variables.copyType == 0) || Variables.selectZoneFlag) {
                                 if (!Variables.firstTouch) {
                                     Variables.firstPointX = event.getX();
@@ -297,20 +300,26 @@ public class Plan {
         });
     }
 
-    public void rotateImg(float angle,ImageView imageView,int type){
-        Bitmap myImg = BitmapFactory.decodeResource(Variables.activity.getResources(), type);
+    public void rotateImg(float angle,ImageView imageView,String type){
+        if (imageView!=null) {
+            Resources resources = Variables.activity.getResources();
+            final int resourceId = resources.getIdentifier(type, "drawable",
+                    Variables.activity.getPackageName());
+            Bitmap myImg = BitmapFactory.decodeResource(Variables.activity.getResources(), resourceId);
+            if (myImg!=null) {
+                Matrix matrix = new Matrix();
+                matrix.postRotate(angle);
 
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
+                Bitmap rotated = Bitmap.createBitmap(myImg, 0, 0, myImg.getWidth(), myImg.getHeight(),
+                        matrix, true);
 
-        Bitmap rotated = Bitmap.createBitmap(myImg, 0, 0, myImg.getWidth(), myImg.getHeight(),
-                matrix, true);
-
-        imageView.setImageBitmap(rotated);
+                imageView.setImageBitmap(rotated);
+            }
+        }
     }
     @SuppressLint("ResourceAsColor")
     //Функция создания и отображения светильника на плане
-    public void spawnLamp(Integer type, int pos,int typeLamp,float cordX,float cordY,boolean type_spawning,float rotation) {
+    public void spawnLamp(Integer type, int pos,int typeLamp,String lampName,float cordX,float cordY,boolean type_spawning,float rotation) {
             if (tempView != null || type_spawning) {                   //Если активная функция добавления светильника
                 ImageView imageView = new ImageView(Variables.activity);
                 imageView.setImageResource(type);
@@ -322,7 +331,7 @@ public class Plan {
                 if (type_spawning){
                     imageView.setX(cordX);
                     imageView.setY(cordY);
-                    rotateImg(90, imageView, type);
+                    rotateImg(90, imageView, lampName);
                 }else {
                     imageView.setX(tempView.getX());
                     imageView.setY(tempView.getY());
@@ -336,7 +345,7 @@ public class Plan {
                         lamp.setType("Люминесцентный");
                     }
                     lamp.setRotationAngle(rotation);
-                    lamp.setTypeImage(type);
+                    lamp.setTypeImage(lampName);
                     lamp.setLampRoom(touchedRoom.getNumber());
                     lamp.setPower(Variables.lampNames[pos]);
                     lamp.setImage(imageView);
@@ -350,7 +359,7 @@ public class Plan {
                     lamp.setRotationAngle(rotation);
                     lamp.setLampRoom("-1");
                     imageView.setBackgroundResource(R.color.blue);
-                    lamp.setTypeImage(type);
+                    lamp.setTypeImage(lampName);
                     lamp.setPower(Variables.lampNames[pos]);
                     lamp.setImage(imageView);
                     Variables.current_floor.unusedLamps.add(lamp);          //Добавляем светильник в вектор непривязанных светильников

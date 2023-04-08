@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         Variables.buttons.startDetecting();       //Начало отслеживания нажатия кнопок
         Variables.listView.setOnItemClickListener((adapterView, view, position, l) -> {       //Обработка нажатия на один из элементов списка светильников
             if (Variables.getAddFlag()) {
-                Variables.plan.spawnLamp(Variables.plan.imageid[position], position, 1,0,0,false,0);         //Создание светильника
+                Variables.plan.spawnLamp(Variables.plan.imageid[position], position, 1,Variables.plan.lampsName[position],0,0,false,0);         //Создание светильника
             }else if (Variables.addMultiple_flag || Variables.addMultipleRowsFlag){
                 Variables.resetListColor();
                 view.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
