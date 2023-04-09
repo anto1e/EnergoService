@@ -88,6 +88,7 @@ public class ExcelExporter {
         for (int l=0;l<Variables.floors.size();l++) {
             if (Objects.equals(Variables.floors.elementAt(l).getName(), Variables.current_floor.getName())) {
                 Floor temp = Variables.floors.elementAt(l);
+                Variables.refreshLampsToRooms(temp);
                 for (int i = 0; i < temp.rooms.size(); i++) {
                     int count = 0;
                     Vector<String> types = new Vector<String>();
@@ -228,6 +229,9 @@ public class ExcelExporter {
 
     }
     public void save() throws Exception {       //Сохранение в новый файл(Aspose Cells)
+        Cell cell = cells.get("M510");
+        String value = cell.getFormula();
+        cell.setFormula(value);
         workbook.save(path + "/"+Variables.current_floor.getName()+".xlsx");
         //Пересохранение файла, с удалением страницы о пробной лицензии(Apache POI Excel)
         FileInputStream inputStream = new FileInputStream(new File(path + "/"+Variables.current_floor.getName()+".xlsx"));

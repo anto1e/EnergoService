@@ -268,4 +268,28 @@ public class Variables {
             Buttons.createNewPhotoRoom(f);
         }
     }
+    public static void refreshLampsToRooms(Floor floor){
+        for (Room room: floor.rooms){
+            Vector<Lamp> tempVec= new Vector<Lamp>(room.lamps);
+            for (Lamp lamp: tempVec){
+                Room temp = getRoomByNumber(lamp.getLampRoom());
+                if (temp!=null && !temp.lamps.contains(lamp)){
+                    temp.lamps.add(lamp);
+                    if (current_floor.unusedLamps.contains(lamp)){
+                        current_floor.unusedLamps.remove(lamp);
+                    }
+                }
+            }
+        }
+        Vector<Lamp> tempVec = new Vector<Lamp>(floor.unusedLamps);
+         for (Lamp lamp: tempVec){
+            Room temp = getRoomByNumber(lamp.getLampRoom());
+            if (temp!=null && !temp.lamps.contains(lamp)){
+                temp.lamps.add(lamp);
+                if (current_floor.unusedLamps.contains(lamp)){
+                    current_floor.unusedLamps.remove(lamp);
+                }
+            }
+        }
+    }
 }

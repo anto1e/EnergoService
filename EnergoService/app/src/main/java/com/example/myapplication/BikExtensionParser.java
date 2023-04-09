@@ -133,9 +133,6 @@ public class BikExtensionParser {
                         String[] split_number = line.split("%");
                         if (split_number.length>1){
                             String number = split_number[0];
-                            if (Objects.equals(number, "87")){
-                                System.out.println();
-                            }
                             String[] split_room_info = split_number[1].split("@");
                             String height = split_room_info[0];
                             int typeRoom = Integer.parseInt(split_room_info[1]);
@@ -213,25 +210,20 @@ public class BikExtensionParser {
                                 Variables.plan.setListener(imageView);
                                 lamp.setImage(imageView);
                                 Variables.plan.rotateImg(rotationAngle,imageView,type_image);
-                                Room detectedRoom=null;
-                                for (Room temp:Variables.current_floor.rooms){
-                                if (temp.detectTouch(cordX,cordY)) {
-                                        detectedRoom=temp;
+                                if (Objects.equals(lampRoom, "-1") && !Objects.equals(usedOrNot, "used")){
+                                    Room detectedRoom=null;
+                                    for (Room temp:Variables.current_floor.rooms){
+                                        if (temp.detectTouch(cordX,cordY)) {
+                                            detectedRoom=temp;
+                                        }
                                     }
-                                }
-                                //lamp.setView();
-                                if (detectedRoom==null){
-                                    Variables.current_floor.unusedLamps.add(lamp);
-                                    if (Objects.equals(lampRoom, "-1")) {
-                                        imageView.setBackgroundResource(R.color.blue);
+                                    if (detectedRoom==null){
+                                        Variables.current_floor.unusedLamps.add(lamp);
+                                            imageView.setBackgroundResource(R.color.blue);
+                                    }else{
+                                        detectedRoom.lamps.add(lamp);
                                     }
-                                }else {
-                                    if (detectedRoom!=room){
-                                        room=detectedRoom;
-                                    }
-                                    if (lamp.getLampRoom()!=room.getNumber()){
-                                        lamp.setLampRoom(room.getNumber());
-                                    }
+                                }else{
                                     room.lamps.add(lamp);
                                 }
                         }
