@@ -2,17 +2,20 @@ package com.example.myapplication;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
+import java.io.File;
 import java.util.Objects;
 import java.util.Vector;
 
@@ -24,6 +27,8 @@ public class Variables {
 
     static int typeOpening=0;           //Тип открытия нового файла
     static boolean selectZoneFlag=false;
+    static String tempPath;
+    static ImageView imgShot;
     static Vector<Lamp> copyVector = new Vector<Lamp>();
     static Vector<Float> distX = new Vector<Float>();
     static Vector<Float> distY = new Vector<Float>();
@@ -80,6 +85,7 @@ public class Variables {
     static RelativeLayout planLay;          //Layout плана
     static ImageView image;                     //Изображение(план)
     static EditText lampRoom;
+    static GridLayout roomGrid;
     static EditText roomNumber=null;            //Поле для номера помещения
     static EditText roomHeight;            //Поле для высоты помещения
     static Spinner daysPerWeek;            //Поле для дней работы помещения
@@ -121,6 +127,7 @@ public class Variables {
 
 
     public static void init(){                //Инициализация переменных
+        roomGrid = activity.findViewById(R.id.roomGrid);
         multipleRowsInfo = activity.findViewById(R.id.multipleRowsInfo);
         lampRoom = activity.findViewById(R.id.lampRoom);
         floorsPanels = activity.findViewById(R.id.floorPanelsLay);
@@ -254,5 +261,11 @@ public class Variables {
         }
         lastMovePosX.clear();
         lastMovePosY.clear();
+    }
+    public static void showAllPhotos(Room room){
+        for (String str:room.photoPaths){
+            File f = new File(str);
+            Buttons.createNewPhotoRoom(f);
+        }
     }
 }

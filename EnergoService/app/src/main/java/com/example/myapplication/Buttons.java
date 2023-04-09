@@ -8,11 +8,14 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Property;
@@ -35,17 +38,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import org.apache.poi.hssf.util.HSSFColor;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Vector;
 
 //Класс, обрабатывающий нажатия кнопок из правого тулбара
 
 public class Buttons {
+    public static final int CAMERA_PERM_CODE = 101;
+    public static final int CAMERA_REQUEST_CODE = 102;
     static LinearLayout active=null;
 
     ImageView addBtn;
@@ -69,7 +80,7 @@ public class Buttons {
     ImageButton selectZone;
     ImageButton copyToBufBtn;
     ImageButton pasteBtn;
-
+    ImageView takePicBtn;
 
 
 
@@ -173,6 +184,16 @@ public class Buttons {
         selectZone = Variables.activity.findViewById(R.id.selectZone);
         copyToBufBtn = Variables.activity.findViewById(R.id.copyToBuf);
         pasteBtn = Variables.activity.findViewById(R.id.pasteBtn);
+        takePicBtn = Variables.activity.findViewById(R.id.takePicBtn);
+
+        takePicBtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                        verifyPermissions();
+
+                return false;
+            }
+        });
 
         pasteBtn.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -183,6 +204,7 @@ public class Buttons {
                             Variables.moveCopiedBufVector(Variables.plan.tempView.getX(),Variables.plan.tempView.getY());
                             for (Lamp lamp:Variables.copyBuffer){
                                 lamp.setView();
+                                Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),lamp.getTypeImage());
                             }
                             for (Lamp lamp : Variables.copyBuffer) {
                                 boolean found = false;
@@ -521,6 +543,7 @@ public class Buttons {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                         if (Variables.addMultipleRowsFlag) {
+                            float scaleType = Variables.lastScaletype;
                             EditText column = Variables.activity.findViewById(R.id.columnAmount);
                             EditText rows = Variables.activity.findViewById(R.id.rowsAmount);
                             int column_amount;
@@ -535,23 +558,23 @@ public class Buttons {
                             CheckBox check = Variables.activity.findViewById(R.id.angleCheckbox);
                             float cordX = Variables.plan.selectionZone.getX();
                             float cordY = Variables.plan.selectionZone.getY();
-                            float height = (Variables.plan.selectionZone.getHeight())-(15*Variables.lastScaletype);
-                            float width = Variables.plan.selectionZone.getWidth()-(15*Variables.lastScaletype);
+                            float height = (Variables.plan.selectionZone.getHeight())-(15*scaleType);
+                            float width = Variables.plan.selectionZone.getWidth()-(15*scaleType);
                             float height_step = (height / (rows_amount-1));
                             float width_step = (width / (column_amount-1));
                             float angle = 0;
-                            while ((cordX+15*Variables.lastScaletype)+2 > cordX+width_step){
-                                Variables.lastScaletype-=0.1f;
+                            while ((cordX+15*scaleType)+2 > cordX+width_step){
+                                scaleType-=0.1f;
                             }
-                            while ((cordY+15*Variables.lastScaletype)+2 > cordY+height_step){
-                                Variables.lastScaletype-=0.1f;
+                            while ((cordY+15*scaleType)+2 > cordY+height_step){
+                                scaleType-=0.1f;
                             }
                             if (check.isChecked())
                                 angle = 90;
                             if (column_amount > 0 && column != null && rows_amount > 0 && rows != null && Variables.multipleType != -1) {
                                 for (int i = 0; i < rows_amount; i++) {
                                     for (int j = 0; j < column_amount; j++) {
-                                        Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.plan.lampsName[Variables.multiplepos],cordX + j * width_step, cordY + i * height_step, true, angle);
+                                        Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.plan.lampsName[Variables.multiplepos],cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
                                     }
                                 }
                             }
@@ -1120,25 +1143,28 @@ public class Buttons {
 
             @Override
             public void afterTextChanged(Editable s) {
-                //double lastNumber=-1;
-                if (Variables.plan.touchedLamp != null) {
-                    //lastNumber=Variables.plan.touchedLamp.getLampRoom();
-                    if (Variables.lampRoom.getText().length()>0) {
-                        try {
-                            Variables.plan.touchedLamp.setLampRoom(String.valueOf(Variables.lampRoom.getText()));
-                        }catch(NumberFormatException e){
+                if (!Variables.selectZoneFlag) {
+                    //double lastNumber=-1;
+                    if (Variables.plan.touchedLamp != null) {
+                        //lastNumber=Variables.plan.touchedLamp.getLampRoom();
+                        if (Variables.lampRoom.getText().length() > 0) {
+                            try {
+                                Variables.plan.touchedLamp.setLampRoom(String.valueOf(Variables.lampRoom.getText()));
+                            } catch (NumberFormatException e) {
 
+                            }
                         }
-                    }
-                    if (!Objects.equals(Variables.plan.touchedLamp.getLampRoom(), "-1")){
+
+                        if (!Objects.equals(Variables.plan.touchedLamp.getLampRoom(), "-1")) {
                                 /*Room room = Variables.getRoomByNumber((float) Double.parseDouble(String.valueOf(Variables.lampRoom.getText())));
                                 if (room!=null) {
                                     Variables.current_floor.unusedLamps.remove(Variables.plan.touchedLamp);
                                     room.lamps.add(Variables.plan.touchedLamp);
                                 }*/
-                        Variables.plan.touchedLamp.getImage().setBackgroundResource(0);
-                    }else{
-                        Variables.plan.touchedLamp.getImage().setBackgroundResource(R.color.blue);
+                            Variables.plan.touchedLamp.getImage().setBackgroundResource(0);
+                        } else {
+                            Variables.plan.touchedLamp.getImage().setBackgroundResource(R.color.blue);
+                        }
                     }
                 }
             }
@@ -1156,8 +1182,10 @@ public class Buttons {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (Variables.plan.touchedLamp != null) {
-                    Variables.plan.touchedLamp.setType(String.valueOf(Variables.lampType.getText()));
+                if (!Variables.selectZoneFlag) {
+                    if (Variables.plan.touchedLamp != null) {
+                        Variables.plan.touchedLamp.setType(String.valueOf(Variables.lampType.getText()));
+                    }
                 }
             }
         });
@@ -1174,8 +1202,10 @@ public class Buttons {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (Variables.plan.touchedLamp != null) {
-                    Variables.plan.touchedLamp.setPower(String.valueOf(Variables.lampPower.getText()));
+                if (!Variables.selectZoneFlag) {
+                    if (Variables.plan.touchedLamp != null) {
+                        Variables.plan.touchedLamp.setPower(String.valueOf(Variables.lampPower.getText()));
+                    }
                 }
             }
         });
@@ -1327,5 +1357,87 @@ public class Buttons {
         }
         Variables.copyVector.clear();
         Variables.plan.disableListenerFromPlan();
+    }
+
+    private void verifyPermissions(){
+        String[] permissions = {android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.CAMERA};
+
+        if(ContextCompat.checkSelfPermission(Variables.activity.getApplicationContext(),
+                permissions[0]) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(Variables.activity.getApplicationContext(),
+                permissions[1]) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(Variables.activity.getApplicationContext(),
+                permissions[2]) == PackageManager.PERMISSION_GRANTED){
+            dispatchTakePictureIntent();
+        }else{
+            ActivityCompat.requestPermissions(Variables.activity,
+                    permissions,
+                    CAMERA_PERM_CODE);
+        }
+    }
+    public static void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(Variables.activity.getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                System.out.println(ex.toString());
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(Variables.activity,
+                        "com.example.myapplication",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                Variables.activity.startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
+            }
+        }
+    }
+    private static File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName="temp";
+        if (Variables.plan.touchedRoom!=null) {
+            imageFileName = Variables.current_floor.getFloor()+";"+Variables.plan.touchedRoom.getNumber();
+        }
+//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        String path = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
+        //String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
+        File directory = new File(path+"/"+Variables.current_floor.getName());
+        if (! directory.exists()){
+            directory.mkdir();
+            // If you require it to make the entire directory path including parents,
+            // use directory.mkdirs(); here instead.
+        }
+        File storageDir = Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS+"/"+Variables.current_floor.getName());
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        Variables.plan.touchedRoom.photoPaths.add(image.getAbsolutePath());
+        return image;
+    }
+
+    public static void createNewPhotoRoom(File f){
+        ImageView view = new ImageView(Variables.activity);
+        view.setLayoutParams(new ViewGroup.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, Variables.activity.getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, Variables.activity.getResources().getDisplayMetrics())));
+        //lay.setBackgroundResource(R.drawable.txtviewborder);
+        view.setImageURI(Uri.fromFile(f));
+        Variables.roomGrid.addView(view);
+    }
+    private static void setMargins (View view, int left, int top, int right, int bottom) {
+        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+            p.setMargins(left, top, right, bottom);
+            view.requestLayout();
+        }
     }
 }

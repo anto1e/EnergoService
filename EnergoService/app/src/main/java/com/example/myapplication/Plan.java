@@ -84,7 +84,7 @@ public class Plan {
                                 tempView.setX(event.getX() - tempView.getWidth() / 2);
                                 tempView.setY(event.getY() - tempView.getHeight() / 2);
                                 // Log.d("Touched at: ",Float.toString(event.getX())+" , " + Float.toString(event.getY()));
-                            } else if (Variables.multiplepos != -1 && Variables.multipleType != -1 && Variables.multiplelampType != -1) {
+                            } else if (Variables.addMultiple_flag && Variables.multiplepos != -1 && Variables.multipleType != -1 && Variables.multiplelampType != -1) {
                                 if (tempView == null) {        //Если маркера появления светильника нет - отрисовываем его
                                     tempView = new View(Variables.activity);
                                     Variables.planLay.addView(tempView);
@@ -96,7 +96,7 @@ public class Plan {
                                 }       //Иначе устанавливаем ему координаты нажатия
                                 tempView.setX(event.getX() - tempView.getWidth() / 2);
                                 tempView.setY(event.getY() - tempView.getHeight() / 2);
-                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, lampsName[Variables.multiplepos], 0, 0, false, 0);
+                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, lampsName[Variables.multiplepos], 0, 0, false, 0,0);
                             } else if (Variables.addMultipleRowsFlag || (Variables.copyFlag && Variables.copyType == 0) || Variables.selectZoneFlag) {
                                 if (!Variables.firstTouch) {
                                     Variables.firstPointX = event.getX();
@@ -213,6 +213,8 @@ public class Plan {
             Variables.roomComments.setText(touchedRoom.getComments());
             EditText tempText = Variables.activity.findViewById(R.id.roomLamps);
             tempText.setText(Integer.toString(touchedRoom.lamps.size()));
+            Variables.roomGrid.removeAllViews();
+            Variables.showAllPhotos(touchedRoom);
         }
     }
 
@@ -232,6 +234,8 @@ public class Plan {
                     Variables.roomComments.setText(touchedRoom.getComments());
                     EditText tempText = Variables.activity.findViewById(R.id.roomLamps);
                     tempText.setText(Integer.toString(touchedRoom.lamps.size()));
+                    Variables.roomGrid.removeAllViews();
+                    Variables.showAllPhotos(touchedRoom);
                     return;
             }
         }
@@ -319,14 +323,19 @@ public class Plan {
     }
     @SuppressLint("ResourceAsColor")
     //Функция создания и отображения светильника на плане
-    public void spawnLamp(Integer type, int pos,int typeLamp,String lampName,float cordX,float cordY,boolean type_spawning,float rotation) {
+    public void spawnLamp(Integer type, int pos,int typeLamp,String lampName,float cordX,float cordY,boolean type_spawning,float rotation,float scaleType) {
             if (tempView != null || type_spawning) {                   //Если активная функция добавления светильника
                 ImageView imageView = new ImageView(Variables.activity);
                 imageView.setImageResource(type);
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
                 imageView.setLayoutParams(params);
-                imageView.setScaleX(Variables.lastScaletype);
-                imageView.setScaleY(Variables.lastScaletype);
+                if (type_spawning){
+                    imageView.setScaleX(scaleType);
+                    imageView.setScaleY(scaleType);
+                }else {
+                    imageView.setScaleX(Variables.lastScaletype);
+                    imageView.setScaleY(Variables.lastScaletype);
+                }
                 setListener(imageView);
                 if (type_spawning){
                     imageView.setX(cordX);
@@ -441,29 +450,29 @@ public class Plan {
                             Variables.current_floor.unusedLamps.remove(touchedLamp);
                         }
                     }
-                }else{
-                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_DOWN:       //Получаем нажатый светильнк
-                        if (!Variables.moveOnlySelectedZone) {
-                            sumXY = (imageView.getX() + (event.getX())) + (imageView.getY() + (event.getY()));
-                            setTouchedRoom(imageView.getX() + (event.getX()), imageView.getY() + (event.getY()), false);   //Первичное нажатие на светильник
-                            touchedLamp = getLampByTouch(imageView);
-                            setInfoLamp(touchedLamp);
-                        }
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        if (Variables.scalemode) {
-                            float currentScale = imageView.getScaleX();
-                            double newSumXY = (imageView.getX() + (event.getX())) + (imageView.getY() + (event.getY()));
-                            double dx = newSumXY - sumXY;
-                            imageView.setPivotX(imageView.getWidth());
-                            imageView.setPivotY(imageView.getHeight());
-                            if ((currentScale + (float) dx / 50) > 0.5) {
-                                imageView.setScaleX(currentScale + (float) dx / 50);
-                                imageView.setScaleY(currentScale + (float) dx / 50);
-                                Variables.lastScaletype = currentScale + (float) dx / 50;
-                                sumXY = newSumXY;
+                }else {
+                    switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
+                        case MotionEvent.ACTION_DOWN:       //Получаем нажатый светильнк
+                            if (!Variables.moveOnlySelectedZone) {
+                                sumXY = (imageView.getX() + (event.getX())) + (imageView.getY() + (event.getY()));
+                                setTouchedRoom(imageView.getX() + (event.getX()), imageView.getY() + (event.getY()), false);   //Первичное нажатие на светильник
+                                touchedLamp = getLampByTouch(imageView);
+                                setInfoLamp(touchedLamp);
                             }
+                            break;
+                        case MotionEvent.ACTION_MOVE:
+                            if (Variables.scalemode) {
+                                float currentScale = imageView.getScaleX();
+                                double newSumXY = (imageView.getX() + (event.getX())) + (imageView.getY() + (event.getY()));
+                                double dx = newSumXY - sumXY;
+                                imageView.setPivotX(imageView.getWidth());
+                                imageView.setPivotY(imageView.getHeight());
+                                if ((currentScale + (float) dx / 50) > 0.5) {
+                                    imageView.setScaleX(currentScale + (float) dx / 50);
+                                    imageView.setScaleY(currentScale + (float) dx / 50);
+                                    Variables.lastScaletype = currentScale + (float) dx / 50;
+                                    sumXY = newSumXY;
+                                }
                             /*touchedLamp = getLampByTouch(imageView);
                             lenght = Math.sqrt(Math.pow((double) (event.getX(0)) - (double) (event.getX(1)), 2) + Math.pow((double) (event.getY(0)) - (double) (event.getY(1)), 2));
                             double dx = lenght - prevLength;
@@ -476,54 +485,55 @@ public class Plan {
                                 Log.d("current scale:", Float.toString(imageView.getScaleX()) + " , " + Float.toString(imageView.getScaleY()));
 
                             }*/
-                        } else if (Variables.rotateMode) {
-                            isReleased=false;
-                            float angle = getDegreesFromTouchEvent(event, imageView, x, y);
-                            touchedLamp.setRotationAngle(angle);
-                            rotateImg(angle, imageView, touchedLamp.getTypeImage());
-                            //imageView.setRotation((float) angle);
-                        } else if (Variables.moveOnlySelectedZone){
-                            if (imageView == Variables.tempCopiedLamp.getImage()){
-                                Variables.moveCopiedVector(imageView.getX() + (event.getX()),imageView.getY() + (event.getY()));
+                            } else if (Variables.rotateMode) {
+                                isReleased = false;
+                                float angle = getDegreesFromTouchEvent(event, imageView, x, y);
+                                touchedLamp.setRotationAngle(angle);
+                                rotateImg(angle, imageView, touchedLamp.getTypeImage());
+                                //imageView.setRotation((float) angle);
+                            } else if (Variables.moveOnlySelectedZone) {
+                                if (imageView == Variables.tempCopiedLamp.getImage()) {
+                                    Variables.moveCopiedVector(imageView.getX() + (event.getX()), imageView.getY() + (event.getY()));
+                                }
+                            } else if (Variables.getMoveFlag()) {
+                                //Иначе обычное перемещение
+                                //setTouchedRoom(imageView.getX() + (event.getX()), imageView.getY() + (event.getY()), true);  //Перемещение светильника
+                                imageView.setX((imageView.getX() + (event.getX())) - imageView.getWidth() / 2);
+                                imageView.setY((imageView.getY() + (event.getY())) - imageView.getHeight() / 2);
+                            }
+                            break;
+                        case MotionEvent.ACTION_CANCEL:
+                        case MotionEvent.ACTION_UP:
+                            isReleased = true;
+                            setTouchedRoom(imageView.getX() + (event.getX()), imageView.getY() + (event.getY()), true);  //Перемещение светильника
+                            //lastRoom = touchedRoom;
+                            break;
+                    }
+
+                    if (Variables.getMoveFlag()){
+                        if (!Variables.scalemode && !Variables.removeMode && !Variables.moveOnlySelectedZone) {
+                            if (touchedRoom != lastRoom && touchedLamp != null && isReleased) {   //Если светильник в процессе перемещения оказался в другой комнате, то убираем его из старой комнаты и привязываем к новой
+                                if (lastRoom != null) {
+                                    //if (lastRoom.lamps.contains(touchedLamp)) {
+                                    lastRoom.lampRemove(touchedLamp);
+                                    //}
+                                    // if (!Variables.current_floor.unusedLamps.contains(touchedLamp)) {
+                                    Variables.current_floor.unusedLamps.add(touchedLamp);
+                                    //}
+                                    touchedLamp.setLampRoom("-1");
+                                    touchedLamp.getImage().setBackgroundResource(R.color.blue);
+                                    lastRoom = touchedRoom;
+                                }
+                                if (touchedRoom != null) {
+                                    //if (!touchedRoom.lamps.contains(imageView)) {
+                                    Variables.current_floor.unusedLamps.remove(touchedLamp);
+                                    touchedRoom.lampPush(touchedLamp);
+                                    touchedLamp.setLampRoom(touchedRoom.getNumber());
+                                    touchedLamp.getImage().setBackgroundResource(0);
+                                    //}
+                                }
                             }
                         }
-                           else if (Variables.getMoveFlag()) {
-                            //Иначе обычное перемещение
-                            //setTouchedRoom(imageView.getX() + (event.getX()), imageView.getY() + (event.getY()), true);  //Перемещение светильника
-                            imageView.setX((imageView.getX() + (event.getX())) - imageView.getWidth() / 2);
-                            imageView.setY((imageView.getY() + (event.getY())) - imageView.getHeight() / 2);
-                        }
-                        break;
-                    case MotionEvent.ACTION_CANCEL:
-                    case MotionEvent.ACTION_UP:
-                        isReleased=true;
-                        setTouchedRoom(imageView.getX() + (event.getX()), imageView.getY() + (event.getY()), true);  //Перемещение светильника
-                        //lastRoom = touchedRoom;
-                        break;
-                }
-
-                if (!Variables.scalemode && !Variables.removeMode && !Variables.moveOnlySelectedZone) {
-                    if (touchedRoom != lastRoom && touchedLamp!=null && isReleased) {   //Если светильник в процессе перемещения оказался в другой комнате, то убираем его из старой комнаты и привязываем к новой
-                        if (lastRoom != null) {
-                            //if (lastRoom.lamps.contains(touchedLamp)) {
-                                lastRoom.lampRemove(touchedLamp);
-                            //}
-                           // if (!Variables.current_floor.unusedLamps.contains(touchedLamp)) {
-                                Variables.current_floor.unusedLamps.add(touchedLamp);
-                            //}
-                            touchedLamp.setLampRoom("-1");
-                            touchedLamp.getImage().setBackgroundResource(R.color.blue);
-                            lastRoom=touchedRoom;
-                        }
-                        if (touchedRoom != null) {
-                            //if (!touchedRoom.lamps.contains(imageView)) {
-                                Variables.current_floor.unusedLamps.remove(touchedLamp);
-                                touchedRoom.lampPush(touchedLamp);
-                                touchedLamp.setLampRoom(touchedRoom.getNumber());
-                                touchedLamp.getImage().setBackgroundResource(0);
-                            //}
-                        }
-                    }
                 }
             }
 

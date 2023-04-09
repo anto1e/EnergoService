@@ -47,6 +47,7 @@ public class Room {
     public void setRoofType(int roofType) {
         this.roofType = roofType;
     }
+    Vector<String> photoPaths = new Vector<String>();
 
     public Vector<Lamp> lamps = new Vector<>();       //Список светильников в помещении
 

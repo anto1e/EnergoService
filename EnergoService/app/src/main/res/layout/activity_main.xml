@@ -68,9 +68,10 @@
                     android:layout_width="25dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/close"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp"
                     android:background="@color/red"
-                    android:layout_height="25dp"/>
+                    android:layout_height="25dp"
+                    android:contentDescription="TODO" />
                 <ImageButton
                     android:id="@+id/addPanelBtn"
                     android:layout_width="25dp"
@@ -177,7 +178,8 @@
                 android:layout_width="30dp"
                 android:background="@color/white"
                 android:src="@drawable/rotate"
-                android:layout_height="30dp">
+                android:layout_height="30dp"
+                android:contentDescription="TODO">
             </ImageButton>
 
             <ImageView
@@ -202,7 +204,8 @@
                 android:layout_width="30dp"
                 android:background="@color/white"
                 android:src="@drawable/addmultiplerowbtn"
-                android:layout_height="30dp">
+                android:layout_height="30dp"
+                android:contentDescription="TODO">
             </ImageButton>
 
             <ImageView
@@ -226,7 +229,8 @@
                 android:layout_marginTop="5dp"
                 android:background="@color/grey"
                 android:layout_marginLeft="0dp"
-                android:layout_height="30dp">
+                android:layout_height="30dp"
+                android:contentDescription="TODO">
             </ImageButton>
 
             <ImageButton
@@ -237,7 +241,8 @@
                 android:layout_marginTop="5dp"
                 android:background="@color/grey"
                 android:layout_marginLeft="10dp"
-                android:layout_height="30dp">
+                android:layout_height="30dp"
+                android:contentDescription="TODO">
             </ImageButton>
 
             <ImageButton
@@ -247,8 +252,9 @@
                 android:layout_width="30dp"
                 android:layout_marginTop="5dp"
                 android:background="@color/white"
-                android:layout_marginLeft="10dp"
-                android:layout_height="30dp">
+                android:layout_marginStart="10dp"
+                android:layout_height="30dp"
+                android:contentDescription="TODO">
             </ImageButton>
 
 
@@ -259,8 +265,9 @@
                 android:layout_width="30dp"
                 android:layout_marginTop="5dp"
                 android:background="@color/white"
-                android:layout_marginLeft="10dp"
-                android:layout_height="30dp">
+                android:layout_marginStart="10dp"
+                android:layout_height="30dp"
+                android:contentDescription="TODO">
             </ImageButton>
 
             <ImageButton
@@ -272,7 +279,8 @@
                 android:background="@color/white"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:layout_height="30dp">
+                android:layout_height="30dp"
+                android:contentDescription="TODO">
             </ImageButton>
             <ImageButton
                 android:id="@+id/excelExport"
@@ -283,7 +291,8 @@
                 android:layout_marginTop="5dp"
                 android:background="@color/white"
                 android:layout_marginBottom="5dp"
-                android:layout_height="30dp">
+                android:layout_height="30dp"
+                android:contentDescription="TODO">
             </ImageButton>
             <ImageButton
                 android:id="@+id/cancelBtn"
@@ -329,7 +338,7 @@
                     android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:background="@drawable/txtviewborder"
-                    app:layout_constraintTop_toBottomOf="@+id/globalScroll">
+                    app:layout_constraintTop_toTopOf="parent">
                     <GridLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -425,9 +434,9 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:text="Название:"
+                    android:text="@string/name_standart"
                     android:textColor="@color/black"
-                    android:textSize="12dp"
+                    android:textSize="12sp"
                     />
                 <EditText
                     android:layout_marginLeft="-80dp"
@@ -438,7 +447,7 @@
                 <TextView
                     android:text="Этаж:"
                     android:textColor="@color/black"
-                    android:textSize="12dp"
+                    android:textSize="12sp"
                     />
                 <EditText
                     android:layout_marginLeft="-80dp"
@@ -447,9 +456,9 @@
                     android:id="@+id/floorNumber"
                     />
                 <TextView
-                    android:text="Адрес:"
+                    android:text="@string/adres_standart"
                     android:textColor="@color/black"
-                    android:textSize="12dp"
+                    android:textSize="12sp"
                     />
 
                 <EditText
@@ -490,32 +499,33 @@
             tools:layout_editor_absoluteX="10dp">
 
             <GridLayout
+                android:id="@+id/gridRoomInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:columnCount="2"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:text="Номер помещения:"
+                    android:text="@string/s"
                     android:textColor="@color/black"
-                    android:textSize="12dp"
+                    android:textSize="12sp"
                     />
                 <EditText
-                    android:layout_marginLeft="-15dp"
-                    android:text="0"
-                    android:textSize="12dp"
+                    android:layout_marginStart="-15dp"
+                    android:text="@string/_0"
+                    android:textSize="12sp"
                     android:id="@+id/roomNumber"
                     android:layout_width="wrap_content"
                     />
                 <TextView
-                    android:text="Высота:"
+                    android:text="@string/hight_standart"
                     android:textColor="@color/black"
-                    android:textSize="12dp"
+                    android:textSize="12sp"
                     />
                 <EditText
-                    android:layout_marginLeft="-15dp"
-                    android:text="0.0"
-                    android:textSize="12dp"
+                    android:layout_marginStart="-15dp"
+                    android:text="@string/_0_0"
+                    android:textSize="12sp"
                     android:id="@+id/roomHigh"
                     android:layout_width="wrap_content"
                     />
@@ -620,7 +630,23 @@
                     android:textColor="@color/black"
                     android:backgroundTint="@color/grey"
                     />
+                <ImageView
+                    android:id="@+id/takePicBtn"
+                    android:layout_width="40dp"
+                    android:layout_marginStart="-30dp"
+                    android:layout_height="40dp"
+                    android:background="@color/green"/>
             </GridLayout>
+            <GridLayout
+                android:layout_below="@+id/gridRoomInfo"
+                android:id="@+id/roomGrid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="3"
+                android:useDefaultMargins="true"
+                android:orientation="horizontal">
+            </GridLayout>
+
         </RelativeLayout>
 
         <TextView

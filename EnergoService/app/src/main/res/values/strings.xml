@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="_0_0">0.0</string>
+    <string name="_0">0</string>
+    <string name="s">Номер помещения:</string>
+    <string name="hight_standart">Высота:</string>
+    <string name="adres_standart">Адрес:</string>
+    <string name="name_standart">Название:</string>
 </resources>

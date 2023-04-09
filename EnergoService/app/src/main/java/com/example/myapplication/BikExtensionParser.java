@@ -30,6 +30,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class BikExtensionParser {
@@ -132,6 +133,9 @@ public class BikExtensionParser {
                         String[] split_number = line.split("%");
                         if (split_number.length>1){
                             String number = split_number[0];
+                            if (Objects.equals(number, "87")){
+                                System.out.println();
+                            }
                             String[] split_room_info = split_number[1].split("@");
                             String height = split_room_info[0];
                             int typeRoom = Integer.parseInt(split_room_info[1]);
@@ -150,6 +154,11 @@ public class BikExtensionParser {
                             }
                             Room room = Variables.getRoomByNumber(number);
                             if (room!=null) {
+                                if (split_room_info.length>7){
+                                    String paths = split_room_info[7];
+                                    String[] split_room_photos = paths.split("!");
+                                    room.photoPaths.addAll(Arrays.asList(split_room_photos));
+                                }
                                 room.setHeight(height);
                                 room.setType_pos(typeRoom);
                                 room.setDays(days);
@@ -298,7 +307,16 @@ public class BikExtensionParser {
                     out.println();
                     out.println("///INFORMATION ABOUT ROOMS///");
                     for (int i=0;i<tempFloor.rooms.size();i++){
-                        out.println(tempFloor.rooms.elementAt(i).getNumber()+"%"+tempFloor.rooms.elementAt(i).getHeight()+"@"+tempFloor.rooms.elementAt(i).getType_pos()+"@"+tempFloor.rooms.elementAt(i).getDays()+"@"+tempFloor.rooms.elementAt(i).getHoursPerDay()+"@"+tempFloor.rooms.elementAt(i).getHoursPerWeekend()+"@"+tempFloor.rooms.elementAt(i).getRoofType()+"@"+tempFloor.rooms.elementAt(i).getComments());
+                        String str12 = tempFloor.rooms.elementAt(i).getNumber()+"%"+tempFloor.rooms.elementAt(i).getHeight()+"@"+tempFloor.rooms.elementAt(i).getType_pos()+"@"+tempFloor.rooms.elementAt(i).getDays()+"@"+tempFloor.rooms.elementAt(i).getHoursPerDay()+"@"+tempFloor.rooms.elementAt(i).getHoursPerWeekend()+"@"+tempFloor.rooms.elementAt(i).getRoofType()+"@"+tempFloor.rooms.elementAt(i).getComments();
+                        String str2="@";
+                        if (tempFloor.rooms.elementAt(i).photoPaths.size()!=0){
+                            for (String str:tempFloor.rooms.elementAt(i).photoPaths){
+                                str2+=str;
+                                str2+="!";
+                            }
+                        }
+                        out.println(str12+str2);
+
                     }
 
 
