@@ -88,7 +88,7 @@ public class ExcelExporter {
         for (int l=0;l<Variables.floors.size();l++) {
             if (Objects.equals(Variables.floors.elementAt(l).getName(), Variables.current_floor.getName())) {
                 Floor temp = Variables.floors.elementAt(l);
-                Variables.refreshLampsToRooms(temp);
+                Variables.refreshLampsToRooms(temp);        //Перепривязка светильников к помещениям
                 for (int i = 0; i < temp.rooms.size(); i++) {
                     int count = 0;
                     Vector<String> types = new Vector<String>();

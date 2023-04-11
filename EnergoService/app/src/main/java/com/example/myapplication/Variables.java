@@ -22,49 +22,46 @@ import java.util.Vector;
 //Класс для хранения глобальных переменных
 public class Variables {
     static boolean isExpotedExcel=true;     //Флаг экспорта в эксель
-    static ListView listView=null;
-    static Vector<Lamp> copyBuffer = new Vector<Lamp>();
+    static ListView listView=null;          //Список светильников
+    static Vector<Lamp> copyBuffer = new Vector<Lamp>();        //Буффер копирования
 
     static int typeOpening=0;           //Тип открытия нового файла
-    static boolean selectZoneFlag=false;
-    static String tempPath;
-    static ImageView imgShot;
-    static Vector<Lamp> copyVector = new Vector<Lamp>();
-    static Vector<Float> distX = new Vector<Float>();
-    static Vector<Float> distY = new Vector<Float>();
-    static Lamp tempCopiedLamp;
-    static Lamp tempCopiedBufLamp;
-    static Vector<Float> distBufX = new Vector<Float>();
-    static Vector<Float> distBufY = new Vector<Float>();
-    static Vector<Float> lastMovePosX = new Vector<Float>();
-    static Vector<Float> lastMovePosY = new Vector<Float>();
-    static int copyType=0;
-    static boolean confirmBtnActive=false;
-    static boolean moveOnlySelectedZone=false;
-    static boolean cancelBtnActive=false;
-    static boolean copyFlag=false;
-    static boolean planLayCleared=false;
-    static float lastLampWidth=15;
+    static boolean selectZoneFlag=false;        //Флаг выбора зона
+    static Vector<Lamp> copyVector = new Vector<Lamp>();        //Временный вектор
+    static Vector<Float> distX = new Vector<Float>();           //Вектор расстояний от выбранного светильника по Х
+    static Vector<Float> distY = new Vector<Float>();           //Вектор расстояний от выбранного светильника по У
+    static Lamp tempCopiedLamp;         //Временный скопированный светильник
+    static Lamp tempCopiedBufLamp;      //Временный скопированный светильник в буфер
+    static Vector<Float> distBufX = new Vector<Float>();            //Вектор расстояний от сохраненного светильника в буффер по Х
+    static Vector<Float> distBufY = new Vector<Float>();            //Вектор расстояний от сохраненного светильника в буффер по У
+    static Vector<Float> lastMovePosX = new Vector<Float>();            //Вектор предыдущих позиций выбранных светильников по Х
+    static Vector<Float> lastMovePosY = new Vector<Float>();            //Вектор предыдущих позиций выбранных светильников по У
+    static int copyType=0;                  //Тип копирования светильников
+    static boolean confirmBtnActive=false;      //Флаг активации кнопки подтверждения
+    static boolean moveOnlySelectedZone=false;      //Флаг активации перемещения выбранной зоны
+    static boolean cancelBtnActive=false;           //Флаг активации кнопки отмены
+    static boolean copyFlag=false;                  //Флаг активации функции копирования
+    static boolean planLayCleared=false;            //Флаг очистки плана
     static Vector<LinearLayout> FloorPanelsVec = new Vector<LinearLayout>();        //Вектор вкладок на экране
     static ExcelExporter exporter;                  //Экспортер данных в эксель
     static RelativeLayout roomInfoView;             //Панель инфрмации о комнате
 
     static RelativeLayout buildingInfoView;             //Панель инфрмации о здании
-    static boolean fileSaved=true;
+    static boolean fileSaved=true;                      //Флаг сохранен ли файл
     static RelativeLayout lampInfoView;             //Панель инфрмации о светильнике
     static EditText buildingName;             //Поле наименования здания
     static EditText buidlingFloor;             //Поле номера этажа
-    static RelativeLayout multipleRowsInfo;
-    static boolean scalemode = false;
-    static boolean rotateMode=false;
-    static boolean removeMode=false;
-    static boolean addMultipleRowsFlag=false;
-    static boolean firstTouch=false;
-    static float firstPointX=0;
-    static float firstPointY=0;
-    static boolean disableMovingPlan=false;
+    static RelativeLayout multipleRowsInfo;     //Поле выбора данных для создания множества светильников по рядам и столбцам
+    static boolean scalemode = false;           //Флаг активации режима изменения размера
+    static boolean rotateMode=false;            //Флаг активации режима поворота
+    static boolean removeMode=false;            //Флаг активации режима удаления
+    static boolean addMultipleRowsFlag=false;       //Флаг активации добавления множества светильников по рядам и столбцам
+    static boolean firstTouch=false;                //Флаг определения первого нажатия для создания зоны выделения
+    static float firstPointX=0;                     //Позиция по Х первого нажатия
+    static float firstPointY=0;                     //Позиция по У первого нажатия
+    static boolean disableMovingPlan=false;         //Флаг выключения функции перемещения по плану
 
-    static float lastScaletype=1.5f;
+    static float lastScaletype=1.5f;            //Значение последнего значения масштабирования
     static EditText buildingAdress;             //Поле адреса здания
     static String filePath="";             //Путь к текущему открытому файлу
     static Uri selectedfile;             //Выбранный текущий файл
@@ -73,19 +70,19 @@ public class Variables {
     static BikExtensionParser parser = new BikExtensionParser();        //Парсер данных из .bik
     private static boolean addFlag=false;       //Флаг активации режима добавления светильника
     static boolean addMultiple_flag=false;       //Флаг активации режима добавления светильника
-    static Integer multipleType=-1;
-    static int multiplepos=-1;
-    static int multiplelampType=-1;
+    static Integer multipleType=-1;             //Тип светильника
+    static int multiplepos=-1;                  //Позиция в массиве светильнков
+    static int multiplelampType=-1;             //Тип ламп
     private static boolean moveFlag=false;      //Флаг активации режима перемещния светильника
     static ImageView loadingImage;              //Колесо вращения при сохранении
     static LinearLayout floorsPanels;           //Layout для хранения вкладок
     static Plan plan = new Plan();          //План этажа
-    static Spinner spinRows;
-    static Spinner spinLines;
+    static Spinner spinRows;                //Спиннер столбцов(создание множества светильников по рядам и столбцам)
+    static Spinner spinLines;               //Спиннер строк(создание множества светильников по рядам и столбцам)
     static RelativeLayout planLay;          //Layout плана
     static ImageView image;                     //Изображение(план)
-    static EditText lampRoom;
-    static GridLayout roomGrid;
+    static EditText lampRoom;                   //Поле информации о привязке светильника к комнате
+    static GridLayout roomGrid;                 //Grid layout для отображения фотографий комнаты
     static EditText roomNumber=null;            //Поле для номера помещения
     static EditText roomHeight;            //Поле для высоты помещения
     static Spinner daysPerWeek;            //Поле для дней работы помещения
@@ -106,7 +103,6 @@ public class Variables {
 
     static Floor current_floor=null;            //Текущий открытый этаж
 
-    //static Floor building;
     static double lastWidth;                //Ширина плана, при разметке на сайте
     static double lastHeight;                //Высота плана, при разметке на сайте
     static double currentWidth;                //Ширина плана в приложении
@@ -121,8 +117,8 @@ public class Variables {
     static String[] hoursPerDayArr = {"0","0.5","1","2","4","6","8","12","16","20","24"};       //Часов работы по будням
     static String[] hoursPerWeekendArr = {"0","0.5","1","2","4","6","8","12","16","20","24"};       //Часов работы по выходным
 
-    static String[] spinRowsArr = {"2","3","4","5","6","7","8","9","10"};       //Часов работы по выходным
-    static String[] spinLinesArr = {"2","3","4","5","6","7","8","9","10"};       //Часов работы по выходным
+    static String[] spinRowsArr = {"2","3","4","5","6","7","8","9","10"};       //Количество светильников в столбцах
+    static String[] spinLinesArr = {"2","3","4","5","6","7","8","9","10"};       //Количество светильников в рядах
 
 
 
@@ -158,7 +154,7 @@ public class Variables {
         exporter = new ExcelExporter();
     }
 
-    public static void resetListColor(){
+    public static void resetListColor(){            //Сброс цвето в списке светильников
         if (Variables.listView!=null) {
             int count = Variables.listView.getCount();
             for (int i = 0; i < count; i++) {

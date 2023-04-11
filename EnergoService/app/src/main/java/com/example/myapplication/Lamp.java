@@ -4,14 +4,14 @@ import android.widget.ImageView;
 
 public class Lamp {
     private String type="";     //Тип светильника
-    private float rotationAngle=0;
+    private float rotationAngle=0;      //Угол поворота светильника
 
-    private String lampRoom="-1";
+    private String lampRoom="-1";           //Помещение, к которому привязан светильник
 
     private String power="";        //Мощность светильника
     private ImageView image=null;       //Картинка светильника
 
-    private String typeImage;
+    private String typeImage;           //Тип светильника
     private String comments;            //Комментарии к светильнику
 
     ////Геттеры и сеттеры////

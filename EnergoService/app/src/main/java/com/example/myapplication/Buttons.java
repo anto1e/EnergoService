@@ -59,28 +59,28 @@ public class Buttons {
     public static final int CAMERA_REQUEST_CODE = 102;
     static LinearLayout active=null;
 
-    ImageView addBtn;
-    ImageView moveBtn;
-    ImageButton uploadBtn;
-    TextView roomInfo;
-    TextView buildingInfo;
-    TextView lampInfo;
-    ImageButton addPanel;
-    ImageButton removePanel;
-    ImageView scaleBtn;
-    ImageButton saveFile;
-    ImageButton rotateLamp;
-    ImageView removeLamp;
-    ImageView addMultipleBtn;
-    ImageView addMultipleRows;
-    Button multipleRowsSubmit;
-    ImageView copyBtn;
-    ImageView confirmBtn;
-    ImageButton cancelBtn;
-    ImageButton selectZone;
-    ImageButton copyToBufBtn;
-    ImageButton pasteBtn;
-    ImageView takePicBtn;
+    ImageView addBtn;       //Кнопка добавления светильника
+    ImageView moveBtn;      //Кнопка передвижения светильников
+    ImageButton uploadBtn;      //Кнопка открытия файла
+    TextView roomInfo;          //Поле текста информации о комнате
+    TextView buildingInfo;      //Поле теста информации о здании
+    TextView lampInfo;          //Поле текста информации о светильнике
+    ImageButton addPanel;       //Кнопка добавления новой вкладки
+    ImageButton removePanel;    //Кнопка удаления вкладки
+    ImageView scaleBtn;         //Кнопка изменения масштаба
+    ImageButton saveFile;       //Кнопка сохранения файла
+    ImageButton rotateLamp;     //Кнопка поворота светильника
+    ImageView removeLamp;       //Кнопка удаления светильника
+    ImageView addMultipleBtn;   //Кнопка добавления множества светильников
+    ImageView addMultipleRows;      //Кнопка добавления светильников по рядам и столбцам
+    Button multipleRowsSubmit;      //Кнопка подтверждения добавления светильников по рядам и столбцам
+    ImageView copyBtn;          //Кнопка копирования
+    ImageView confirmBtn;       //Кнопка подтверждения
+    ImageButton cancelBtn;      //Кнопка отмены
+    ImageButton selectZone;     //Кнопка выделения зоны
+    ImageButton copyToBufBtn;   //Кнопка копирования в буфер
+    ImageButton pasteBtn;       //Кнопка вставки
+    ImageView takePicBtn;       //Кнопка активации камеры
 
 
 
@@ -171,22 +171,22 @@ public class Buttons {
         lampInfo = Variables.activity.findViewById(R.id.lampInfo);         //Панель информации о светильнике
         addPanel = Variables.activity.findViewById(R.id.addPanelBtn);   //Кнопка добавления вкладки
         removePanel = Variables.activity.findViewById(R.id.closePanelBtn);  //Кнока удаления вкладки
-        scaleBtn = Variables.activity.findViewById(R.id.scaleBtn);
-        saveFile = Variables.activity.findViewById(R.id.saveFile);
-        rotateLamp = Variables.activity.findViewById(R.id.rotateLamp);
-        removeLamp = Variables.activity.findViewById(R.id.removeLamp);
-        addMultipleBtn = Variables.activity.findViewById(R.id.addMultipleBtn);
-        addMultipleRows = Variables.activity.findViewById(R.id.addMultipleRowsBtn);
-        multipleRowsSubmit = Variables.activity.findViewById(R.id.multipleRowsSubmit);
-        copyBtn = Variables.activity.findViewById(R.id.copyBtn);
-        confirmBtn = Variables.activity.findViewById(R.id.confirmBtn);
-        cancelBtn = Variables.activity.findViewById(R.id.cancelBtn);
-        selectZone = Variables.activity.findViewById(R.id.selectZone);
-        copyToBufBtn = Variables.activity.findViewById(R.id.copyToBuf);
-        pasteBtn = Variables.activity.findViewById(R.id.pasteBtn);
-        takePicBtn = Variables.activity.findViewById(R.id.takePicBtn);
+        scaleBtn = Variables.activity.findViewById(R.id.scaleBtn);      //Кнопка масштабирования
+        saveFile = Variables.activity.findViewById(R.id.saveFile);      //Кнопка сохранения файла
+        rotateLamp = Variables.activity.findViewById(R.id.rotateLamp);  //Кнопка поворота светильника
+        removeLamp = Variables.activity.findViewById(R.id.removeLamp);  //Кнопка удаления светильника
+        addMultipleBtn = Variables.activity.findViewById(R.id.addMultipleBtn);  //Кнопка добавления множества светильников
+        addMultipleRows = Variables.activity.findViewById(R.id.addMultipleRowsBtn);     //Кнопка добавления светильников по рядам и столбцам
+        multipleRowsSubmit = Variables.activity.findViewById(R.id.multipleRowsSubmit);      //Кнопка подтверждения добавления светильников по рядам и столбцам
+        copyBtn = Variables.activity.findViewById(R.id.copyBtn);        //Кнопка копирования
+        confirmBtn = Variables.activity.findViewById(R.id.confirmBtn);  //Кнопка подтверждения
+        cancelBtn = Variables.activity.findViewById(R.id.cancelBtn);    //Кнопка отмены
+        selectZone = Variables.activity.findViewById(R.id.selectZone);  //Кнопка выбора зоны
+        copyToBufBtn = Variables.activity.findViewById(R.id.copyToBuf); //Кнопка копирования в буфер
+        pasteBtn = Variables.activity.findViewById(R.id.pasteBtn);      //Кнопка вставки
+        takePicBtn = Variables.activity.findViewById(R.id.takePicBtn);  //Кнопка активации камеры
 
-        takePicBtn.setOnTouchListener(new View.OnTouchListener() {
+        takePicBtn.setOnTouchListener(new View.OnTouchListener() {      //При нажатии - активируем камеру
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                         verifyPermissions();
@@ -195,18 +195,18 @@ public class Buttons {
             }
         });
 
-        pasteBtn.setOnTouchListener(new View.OnTouchListener() {
+        pasteBtn.setOnTouchListener(new View.OnTouchListener() { //При нажатии - вставляем скопированные ранее элементы
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_UP:
                         if (Variables.copyBuffer.size()>0 && Variables.getAddFlag() && Variables.plan.tempView!=null){
                             Variables.moveCopiedBufVector(Variables.plan.tempView.getX(),Variables.plan.tempView.getY());
-                            for (Lamp lamp:Variables.copyBuffer){
-                                lamp.setView();
-                                Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),lamp.getTypeImage());
+                            for (Lamp lamp:Variables.copyBuffer){   //Для каждого светильника в буфере
+                                lamp.setView();     //Добавляем на экран
+                                Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),lamp.getTypeImage());      //Поворачиваем
                             }
-                            for (Lamp lamp : Variables.copyBuffer) {
+                            for (Lamp lamp : Variables.copyBuffer) {        //Для каждого вставленного светильника ищем комнату куда привязать
                                 boolean found = false;
                                 for (Room room : Variables.current_floor.rooms) {
                                     if (room.detectTouch(lamp.getImage().getX(), lamp.getImage().getY())) {
@@ -215,12 +215,12 @@ public class Buttons {
                                         found = true;
                                     }
                                 }
-                                if (!found) {
+                                if (!found) {       //Если не нашли - комната null
                                     Variables.current_floor.unusedLamps.add(lamp);
                                     lamp.getImage().setBackgroundColor(Variables.activity.getResources().getColor(R.color.blue));
                                 }
                             }
-                            Variables.copyBuffer.clear();
+                            Variables.copyBuffer.clear();       //Очистка буфера
                             copyToBufBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
                             pasteBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
                         }
@@ -230,14 +230,14 @@ public class Buttons {
             }
         });
 
-        copyToBufBtn.setOnTouchListener(new View.OnTouchListener() {
+        copyToBufBtn.setOnTouchListener(new View.OnTouchListener() {        //При нажатии - копируем в буфер светильника(Выделенные ранее, либо один нажатый)
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_UP:
-                        if (Variables.selectZoneFlag && Variables.copyVector.size()>0){
-                            Variables.copyBuffer.clear();
-                            for (Lamp lamp:Variables.copyVector){
+                        if (Variables.selectZoneFlag && Variables.copyVector.size()>0){ //Если выделена группа светильников
+                            Variables.copyBuffer.clear();       //Очистка буффера копирования
+                            for (Lamp lamp:Variables.copyVector){       //Переносим выделенные светильники в буфер копирование
                                 Lamp tempLamp = new Lamp();
                                 tempLamp.setType(lamp.getType());
                                 tempLamp.setRotationAngle(lamp.getRotationAngle());
@@ -259,7 +259,7 @@ public class Buttons {
                                 imageView.setY(lamp.getImage().getY());
                                 tempLamp.setImage(imageView);
                                 Variables.copyBuffer.add(tempLamp);
-                            }
+                            }   //Находим наиболее левый верхний светильник//
                             float minCordX=Float.MAX_VALUE;
                             for (Lamp lamp:Variables.copyBuffer){
                                 if (lamp.getImage().getX()<minCordX){
@@ -274,7 +274,7 @@ public class Buttons {
                                     }
                                 }
                             }
-
+                                //Находим расстояния до других светильников от этого светильника
                             for (int i=0;i<Variables.copyBuffer.size();i++){
                                 //if (Variables.copyBuffer.elementAt(i)!=Variables.tempCopiedBufLamp){
                                     float temp1 = Variables.copyBuffer.elementAt(i).getImage().getX()-Variables.tempCopiedBufLamp.getImage().getX();
@@ -283,8 +283,8 @@ public class Buttons {
                                     Variables.distBufY.add(temp2);
                                 //}
                             }
-                        }else
-                            if(Variables.plan.touchedLamp!=null){
+                        }else       //Иначе - если зона не выделена
+                            if(Variables.plan.touchedLamp!=null){       //Если есть нажатая лампа - копируем ее в буфер
                             Variables.copyBuffer.clear();
                                 Lamp tempLamp = new Lamp();
                                 tempLamp.setType(Variables.plan.touchedLamp.getType());
@@ -309,10 +309,10 @@ public class Buttons {
                                 Variables.copyBuffer.add(tempLamp);
                                 Variables.tempCopiedBufLamp = tempLamp;
                         }
-                        if (Variables.copyBuffer.size()==0){
+                        if (Variables.copyBuffer.size()==0){    //Если размер буфера 0 - меняем цвета на серый
                             copyToBufBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
                             pasteBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
-                        }else {
+                        }else {        //Иначе меняем цвет кнопки на белый
                             copyToBufBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                         }
                         break;
@@ -321,12 +321,12 @@ public class Buttons {
             }
         });
 
-        selectZone.setOnTouchListener(new View.OnTouchListener() {
+        selectZone.setOnTouchListener(new View.OnTouchListener() {      //При нажатии - активируется выделение зоны
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_UP:
-                        if (!Variables.selectZoneFlag) {
+                        if (!Variables.selectZoneFlag) {        //Активация - установка флага, активация подтверждающих кнопок, очистка полей информации о светильнике
                             Variables.selectZoneFlag=true;
                             selectZone.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
                             Variables.plan.setListenerToPlan();
@@ -335,11 +335,11 @@ public class Buttons {
                             Variables.lampType.setText("");
                             Variables.lampPower.setText("");
                             Variables.lampComments.setText("");
-                        }else{
-                            if (!Variables.moveOnlySelectedZone) {
+                        }else{      //Деактивация
+                            if (!Variables.moveOnlySelectedZone) {  //Выключение функцию выделения и подтверждающей кнопки
                                 disableConfirmBtn();
                                 disableSelectZone();
-                            }else{
+                            }else{ //Иначе - выключаем функцию веделения
                                 Variables.selectZoneFlag=false;
                                 selectZone.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                                 Variables.plan.disableListenerFromPlan();
@@ -351,12 +351,12 @@ public class Buttons {
             }
         });
 
-        cancelBtn.setOnTouchListener(new View.OnTouchListener() {
+        cancelBtn.setOnTouchListener(new View.OnTouchListener() {       //При нажатии - выключается какое-либо действие
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_UP:
-                        if (Variables.moveOnlySelectedZone){
+                        if (Variables.moveOnlySelectedZone){    //Если выбран флаг перемещения выбранной области - сбрасываем позицию
                             Variables.resetCordsCopiedVector();
                             Variables.tempCopiedLamp.getImage().setBackgroundResource(0);
                             Variables.moveOnlySelectedZone=false;
@@ -367,7 +367,7 @@ public class Buttons {
                             else
                                 moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                         }else
-                        if (Variables.copyFlag){
+                        if (Variables.copyFlag){        //Иначе если включена функция копирования - выключаем копирование
                             disableConfirmBtn();
                             disableCancelBtn();
                             disableCopyBtn();
@@ -379,17 +379,17 @@ public class Buttons {
             }
         });
 
-        confirmBtn.setOnTouchListener(new View.OnTouchListener() {
+        confirmBtn.setOnTouchListener(new View.OnTouchListener() {      //При нажатии срабатывае подтверждения при определенных режимах
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                        if (Variables.moveOnlySelectedZone){
+                        if (Variables.moveOnlySelectedZone){        //Если выбрано перемещение выбранной зоны - сохраняем позицию
                             for (Room room:Variables.current_floor.rooms){
                                 for (Lamp lamp: Variables.copyVector){
                                     if (room.lamps.contains(lamp)){
                                         room.lamps.remove(lamp);
                                     }
                                 }
-                            }
+                            }       //Ищем комнату куда добавить каждый светильник, если не нашли - добавляем в неиспользуемые
                             for (Lamp lamp : Variables.copyVector) {
                                 boolean found = false;
                                 for (Room room : Variables.current_floor.rooms) {
@@ -415,7 +415,7 @@ public class Buttons {
                             disableConfirmBtn();
                             disableCancelBtn();
                         }
-                        else if (Variables.selectZoneFlag){
+                        else if (Variables.selectZoneFlag){     //Если это флаг выбора зоны - сохраняем групповой комментарий к светильникам
                             String txt = Variables.lampComments.getText().toString();
                             for (Lamp lamp:Variables.copyVector){
                                 String old_comments = lamp.getComments();
@@ -426,8 +426,8 @@ public class Buttons {
                                 }
                             }
                         }
-                        else if (Variables.copyFlag){
-                            if (Variables.copyType==0 && Variables.copyVector.size()>0){
+                        else if (Variables.copyFlag){       //Если это функция копирования по выбору зоны - сохраняем светильники в вектор, а затем вставляем скопированные светильники
+                            if (Variables.copyType==0 && Variables.copyVector.size()>0){        //Сохранение светильников в памяти
                                 Vector<Lamp> temp = new Vector(Variables.copyVector);
                                 for (Lamp lamp1:Variables.copyVector){
                                     lamp1.getImage().setBackgroundResource(0);
@@ -459,7 +459,7 @@ public class Buttons {
                                     Variables.plan.rotateImg(tempLamp.getRotationAngle(),tempLamp.getImage(),tempLamp.getTypeImage());
                                     Variables.copyVector.add(tempLamp);
                                 }
-
+                                //Ищем крайний левый верхний светильник
                                 float minCordX=Float.MAX_VALUE;
                                 for (Lamp lamp:Variables.copyVector){
                                     if (lamp.getImage().getX()<minCordX){
@@ -474,7 +474,7 @@ public class Buttons {
                                         }
                                     }
                                 }
-
+                                //Рассчитываем расстояния остальных светильников
                                 for (int i=0;i<Variables.copyVector.size();i++){
                                     //if (Variables.copyVector.elementAt(i)!=Variables.tempCopiedLamp){
                                         float temp1 = Variables.copyVector.elementAt(i).getImage().getX()-Variables.tempCopiedLamp.getImage().getX();
@@ -486,13 +486,13 @@ public class Buttons {
 
                                 Variables.moveCopiedVector(-1,-1);
                                 Variables.copyType=1;
-                            }else if (Variables.copyType==1){
+                            }else if (Variables.copyType==1){   //Если выбрано подтверждение - вставляем светильники в выбранную позицию
                                 if (Variables.tempCopiedLamp.getImage().getX()==-1 || Variables.tempCopiedLamp.getImage().getY()==-1){
                                     Variables.copyType=0;
                                     disableConfirmBtn();
                                     disableCancelBtn();
                                     disableCopyBtn();
-                                }else {
+                                }else {     //Ищем комнату к которой привязать светильник, если не нашли - добавляем в неиспользуемые
                                     for (Lamp lamp : Variables.copyVector) {
                                         boolean found = false;
                                         for (Room room : Variables.current_floor.rooms) {
@@ -518,17 +518,17 @@ public class Buttons {
             }
         });
 
-        copyBtn.setOnTouchListener(new View.OnTouchListener() {
+        copyBtn.setOnTouchListener(new View.OnTouchListener() {     //При нажатии - активация/деактивация копирования выбором зоны
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                        if (!Variables.copyFlag) {
+                        if (!Variables.copyFlag) {      //Активация
                             Variables.copyFlag=true;
                             Variables.copyType = 0;
                             copyBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
                             activateConfirmBtn();
                             activateCancelBtn();
                             Variables.plan.setListenerToPlan();
-                        }else{
+                        }else{          //Деактивация
                             disableConfirmBtn();
                             disableCancelBtn();
                             disableCopyBtn();
@@ -539,15 +539,16 @@ public class Buttons {
         });
 
 
-        multipleRowsSubmit.setOnTouchListener(new View.OnTouchListener() {
+        multipleRowsSubmit.setOnTouchListener(new View.OnTouchListener() {          //Кнопка создания светильников по рядам/линиям
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                        if (Variables.addMultipleRowsFlag) {
-                            float scaleType = Variables.lastScaletype;
-                            EditText column = Variables.activity.findViewById(R.id.columnAmount);
-                            EditText rows = Variables.activity.findViewById(R.id.rowsAmount);
+                        if (Variables.addMultipleRowsFlag) {        //Активация функции добавления множества светильников по рядам и столбцам
+                            float scaleType = Variables.lastScaletype;  //Получаем коэффициент масштаба
+                            EditText column = Variables.activity.findViewById(R.id.columnAmount);   //Получяем колонны
+                            EditText rows = Variables.activity.findViewById(R.id.rowsAmount);       //Получаем ряда
                             int column_amount;
                             int rows_amount;
+                            //Переводим в int числа
                             if (rows.getText().length()==0 || column.getText().length()==0){
                                 column_amount= Integer.parseInt(Variables.spinRows.getSelectedItem().toString());
                                 rows_amount = Integer.parseInt(Variables.spinLines.getSelectedItem().toString());
@@ -558,20 +559,20 @@ public class Buttons {
                             CheckBox check = Variables.activity.findViewById(R.id.angleCheckbox);
                             float cordX = Variables.plan.selectionZone.getX();
                             float cordY = Variables.plan.selectionZone.getY();
-                            float height = (Variables.plan.selectionZone.getHeight())-(15*scaleType);
-                            float width = Variables.plan.selectionZone.getWidth()-(15*scaleType);
-                            float height_step = (height / (rows_amount-1));
-                            float width_step = (width / (column_amount-1));
-                            float angle = 0;
-                            while ((cordX+15*scaleType)+2 > cordX+width_step){
+                            float height = (Variables.plan.selectionZone.getHeight())-(15*scaleType);       //Высчитываем высоту зоны
+                            float width = Variables.plan.selectionZone.getWidth()-(15*scaleType);           //Высчитываем ширину зону
+                            float height_step = (height / (rows_amount-1));         //Расчитваем шаг по У
+                            float width_step = (width / (column_amount-1));         //Расчитываем шаг по Х
+                            float angle = 0;        //Угол поворота
+                            while ((cordX+15*scaleType)+2 > cordX+width_step){      //Если все светильники не умещаются - изменяем их масштаб
                                 scaleType-=0.1f;
                             }
                             while ((cordY+15*scaleType)+2 > cordY+height_step){
                                 scaleType-=0.1f;
                             }
-                            if (check.isChecked())
+                            if (check.isChecked())      //Если активирована функция поворота - поворачиваем на 90 градусов
                                 angle = 90;
-                            if (column_amount > 0 && column != null && rows_amount > 0 && rows != null && Variables.multipleType != -1) {
+                            if (column_amount > 0 && column != null && rows_amount > 0 && rows != null && Variables.multipleType != -1) {   //Создаем светильники
                                 for (int i = 0; i < rows_amount; i++) {
                                     for (int j = 0; j < column_amount; j++) {
                                         Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.plan.lampsName[Variables.multiplepos],cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
@@ -591,20 +592,20 @@ public class Buttons {
 
 
 
-        addMultipleRows.setOnTouchListener(new View.OnTouchListener() {
+        addMultipleRows.setOnTouchListener(new View.OnTouchListener() {     //При нажатии - вызываем функциб добавления множества светильников по рядам и столбцам
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_UP:
-                        if (!Variables.addMultipleRowsFlag) {
-                            Variables.multipleRowsInfo.setVisibility(View.VISIBLE);
+                        if (!Variables.addMultipleRowsFlag) {       //Активация
+                            Variables.multipleRowsInfo.setVisibility(View.VISIBLE);     //Показываем скрытый Layout
                             Variables.addMultipleRowsFlag = true;
                             disableAddBtn();
                             disableMultipleAddBtn();
                             Variables.plan.setListenerToPlan();
                             Variables.disableMovingPlan=true;
                             addMultipleRows.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
-                        } else {
+                        } else {            //Деактивация
                             disableMultipleRowsAddBtn();
                         }
                         break;
@@ -613,31 +614,31 @@ public class Buttons {
             }
         });
 
-        addMultipleBtn.setOnTouchListener(new View.OnTouchListener() {
+        addMultipleBtn.setOnTouchListener(new View.OnTouchListener() {      //При нажатии - активация добавления множества светильников
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                        if (!Variables.addMultiple_flag){
+                        if (!Variables.addMultiple_flag){       //Активация
                             Variables.addMultiple_flag=true;
                             disableAddBtn();
                             disableMultipleRowsAddBtn();
                             Variables.plan.setListenerToPlan();
                             addMultipleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
-                        }else {
+                        }else {         //Деактивация
                             disableMultipleAddBtn();
                         }
                 return false;
             }
         });
 
-        removeLamp.setOnTouchListener(new View.OnTouchListener() {
+        removeLamp.setOnTouchListener(new View.OnTouchListener() {      //При нажатии - активация удаления светильников
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                        if (!Variables.removeMode){
+                        if (!Variables.removeMode){     //Активация
                             Variables.removeMode=true;
                             removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
                             disableScaleBtn();
                             disableRotateBtn();
-                        }else{
+                        }else{          //Деактивация
                             disableRemoveBtn();
                         }
                 return false;
@@ -645,14 +646,14 @@ public class Buttons {
         });
 
 
-        saveFile.setOnTouchListener(new View.OnTouchListener() {
+        saveFile.setOnTouchListener(new View.OnTouchListener() {         //При нажатии - активация функции сохранения в файл
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_UP:
-                        if (Variables.fileSaved) {
+                        if (Variables.fileSaved) {      //Если файл не сохраняется  в данный момент
                             Variables.fileSaved = false;
-                            SaveFileThread thread = new SaveFileThread(); //Создаем новый поток для сохранения в Эксель
+                            SaveFileThread thread = new SaveFileThread(); //Создаем новый поток для сохранения файла
                             thread.start();     //Запускаем поток
                         }
                         break;
@@ -661,33 +662,32 @@ public class Buttons {
             }
         });
 
-        scaleBtn.setOnTouchListener(new View.OnTouchListener() {
+        scaleBtn.setOnTouchListener(new View.OnTouchListener() {            //При нажатии - активация/деактивация изменения размера светильника
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                        if (!Variables.scalemode) {
+                        if (!Variables.scalemode) {     //Активация
                             Variables.scalemode = true;
                             scaleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
                             disableRemoveBtn();
                             disableRotateBtn();
-                        }else{
+                        }else{      //Деактивация
                             disableScaleBtn();
                         }
                 return false;
             }
         });
 
-        rotateLamp.setOnTouchListener(new View.OnTouchListener() {
+        rotateLamp.setOnTouchListener(new View.OnTouchListener() {      //При нажатии - активация/деактивация функции вращения светильника
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_UP:
-                        if (!Variables.rotateMode){
+                        if (!Variables.rotateMode){         //Активация
                             Variables.rotateMode=true;
                             rotateLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
                             disableScaleBtn();
                             disableRemoveBtn();
-                        }
-                        else{
+                        }else{          //Деактивация
                             disableRotateBtn();
                         }
                         break;
@@ -728,7 +728,7 @@ public class Buttons {
                             });
                             Variables.FloorPanelsVec.remove(lay);   //Удаление вкладки из вектора вкладок
                             Variables.floors.remove(Variables.current_floor);
-                            if (active != null) {
+                            if (active != null) {       //Если в текущий момент не открыта как минимум одна вкладка
                                 Variables.current_floor = Variables.floors.elementAt(Variables.FloorPanelsVec.indexOf(active));
                                 Variables.image.setImageURI(Variables.current_floor.getImage());
                                 Variables.planLay.setX(Variables.current_floor.cordX);
@@ -739,7 +739,7 @@ public class Buttons {
                                 Variables.buildingName.setText(Variables.current_floor.getName());
                                 Variables.buidlingFloor.setText(Variables.current_floor.getFloor());
                                 Variables.buildingAdress.setText(Variables.current_floor.getAdress());
-                            } else {
+                            } else {            //Иначе удаляем все вкладки
                                 Variables.floorsPanels.removeAllViews();
                                 Variables.planLayCleared=true;
                                 Variables.image.setImageResource(0);
@@ -889,10 +889,11 @@ public class Buttons {
                     } else {                                                              //Деактивация перемещения
                         disableMoveBtn();
                     }
-                }else{
+                }else{          //Если двигаем выбранную зону
                     activateCancelBtn();
                     moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.blue));
                     Variables.moveOnlySelectedZone=true;
+                    //Высчитываем крайний левый верхний светильник
                     float minCordX=Float.MAX_VALUE;
                     for (Lamp lamp:Variables.copyVector){
                             lamp.getImage().setBackgroundResource(0);
@@ -913,7 +914,7 @@ public class Buttons {
                         }
                     }
                     Variables.tempCopiedLamp.getImage().setBackgroundColor(Variables.activity.getResources().getColor(R.color.blue));
-
+                    //Рассчитываем расстояния светильников от крайнего левого верхнего светильника
                     for (int i=0;i<Variables.copyVector.size();i++){
                         //if (Variables.copyVector.elementAt(i)!=Variables.tempCopiedLamp){
                             float temp1 = Variables.copyVector.elementAt(i).getImage().getX()-Variables.tempCopiedLamp.getImage().getX();
@@ -948,6 +949,8 @@ public class Buttons {
                 return false;
             }
         });
+
+        //Слушатели изменения текста в полях
         Variables.buildingName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -1230,6 +1233,7 @@ public class Buttons {
             }
         });
     }
+    //Конец слушателей изменения текста в полях
 
     private void animateHeightTo(@NonNull View view, int height) {      //Функция анимирования изменения высота элемента
         final int currentHeight = view.getHeight();
@@ -1256,6 +1260,7 @@ public class Buttons {
         }
     }
 
+    //Деактивации функций
 
     public void drawLamps(){            //Функция отрисовки ламп на экране
         for (int i=0;i<Variables.current_floor.rooms.size();i++){
@@ -1403,7 +1408,7 @@ public class Buttons {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName="temp";
         if (Variables.plan.touchedRoom!=null) {
-            imageFileName = Variables.current_floor.getFloor()+";"+Variables.plan.touchedRoom.getNumber();
+            imageFileName = Variables.current_floor.getFloor()+";Помещение:"+Variables.plan.touchedRoom.getNumber()+";";
         }
 //        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         String path = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
@@ -1440,4 +1445,5 @@ public class Buttons {
             view.requestLayout();
         }
     }
+    //Конец деактивации функций
 }

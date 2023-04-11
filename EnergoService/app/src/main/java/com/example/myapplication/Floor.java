@@ -20,7 +20,7 @@ public class Floor {
     private String floor;               //Название этажа
     private String adress;              //Адрес здания
     public Vector<Room> rooms = new Vector<Room>();     //Хранение размеченных помещений
-    Vector<Lamp> unusedLamps = new Vector<Lamp>();
+    Vector<Lamp> unusedLamps = new Vector<Lamp>();      //Вектор неиспользуемых светильников
 
     ////Геттеры и сеттеры////
     public String getName() {

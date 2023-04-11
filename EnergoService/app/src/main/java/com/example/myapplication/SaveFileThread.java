@@ -20,7 +20,7 @@ public class SaveFileThread extends Thread {
                 rotationElement.setVisibility(View.VISIBLE);
                 rotationElement.setAnimation(an);
             });
-            Variables.refreshLampsToRooms(Variables.current_floor);
+            Variables.refreshLampsToRooms(Variables.current_floor);     //Перепривязка светильников к комнате
             Variables.parser.saveFile(Variables.filePath);
             Variables.fileSaved=true;
             Variables.activity.runOnUiThread(() -> {           //Выключаем вращение и выводим текст об удачном экспорте в эксель

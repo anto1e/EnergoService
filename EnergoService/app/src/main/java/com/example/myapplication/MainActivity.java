@@ -180,10 +180,10 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 Variables.image.setImageURI(Variables.selectedfile);
             }
-        } else if(requestCode == CAMERA_REQUEST_CODE){
+        } else if(requestCode == CAMERA_REQUEST_CODE){      //Если был запрос на использование камеры - сохраняем картинку
             if(resultCode == Activity.RESULT_OK){
                 File f = new File(String.valueOf(Variables.plan.touchedRoom.photoPaths.elementAt(Variables.plan.touchedRoom.photoPaths.size()-1)));
-                Buttons.createNewPhotoRoom(f);
+                Buttons.createNewPhotoRoom(f);      //Создание мини-изображение в layout помещения
                 Log.d("tag", "ABsolute Url of Image is " + Uri.fromFile(f));
                 Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                 Uri contentUri = Uri.fromFile(f);
@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
             Variables.opened = false;
     }
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {         //Запрос разрешений для камеры
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CAMERA_PERM_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

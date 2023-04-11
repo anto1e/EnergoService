@@ -16,7 +16,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 
 public class FileHelper {
-    public static String getRealPathFromURI(final Context context, final Uri uri) {
+    public static String getRealPathFromURI(final Context context, final Uri uri) {     //Получение реального пути файла
         String path = "";
         try {
             path = processUri(context, uri);
