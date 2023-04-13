@@ -23,7 +23,10 @@ import java.util.Vector;
 
 public class ExcelExporter {
 
-    String path = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
+    String path1 = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
+
+    String path;
+
     Workbook workbook;
     WorksheetCollection worksheets;
     Worksheet sheet;
@@ -31,13 +34,20 @@ public class ExcelExporter {
     int rowCount = 4;
     public void init() throws Exception {       //Инициализация Эксель файла
         rowCount=4;
-        workbook = new Workbook(path + "/bdr.xlsx");
+        workbook = new Workbook(path1 + "/bdr.xlsx");
         worksheets = workbook.getWorksheets();
         sheet = worksheets.get(1);
         cells = sheet.getCells();
     }
     public void exportToExel() throws Exception {           //Функция экспорта в Эксель(дорабатывается)
-        init();
+        File directory = new File(path1+"/"+Variables.current_floor.getName());
+        if (! directory.exists()){
+            directory.mkdir();
+            // If you require it to make the entire directory path including parents,
+            // use directory.mkdirs(); here instead.
+        }
+         path = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS+"/"+Variables.current_floor.getName()));
+         init();
         /*for (int i = 0; i < Variables.building.rooms.size(); i++) {
             int count=0;
             Vector<String> types = new Vector<String>();
@@ -205,6 +215,10 @@ public class ExcelExporter {
         cell = cells.get("P"+Integer.toString(rowCount));
         if (room!=null) {
             cell.setValue(Variables.roofType.getItemAtPosition(room.getRoofType()));
+        }
+        cell = cells.get("W"+Integer.toString(rowCount));
+        if (room!=null) {
+            cell.setValue(room.getComments());
         }
         cell = cells.get("Q"+Integer.toString(rowCount));
         cell.setValue(comments);

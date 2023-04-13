@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,6 +45,7 @@ public class Variables {
     static boolean copyFlag=false;                  //Флаг активации функции копирования
     static boolean planLayCleared=false;            //Флаг очистки плана
     static Vector<LinearLayout> FloorPanelsVec = new Vector<LinearLayout>();        //Вектор вкладок на экране
+    static LinearLayout floorPanelLay;
     static ExcelExporter exporter;                  //Экспортер данных в эксель
     static RelativeLayout roomInfoView;             //Панель инфрмации о комнате
 
@@ -66,6 +69,7 @@ public class Variables {
     static String filePath="";             //Путь к текущему открытому файлу
     static Uri selectedfile;             //Выбранный текущий файл
     static Activity activity=null;          //Главное activity
+    static ImageView photoImage;       //Поле для отображения фотографии
     static boolean opened = false;          //Если файл был открыт
     static BikExtensionParser parser = new BikExtensionParser();        //Парсер данных из .bik
     private static boolean addFlag=false;       //Флаг активации режима добавления светильника
@@ -79,13 +83,20 @@ public class Variables {
     static Plan plan = new Plan();          //План этажа
     static Spinner spinRows;                //Спиннер столбцов(создание множества светильников по рядам и столбцам)
     static Spinner spinLines;               //Спиннер строк(создание множества светильников по рядам и столбцам)
+    static Spinner roofTypeDefault;
+    static EditText roofTypeDefaultText;
     static RelativeLayout planLay;          //Layout плана
     static ImageView image;                     //Изображение(план)
     static EditText lampRoom;                   //Поле информации о привязке светильника к комнате
     static GridLayout roomGrid;                 //Grid layout для отображения фотографий комнаты
+    static GridLayout lampGrid;
     static EditText roomNumber=null;            //Поле для номера помещения
     static EditText roomHeight;            //Поле для высоты помещения
     static Spinner daysPerWeek;            //Поле для дней работы помещения
+    static boolean showPhotoFlag=false;
+    static boolean showPhotoLampFlag=false;
+    static CheckBox roomHeightDefaultCheck;
+    static boolean takePhotoFlag=false;
     static Spinner hoursPerDay;            //Поле для часов работы в день помещения
     static Spinner hoursPerWeekend;            //Поле для часов работы в выходные помещения
     static Spinner roofType;                //Поле типа потолка
@@ -96,8 +107,10 @@ public class Variables {
     static EditText lampType;                  //Поле типа светильника
     static EditText lampPower;                  //Поле мощности светильника
     static EditText lampComments;              //Поле комментариев к светильнику
+    static FrameLayout photoFrame;              //Layout для отображения выбранной фотографии
 
     static EditText roomComments;               //Поле комментариев к комнате
+    static int indexOfPhoto=-1;
 
     static Vector<Floor> floors= new Vector<Floor>();       //Вектор, хранящий открытые этаж
 
@@ -111,7 +124,7 @@ public class Variables {
             "4*18Вт","2*36Вт","ЛН 60Вт"
     };
 
-    static String[] roofTypes = {"Бетон","Армстронг","ПВХ"};        //Типы потолков
+    static String[] roofTypes = {"Бетон","Армстронг","ПВХ","Гипрок"};        //Типы потолков
     static String[] typesOfRooms = { "Игровая", "Спальная", "Санузел", "Коридор", "Тамбур","Лестница","Кабинет","Пищеблок"};            //Типы помещений
     static String[] daysPerWeekArr = {"0","1","2","3","4","5","6","7"};         //Дней работы в неделю
     static String[] hoursPerDayArr = {"0","0.5","1","2","4","6","8","12","16","20","24"};       //Часов работы по будням
@@ -123,6 +136,13 @@ public class Variables {
 
 
     public static void init(){                //Инициализация переменных
+        roomHeightDefaultCheck = activity.findViewById(R.id.roomHeightDefaultCheck);
+        roofTypeDefaultText = activity.findViewById(R.id.roofTypeDefaultText);
+        roofTypeDefault = activity.findViewById(R.id.roofTypeDefault);
+        lampGrid = activity.findViewById(R.id.lampGrid);
+        floorPanelLay = activity.findViewById(R.id.floorPanelLay);
+        photoImage = activity.findViewById(R.id.photoImage);
+        photoFrame = activity.findViewById(R.id.photoFrame);
         roomGrid = activity.findViewById(R.id.roomGrid);
         multipleRowsInfo = activity.findViewById(R.id.multipleRowsInfo);
         lampRoom = activity.findViewById(R.id.lampRoom);
@@ -187,6 +207,9 @@ public class Variables {
         adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,spinLinesArr);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinLines.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,roofTypes);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        roofTypeDefault.setAdapter(adapter);
     }
 
     public static void clearFields(){           //Очистка полей при переключении плана
@@ -259,13 +282,28 @@ public class Variables {
         lastMovePosY.clear();
     }
     public static void showAllPhotos(Room room){
+        Variables.roomGrid.removeAllViews();
         for (String str:room.photoPaths){
             File f = new File(str);
-            Buttons.createNewPhotoRoom(f);
+            Buttons.createNewPhotoRoom(f,true);
+        }
+    }
+    public static void showLampsAllPhotos(Lamp lamp){
+        Variables.lampGrid.removeAllViews();
+        for (String str:lamp.photoPaths){
+            File f = new File(str);
+            Buttons.createNewPhotoRoom(f,false);
         }
     }
     public static void refreshLampsToRooms(Floor floor){
         for (Room room: floor.rooms){
+            if (Variables.roomHeightDefaultCheck.isChecked()) {
+                if (Objects.equals(room.getHeight(), "0.0")) {
+                    if (!Objects.equals(Variables.current_floor.roofHeightDefault.elementAt(room.getRoofType()), "0.0")) {
+                        room.setHeight(Variables.current_floor.roofHeightDefault.elementAt(room.getRoofType()));
+                    }
+                }
+            }
             Vector<Lamp> tempVec= new Vector<Lamp>(room.lamps);
             for (Lamp lamp: tempVec){
                 Room temp = getRoomByNumber(lamp.getLampRoom());
@@ -287,5 +325,8 @@ public class Variables {
                 }
             }
         }
+    }
+    public static void clearLampGrid(){
+        lampGrid.removeAllViews();
     }
 }

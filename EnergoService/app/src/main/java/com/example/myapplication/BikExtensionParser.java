@@ -54,6 +54,11 @@ public class BikExtensionParser {
         Variables.plan.touchedRoom=null;
         Variables.plan.lastRoom=null;
         Floor floor = new Floor();          //Создание нового этажа
+        for (String type:Variables.roofTypes){
+            floor.roofHeightDefault.add("0.0");
+        }
+        Variables.roofTypeDefaultText.setText("");
+        Variables.roomHeightDefaultCheck.setChecked(false);
         if (Variables.current_floor!=null) {        //Если есть предыдущий этаж - записываем в него текущие позицию и приближение
             Variables.current_floor.cordX = Variables.planLay.getX();
             Variables.current_floor.cordY = Variables.planLay.getY();
@@ -218,6 +223,18 @@ public class BikExtensionParser {
                                 Variables.plan.setListener(imageView);
                                 lamp.setImage(imageView);
                                 Variables.plan.rotateImg(rotationAngle,imageView,type_image);
+                            if (split_room_info.length>10){      //Если есть пути к фотографиям и сами файлы существуют - добавляем
+                                String paths = split_room_info[10];
+                                String[] split_room_photos = paths.split("!");
+                                for (int i=0;i<split_room_photos.length;i++){
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                        if (Files.exists(Paths.get(split_room_photos[i]))){
+                                            lamp.photoPaths.add(split_room_photos[i]);
+                                        }
+                                    }
+                                }
+                                //room.photoPaths.addAll(Arrays.asList(split_room_photos));
+                            }
                                 if (Objects.equals(lampRoom, "-1") && !Objects.equals(usedOrNot, "used")){  //Если светильник не привязан никуда, пытаемся привязать по координатам, если не выходит - не привязываем
                                     Room detectedRoom=null;
                                     for (Room temp:Variables.current_floor.rooms){
@@ -324,12 +341,28 @@ public class BikExtensionParser {
                     for (int i=0;i<tempFloor.rooms.size();i++){
                         for (int j=0;j<tempFloor.rooms.elementAt(i).lamps.size();j++){
                             Lamp temp = tempFloor.rooms.elementAt(i).lamps.elementAt(j);
-                            out.println(tempFloor.rooms.elementAt(i).getNumber()+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle()+"@"+temp.getLampRoom()+"@"+"used");
+                            String str12 = tempFloor.rooms.elementAt(i).getNumber()+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle()+"@"+temp.getLampRoom()+"@"+"used";
+                            String str2="@";
+                            if (temp.photoPaths.size()!=0){
+                                for (String str:temp.photoPaths){
+                                    str2+=str;
+                                    str2+="!";
+                                }
+                            }
+                            out.println(str12+str2);
                         }
                     }
                     for (int i=0;i<tempFloor.unusedLamps.size();i++){
                             Lamp temp = tempFloor.unusedLamps.elementAt(i);
-                            out.println("-1"+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle()+"@"+temp.getLampRoom()+"@"+"unused");
+                            String str12 = "-1"+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle()+"@"+temp.getLampRoom()+"@"+"unused";
+                             String str2="@";
+                            if (temp.photoPaths.size()!=0){
+                                for (String str:temp.photoPaths){
+                                    str2+=str;
+                                    str2+="!";
+                                }
+                         }
+                            out.println(str12+str2);
                     }
                 } catch (IOException e) {
                     //exception handling left as an exercise for the reader

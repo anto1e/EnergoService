@@ -182,8 +182,15 @@ public class MainActivity extends AppCompatActivity {
             }
         } else if(requestCode == CAMERA_REQUEST_CODE){      //Если был запрос на использование камеры - сохраняем картинку
             if(resultCode == Activity.RESULT_OK){
-                File f = new File(String.valueOf(Variables.plan.touchedRoom.photoPaths.elementAt(Variables.plan.touchedRoom.photoPaths.size()-1)));
-                Buttons.createNewPhotoRoom(f);      //Создание мини-изображение в layout помещения
+                File f;
+                if (Variables.takePhotoFlag) {
+                    f = new File(String.valueOf(Variables.plan.touchedRoom.photoPaths.elementAt(Variables.plan.touchedRoom.photoPaths.size() - 1)));
+                    Buttons.createNewPhotoRoom(f, true);      //Создание мини-изображение в layout помещения
+                }else {
+                    f = new File(String.valueOf(Variables.plan.touchedLamp.photoPaths.elementAt(Variables.plan.touchedLamp.photoPaths.size() - 1)));
+                    Buttons.createNewPhotoRoom(f, false);      //Создание мини-изображение в layout помещения
+                }
+                Variables.takePhotoFlag=false;
                 Log.d("tag", "ABsolute Url of Image is " + Uri.fromFile(f));
                 Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                 Uri contentUri = Uri.fromFile(f);
@@ -201,7 +208,11 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CAMERA_PERM_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Buttons.dispatchTakePictureIntent();
+                if (Variables.takePhotoFlag) {
+                    Buttons.dispatchTakePictureIntent(true);
+                }else {
+                    Buttons.dispatchTakePictureIntent(false);
+                }
             } else {
                 Toast.makeText(this, "Camera Permission is Required to Use camera.", Toast.LENGTH_SHORT).show();
             }

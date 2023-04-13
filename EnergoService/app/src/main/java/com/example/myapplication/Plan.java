@@ -182,6 +182,8 @@ public class Plan {
     public void setTouchedRoom(float x,float y,boolean type){       //Функция для переопределения текущей выбранной комнаты и прошлой выбранной комнаты
         for (Room room:Variables.current_floor.rooms){
             if (room.detectTouch(x,y)) {
+                if (room!=touchedRoom)
+                    clearInfoLamp();
                 if (!type) { //Если нам нужно отследить положение при перемещении светильника
                     //lastRoom = touchedRoom;
                     touchedRoom = room;
@@ -215,6 +217,14 @@ public class Plan {
             tempText.setText(Integer.toString(touchedRoom.lamps.size()));
             Variables.roomGrid.removeAllViews();
             Variables.showAllPhotos(touchedRoom);
+            if (Variables.roomHeightDefaultCheck.isChecked()) {
+                if (String.valueOf(Variables.roomHeight.getText()).equals("0.0")) {
+                    int index = Variables.roofType.getSelectedItemPosition();
+                    Variables.roomHeight.setText(Variables.current_floor.roofHeightDefault.elementAt(index));
+                    touchedRoom.setHeight(Variables.current_floor.roofHeightDefault.elementAt(index));
+                    Variables.buttons.lastIndex = -1;
+                }
+            }
         }
     }
 
@@ -222,8 +232,10 @@ public class Plan {
     public void detectRoomTouch(float x, float y){      //Функиця определения нажатия на комнату и вывода информации о ней
         for (Room room:Variables.current_floor.rooms){
             if (room.detectTouch(x,y)) {
-                Variables.RoomInfo.setVisibility(View.VISIBLE);     //Отображаем данные о комнате
-                touchedRoom = room;
+                if (room!=touchedRoom) {
+                    clearInfoLamp();
+                    Variables.RoomInfo.setVisibility(View.VISIBLE);     //Отображаем данные о комнате
+                    touchedRoom = room;
                     Variables.roomNumber.setText(touchedRoom.getNumber());
                     Variables.roomHeight.setText(touchedRoom.getHeight());
                     Variables.type.setSelection(touchedRoom.getType_pos());
@@ -234,8 +246,16 @@ public class Plan {
                     Variables.roomComments.setText(touchedRoom.getComments());
                     EditText tempText = Variables.activity.findViewById(R.id.roomLamps);
                     tempText.setText(Integer.toString(touchedRoom.lamps.size()));
-                    Variables.roomGrid.removeAllViews();
                     Variables.showAllPhotos(touchedRoom);
+                    if (Variables.roomHeightDefaultCheck.isChecked()) {
+                        if (String.valueOf(Variables.roomHeight.getText()).equals("0.0")) {
+                            int index = Variables.roofType.getSelectedItemPosition();
+                            Variables.roomHeight.setText(Variables.current_floor.roofHeightDefault.elementAt(index));
+                            touchedRoom.setHeight(Variables.current_floor.roofHeightDefault.elementAt(index));
+                            Variables.buttons.lastIndex = -1;
+                        }
+                    }
+                }
                     return;
             }
         }
@@ -549,7 +569,17 @@ public class Plan {
             Variables.lampType.setText(lamp.getType());
             Variables.lampPower.setText(lamp.getPower());
             Variables.lampComments.setText(lamp.getComments());
+            Variables.showLampsAllPhotos(lamp);
         }
+    }
+
+    private void clearInfoLamp(){
+        touchedLamp=null;
+        Variables.lampRoom.setText("");
+        Variables.lampType.setText("");
+        Variables.lampPower.setText("");
+        Variables.lampComments.setText("");
+        Variables.clearLampGrid();
     }
 
     private Lamp getLampByTouch(ImageView image){       //Функция получения информации о светильнике по нажатию на него

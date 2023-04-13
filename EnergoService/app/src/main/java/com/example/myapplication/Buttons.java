@@ -7,6 +7,8 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -47,6 +49,8 @@ import org.apache.poi.hssf.util.HSSFColor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -81,6 +85,13 @@ public class Buttons {
     ImageButton copyToBufBtn;   //Кнопка копирования в буфер
     ImageButton pasteBtn;       //Кнопка вставки
     ImageView takePicBtn;       //Кнопка активации камеры
+    ImageView photoClose;       //Кнопка закрытия просмотра фотографий
+    ImageView photoDelete;      //Кнопка удаления фотографии
+    ImageView photoRightArrow;  //Кнопка перехода к следующей фотографии
+    ImageView photoLeftArrow;   //Кнопка перехода к предыдущей фотографии
+    ImageView takePicLampPhoto;     //Кнопка активации камеры(вкладка светильников)
+    Button submitHeightFloor;
+    int lastIndex=-1;
 
 
 
@@ -152,6 +163,8 @@ public class Buttons {
                     Variables.plan.touchedRoom=null;
                     Variables.plan.lastRoom=null;
                     Variables.selectedfile = Variables.current_floor.getImage();
+                    Variables.roofTypeDefaultText.setText("");
+                    Variables.roomHeightDefaultCheck.setChecked(false);
                 }
                 return false;
             }
@@ -185,12 +198,200 @@ public class Buttons {
         copyToBufBtn = Variables.activity.findViewById(R.id.copyToBuf); //Кнопка копирования в буфер
         pasteBtn = Variables.activity.findViewById(R.id.pasteBtn);      //Кнопка вставки
         takePicBtn = Variables.activity.findViewById(R.id.takePicBtn);  //Кнопка активации камеры
+        photoClose = Variables.activity.findViewById(R.id.photoClose);       //Кнопка закрытия просмотра фотографий
+        photoDelete = Variables.activity.findViewById(R.id.photoDelete);      //Кнопка удаления фотографии
+        photoRightArrow = Variables.activity.findViewById(R.id.photoArrowRight);  //Кнопка перехода к следующей фотографии
+        photoLeftArrow = Variables.activity.findViewById(R.id.photoArrowLeft);   //Кнопка перехода к предыдущей фотографии
+        takePicLampPhoto = Variables.activity.findViewById(R.id.takePicLampBtn);    //Кнопка активации камеры(Вкладка со светильниками)
+        submitHeightFloor = Variables.activity.findViewById(R.id.submitHeightFloor);
+
+        submitHeightFloor.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (!String.valueOf(Variables.roofTypeDefaultText.getText()).equals("0.0")) {
+                    int index = Variables.roofTypeDefault.getSelectedItemPosition();
+                    Variables.current_floor.roofHeightDefault.set(index, String.valueOf(Variables.roofTypeDefaultText.getText()));
+                }
+                return false;
+            }
+        });
+
+        takePicLampPhoto.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (Variables.plan.touchedLamp!=null) {
+                    verifyPermissions(false);
+                }
+                return false;
+            }
+        });
+
+        photoDelete.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (Variables.showPhotoFlag) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Variables.activity);
+                    builder.setCancelable(true);
+                    builder.setTitle("Удалить");
+                    builder.setMessage("Вы действительно хотите удалить фотографию?");
+                    builder.setPositiveButton("Удалить",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                        try {
+                                            Files.delete(Paths.get(Variables.plan.touchedRoom.photoPaths.elementAt(Variables.indexOfPhoto)));
+                                            Variables.plan.touchedRoom.photoPaths.remove(Variables.plan.touchedRoom.photoPaths.elementAt(Variables.indexOfPhoto));
+                                            Variables.showAllPhotos(Variables.plan.touchedRoom);
+                                        } catch (IOException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                                    if (Variables.plan.touchedRoom.photoPaths.size() == 0) {
+                                        Variables.indexOfPhoto = -1;
+                                        disablePhotoShow();
+                                    } else if (Variables.plan.touchedRoom.photoPaths.size() == 1) {
+                                        Variables.indexOfPhoto = 0;
+                                        File f = new File(Variables.plan.touchedRoom.photoPaths.elementAt(Variables.indexOfPhoto));
+                                        Variables.photoImage.setImageURI(Uri.fromFile(f));
+                                    } else {
+                                        if (Variables.indexOfPhoto == 0) {
+                                            Variables.indexOfPhoto = Variables.plan.touchedRoom.photoPaths.size() - 1;
+                                        } else {
+                                            Variables.indexOfPhoto--;
+                                        }
+                                        File f = new File(Variables.plan.touchedRoom.photoPaths.elementAt(Variables.indexOfPhoto));
+                                        Variables.photoImage.setImageURI(Uri.fromFile(f));
+                                    }
+                                }
+                            });
+                    builder.setNegativeButton("Отменить", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }else if (Variables.showPhotoLampFlag){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Variables.activity);
+                    builder.setCancelable(true);
+                    builder.setTitle("Удалить");
+                    builder.setMessage("Вы действительно хотите удалить фотографию?");
+                    builder.setPositiveButton("Удалить",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                        try {
+                                            Files.delete(Paths.get(Variables.plan.touchedLamp.photoPaths.elementAt(Variables.indexOfPhoto)));
+                                            Variables.plan.touchedLamp.photoPaths.remove(Variables.plan.touchedLamp.photoPaths.elementAt(Variables.indexOfPhoto));
+                                            Variables.showLampsAllPhotos(Variables.plan.touchedLamp);
+                                        } catch (IOException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                                    if (Variables.plan.touchedLamp.photoPaths.size() == 0) {
+                                        Variables.indexOfPhoto = -1;
+                                        disablePhotoShow();
+                                    } else if (Variables.plan.touchedLamp.photoPaths.size() == 1) {
+                                        Variables.indexOfPhoto = 0;
+                                        File f = new File(Variables.plan.touchedLamp.photoPaths.elementAt(Variables.indexOfPhoto));
+                                        Variables.photoImage.setImageURI(Uri.fromFile(f));
+                                    } else {
+                                        if (Variables.indexOfPhoto == 0) {
+                                            Variables.indexOfPhoto = Variables.plan.touchedLamp.photoPaths.size() - 1;
+                                        } else {
+                                            Variables.indexOfPhoto--;
+                                        }
+                                        File f = new File(Variables.plan.touchedLamp.photoPaths.elementAt(Variables.indexOfPhoto));
+                                        Variables.photoImage.setImageURI(Uri.fromFile(f));
+                                    }
+                                }
+                            });
+                    builder.setNegativeButton("Отменить", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+                return false;
+            }
+        });
+
+
+        photoLeftArrow.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (Variables.showPhotoFlag) {
+                    if (Variables.plan.touchedRoom.photoPaths.size() > 1) {
+                        if (Variables.indexOfPhoto == 0) {
+                            Variables.indexOfPhoto = Variables.plan.touchedRoom.photoPaths.size() - 1;
+                        } else {
+                            Variables.indexOfPhoto--;
+                        }
+                        File f = new File(Variables.plan.touchedRoom.photoPaths.elementAt(Variables.indexOfPhoto));
+                        Variables.photoImage.setImageURI(Uri.fromFile(f));
+                    }
+                } else if (Variables.showPhotoLampFlag){
+                    if (Variables.plan.touchedLamp.photoPaths.size() > 1) {
+                        if (Variables.indexOfPhoto == 0) {
+                            Variables.indexOfPhoto = Variables.plan.touchedLamp.photoPaths.size() - 1;
+                        } else {
+                            Variables.indexOfPhoto--;
+                        }
+                        File f = new File(Variables.plan.touchedLamp.photoPaths.elementAt(Variables.indexOfPhoto));
+                        Variables.photoImage.setImageURI(Uri.fromFile(f));
+                    }
+                }
+                return false;
+            }
+        });
+
+        photoRightArrow.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (Variables.showPhotoFlag) {
+                    if (Variables.plan.touchedRoom.photoPaths.size() > 1) {
+                        if (Variables.indexOfPhoto == Variables.plan.touchedRoom.photoPaths.size() - 1) {
+                            Variables.indexOfPhoto = 0;
+                        } else {
+                            Variables.indexOfPhoto++;
+                        }
+                        File f = new File(Variables.plan.touchedRoom.photoPaths.elementAt(Variables.indexOfPhoto));
+                        Variables.photoImage.setImageURI(Uri.fromFile(f));
+                    }
+                }else if (Variables.showPhotoLampFlag){
+                    if (Variables.plan.touchedLamp.photoPaths.size() > 1) {
+                        if (Variables.indexOfPhoto == Variables.plan.touchedLamp.photoPaths.size() - 1) {
+                            Variables.indexOfPhoto = 0;
+                        } else {
+                            Variables.indexOfPhoto++;
+                        }
+                        File f = new File(Variables.plan.touchedLamp.photoPaths.elementAt(Variables.indexOfPhoto));
+                        Variables.photoImage.setImageURI(Uri.fromFile(f));
+                    }
+                }
+                return false;
+            }
+        });
+
+        photoClose.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                        disablePhotoShow();
+                return false;
+            }
+        });
 
         takePicBtn.setOnTouchListener(new View.OnTouchListener() {      //При нажатии - активируем камеру
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                        verifyPermissions();
-
+                if (Variables.plan.touchedRoom!=null) {
+                    Variables.takePhotoFlag = true;
+                    verifyPermissions(true);
+                }
                 return false;
             }
         });
@@ -785,7 +986,7 @@ public class Buttons {
             public boolean onTouch(View v, MotionEvent event) {
                 if (Variables.isExpotedExcel) {
                     switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
-                        case MotionEvent.ACTION_DOWN:
+                        case MotionEvent.ACTION_UP:
                             if (Variables.isExpotedExcel) {
                                 Variables.isExpotedExcel = false;
                                 SaveExcelThread thread = new SaveExcelThread(); //Создаем новый поток для сохранения в Эксель
@@ -1090,6 +1291,25 @@ public class Buttons {
             }
 
         });
+
+        Variables.roofTypeDefault.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                    if (Variables.current_floor!=null) {
+                        int index = Variables.roofTypeDefault.getSelectedItemPosition();
+                        Variables.roofTypeDefaultText.setText(Variables.current_floor.roofHeightDefault.elementAt(index));
+                    }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
+
+
         Variables.hoursPerDay.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -1118,17 +1338,30 @@ public class Buttons {
             }
 
         });
+
         Variables.roofType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                if(Variables.plan.touchedRoom!=null) {
-                    Variables.plan.touchedRoom.setRoofType(Variables.roofType.getSelectedItemPosition());
+                if (Variables.roomHeightDefaultCheck.isChecked()) {
+                    if (Variables.plan.touchedRoom != null) {
+                        if (lastIndex == -1) {
+                            lastIndex = Variables.current_floor.roofHeightDefault.indexOf(String.valueOf(Variables.roomHeight.getText()));
+                        }
+                        Variables.plan.touchedRoom.setRoofType(Variables.roofType.getSelectedItemPosition());
+                        int index = Variables.roofType.getSelectedItemPosition();
+                        if (String.valueOf(Variables.roomHeight.getText()).equals("0.0") || (lastIndex != -1 && String.valueOf(Variables.roomHeight.getText()).equals(Variables.current_floor.roofHeightDefault.elementAt(lastIndex)))) {
+                            if (!Objects.equals(Variables.current_floor.roofHeightDefault.elementAt(index), "0.0")) {
+                                Variables.plan.touchedRoom.setHeight(Variables.current_floor.roofHeightDefault.elementAt(index));
+                                Variables.roomHeight.setText(Variables.current_floor.roofHeightDefault.elementAt(index));
+                            }
+                        }
+                        lastIndex = index;
+                    }
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
             }
 
         });
@@ -1364,7 +1597,7 @@ public class Buttons {
         Variables.plan.disableListenerFromPlan();
     }
 
-    private void verifyPermissions(){
+    private void verifyPermissions(boolean type){
         String[] permissions = {android.Manifest.permission.READ_EXTERNAL_STORAGE,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 android.Manifest.permission.CAMERA};
@@ -1375,21 +1608,21 @@ public class Buttons {
                 permissions[1]) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(Variables.activity.getApplicationContext(),
                 permissions[2]) == PackageManager.PERMISSION_GRANTED){
-            dispatchTakePictureIntent();
+            dispatchTakePictureIntent(type);
         }else{
             ActivityCompat.requestPermissions(Variables.activity,
                     permissions,
                     CAMERA_PERM_CODE);
         }
     }
-    public static void dispatchTakePictureIntent() {
+    public static void dispatchTakePictureIntent(boolean type) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(Variables.activity.getPackageManager()) != null) {
             // Create the File where the photo should go
             File photoFile = null;
             try {
-                photoFile = createImageFile();
+                photoFile = createImageFile(type);
             } catch (IOException ex) {
                 System.out.println(ex.toString());
             }
@@ -1403,12 +1636,18 @@ public class Buttons {
             }
         }
     }
-    private static File createImageFile() throws IOException {
+    private static File createImageFile(boolean type) throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName="temp";
-        if (Variables.plan.touchedRoom!=null) {
-            imageFileName = Variables.current_floor.getFloor()+";Помещение:"+Variables.plan.touchedRoom.getNumber()+";";
+        if (type) {
+            if (Variables.plan.touchedRoom != null) {
+                imageFileName = Variables.current_floor.getFloor() + ";Помещение:" + Variables.plan.touchedRoom.getNumber() + ";";
+            }
+        }else{
+            if (Variables.plan.touchedLamp != null) {
+                imageFileName = Variables.current_floor.getFloor() + ";Помещение:" + Variables.plan.touchedRoom.getNumber() + ";"+Variables.plan.touchedLamp.getType()+" "+Variables.plan.touchedLamp.getPower()+";";
+            }
         }
 //        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         String path = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
@@ -1427,16 +1666,79 @@ public class Buttons {
         );
 
         // Save a file: path for use with ACTION_VIEW intents
+        if (type)
         Variables.plan.touchedRoom.photoPaths.add(image.getAbsolutePath());
+        else
+            Variables.plan.touchedLamp.photoPaths.add(image.getAbsolutePath());
         return image;
     }
 
-    public static void createNewPhotoRoom(File f){
+    private static void disablePhotoShow(){
+        Variables.photoFrame.setVisibility(View.GONE);
+        Variables.floorPanelLay.setVisibility(View.VISIBLE);
+        Variables.planLay.setVisibility(View.VISIBLE);
+        Variables.photoImage.setImageResource(0);
+        Variables.indexOfPhoto=-1;
+        Variables.showPhotoFlag=false;
+        Variables.showPhotoLampFlag=false;
+    }
+
+    public static void createNewPhotoRoom(File f,boolean type){
         ImageView view = new ImageView(Variables.activity);
         view.setLayoutParams(new ViewGroup.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, Variables.activity.getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, Variables.activity.getResources().getDisplayMetrics())));
         //lay.setBackgroundResource(R.drawable.txtviewborder);
         view.setImageURI(Uri.fromFile(f));
-        Variables.roomGrid.addView(view);
+        if (type){
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (Variables.scalemode) {
+                    Variables.showPhotoLampFlag=false;
+                        Variables.showPhotoFlag=true;
+                        for (int i = 0; i < Variables.roomGrid.getChildCount(); i++) {
+                            if (Variables.roomGrid.getChildAt(i) == view) {
+                                Variables.indexOfPhoto = i;
+                                break;
+                            }
+                        }
+                        if (Variables.indexOfPhoto != -1) {
+                            Variables.photoFrame.setVisibility(View.VISIBLE);
+                            Variables.floorPanelLay.setVisibility(View.GONE);
+                            Variables.planLay.setVisibility(View.GONE);
+                            File f = new File(Variables.plan.touchedRoom.photoPaths.elementAt(Variables.indexOfPhoto));
+                            Variables.photoImage.setImageURI(Uri.fromFile(f));
+                        }
+                }
+                return false;
+            }
+        });Variables.roomGrid.addView(view);}
+        else{
+            view.setOnTouchListener(new View.OnTouchListener() {
+                @SuppressLint("ClickableViewAccessibility")
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (Variables.scalemode) {
+                        Variables.showPhotoFlag=false;
+                        Variables.showPhotoLampFlag=true;
+                        for (int i = 0; i < Variables.lampGrid.getChildCount(); i++) {
+                            if (Variables.lampGrid.getChildAt(i) == view) {
+                                Variables.indexOfPhoto = i;
+                                break;
+                            }
+                        }
+                        if (Variables.indexOfPhoto != -1) {
+                            Variables.photoFrame.setVisibility(View.VISIBLE);
+                            Variables.floorPanelLay.setVisibility(View.GONE);
+                            Variables.planLay.setVisibility(View.GONE);
+                            File f = new File(Variables.plan.touchedLamp.photoPaths.elementAt(Variables.indexOfPhoto));
+                            Variables.photoImage.setImageURI(Uri.fromFile(f));
+                        }
+                    }
+                    return false;
+                }
+            });Variables.lampGrid.addView(view);
+        }
     }
     private static void setMargins (View view, int left, int top, int right, int bottom) {
         if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {

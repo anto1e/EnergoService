@@ -2,6 +2,8 @@ package com.example.myapplication;
 
 import android.widget.ImageView;
 
+import java.util.Vector;
+
 public class Lamp {
     private String type="";     //Тип светильника
     private float rotationAngle=0;      //Угол поворота светильника
@@ -12,6 +14,8 @@ public class Lamp {
     private ImageView image=null;       //Картинка светильника
 
     private String typeImage;           //Тип светильника
+
+    Vector<String> photoPaths = new Vector<String>();
     private String comments;            //Комментарии к светильнику
 
     ////Геттеры и сеттеры////

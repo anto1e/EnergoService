@@ -22,6 +22,8 @@ public class Floor {
     public Vector<Room> rooms = new Vector<Room>();     //Хранение размеченных помещений
     Vector<Lamp> unusedLamps = new Vector<Lamp>();      //Вектор неиспользуемых светильников
 
+    Vector<String> roofHeightDefault = new Vector<>();
+
     ////Геттеры и сеттеры////
     public String getName() {
         return name;

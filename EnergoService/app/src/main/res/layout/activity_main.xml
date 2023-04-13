@@ -112,6 +112,66 @@
 
 
                 </RelativeLayout>
+                    <FrameLayout
+                        android:id="@+id/photoFrame"
+                        android:visibility="gone"
+                        android:layout_marginBottom="0dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/photoImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitCenter"
+                            />
+
+                        <ImageView
+                            android:id="@+id/photoClose"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:scaleType="fitCenter"
+                            android:alpha="0.6"
+                            android:layout_marginEnd="0dp"
+                            android:background="@drawable/txtviewborder"
+                            android:layout_gravity="top|right"
+                            android:src="@drawable/close"/>
+                        <ImageView
+                            android:id="@+id/photoDelete"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:scaleType="fitCenter"
+                            android:layout_marginEnd="40dp"
+                            android:alpha="0.6"
+                            android:padding="4dp"
+                            android:background="@drawable/txtviewborder"
+                            android:layout_gravity="top|right"
+                            android:src="@drawable/delete"/>
+                        <ImageView
+                            android:id="@+id/photoArrowRight"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:scaleType="fitCenter"
+                            android:alpha="0.6"
+                            android:layout_marginLeft="20dp"
+                            android:padding="4dp"
+                            android:background="@drawable/txtviewborder"
+                            android:layout_gravity="bottom|center"
+                            android:src="@drawable/arrow"/>
+                        <ImageView
+                            android:id="@+id/photoArrowLeft"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:scaleType="fitCenter"
+                            android:alpha="0.6"
+                            android:layout_marginRight="40dp"
+                            android:padding="4dp"
+                            android:rotation="180"
+                            android:background="@drawable/txtviewborder"
+                            android:layout_gravity="bottom|center"
+                            android:src="@drawable/arrow"/>
+
+                    </FrameLayout>
                 </LinearLayout>
         <!--Второй тул-бар -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -191,7 +251,6 @@
                 android:layout_width="30dp"
                 android:background="@color/white"
                 android:layout_marginTop="5dp"
-
                 android:layout_height="30dp">
             </ImageView>
 
@@ -324,7 +383,7 @@
             android:id="@+id/globalScroll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="100dp"
+            android:paddingBottom="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolsGrid">
@@ -467,15 +526,43 @@
                     android:textSize="12dp"
                     android:id="@+id/adress"
                     />
-                <Button
-                    android:visibility="invisible"
-                    android:id="@+id/submitBuilding"
-                    android:layout_height="20dp"
-                    android:text="Подтвердить"
+                <TextView
+                    android:text="Высота по умолчанию:"
                     android:textColor="@color/black"
-                    android:backgroundTint="@color/grey"
+                    android:textSize="12sp"
                     />
+                <CheckBox
+                    android:id="@+id/roomHeightDefaultCheck"
+                    android:layout_marginLeft="-20dp"
+                    />
+                <Spinner
+                    android:verticalScrollbarPosition="right"
+                    android:id="@+id/roofTypeDefault"
+                    android:layout_marginLeft="0dp"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown" />
+                <EditText
+                    android:text="0.0"
+                    android:layout_marginTop="-8dp"
+                    android:layout_marginLeft="-10dp"
+                    android:layout_width="wrap_content"
+                    android:textSize="12dp"
+                    android:id="@+id/roofTypeDefaultText"
+                    />
+                <Button
+                android:id="@+id/submitHeightFloor"
+                android:layout_height="30dp"
+                android:layout_width="150dp"
+                android:textSize="8sp"
+                android:text="Сохранить высоту"
+                android:textColor="@color/black"
+                android:backgroundTint="@color/grey"
+                />
+
             </GridLayout>
+
         </RelativeLayout>
 
         <TextView
@@ -630,12 +717,15 @@
                     android:textColor="@color/black"
                     android:backgroundTint="@color/grey"
                     />
+                <TextView/>
                 <ImageView
                     android:id="@+id/takePicBtn"
                     android:layout_width="40dp"
-                    android:layout_marginStart="-30dp"
-                    android:layout_height="40dp"
-                    android:background="@color/green"/>
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:src="@drawable/camera"
+                    android:background="@drawable/txtviewborder"
+                    android:layout_height="40dp"/>
             </GridLayout>
             <GridLayout
                 android:layout_below="@+id/gridRoomInfo"
@@ -664,10 +754,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
+            android:layout_marginBottom="100dp"
             app:layout_constraintTop_toBottomOf="@+id/lampInfo"
             tools:layout_editor_absoluteX="10dp">
 
             <GridLayout
+                android:id="@+id/gridLampInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:columnCount="2"
@@ -724,9 +816,26 @@
                     android:id="@+id/submitLamp"
                     android:text="Подтвердить"
                     android:textColor="@color/black"
-                    android:layout_marginBottom="60dp"
                     android:backgroundTint="@color/grey"
-                    />
+                    /><TextView/>
+                <ImageView
+                    android:id="@+id/takePicLampBtn"
+                    android:layout_width="40dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:src="@drawable/camera"
+                    android:background="@drawable/txtviewborder"
+                    android:layout_height="40dp"/>
+            </GridLayout>
+            <GridLayout
+                android:layout_marginBottom="150dp"
+                android:layout_below="@+id/gridLampInfo"
+                android:id="@+id/lampGrid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="3"
+                android:useDefaultMargins="true"
+                android:orientation="horizontal">
             </GridLayout>
         </RelativeLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>

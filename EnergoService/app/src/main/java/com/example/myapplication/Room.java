@@ -23,6 +23,7 @@ public class Room {
     private Polygon polygon;                //Многоугольник, построенный по координатам точек помещения
     public double[] arrayX;                 //Массив координат Х точек помещения
     public double[] arrayY;                 //Массив координат У точек помещения
+    Vector<String> photoPaths = new Vector<String>();
 
     public Room()
     {
@@ -47,7 +48,6 @@ public class Room {
     public void setRoofType(int roofType) {
         this.roofType = roofType;
     }
-    Vector<String> photoPaths = new Vector<String>();
 
     public Vector<Lamp> lamps = new Vector<>();       //Список светильников в помещении
 
