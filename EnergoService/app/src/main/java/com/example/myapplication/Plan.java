@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Objects;
 import java.util.Vector;
 
 //Класс для хранения плана здания, и нанесенных на него светильников
@@ -574,7 +575,9 @@ public class Plan {
     }
 
     private void clearInfoLamp(){
+        if (!Variables.getMoveFlag()){
         touchedLamp=null;
+        }
         Variables.lampRoom.setText("");
         Variables.lampType.setText("");
         Variables.lampPower.setText("");

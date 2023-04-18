@@ -1,6 +1,8 @@
 package com.example.myapplication;
 
+import android.graphics.Bitmap;
 import android.os.Environment;
+import android.util.Log;
 
 
 import com.aspose.cells.Cell;
@@ -18,6 +20,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Vector;
 
@@ -48,6 +53,54 @@ public class ExcelExporter {
         }
          path = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS+"/"+Variables.current_floor.getName()));
          init();
+ /*           for (Room room:Variables.current_floor.rooms) {
+                for (Lamp lamp: room.lamps){
+                    if (Objects.equals(lamp.getTypeImage(), "lum4_18")){
+                        lamp.getImage().setBackgroundResource(R.drawable.lum4_18bald);
+                    }
+                }
+            }
+            File mediaStorageDir = new File(path1+"/"+Variables.current_floor.getName());
+            // Create a storage directory if it does not exist
+
+            // Create a media file name
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String imageName = "IMG_" + timeStamp + ".jpg";
+
+            String selectedOutputPath = mediaStorageDir.getPath() + File.separator + imageName;
+
+            Variables.planLay.setDrawingCacheEnabled(true);
+            Variables.planLay.buildDrawingCache();
+            Bitmap bitmap = Bitmap.createBitmap(Variables.planLay.getDrawingCache());
+
+            int maxSize = 1080;
+
+            int bWidth = bitmap.getWidth();
+            int bHeight = bitmap.getHeight();
+            //bitmap = Bitmap.createScaledBitmap(bitmap, 1920, 1080, true);
+            //bitmap = Bitmap.createScaledBitmap(bitmap, bWidth*5, bHeight*5, true);
+
+            /*if (bWidth > bHeight) {
+                int imageHeight = (int) Math.abs(maxSize * ((float)bitmap.getWidth() / (float) bitmap.getHeight()));
+                bitmap = Bitmap.createScaledBitmap(bitmap, maxSize, imageHeight, true);
+            } else {
+                int imageWidth = (int) Math.abs(maxSize * ((float)bitmap.getWidth() / (float) bitmap.getHeight()));
+                bitmap = Bitmap.createScaledBitmap(bitmap, imageWidth, maxSize, true);
+            }*/
+       /* Variables.planLay.setDrawingCacheEnabled(false);
+        Variables.planLay.destroyDrawingCache();
+
+            OutputStream fOut = null;
+            try {
+                File file = new File(selectedOutputPath);
+                fOut = new FileOutputStream(file);
+
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+                fOut.flush();
+                fOut.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         /*for (int i = 0; i < Variables.building.rooms.size(); i++) {
             int count=0;
             Vector<String> types = new Vector<String>();
@@ -98,6 +151,20 @@ public class ExcelExporter {
         for (int l=0;l<Variables.floors.size();l++) {
             if (Objects.equals(Variables.floors.elementAt(l).getName(), Variables.current_floor.getName())) {
                 Floor temp = Variables.floors.elementAt(l);
+                for (int i=0;i<temp.rooms.size();i++){
+                    for (int j=i;j<temp.rooms.size();j++) {
+                        try{
+                        if (Double.parseDouble(temp.rooms.elementAt(i).getNumber()) > Double.parseDouble(temp.rooms.elementAt(j).getNumber())) {
+                            Room tempRoom = temp.rooms.elementAt(i);
+                            temp.rooms.set(i, temp.rooms.elementAt(j));
+                            temp.rooms.set(j, tempRoom);
+                        }
+                    } catch(NumberFormatException e){
+
+                    }
+                }
+                }
+                Variables.copyFile(temp.getImage(),path);
                 Variables.refreshLampsToRooms(temp);        //Перепривязка светильников к помещениям
                 for (int i = 0; i < temp.rooms.size(); i++) {
                     int count = 0;

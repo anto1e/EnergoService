@@ -18,6 +18,9 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Vector;
 
@@ -48,6 +51,8 @@ public class Variables {
     static LinearLayout floorPanelLay;
     static ExcelExporter exporter;                  //Экспортер данных в эксель
     static RelativeLayout roomInfoView;             //Панель инфрмации о комнате
+    static Spinner typeOfBuilding;
+    static Spinner daysOfWorkDefault;
 
     static RelativeLayout buildingInfoView;             //Панель инфрмации о здании
     static boolean fileSaved=true;                      //Флаг сохранен ли файл
@@ -125,7 +130,10 @@ public class Variables {
     };
 
     static String[] roofTypes = {"Бетон","Армстронг","ПВХ","Гипрок"};        //Типы потолков
-    static String[] typesOfRooms = { "Игровая", "Спальная", "Санузел", "Коридор", "Тамбур","Лестница","Кабинет","Пищеблок"};            //Типы помещений
+    static String[] typeOfBuildingArr = {"Детский сад","Школа","Больница"};
+    static String[] typesOfRoomsDetSad = { "Игровая", "Спальная", "Санузел", "Коридор", "Тамбур","Лестница","Кабинет","Пищеблок","Прачечная","Моечная","Кладовая","Служебное помещение","Спортзал","Актовый зал","Медкабинет"};            //Типы помещений(детские сады)
+    static String[] typesOfRoomsSchools = { "Учебный кабинет", "Кабинет", "Санузел", "Коридор", "Тамбур","Лестница","Спортзал","Пищеблок","Актовый зал","Медкабинет","Кладовая","Служебное помещение"};            //Типы помещений(школы)
+    static String[] typesOfRoomsHospitals = { "Кабинет врача", "Кабинет", "Санузел", "Коридор", "Тамбур","Лестница","Спортзал","Пищеблок","Актовый зал","Медкабинет","Кладовая","Служебное помещение","Палата","Процедурная"};            //Типы помещений(больницы)
     static String[] daysPerWeekArr = {"0","1","2","3","4","5","6","7"};         //Дней работы в неделю
     static String[] hoursPerDayArr = {"0","0.5","1","2","4","6","8","12","16","20","24"};       //Часов работы по будням
     static String[] hoursPerWeekendArr = {"0","0.5","1","2","4","6","8","12","16","20","24"};       //Часов работы по выходным
@@ -136,6 +144,8 @@ public class Variables {
 
 
     public static void init(){                //Инициализация переменных
+        daysOfWorkDefault = activity.findViewById(R.id.daysOfWorkDefault);
+        typeOfBuilding = activity.findViewById(R.id.typeOfBuilding);
         roomHeightDefaultCheck = activity.findViewById(R.id.roomHeightDefaultCheck);
         roofTypeDefaultText = activity.findViewById(R.id.roofTypeDefaultText);
         roofTypeDefault = activity.findViewById(R.id.roofTypeDefault);
@@ -186,12 +196,13 @@ public class Variables {
         }
     }
     public static void setSpinners(){       //Инициализация спиннеров
-        ArrayAdapter<String> adapter = new ArrayAdapter(activity, R.layout.spinner_item, typesOfRooms);
+        ArrayAdapter<String> adapter = new ArrayAdapter(activity, R.layout.spinner_item, typesOfRoomsDetSad);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         type.setAdapter(adapter);
         adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,daysPerWeekArr);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         daysPerWeek.setAdapter(adapter);
+        daysOfWorkDefault.setAdapter(adapter);
         adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,hoursPerWeekendArr);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         hoursPerWeekend.setAdapter(adapter);
@@ -210,6 +221,9 @@ public class Variables {
         adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,roofTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roofTypeDefault.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,typeOfBuildingArr);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        typeOfBuilding.setAdapter(adapter);
     }
 
     public static void clearFields(){           //Очистка полей при переключении плана
@@ -327,6 +341,46 @@ public class Variables {
         }
     }
     public static void clearLampGrid(){
-        lampGrid.removeAllViews();
+        if (!Variables.getMoveFlag()) {
+            lampGrid.removeAllViews();
+        }
+    }
+
+    public static void copyFile(Uri pathOld, String pathNew){
+        String pathOldFile = FileHelper.getRealPathFromURI(activity, pathOld);
+        String[] pathOldSplitted =  pathOldFile.split("/");
+        String name = pathOldSplitted[pathOldSplitted.length-1];
+        File oldFile = new File(pathOldFile);
+        File newFile = new File( pathNew, name );
+        try
+        {
+            FileInputStream fis = new FileInputStream( oldFile );
+            FileOutputStream fos = new FileOutputStream( newFile );
+            try
+            {
+                int currentByte = fis.read();
+                while( currentByte != -1 )
+                {
+                    fos.write( currentByte );
+                    currentByte = fis.read();
+                }
+            }
+            catch( IOException exception )
+            {
+                System.err.println( "IOException occurred!" );
+                exception.printStackTrace();
+            }
+            finally
+            {
+                fis.close();
+                fos.close();
+                System.out.println( "Copied file!" );
+            }
+        }
+        catch( IOException exception )
+        {
+            System.err.println( "Problems with files!" );
+            exception.printStackTrace();
+        }
     }
 }

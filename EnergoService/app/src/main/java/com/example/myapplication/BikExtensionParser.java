@@ -273,6 +273,13 @@ public class BikExtensionParser {
                 Variables.buttons.addPanel(floor.getFloor());
             }
             reader.close();
+            if (Variables.current_floor!=null) {
+                for (Room room : Variables.current_floor.rooms) {
+                    if (room.getDays() == 0) {
+                        room.setDays(Integer.parseInt(String.valueOf(Variables.daysOfWorkDefault.getSelectedItem())));
+                    }
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {

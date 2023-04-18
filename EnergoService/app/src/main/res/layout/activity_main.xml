@@ -527,6 +527,32 @@
                     android:id="@+id/adress"
                     />
                 <TextView
+                    android:text="Тип здания:"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"
+                    />
+                <Spinner
+                    android:verticalScrollbarPosition="right"
+                    android:id="@+id/typeOfBuilding"
+                    android:layout_marginLeft="-70dp"
+                    android:layout_width="90dp"
+                    android:layout_height="30dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown" />
+                <TextView
+                    android:text="Дни работы"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"
+                    />
+                <Spinner
+                    android:verticalScrollbarPosition="right"
+                    android:id="@+id/daysOfWorkDefault"
+                    android:layout_marginLeft="-70dp"
+                    android:layout_width="90dp"
+                    android:layout_height="30dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown" />
+                <TextView
                     android:text="Высота по умолчанию:"
                     android:textColor="@color/black"
                     android:textSize="12sp"

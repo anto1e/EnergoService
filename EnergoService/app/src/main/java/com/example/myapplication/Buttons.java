@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -92,6 +93,7 @@ public class Buttons {
     ImageView takePicLampPhoto;     //Кнопка активации камеры(вкладка светильников)
     Button submitHeightFloor;
     int lastIndex=-1;
+    private int lastWorkdays=5;
 
 
 
@@ -219,9 +221,9 @@ public class Buttons {
         takePicLampPhoto.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (Variables.plan.touchedLamp!=null) {
-                    verifyPermissions(false);
-                }
+                    if (Variables.plan.touchedLamp != null) {
+                        verifyPermissions(false);
+                    }
                 return false;
             }
         });
@@ -1339,6 +1341,52 @@ public class Buttons {
 
         });
 
+        Variables.typeOfBuilding.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if (String.valueOf(Variables.typeOfBuilding.getSelectedItem()).equals("Детский сад")){
+                    ArrayAdapter<String> adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsDetSad);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    Variables.type.setAdapter(adapter);
+                    Variables.daysOfWorkDefault.setSelection(5);
+                }else if (String.valueOf(Variables.typeOfBuilding.getSelectedItem()).equals("Школа")){
+                    ArrayAdapter<String> adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsSchools);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    Variables.type.setAdapter(adapter);
+                    Variables.daysOfWorkDefault.setSelection(6);
+                }else if (String.valueOf(Variables.typeOfBuilding.getSelectedItem()).equals("Больница")){
+                    ArrayAdapter<String> adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsHospitals);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    Variables.type.setAdapter(adapter);
+                    Variables.daysOfWorkDefault.setSelection(7);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
+        Variables.daysOfWorkDefault.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if (Variables.current_floor!=null) {
+                    for (Room room : Variables.current_floor.rooms) {
+                            room.setDays(Integer.parseInt(String.valueOf(Variables.daysOfWorkDefault.getSelectedItem())));
+                    }
+                    lastWorkdays = Variables.daysOfWorkDefault.getSelectedItemPosition();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
         Variables.roofType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -1379,7 +1427,7 @@ public class Buttons {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!Variables.selectZoneFlag) {
+                if (!Variables.selectZoneFlag && !Variables.getMoveFlag()) {
                     //double lastNumber=-1;
                     if (Variables.plan.touchedLamp != null) {
                         //lastNumber=Variables.plan.touchedLamp.getLampRoom();
@@ -1418,7 +1466,7 @@ public class Buttons {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!Variables.selectZoneFlag) {
+                if (!Variables.selectZoneFlag && !Variables.getMoveFlag()) {
                     if (Variables.plan.touchedLamp != null) {
                         Variables.plan.touchedLamp.setType(String.valueOf(Variables.lampType.getText()));
                     }
@@ -1438,7 +1486,7 @@ public class Buttons {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!Variables.selectZoneFlag) {
+                if (!Variables.selectZoneFlag && !Variables.getMoveFlag()) {
                     if (Variables.plan.touchedLamp != null) {
                         Variables.plan.touchedLamp.setPower(String.valueOf(Variables.lampPower.getText()));
                     }
@@ -1458,7 +1506,7 @@ public class Buttons {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!Variables.selectZoneFlag) {
+                if (!Variables.selectZoneFlag && !Variables.getMoveFlag()) {
                     if (Variables.plan.touchedLamp != null) {
                         Variables.plan.touchedLamp.setComments(String.valueOf(Variables.lampComments.getText()));
                     }
@@ -1576,13 +1624,13 @@ public class Buttons {
     private void disableCopyBtn(){
         Variables.copyFlag=false;
         copyBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-        Variables.copyVector.clear();
         if (Variables.copyType==1) {
             for (Lamp lamp : Variables.copyVector) {
                 if (lamp.getImage() != null)
                     Variables.planLay.removeView(lamp.getImage());
             }
         }
+        Variables.copyVector.clear();
         Variables.plan.disableListenerFromPlan();
         Variables.distX.clear();
         Variables.distY.clear();
