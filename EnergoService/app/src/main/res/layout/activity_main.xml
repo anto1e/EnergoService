@@ -376,6 +376,15 @@
                 android:layout_marginBottom="5dp"
                 android:layout_height="30dp">
             </ImageView>
+            <ImageView
+                android:id="@+id/screenShotBtn"
+                android:scaleType="fitCenter"
+                android:src="@drawable/screenshot"
+                android:layout_width="30dp"
+                android:background="@color/white"
+                android:layout_marginBottom="5dp"
+                android:layout_height="30dp">
+            </ImageView>
 
         </GridLayout>
 
@@ -685,7 +694,7 @@
                     android:background="@android:drawable/btn_dropdown"
                     android:spinnerMode="dropdown" />
                 <TextView
-                    android:text="В выходные:"
+                    android:text="Суббота:"
                     android:textColor="@color/black"
                     android:textSize="12dp"
                     />
@@ -693,6 +702,20 @@
                 <Spinner
                     android:verticalScrollbarPosition="right"
                     android:id="@+id/roomHoursWeekends"
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown" />
+                <TextView
+                    android:text="Воскресенье:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+
+                <Spinner
+                    android:verticalScrollbarPosition="right"
+                    android:id="@+id/roomHoursSunday"
                     android:layout_marginLeft="-80dp"
                     android:layout_width="100dp"
                     android:layout_height="30dp"

@@ -46,11 +46,7 @@ public class Plan {
     float pivotY=0.f;           //Пивот У для корректного приближения плана(Не работает)
     private boolean ifReleased=false;
 
-    public final Integer[] imageid = {              //Изображения светильников
-            R.drawable.lum4_18, R.drawable.lum2_36,R.drawable.lampnakal
-    };
 
-    public final String[] lampsName = {"lum4_18","lum2_36","lampnakal"};
 
     @SuppressLint("ClickableViewAccessibility")
     public void disableListenerFromPlan(){              //Отключение слушателя нажатий на план для добавления светильников
@@ -97,7 +93,7 @@ public class Plan {
                                 }       //Иначе устанавливаем ему координаты нажатия
                                 tempView.setX(event.getX() - tempView.getWidth() / 2);
                                 tempView.setY(event.getY() - tempView.getHeight() / 2);
-                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, lampsName[Variables.multiplepos], 0, 0, false, 0,0);
+                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsName[Variables.multiplepos], 0, 0, false, 0,0);
                             } else if (Variables.addMultipleRowsFlag || (Variables.copyFlag && Variables.copyType == 0) || Variables.selectZoneFlag) {      //Отрисовка зоны выделения
                                 if (!Variables.firstTouch) {        //Если первое нажатие - создаем зону выделения
                                     Variables.firstPointX = event.getX();
@@ -211,6 +207,7 @@ public class Plan {
             Variables.type.setSelection(touchedRoom.getType_pos());
             Variables.daysPerWeek.setSelection(touchedRoom.getDays());
             Variables.hoursPerDay.setSelection(touchedRoom.getHoursPerDay());
+            Variables.hoursPerSunday.setSelection(touchedRoom.getHoursPerSunday());
             Variables.hoursPerWeekend.setSelection(touchedRoom.getHoursPerWeekend());
             Variables.roofType.setSelection(touchedRoom.getRoofType());
             Variables.roomComments.setText(touchedRoom.getComments());
@@ -242,6 +239,7 @@ public class Plan {
                     Variables.type.setSelection(touchedRoom.getType_pos());
                     Variables.daysPerWeek.setSelection(touchedRoom.getDays());
                     Variables.hoursPerDay.setSelection(touchedRoom.getHoursPerDay());
+                    Variables.hoursPerSunday.setSelection(touchedRoom.getHoursPerSunday());
                     Variables.hoursPerWeekend.setSelection(touchedRoom.getHoursPerWeekend());
                     Variables.roofType.setSelection(touchedRoom.getRoofType());
                     Variables.roomComments.setText(touchedRoom.getComments());
@@ -325,11 +323,16 @@ public class Plan {
         });
     }
 
-    public void rotateImg(float angle,ImageView imageView,String type){     //Функция поворота светильника
+    public void rotateImg(float angle,ImageView imageView,String type, int resource){     //Функция поворота светильника
         if (imageView!=null) {      //Если светильник существует
             Resources resources = Variables.activity.getResources();
-            final int resourceId = resources.getIdentifier(type, "drawable",
-                    Variables.activity.getPackageName());
+            int resourceId;
+            if (resource!=-1){
+                resourceId=resource;
+            }else {
+                resourceId = resources.getIdentifier(type, "drawable",
+                        Variables.activity.getPackageName());
+            }
             Bitmap myImg = BitmapFactory.decodeResource(Variables.activity.getResources(), resourceId);     //Получаем картинку светильника
             if (myImg!=null) {
                 Matrix matrix = new Matrix();
@@ -361,7 +364,7 @@ public class Plan {
                 if (type_spawning){     //Если тип появления - не по нажатию кнопки добавления - берем переданные в метод параметры
                     imageView.setX(cordX);
                     imageView.setY(cordY);
-                    rotateImg(90, imageView, lampName);
+                    rotateImg(90, imageView, lampName,-1);
                 }else {         //Иначе берем данные из маркера
                     imageView.setX(tempView.getX());
                     imageView.setY(tempView.getY());
@@ -510,8 +513,15 @@ public class Plan {
                             } else if (Variables.rotateMode) {      //Если режим поворота - поворачиваем
                                 isReleased = false;
                                 float angle = getDegreesFromTouchEvent(event, imageView, x, y);
-                                touchedLamp.setRotationAngle(angle);        //Устанавливаем в светильник угол поворота
-                                rotateImg(angle, imageView, touchedLamp.getTypeImage());        //Выполняем поворот картинки
+                                if (!Variables.selectZoneFlag) {
+                                    touchedLamp.setRotationAngle(angle);        //Устанавливаем в светильник угол поворота
+                                    rotateImg(angle, imageView, touchedLamp.getTypeImage(),-1);        //Выполняем поворот картинки
+                                }else{
+                                    for (Lamp lamp:Variables.copyVector){
+                                        lamp.setRotationAngle(angle);
+                                        rotateImg(angle,lamp.getImage(),lamp.getTypeImage(),-1);
+                                    }
+                                }
                                 //imageView.setRotation((float) angle);
                             } else if (Variables.moveOnlySelectedZone) {        //Если режим перемещния выбранной зоны
                                 if (imageView == Variables.tempCopiedLamp.getImage()) {     //Двигаем светильники во временном векторе

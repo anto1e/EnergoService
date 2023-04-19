@@ -1,19 +1,13 @@
 package com.example.myapplication;
 
-import static android.app.Activity.RESULT_OK;
-
-import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.media.Image;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -26,7 +20,6 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -38,18 +31,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
-import org.apache.poi.hssf.util.HSSFColor;
-
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -91,6 +82,7 @@ public class Buttons {
     ImageView photoRightArrow;  //Кнопка перехода к следующей фотографии
     ImageView photoLeftArrow;   //Кнопка перехода к предыдущей фотографии
     ImageView takePicLampPhoto;     //Кнопка активации камеры(вкладка светильников)
+    ImageView screenShotBtn;
     Button submitHeightFloor;
     int lastIndex=-1;
     private int lastWorkdays=5;
@@ -206,6 +198,84 @@ public class Buttons {
         photoLeftArrow = Variables.activity.findViewById(R.id.photoArrowLeft);   //Кнопка перехода к предыдущей фотографии
         takePicLampPhoto = Variables.activity.findViewById(R.id.takePicLampBtn);    //Кнопка активации камеры(Вкладка со светильниками)
         submitHeightFloor = Variables.activity.findViewById(R.id.submitHeightFloor);
+        screenShotBtn = Variables.activity.findViewById(R.id.screenShotBtn);
+
+        screenShotBtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                String path1 = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
+                for (Room room:Variables.current_floor.rooms) {
+                for (Lamp lamp: room.lamps){
+                        lamp.getImage().setImageResource(0);
+                        int index = Variables.findIndexOfLamp(lamp.getTypeImage());
+                        lamp.getImage().setImageResource(Variables.imageidBold[index]);
+                        Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.imageidBold[index]);
+                }
+            }
+                        for (Lamp lamp: Variables.current_floor.unusedLamps){
+                            lamp.getImage().setImageResource(0);
+                            int index = Variables.findIndexOfLamp(lamp.getTypeImage());
+                            lamp.getImage().setImageResource(Variables.imageidBold[index]);
+                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.imageidBold[index]);
+                        }
+            File mediaStorageDir = new File(path1+"/"+Variables.current_floor.getName());
+            // Create a storage directory if it does not exist
+
+            // Create a media file name
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String imageName = "IMG_" + timeStamp + ".jpg";
+
+            String selectedOutputPath = mediaStorageDir.getPath() + File.separator + imageName;
+
+            Variables.planLay.setDrawingCacheEnabled(true);
+            Variables.planLay.buildDrawingCache();
+            Bitmap bitmap = Bitmap.createBitmap(Variables.planLay.getDrawingCache());
+
+            int maxSize = 1080;
+
+            int bWidth = bitmap.getWidth();
+            int bHeight = bitmap.getHeight();
+            //bitmap = Bitmap.createScaledBitmap(bitmap, 1920, 1080, true);
+            //bitmap = Bitmap.createScaledBitmap(bitmap, bWidth*5, bHeight*5, true);
+
+            /*if (bWidth > bHeight) {
+                int imageHeight = (int) Math.abs(maxSize * ((float)bitmap.getWidth() / (float) bitmap.getHeight()));
+                bitmap = Bitmap.createScaledBitmap(bitmap, maxSize, imageHeight, true);
+            } else {
+                int imageWidth = (int) Math.abs(maxSize * ((float)bitmap.getWidth() / (float) bitmap.getHeight()));
+                bitmap = Bitmap.createScaledBitmap(bitmap, imageWidth, maxSize, true);
+            }*/
+       Variables.planLay.setDrawingCacheEnabled(false);
+        Variables.planLay.destroyDrawingCache();
+
+            OutputStream fOut = null;
+            try {
+                File file = new File(selectedOutputPath);
+                fOut = new FileOutputStream(file);
+
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+                fOut.flush();
+                fOut.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+                        for (Room room:Variables.current_floor.rooms) {
+                            for (Lamp lamp: room.lamps){
+                                lamp.getImage().setImageResource(0);
+                                int index = Variables.findIndexOfLamp(lamp.getTypeImage());
+                                lamp.getImage().setImageResource(Variables.imageid[index]);
+                                Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.imageid[index]);
+                            }
+                        }
+                for (Lamp lamp: Variables.current_floor.unusedLamps){
+                    lamp.getImage().setImageResource(0);
+                    int index = Variables.findIndexOfLamp(lamp.getTypeImage());
+                    lamp.getImage().setImageResource(Variables.imageid[index]);
+                    Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.imageid[index]);
+                }
+                return false;
+            }
+        });
 
         submitHeightFloor.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -407,7 +477,7 @@ public class Buttons {
                             Variables.moveCopiedBufVector(Variables.plan.tempView.getX(),Variables.plan.tempView.getY());
                             for (Lamp lamp:Variables.copyBuffer){   //Для каждого светильника в буфере
                                 lamp.setView();     //Добавляем на экран
-                                Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),lamp.getTypeImage());      //Поворачиваем
+                                Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),lamp.getTypeImage(),-1);      //Поворачиваем
                             }
                             for (Lamp lamp : Variables.copyBuffer) {        //Для каждого вставленного светильника ищем комнату куда привязать
                                 boolean found = false;
@@ -659,7 +729,7 @@ public class Buttons {
                                     imageView.setY(lamp.getImage().getY());
                                     tempLamp.setImage(imageView);
                                     tempLamp.setView();
-                                    Variables.plan.rotateImg(tempLamp.getRotationAngle(),tempLamp.getImage(),tempLamp.getTypeImage());
+                                    Variables.plan.rotateImg(tempLamp.getRotationAngle(),tempLamp.getImage(),tempLamp.getTypeImage(),-1);
                                     Variables.copyVector.add(tempLamp);
                                 }
                                 //Ищем крайний левый верхний светильник
@@ -778,7 +848,7 @@ public class Buttons {
                             if (column_amount > 0 && column != null && rows_amount > 0 && rows != null && Variables.multipleType != -1) {   //Создаем светильники
                                 for (int i = 0; i < rows_amount; i++) {
                                     for (int j = 0; j < column_amount; j++) {
-                                        Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.plan.lampsName[Variables.multiplepos],cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                        Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsName[Variables.multiplepos],cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
                                     }
                                 }
                             }
@@ -836,6 +906,38 @@ public class Buttons {
         removeLamp.setOnTouchListener(new View.OnTouchListener() {      //При нажатии - активация удаления светильников
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                    if (Variables.selectZoneFlag){
+                        AlertDialog.Builder builder = new AlertDialog.Builder(Variables.activity);
+                        builder.setCancelable(true);
+                        builder.setTitle("Удалить");
+                        builder.setMessage("Вы действительно хотите удалить группу светильников?");
+                        builder.setPositiveButton("Удалить",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        for (Lamp lamp:Variables.copyVector){
+                                            Room temp = Variables.getRoomByNumber(lamp.getLampRoom());
+                                            if (temp!=null) {
+                                                temp.lamps.remove(lamp);
+                                            }else{
+                                                if (Variables.current_floor.unusedLamps.contains(lamp)){
+                                                    Variables.current_floor.unusedLamps.remove(lamp);
+                                                }
+                                            }
+                                            Variables.activity.runOnUiThread(() -> {        //Удаляем светильник с экрана
+                                                Variables.planLay.removeView(lamp.getImage());
+                                            });
+                                        }
+                                    }
+                                });
+                        builder.setNegativeButton("Отменить", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    } else
                         if (!Variables.removeMode){     //Активация
                             Variables.removeMode=true;
                             removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
@@ -1331,6 +1433,21 @@ public class Buttons {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if(Variables.plan.touchedRoom!=null) {
                     Variables.plan.touchedRoom.setHoursPerWeekend(Variables.hoursPerWeekend.getSelectedItemPosition());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
+        Variables.hoursPerSunday.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if(Variables.plan.touchedRoom!=null) {
+                    Variables.plan.touchedRoom.setHoursPerSunday(Variables.hoursPerSunday.getSelectedItemPosition());
                 }
             }
 

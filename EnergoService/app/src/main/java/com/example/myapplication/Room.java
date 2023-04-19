@@ -20,6 +20,7 @@ public class Room {
     private int hoursPerDay=0;     //Часы работы по будням
 
     private int hoursPerWeekend=0;     //Часы работы по выходным
+    private int hoursPerSunday=0;
     private Polygon polygon;                //Многоугольник, построенный по координатам точек помещения
     public double[] arrayX;                 //Массив координат Х точек помещения
     public double[] arrayY;                 //Массив координат У точек помещения
@@ -32,6 +33,14 @@ public class Room {
 
 
     ////Геттеры и сеттеры////
+
+    public int getHoursPerSunday() {
+        return hoursPerSunday;
+    }
+
+    public void setHoursPerSunday(int hoursPerSunday) {
+        this.hoursPerSunday = hoursPerSunday;
+    }
 
     public String getComments() {
         return comments;

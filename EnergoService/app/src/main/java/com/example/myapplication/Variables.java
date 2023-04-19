@@ -34,6 +34,7 @@ public class Variables {
     static boolean selectZoneFlag=false;        //Флаг выбора зона
     static Vector<Lamp> copyVector = new Vector<Lamp>();        //Временный вектор
     static Vector<Float> distX = new Vector<Float>();           //Вектор расстояний от выбранного светильника по Х
+    static Spinner hoursPerSunday;
     static Vector<Float> distY = new Vector<Float>();           //Вектор расстояний от выбранного светильника по У
     static Lamp tempCopiedLamp;         //Временный скопированный светильник
     static Lamp tempCopiedBufLamp;      //Временный скопированный светильник в буфер
@@ -129,6 +130,16 @@ public class Variables {
             "4*18Вт","2*36Вт","ЛН 60Вт"
     };
 
+    public static  final Integer[] imageid = {              //Изображения светильников
+            R.drawable.lum4_18, R.drawable.lum2_36,R.drawable.lampnakal
+    };
+
+    public static  final Integer[] imageidBold = {              //Изображения светильников
+            R.drawable.lum4_18bold, R.drawable.lum2_36bold,R.drawable.lampnakalbold
+    };
+
+    public static  final String[] lampsName = {"lum4_18","lum2_36","lampnakal"};
+
     static String[] roofTypes = {"Бетон","Армстронг","ПВХ","Гипрок"};        //Типы потолков
     static String[] typeOfBuildingArr = {"Детский сад","Школа","Больница"};
     static String[] typesOfRoomsDetSad = { "Игровая", "Спальная", "Санузел", "Коридор", "Тамбур","Лестница","Кабинет","Пищеблок","Прачечная","Моечная","Кладовая","Служебное помещение","Спортзал","Актовый зал","Медкабинет"};            //Типы помещений(детские сады)
@@ -144,6 +155,7 @@ public class Variables {
 
 
     public static void init(){                //Инициализация переменных
+        hoursPerSunday = activity.findViewById(R.id.roomHoursSunday);
         daysOfWorkDefault = activity.findViewById(R.id.daysOfWorkDefault);
         typeOfBuilding = activity.findViewById(R.id.typeOfBuilding);
         roomHeightDefaultCheck = activity.findViewById(R.id.roomHeightDefaultCheck);
@@ -206,6 +218,7 @@ public class Variables {
         adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,hoursPerWeekendArr);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         hoursPerWeekend.setAdapter(adapter);
+        hoursPerSunday.setAdapter(adapter);
         adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,hoursPerDayArr);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         hoursPerDay.setAdapter(adapter);
@@ -382,5 +395,14 @@ public class Variables {
             System.err.println( "Problems with files!" );
             exception.printStackTrace();
         }
+    }
+
+    public static int findIndexOfLamp(String type){
+        for (int i=0;i<lampsName.length;i++){
+            if (lampsName[i].equals(type)){
+                return i;
+            }
+        }
+        return -1;
     }
 }

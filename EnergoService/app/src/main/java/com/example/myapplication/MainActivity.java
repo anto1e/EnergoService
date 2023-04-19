@@ -82,25 +82,25 @@ public class MainActivity extends AppCompatActivity {
         Variables.init();                               //Инициализация переменныъ
         Variables.plan.startDetecting(); //Начало отслеживания перемещения на плане
         Variables.listView=(ListView)findViewById(R.id.LampsListView);           //Лист со списком светильников
-        LampsList lampsList = new LampsList(this, Variables.lampNames, Variables.plan.imageid);        //Заполнение списка светильников
+        LampsList lampsList = new LampsList(this, Variables.lampNames, Variables.imageid);        //Заполнение списка светильников
         Variables.listView.setAdapter(lampsList);
-        if (Build.VERSION.SDK_INT >= 30){
+        /*if (Build.VERSION.SDK_INT >= 30){
             if (!Environment.isExternalStorageManager()){
                 Intent getpermission = new Intent();
                 getpermission.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
                 startActivity(getpermission);
             }
-        }
+        }*/
 
 
         Variables.buttons.startDetecting();       //Начало отслеживания нажатия кнопок
         Variables.listView.setOnItemClickListener((adapterView, view, position, l) -> {       //Обработка нажатия на один из элементов списка светильников
             if (Variables.getAddFlag()) {
-                Variables.plan.spawnLamp(Variables.plan.imageid[position], position, 1,Variables.plan.lampsName[position],0,0,false,0,0);         //Создание светильника
+                Variables.plan.spawnLamp(Variables.imageid[position], position, 1,Variables.lampsName[position],0,0,false,0,0);         //Создание светильника
             }else if (Variables.addMultiple_flag || Variables.addMultipleRowsFlag){
                 Variables.resetListColor();
                 view.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
-                Variables.multipleType = Variables.plan.imageid[position];
+                Variables.multipleType = Variables.imageid[position];
                 Variables.multiplepos = position;
                 Variables.multiplelampType = 1;
             }

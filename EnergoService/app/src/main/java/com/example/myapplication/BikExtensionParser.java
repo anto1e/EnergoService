@@ -135,7 +135,7 @@ public class BikExtensionParser {
                     }
             }
                 else if (roomInfo){         //Если информация о комнатах
-                    if (line.length()>7 && line.charAt(0) != '/'){
+                    if (line.length()>8 && line.charAt(0) != '/'){
                         String[] split_number = line.split("%");
                         if (split_number.length>1){
                             String number = split_number[0];
@@ -145,20 +145,21 @@ public class BikExtensionParser {
                             int days = Integer.parseInt(split_room_info[2]);
                             int hours = Integer.parseInt(split_room_info[3]);
                             int hoursPerWeekend = Integer.parseInt(split_room_info[4]);
-                            int roofType = Integer.parseInt(split_room_info[5]);
+                            int hoursPerSunday = Integer.parseInt(split_room_info[5]);
+                            int roofType = Integer.parseInt(split_room_info[6]);
                             String comments;
-                            if (split_room_info.length==6){
+                            if (split_room_info.length==7){
                                 comments="";
                             }else {
-                                comments = split_room_info[6];
+                                comments = split_room_info[7];
 
                                 if (Objects.equals(comments, "null"))
                                     comments = "";
                             }
                             Room room = Variables.getRoomByNumber(number);
                             if (room!=null) {
-                                if (split_room_info.length>7){      //Если есть пути к фотографиям и сами файлы существуют - добавляем
-                                    String paths = split_room_info[7];
+                                if (split_room_info.length>8){      //Если есть пути к фотографиям и сами файлы существуют - добавляем
+                                    String paths = split_room_info[8];
                                     String[] split_room_photos = paths.split("!");
                                     for (int i=0;i<split_room_photos.length;i++){
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -176,6 +177,7 @@ public class BikExtensionParser {
                                 room.setHoursPerWeekend(hoursPerWeekend);
                                 room.setRoofType(roofType);
                                 room.setComments(comments);
+                                room.setHoursPerSunday(hoursPerSunday);
                             }
                         }
                     }
@@ -222,7 +224,7 @@ public class BikExtensionParser {
                                 imageView.setScaleY(scale);
                                 Variables.plan.setListener(imageView);
                                 lamp.setImage(imageView);
-                                Variables.plan.rotateImg(rotationAngle,imageView,type_image);
+                                Variables.plan.rotateImg(rotationAngle,imageView,type_image,-1);
                             if (split_room_info.length>10){      //Если есть пути к фотографиям и сами файлы существуют - добавляем
                                 String paths = split_room_info[10];
                                 String[] split_room_photos = paths.split("!");
@@ -293,7 +295,7 @@ public class BikExtensionParser {
         File newFile = new File( pathFile );
 
         try {       //Находим информацию о комнатах и стираем все после нее
-            String str1= "///INFORMATION ABOUT ROOMS///";
+            String str1= "\n///INFORMATION ABOUT ROOMS///";
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 byte[] b1 = Files.readAllBytes(Paths.get(pathFile));
                 byte[] b2 = str1.getBytes();
@@ -331,7 +333,7 @@ public class BikExtensionParser {
                     out.println();
                     out.println("///INFORMATION ABOUT ROOMS///");
                     for (int i=0;i<tempFloor.rooms.size();i++){
-                        String str12 = tempFloor.rooms.elementAt(i).getNumber()+"%"+tempFloor.rooms.elementAt(i).getHeight()+"@"+tempFloor.rooms.elementAt(i).getType_pos()+"@"+tempFloor.rooms.elementAt(i).getDays()+"@"+tempFloor.rooms.elementAt(i).getHoursPerDay()+"@"+tempFloor.rooms.elementAt(i).getHoursPerWeekend()+"@"+tempFloor.rooms.elementAt(i).getRoofType()+"@"+tempFloor.rooms.elementAt(i).getComments();
+                        String str12 = tempFloor.rooms.elementAt(i).getNumber()+"%"+tempFloor.rooms.elementAt(i).getHeight()+"@"+tempFloor.rooms.elementAt(i).getType_pos()+"@"+tempFloor.rooms.elementAt(i).getDays()+"@"+tempFloor.rooms.elementAt(i).getHoursPerDay()+"@"+tempFloor.rooms.elementAt(i).getHoursPerWeekend()+"@"+tempFloor.rooms.elementAt(i).getHoursPerSunday()+"@"+tempFloor.rooms.elementAt(i).getRoofType()+"@"+tempFloor.rooms.elementAt(i).getComments();
                         String str2="@";
                         if (tempFloor.rooms.elementAt(i).photoPaths.size()!=0){
                             for (String str:tempFloor.rooms.elementAt(i).photoPaths){
