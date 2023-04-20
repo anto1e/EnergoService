@@ -142,7 +142,7 @@ public class Variables {
 
     static String[] roofTypes = {"Бетон","Армстронг","ПВХ","Гипрок"};        //Типы потолков
     static String[] typeOfBuildingArr = {"Детский сад","Школа","Больница"};
-    static String[] typesOfRoomsDetSad = { "Игровая", "Спальная", "Санузел", "Коридор", "Тамбур","Лестница","Кабинет","Пищеблок","Прачечная","Моечная","Кладовая","Служебное помещение","Спортзал","Актовый зал","Медкабинет"};            //Типы помещений(детские сады)
+    static String[] typesOfRoomsDetSad = { "Игровая","Гардероб", "Спальная", "Санузел", "Коридор", "Тамбур","Лестница","Кабинет","Пищеблок","Прачечная","Моечная","Кладовая","Служебное помещение","Спортзал","Актовый зал","Медкабинет"};            //Типы помещений(детские сады)
     static String[] typesOfRoomsSchools = { "Учебный кабинет", "Кабинет", "Санузел", "Коридор", "Тамбур","Лестница","Спортзал","Пищеблок","Актовый зал","Медкабинет","Кладовая","Служебное помещение"};            //Типы помещений(школы)
     static String[] typesOfRoomsHospitals = { "Кабинет врача", "Кабинет", "Санузел", "Коридор", "Тамбур","Лестница","Спортзал","Пищеблок","Актовый зал","Медкабинет","Кладовая","Служебное помещение","Палата","Процедурная"};            //Типы помещений(больницы)
     static String[] daysPerWeekArr = {"0","1","2","3","4","5","6","7"};         //Дней работы в неделю
@@ -326,8 +326,8 @@ public class Variables {
         for (Room room: floor.rooms){
             if (Variables.roomHeightDefaultCheck.isChecked()) {
                 if (Objects.equals(room.getHeight(), "0.0")) {
-                    if (!Objects.equals(Variables.current_floor.roofHeightDefault.elementAt(room.getRoofType()), "0.0")) {
-                        room.setHeight(Variables.current_floor.roofHeightDefault.elementAt(room.getRoofType()));
+                    if (!Objects.equals(floor.roofHeightDefault.elementAt(room.getRoofType()), "0.0")) {
+                        room.setHeight(floor.roofHeightDefault.elementAt(room.getRoofType()));
                     }
                 }
             }
@@ -336,8 +336,8 @@ public class Variables {
                 Room temp = getRoomByNumber(lamp.getLampRoom());
                 if (temp!=null && !temp.lamps.contains(lamp)){
                     temp.lamps.add(lamp);
-                    if (current_floor.unusedLamps.contains(lamp)){
-                        current_floor.unusedLamps.remove(lamp);
+                    if (floor.unusedLamps.contains(lamp)){
+                        floor.unusedLamps.remove(lamp);
                     }
                 }
             }
@@ -347,11 +347,19 @@ public class Variables {
             Room temp = getRoomByNumber(lamp.getLampRoom());
             if (temp!=null && !temp.lamps.contains(lamp)){
                 temp.lamps.add(lamp);
-                if (current_floor.unusedLamps.contains(lamp)){
-                    current_floor.unusedLamps.remove(lamp);
+                if (floor.unusedLamps.contains(lamp)){
+                    floor.unusedLamps.remove(lamp);
                 }
             }
         }
+         for (Room room:floor.rooms){
+             if (room.getHeight().equals("0.0")){
+                 if (Variables.roomHeightDefaultCheck.isChecked()){
+                     int index = room.getRoofType();
+                     room.setHeight(Variables.current_floor.roofHeightDefault.elementAt(index));
+                 }
+             }
+         }
     }
     public static void clearLampGrid(){
         if (!Variables.getMoveFlag()) {

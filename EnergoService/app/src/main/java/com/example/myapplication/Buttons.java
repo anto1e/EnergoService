@@ -525,8 +525,8 @@ public class Buttons {
                                 imageView.setImageResource(resourceId);
                                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
                                 imageView.setLayoutParams(params);
-                                imageView.setScaleX(Variables.lastScaletype);
-                                imageView.setScaleY(Variables.lastScaletype);
+                                imageView.setScaleX(lamp.getImage().getScaleX());
+                                imageView.setScaleY(lamp.getImage().getScaleY());
                                 Variables.plan.setListener(imageView);
                                 imageView.setX(lamp.getImage().getX());
                                 imageView.setY(lamp.getImage().getY());
