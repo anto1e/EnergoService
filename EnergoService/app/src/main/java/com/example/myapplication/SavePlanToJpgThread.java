@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SavePlanToJpgThread extends Thread{
     public void run() {
-        /*try {
+        try {
             AtomicBoolean isReady1= new AtomicBoolean(false);
             AtomicBoolean isReady2= new AtomicBoolean(false);
             ImageView rotationElement = Variables.loadingImage;     //Колесо вращения
@@ -37,20 +37,66 @@ public class SavePlanToJpgThread extends Thread{
                 for (Lamp lamp: room.lamps){
                     Variables.activity.runOnUiThread(() -> {           //Выключаем вращение и выводим текст об удачном экспорте в эксель
                     lamp.getImage().setImageResource(0);
-                    int index = Variables.findIndexOfLamp(lamp.getTypeImage());
-                    lamp.getImage().setImageResource(Variables.imageidBold[index]);
-                    Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.imageidBold[index]);
-                    isReady1.set(true);
+                    int index = Variables.findIndexOfLamp(lamp.getTypeImage(),lamp.getGroupIndex());
+                    switch (lamp.getGroupIndex()){
+                        case 0:
+                            lamp.getImage().setImageResource(Variables.VstraivaemieImageIdBold[index]);
+                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.VstraivaemieImageIdBold[index]);
+                            break;
+                        case 1:
+                            lamp.getImage().setImageResource(Variables.NakladnieImageIdBold[index]);
+                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.NakladnieImageIdBold[index]);
+                            break;
+                        case 2:
+                            lamp.getImage().setImageResource(Variables.LampsImageIdBold[index]);
+                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.LampsImageIdBold[index]);
+                            break;
+                        case 3:
+                            lamp.getImage().setImageResource(Variables.DiodsImageIdBold[index]);
+                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.DiodsImageIdBold[index]);
+                            break;
+                        case 4:
+                            lamp.getImage().setImageResource(Variables.OthersImageIdBold[index]);
+                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.OthersImageIdBold[index]);
+                            break;
+                        case 5:
+                            lamp.getImage().setImageResource(Variables.OutsideImageIdBold[index]);
+                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.OutsideImageIdBold[index]);
+                            break;
+                    }
                     });
                 }
             }
             for (Lamp lamp: Variables.current_floor.unusedLamps){
                 Variables.activity.runOnUiThread(() -> {           //Выключаем вращение и выводим текст об удачном экспорте в эксель
                 lamp.getImage().setImageResource(0);
-                int index = Variables.findIndexOfLamp(lamp.getTypeImage());
-                    lamp.getImage().setImageResource(Variables.imageidBold[index]);
-                    Variables.plan.rotateImg(lamp.getRotationAngle(), lamp.getImage(), "", Variables.imageidBold[index]);
-                    isReady2.set(true);
+                int index = Variables.findIndexOfLamp(lamp.getTypeImage(),lamp.getGroupIndex());
+                    switch (lamp.getGroupIndex()){
+                        case 0:
+                            lamp.getImage().setImageResource(Variables.VstraivaemieImageIdBold[index]);
+                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.VstraivaemieImageIdBold[index]);
+                            break;
+                        case 1:
+                            lamp.getImage().setImageResource(Variables.NakladnieImageIdBold[index]);
+                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.NakladnieImageIdBold[index]);
+                            break;
+                        case 2:
+                            lamp.getImage().setImageResource(Variables.LampsImageIdBold[index]);
+                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.LampsImageIdBold[index]);
+                            break;
+                        case 3:
+                            lamp.getImage().setImageResource(Variables.DiodsImageIdBold[index]);
+                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.DiodsImageIdBold[index]);
+                            break;
+                        case 4:
+                            lamp.getImage().setImageResource(Variables.OthersImageIdBold[index]);
+                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.OthersImageIdBold[index]);
+                            break;
+                        case 5:
+                            lamp.getImage().setImageResource(Variables.OutsideImageIdBold[index]);
+                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.OutsideImageIdBold[index]);
+                            break;
+                    }
                 });
             }
             Variables.activity.runOnUiThread(() -> {           //Выключаем вращение и выводим текст об удачном экспорте в эксель
@@ -81,7 +127,7 @@ public class SavePlanToJpgThread extends Thread{
                 int imageWidth = (int) Math.abs(maxSize * ((float)bitmap.getWidth() / (float) bitmap.getHeight()));
                 bitmap = Bitmap.createScaledBitmap(bitmap, imageWidth, maxSize, true);
             }*/
-            /*Variables.planLay.setDrawingCacheEnabled(false);
+            Variables.planLay.setDrawingCacheEnabled(false);
             Variables.planLay.destroyDrawingCache();
 
                 OutputStream fOut = null;
@@ -100,18 +146,66 @@ public class SavePlanToJpgThread extends Thread{
                 for (Lamp lamp: room.lamps){
                     Variables.activity.runOnUiThread(() -> {           //Выключаем вращение и выводим текст об удачном экспорте в эксель
                     lamp.getImage().setImageResource(0);
-                    int index = Variables.findIndexOfLamp(lamp.getTypeImage());
-                        lamp.getImage().setImageResource(Variables.imageid[index]);
-                        Variables.plan.rotateImg(lamp.getRotationAngle(), lamp.getImage(), "", Variables.imageid[index]);
+                    int index = Variables.findIndexOfLamp(lamp.getTypeImage(),lamp.getGroupIndex());
+                        switch (lamp.getGroupIndex()){
+                            case 0:
+                                lamp.getImage().setImageResource(Variables.VstraivaemieImageId[index]);
+                                Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.VstraivaemieImageId[index]);
+                                break;
+                            case 1:
+                                lamp.getImage().setImageResource(Variables.NakladnieImageId[index]);
+                                Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.NakladnieImageId[index]);
+                                break;
+                            case 2:
+                                lamp.getImage().setImageResource(Variables.LampsImageId[index]);
+                                Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.LampsImageId[index]);
+                                break;
+                            case 3:
+                                lamp.getImage().setImageResource(Variables.DiodsImageId[index]);
+                                Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.DiodsImageId[index]);
+                                break;
+                            case 4:
+                                lamp.getImage().setImageResource(Variables.OthersImageId[index]);
+                                Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.OthersImageId[index]);
+                                break;
+                            case 5:
+                                lamp.getImage().setImageResource(Variables.OutsideImageId[index]);
+                                Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.OutsideImageId[index]);
+                                break;
+                        }
                     });
                 }
             }
             for (Lamp lamp: Variables.current_floor.unusedLamps){
                 Variables.activity.runOnUiThread(() -> {           //Выключаем вращение и выводим текст об удачном экспорте в эксель
                 lamp.getImage().setImageResource(0);
-                int index = Variables.findIndexOfLamp(lamp.getTypeImage());
-                    lamp.getImage().setImageResource(Variables.imageid[index]);
-                    Variables.plan.rotateImg(lamp.getRotationAngle(), lamp.getImage(), "", Variables.imageid[index]);
+                int index = Variables.findIndexOfLamp(lamp.getTypeImage(),lamp.getGroupIndex());
+                    switch (lamp.getGroupIndex()){
+                        case 0:
+                            lamp.getImage().setImageResource(Variables.VstraivaemieImageId[index]);
+                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.VstraivaemieImageId[index]);
+                            break;
+                        case 1:
+                            lamp.getImage().setImageResource(Variables.NakladnieImageId[index]);
+                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.NakladnieImageId[index]);
+                            break;
+                        case 2:
+                            lamp.getImage().setImageResource(Variables.LampsImageId[index]);
+                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.LampsImageId[index]);
+                            break;
+                        case 3:
+                            lamp.getImage().setImageResource(Variables.DiodsImageId[index]);
+                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.DiodsImageId[index]);
+                            break;
+                        case 4:
+                            lamp.getImage().setImageResource(Variables.OthersImageId[index]);
+                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.OthersImageId[index]);
+                            break;
+                        case 5:
+                            lamp.getImage().setImageResource(Variables.OutsideImageId[index]);
+                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.OutsideImageId[index]);
+                            break;
+                    }
                 });
             }
             Variables.activity.runOnUiThread(() -> {           //Выключаем вращение и выводим текст об удачном экспорте в эксель
@@ -121,6 +215,6 @@ public class SavePlanToJpgThread extends Thread{
             });
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }*/
+        }
     }
 }

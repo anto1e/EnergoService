@@ -953,6 +953,19 @@
                     android:background="@android:drawable/btn_dropdown"
                     android:spinnerMode="dropdown" />
                 <TextView
+                    android:text="Место:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+                <Spinner
+                    android:verticalScrollbarPosition="right"
+                    android:id="@+id/placeType"
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown" />
+                <TextView
                     android:text="Комментарии:"
                     android:textColor="@color/black"
                     android:textSize="12dp"

@@ -782,22 +782,22 @@ public class Buttons {
                                     for (int j = 0; j < column_amount; j++) {
                                         switch (Variables.currentLampsPanelIndex){
                                             case 0:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsVstraivaemieName[Variables.multiplepos],cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsVstraivaemieName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
                                                 break;
                                             case 1:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsNakladnieName[Variables.multiplepos],cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsNakladnieName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
                                                 break;
                                             case 2:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsLampsName[Variables.multiplepos],cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsLampsName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
                                                 break;
                                             case 3:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsDiodsName[Variables.multiplepos],cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsDiodsName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
                                                 break;
                                             case 4:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsOthersName[Variables.multiplepos],cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOthersName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
                                                 break;
                                             case 5:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsOutsideName[Variables.multiplepos],cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOutsideName[Variables.multiplepos],1,Variables.currentLampsPanelIndex,cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
                                                 break;
                                         }
                                     }
@@ -1453,6 +1453,20 @@ public class Buttons {
                 // your code here
             }
 
+        });
+
+        Variables.placeType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (Variables.plan.touchedLamp!=null){
+                    Variables.plan.touchedLamp.setPlaceType(Variables.placeType.getSelectedItemPosition());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
         });
 
         Variables.montagneType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

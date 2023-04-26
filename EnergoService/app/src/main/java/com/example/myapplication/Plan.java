@@ -106,22 +106,22 @@ public class Plan {
                                         tempView.setY(event.getY() - tempView.getHeight() / 2);
                                         switch (Variables.currentLampsPanelIndex){
                                             case 0:
-                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsVstraivaemieName[Variables.multiplepos], 0, 0, false, 0,0);
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsVstraivaemieName[Variables.multiplepos], 0,0, 0,0, false, 0,0);
                                                 break;
                                             case 1:
-                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsNakladnieName[Variables.multiplepos], 0, 0, false, 0,0);
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsNakladnieName[Variables.multiplepos],0, 1, 0,0, false, 0,0);
+                                                break;
+                                            case 2:
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsLampsName[Variables.multiplepos], 0, 2,0, 0,false, 0,0);
                                                 break;
                                             case 3:
-                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsLampsName[Variables.multiplepos], 0, 0, false, 0,0);
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsDiodsName[Variables.multiplepos], 0,3, 0,0, false, 0,0);
                                                 break;
                                             case 4:
-                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsDiodsName[Variables.multiplepos], 0, 0, false, 0,0);
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOthersName[Variables.multiplepos], 0, 4,0,0, false, 0,0);
                                                 break;
                                             case 5:
-                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsOthersName[Variables.multiplepos], 0, 0, false, 0,0);
-                                                break;
-                                            case 6:
-                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsOutsideName[Variables.multiplepos], 0, 0, false, 0,0);
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOutsideName[Variables.multiplepos], 1,5, 0,0, false, 0,0);
                                                 break;
                                         }
                                         //spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsName[Variables.multiplepos], 0, 0, false, 0,0);
@@ -380,7 +380,7 @@ public class Plan {
     }
     @SuppressLint("ResourceAsColor")
     //Функция создания и отображения светильника на плане
-    public void spawnLamp(Integer type, int pos,int typeLamp,String lampName,float cordX,float cordY,boolean type_spawning,float rotation,float scaleType) {
+    public void spawnLamp(Integer type, int pos,String lampName,int placeType,int groupIndex,float cordX,float cordY,boolean type_spawning,float rotation,float scaleType) {
             if (tempView != null || type_spawning) {                   //Если активная функция добавления светильника
                 ImageView imageView = new ImageView(Variables.activity);
                 imageView.setImageResource(type);
@@ -407,8 +407,18 @@ public class Plan {
                 }
                 Lamp lamp = new Lamp();     //Создаем новый светильник
                 if (touchedRoom != null) {        //Если нажатая комната размечена
-                    if (typeLamp == 1) {
+                    if (groupIndex == 0 || groupIndex == 1) {
                         lamp.setType("Люминесцентный");
+                        if (groupIndex==0){
+                            lamp.setMontagneType(1);
+                        }
+                    }else if(groupIndex==2){
+                        lamp.setType("Лампа");
+                    }else if (groupIndex==3){
+                        lamp.setType("Светодиодный");
+                        if (lampName.equals("diod4_18")){
+                            lamp.setMontagneType(1);
+                        }
                     }
                     lamp.setRotationAngle(rotation);
                     lamp.setTypeImage(lampName);
@@ -417,8 +427,18 @@ public class Plan {
                     touchedRoom.lampPush(lamp);     //Добавляем светильник в вектор светильников нажатой комнаты
                     lamp.setView();                 //Добавляем картинку светильника на экран
                 } else {                           //Иначе, если нажатая комната не размечена
-                    if (typeLamp == 1) {
+                    if (groupIndex == 0 || groupIndex == 1) {
                         lamp.setType("Люминесцентный");
+                        if (groupIndex==0){
+                            lamp.setMontagneType(1);
+                        }
+                    }else if(groupIndex==2){
+                        lamp.setType("Лампа");
+                    }else if (groupIndex==3){
+                        lamp.setType("Светодиодный");
+                        if (lampName.equals("diod4_18")){
+                            lamp.setMontagneType(1);
+                        }
                     }
                     lamp.setRotationAngle(rotation);
                     lamp.setLampRoom("-1");
@@ -428,7 +448,9 @@ public class Plan {
                     Variables.current_floor.unusedLamps.add(lamp);          //Добавляем светильник в вектор непривязанных светильников
                     lamp.setView();                 //Добавляем картинку светильника на экран
                 }
-                switch (Variables.currentLampsPanelIndex){
+                lamp.setPlaceType(placeType);
+                lamp.setGroupIndex(groupIndex);
+                switch (groupIndex){
                     case 0:
                         lamp.setPower(Variables.lampVstraivaemieNames[pos]);
                         break;
@@ -436,7 +458,7 @@ public class Plan {
                         lamp.setPower(Variables.lampNakladnieNames[pos]);
                         break;
                     case 2:
-                        lamp.setPower(Variables.lampLampsNames[pos]);
+                        lamp.setPower(Variables.lampLampsNamesForOutput[pos]);
                         break;
                     case 3:
                         lamp.setPower(Variables.lampDiodsNames[pos]);
@@ -631,6 +653,7 @@ public class Plan {
             Variables.lampPower.setText(lamp.getPower());
             Variables.lampComments.setText(lamp.getComments());
             Variables.montagneType.setSelection(lamp.getMontagneType());
+            Variables.placeType.setSelection(lamp.getPlaceType());
             Variables.showLampsAllPhotos(lamp);
         }
     }

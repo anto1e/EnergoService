@@ -17,9 +17,28 @@ public class Lamp {
 
     Vector<String> photoPaths = new Vector<String>();
     private String comments;            //Комментарии к светильнику
-    private int montagneType;
+    private int montagneType=0;
+    private int placeType;
+    private int groupIndex;
+
+
 
     ////Геттеры и сеттеры////
+    public int getPlaceType() {
+        return placeType;
+    }
+
+    public void setPlaceType(int placeType) {
+        this.placeType = placeType;
+    }
+
+    public int getGroupIndex() {
+        return groupIndex;
+    }
+
+    public void setGroupIndex(int groupIndex) {
+        this.groupIndex = groupIndex;
+    }
     public int getMontagneType() {
         return montagneType;
     }

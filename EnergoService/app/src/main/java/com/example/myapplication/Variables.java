@@ -120,6 +120,7 @@ public class Variables {
     static EditText lampPower;                  //Поле мощности светильника
     static EditText lampComments;              //Поле комментариев к светильнику
     static FrameLayout photoFrame;              //Layout для отображения выбранной фотографии
+    static Spinner placeType;
 
     static EditText roomComments;               //Поле комментариев к комнате
     static int indexOfPhoto=-1;
@@ -135,6 +136,7 @@ public class Variables {
 
     static String[] roofTypes = {"Бетон","Армстронг","ПВХ","Гипрок"};        //Типы потолков
     static String[] montagneTypeArr = {"Накладной","Встраиваемый"};        //Типы потолков
+    static String[] placeTypeArr = {"В здании","Наружный"};        //Типы потолков
     static String[] typeOfBuildingArr = {"Детский сад","Школа","Больница"};
     static String[] typesOfRoomsDetSad = { "Игровая","Гардероб", "Спальная", "Санузел", "Коридор", "Тамбур","Лестница","Кабинет","Пищеблок","Прачечная","Моечная","Кладовая","Служебное помещение","Спортзал","Актовый зал","Медкабинет"};            //Типы помещений(детские сады)
     static String[] typesOfRoomsSchools = { "Учебный кабинет", "Кабинет", "Санузел", "Коридор", "Тамбур","Лестница","Спортзал","Пищеблок","Актовый зал","Медкабинет","Кладовая","Служебное помещение"};            //Типы помещений(школы)
@@ -198,6 +200,9 @@ public class Variables {
             "2*36Вт"
     };
     public static final String[] lampLampsNames = {             //Названия светильников
+            "ЛН 60Вт","СД 12Вт"
+    };
+    public static final String[] lampLampsNamesForOutput = {             //Названия светильников
             "накаливания 60Вт","светодиодная 12Вт"
     };
     public static final String[] lampDiodsNames = {             //Названия светильников
@@ -221,6 +226,7 @@ public class Variables {
 
 
     public static void init(){                //Инициализация переменных
+        placeType = activity.findViewById(R.id.placeType);
         montagneType=activity.findViewById(R.id.montagneType);
         initLampsPanels();
         hoursPerSunday = activity.findViewById(R.id.roomHoursSunday);
@@ -308,6 +314,9 @@ public class Variables {
         adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,montagneTypeArr);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         montagneType.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,placeTypeArr);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        placeType.setAdapter(adapter);
     }
 
     public static void clearFields(){           //Очистка полей при переключении плана
@@ -476,8 +485,8 @@ public class Variables {
         }
     }
 
-    public static int findIndexOfLamp(String type){
-        switch (currentLampsPanelIndex){
+    public static int findIndexOfLamp(String type,int index){
+        switch (index){
             case 0:
                 for (int i=0;i<lampsVstraivaemieName.length;i++){
                     if (lampsVstraivaemieName[i].equals(type)){
