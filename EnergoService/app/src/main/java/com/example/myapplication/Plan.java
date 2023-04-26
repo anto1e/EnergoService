@@ -77,9 +77,17 @@ public class Plan {
                                     tempView.setScaleY(Variables.lastScaletype);
                                     tempView.setBackgroundColor(Color.parseColor("#808080"));
                                     tempView.getBackground().setAlpha(128);
-                                }       //Иначе устанавливаем ему координаты нажатия
-                                tempView.setX(event.getX() - tempView.getWidth() / 2);
-                                tempView.setY(event.getY() - tempView.getHeight() / 2);
+                                    tempView.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            tempView.setX(event.getX() - tempView.getWidth() / 2);
+                                            tempView.setY(event.getY() - tempView.getHeight() / 2);
+                                        }
+                                    });
+                                } else {      //Иначе устанавливаем ему координаты нажатия
+                                    tempView.setX(event.getX() - tempView.getWidth() / 2);
+                                    tempView.setY(event.getY() - tempView.getHeight() / 2);
+                                }
                                 // Log.d("Touched at: ",Float.toString(event.getX())+" , " + Float.toString(event.getY()));
                             } else if (Variables.addMultiple_flag && Variables.multiplepos != -1 && Variables.multipleType != -1 && Variables.multiplelampType != -1) {     //Если выбрана функция добавления множества светильников по нажатию
                                 if (tempView == null) {        //Если маркера появления светильника нет - отрисовываем его
@@ -91,9 +99,34 @@ public class Plan {
                                     tempView.setScaleY(Variables.lastScaletype);
                                     tempView.setBackgroundColor(Color.parseColor("#808080"));
                                 }       //Иначе устанавливаем ему координаты нажатия
-                                tempView.setX(event.getX() - tempView.getWidth() / 2);
-                                tempView.setY(event.getY() - tempView.getHeight() / 2);
-                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsName[Variables.multiplepos], 0, 0, false, 0,0);
+                                tempView.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        tempView.setX(event.getX() - tempView.getWidth() / 2);
+                                        tempView.setY(event.getY() - tempView.getHeight() / 2);
+                                        switch (Variables.currentLampsPanelIndex){
+                                            case 0:
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsVstraivaemieName[Variables.multiplepos], 0, 0, false, 0,0);
+                                                break;
+                                            case 1:
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsNakladnieName[Variables.multiplepos], 0, 0, false, 0,0);
+                                                break;
+                                            case 3:
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsLampsName[Variables.multiplepos], 0, 0, false, 0,0);
+                                                break;
+                                            case 4:
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsDiodsName[Variables.multiplepos], 0, 0, false, 0,0);
+                                                break;
+                                            case 5:
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsOthersName[Variables.multiplepos], 0, 0, false, 0,0);
+                                                break;
+                                            case 6:
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsOutsideName[Variables.multiplepos], 0, 0, false, 0,0);
+                                                break;
+                                        }
+                                        //spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsName[Variables.multiplepos], 0, 0, false, 0,0);
+                                    }
+                                });
                             } else if (Variables.addMultipleRowsFlag || (Variables.copyFlag && Variables.copyType == 0) || Variables.selectZoneFlag) {      //Отрисовка зоны выделения
                                 if (!Variables.firstTouch) {        //Если первое нажатие - создаем зону выделения
                                     Variables.firstPointX = event.getX();
@@ -372,20 +405,18 @@ public class Plan {
                 if (!type_spawning) {       //Удаляем маркер если добавление светильника по нажатию кнопки добавления
                     Variables.planLay.removeView(tempView);
                 }
+                Lamp lamp = new Lamp();     //Создаем новый светильник
                 if (touchedRoom != null) {        //Если нажатая комната размечена
-                    Lamp lamp = new Lamp();     //Создаем новый светильник
                     if (typeLamp == 1) {
                         lamp.setType("Люминесцентный");
                     }
                     lamp.setRotationAngle(rotation);
                     lamp.setTypeImage(lampName);
                     lamp.setLampRoom(touchedRoom.getNumber());
-                    lamp.setPower(Variables.lampNames[pos]);
                     lamp.setImage(imageView);
                     touchedRoom.lampPush(lamp);     //Добавляем светильник в вектор светильников нажатой комнаты
                     lamp.setView();                 //Добавляем картинку светильника на экран
                 } else {                           //Иначе, если нажатая комната не размечена
-                    Lamp lamp = new Lamp();
                     if (typeLamp == 1) {
                         lamp.setType("Люминесцентный");
                     }
@@ -393,10 +424,29 @@ public class Plan {
                     lamp.setLampRoom("-1");
                     imageView.setBackgroundResource(R.color.blue);
                     lamp.setTypeImage(lampName);
-                    lamp.setPower(Variables.lampNames[pos]);
                     lamp.setImage(imageView);
                     Variables.current_floor.unusedLamps.add(lamp);          //Добавляем светильник в вектор непривязанных светильников
                     lamp.setView();                 //Добавляем картинку светильника на экран
+                }
+                switch (Variables.currentLampsPanelIndex){
+                    case 0:
+                        lamp.setPower(Variables.lampVstraivaemieNames[pos]);
+                        break;
+                    case 1:
+                        lamp.setPower(Variables.lampNakladnieNames[pos]);
+                        break;
+                    case 2:
+                        lamp.setPower(Variables.lampLampsNames[pos]);
+                        break;
+                    case 3:
+                        lamp.setPower(Variables.lampDiodsNames[pos]);
+                        break;
+                    case 4:
+                        lamp.setPower(Variables.lampOthersNames[pos]);
+                        break;
+                    case 5:
+                        lamp.setPower(Variables.lampOutsideNames[pos]);
+                        break;
                 }
                 tempView = null;
             }
@@ -580,6 +630,7 @@ public class Plan {
             Variables.lampType.setText(lamp.getType());
             Variables.lampPower.setText(lamp.getPower());
             Variables.lampComments.setText(lamp.getComments());
+            Variables.montagneType.setSelection(lamp.getMontagneType());
             Variables.showLampsAllPhotos(lamp);
         }
     }

@@ -64,6 +64,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity {
@@ -82,8 +84,8 @@ public class MainActivity extends AppCompatActivity {
         Variables.init();                               //Инициализация переменныъ
         Variables.plan.startDetecting(); //Начало отслеживания перемещения на плане
         Variables.listView=(ListView)findViewById(R.id.LampsListView);           //Лист со списком светильников
-        LampsList lampsList = new LampsList(this, Variables.lampNames, Variables.imageid);        //Заполнение списка светильников
-        Variables.listView.setAdapter(lampsList);
+        Variables.lampsList = new LampsList(this, Variables.lampVstraivaemieNames, Variables.VstraivaemieImageId);        //Заполнение списка светильников
+        Variables.listView.setAdapter(Variables.lampsList);
         /*if (Build.VERSION.SDK_INT >= 30){
             if (!Environment.isExternalStorageManager()){
                 Intent getpermission = new Intent();
@@ -96,16 +98,65 @@ public class MainActivity extends AppCompatActivity {
         Variables.buttons.startDetecting();       //Начало отслеживания нажатия кнопок
         Variables.listView.setOnItemClickListener((adapterView, view, position, l) -> {       //Обработка нажатия на один из элементов списка светильников
             if (Variables.getAddFlag()) {
-                Variables.plan.spawnLamp(Variables.imageid[position], position, 1,Variables.lampsName[position],0,0,false,0,0);         //Создание светильника
+                switch (Variables.currentLampsPanelIndex){
+                    case 0:
+                        Variables.plan.spawnLamp(Variables.VstraivaemieImageId[position], position, 1,Variables.lampsVstraivaemieName[position],0,0,false,0,0);         //Создание светильника
+                        break;
+                    case 1:
+                        Variables.plan.spawnLamp(Variables.NakladnieImageId[position], position, 1,Variables.lampsNakladnieName[position],0,0,false,0,0);         //Создание светильника
+                        break;
+                    case 2:
+                        Variables.plan.spawnLamp(Variables.LampsImageId[position], position, 1,Variables.lampsLampsName[position],0,0,false,0,0);         //Создание светильника
+                        break;
+                    case 3:
+                        Variables.plan.spawnLamp(Variables.DiodsImageId[position], position, 1,Variables.lampsDiodsName[position],0,0,false,0,0);         //Создание светильника
+                        break;
+                    case 4:
+                        Variables.plan.spawnLamp(Variables.OthersImageId[position], position, 1,Variables.lampsOthersName[position],0,0,false,0,0);         //Создание светильника
+                        break;
+                    case 5:
+                        Variables.plan.spawnLamp(Variables.OutsideImageId[position], position, 1,Variables.lampsOutsideName[position],0,0,false,0,0);         //Создание светильника
+                        break;
+                }
             }else if (Variables.addMultiple_flag || Variables.addMultipleRowsFlag){
                 Variables.resetListColor();
                 view.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
-                Variables.multipleType = Variables.imageid[position];
+                switch (Variables.currentLampsPanelIndex){
+                    case 0:
+                        Variables.multipleType = Variables.VstraivaemieImageId[position];
+                        break;
+                    case 1:
+                        Variables.multipleType = Variables.NakladnieImageId[position];
+                        break;
+                    case 2:
+                        Variables.multipleType = Variables.LampsImageId[position];
+                        break;
+                    case 3:
+                        Variables.multipleType = Variables.DiodsImageId[position];
+                        break;
+                    case 4:
+                        Variables.multipleType = Variables.OthersImageId[position];
+                        break;
+                    case 5:
+                        Variables.multipleType = Variables.OutsideImageId[position];
+                        break;
+                }
                 Variables.multiplepos = position;
                 Variables.multiplelampType = 1;
             }
         });
 
+        Timer myTimer;
+        myTimer = new Timer();
+
+        myTimer.schedule(new TimerTask() {
+            public void run() {
+                if (Variables.current_floor!=null) {
+                    SaveFileThread thread = new SaveFileThread();
+                    thread.start();
+                }
+            }
+        }, 0, 180*1000); // каждые 3 минуты-сохранение файла
 
 
         Variables.image.addOnLayoutChangeListener( new View.OnLayoutChangeListener()        //В момент изменения размеров изображения

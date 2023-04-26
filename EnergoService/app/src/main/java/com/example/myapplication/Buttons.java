@@ -203,76 +203,8 @@ public class Buttons {
         screenShotBtn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                String path1 = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
-                for (Room room:Variables.current_floor.rooms) {
-                for (Lamp lamp: room.lamps){
-                        lamp.getImage().setImageResource(0);
-                        int index = Variables.findIndexOfLamp(lamp.getTypeImage());
-                        lamp.getImage().setImageResource(Variables.imageidBold[index]);
-                        Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.imageidBold[index]);
-                }
-            }
-                        for (Lamp lamp: Variables.current_floor.unusedLamps){
-                            lamp.getImage().setImageResource(0);
-                            int index = Variables.findIndexOfLamp(lamp.getTypeImage());
-                            lamp.getImage().setImageResource(Variables.imageidBold[index]);
-                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.imageidBold[index]);
-                        }
-            File mediaStorageDir = new File(path1+"/"+Variables.current_floor.getName());
-            // Create a storage directory if it does not exist
-
-            // Create a media file name
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            String imageName = "IMG_" + timeStamp + ".jpg";
-
-            String selectedOutputPath = mediaStorageDir.getPath() + File.separator + imageName;
-
-            Variables.planLay.setDrawingCacheEnabled(true);
-            Variables.planLay.buildDrawingCache();
-            Bitmap bitmap = Bitmap.createBitmap(Variables.planLay.getDrawingCache());
-
-            int maxSize = 1080;
-
-            int bWidth = bitmap.getWidth();
-            int bHeight = bitmap.getHeight();
-            //bitmap = Bitmap.createScaledBitmap(bitmap, 1920, 1080, true);
-            //bitmap = Bitmap.createScaledBitmap(bitmap, bWidth*5, bHeight*5, true);
-
-            /*if (bWidth > bHeight) {
-                int imageHeight = (int) Math.abs(maxSize * ((float)bitmap.getWidth() / (float) bitmap.getHeight()));
-                bitmap = Bitmap.createScaledBitmap(bitmap, maxSize, imageHeight, true);
-            } else {
-                int imageWidth = (int) Math.abs(maxSize * ((float)bitmap.getWidth() / (float) bitmap.getHeight()));
-                bitmap = Bitmap.createScaledBitmap(bitmap, imageWidth, maxSize, true);
-            }*/
-       Variables.planLay.setDrawingCacheEnabled(false);
-        Variables.planLay.destroyDrawingCache();
-
-            OutputStream fOut = null;
-            try {
-                File file = new File(selectedOutputPath);
-                fOut = new FileOutputStream(file);
-
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
-                fOut.flush();
-                fOut.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-                        for (Room room:Variables.current_floor.rooms) {
-                            for (Lamp lamp: room.lamps){
-                                lamp.getImage().setImageResource(0);
-                                int index = Variables.findIndexOfLamp(lamp.getTypeImage());
-                                lamp.getImage().setImageResource(Variables.imageid[index]);
-                                Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.imageid[index]);
-                            }
-                        }
-                for (Lamp lamp: Variables.current_floor.unusedLamps){
-                    lamp.getImage().setImageResource(0);
-                    int index = Variables.findIndexOfLamp(lamp.getTypeImage());
-                    lamp.getImage().setImageResource(Variables.imageid[index]);
-                    Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.imageid[index]);
-                }
+                SavePlanToJpgThread thread = new SavePlanToJpgThread(); //Создаем новый поток для экспорта плана в JPG
+                thread.start();     //Запускаем поток
                 return false;
             }
         });
@@ -848,7 +780,26 @@ public class Buttons {
                             if (column_amount > 0 && column != null && rows_amount > 0 && rows != null && Variables.multipleType != -1) {   //Создаем светильники
                                 for (int i = 0; i < rows_amount; i++) {
                                     for (int j = 0; j < column_amount; j++) {
-                                        Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsName[Variables.multiplepos],cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                        switch (Variables.currentLampsPanelIndex){
+                                            case 0:
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsVstraivaemieName[Variables.multiplepos],cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                break;
+                                            case 1:
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsNakladnieName[Variables.multiplepos],cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                break;
+                                            case 2:
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsLampsName[Variables.multiplepos],cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                break;
+                                            case 3:
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsDiodsName[Variables.multiplepos],cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                break;
+                                            case 4:
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsOthersName[Variables.multiplepos],cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                break;
+                                            case 5:
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsOutsideName[Variables.multiplepos],cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                break;
+                                        }
                                     }
                                 }
                             }
@@ -1504,6 +1455,20 @@ public class Buttons {
 
         });
 
+        Variables.montagneType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (Variables.plan.touchedLamp!=null){
+                    Variables.plan.touchedLamp.setMontagneType(Variables.montagneType.getSelectedItemPosition());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         Variables.roofType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -1521,6 +1486,10 @@ public class Buttons {
                             }
                         }
                         lastIndex = index;
+                    }
+                }else{
+                    if (Variables.plan.touchedRoom!=null) {
+                        Variables.plan.touchedRoom.setRoofType(Variables.roofType.getSelectedItemPosition());
                     }
                 }
             }

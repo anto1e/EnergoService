@@ -30,6 +30,98 @@
         android:orientation="horizontal"
         android:backgroundTint="@color/bc_layout"
         android:background="@drawable/toolbarborder">
+        <LinearLayout
+            android:id="@+id/lampTypesPanelsLayout"
+            android:orientation="vertical"
+            android:layout_width="20dp"
+            android:background="@color/blue"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:id="@+id/VstraivaemieLayout"
+                android:layout_width="match_parent"
+                android:background="@color/white"
+                android:layout_weight=".16"
+                android:layout_height="65dp">
+                <com.example.myapplication.VerticalTextView
+                    android:id="@+id/VstraivaemiePanel"
+                    android:layout_width="65dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="left|center_vertical"
+                    android:padding="4dp"
+                    android:text="Встраиваемые"
+                    android:textSize="12sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/NakladnieLayout"
+                android:layout_width="match_parent"
+                android:background="@color/grey"
+                android:layout_height="65dp">
+                <com.example.myapplication.VerticalTextView
+                    android:id="@+id/NakladniePanel"
+                    android:layout_width="65dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="left|center_vertical"
+                    android:padding="4dp"
+                    android:text="    Накладные"
+                    android:textSize="12sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/LampsLayout"
+                android:layout_width="match_parent"
+                android:background="@color/grey"
+                android:layout_height="65dp">
+                <com.example.myapplication.VerticalTextView
+                    android:id="@+id/LampsPanel"
+                    android:layout_width="65dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity=""
+                    android:padding="4dp"
+                    android:text="     Лампы"
+                    android:textSize="12sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/DiodsLayout"
+                android:layout_width="match_parent"
+                android:background="@color/grey"
+                android:layout_height="65dp">
+                <com.example.myapplication.VerticalTextView
+                    android:id="@+id/DiodsPanel"
+                    android:layout_width="65dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="left|center_vertical"
+                    android:padding="4dp"
+                    android:text="Светодиодные"
+                    android:textSize="12sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/OthersLayout"
+                android:layout_width="match_parent"
+                android:background="@color/grey"
+                android:layout_height="65dp">
+                <com.example.myapplication.VerticalTextView
+                    android:id="@+id/OthersPanel"
+                    android:layout_width="65dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="left|center_vertical"
+                    android:padding="4dp"
+                    android:text="     Другие"
+                    android:textSize="12sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/OutsideLayout"
+                android:layout_width="match_parent"
+                android:background="@color/grey"
+                android:layout_height="65dp">
+                <com.example.myapplication.VerticalTextView
+                    android:id="@+id/OutsidePanel"
+                    android:layout_width="65dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="left|center_vertical"
+                    android:padding="4dp"
+                    android:text="  Наружное"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
         <ListView
             android:background="@color/white"
             android:layout_width="match_parent"
@@ -847,6 +939,19 @@
                     android:textSize="12dp"
                     android:id="@+id/lampPower"
                     />
+                <TextView
+                    android:text="Монтаж:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+                <Spinner
+                    android:verticalScrollbarPosition="right"
+                    android:id="@+id/montagneType"
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown" />
                 <TextView
                     android:text="Комментарии:"
                     android:textColor="@color/black"

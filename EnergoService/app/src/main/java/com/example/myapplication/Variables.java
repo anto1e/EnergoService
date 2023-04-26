@@ -3,6 +3,8 @@ package com.example.myapplication;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.TypedValue;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -46,6 +48,7 @@ public class Variables {
     static boolean confirmBtnActive=false;      //Флаг активации кнопки подтверждения
     static boolean moveOnlySelectedZone=false;      //Флаг активации перемещения выбранной зоны
     static boolean cancelBtnActive=false;           //Флаг активации кнопки отмены
+    static Spinner montagneType;
     static boolean copyFlag=false;                  //Флаг активации функции копирования
     static boolean planLayCleared=false;            //Флаг очистки плана
     static Vector<LinearLayout> FloorPanelsVec = new Vector<LinearLayout>();        //Вектор вкладок на экране
@@ -76,7 +79,9 @@ public class Variables {
     static Uri selectedfile;             //Выбранный текущий файл
     static Activity activity=null;          //Главное activity
     static ImageView photoImage;       //Поле для отображения фотографии
+    static int currentLampsPanelIndex = 0;
     static boolean opened = false;          //Если файл был открыт
+    static LampsList lampsList=null;
     static BikExtensionParser parser = new BikExtensionParser();        //Парсер данных из .bik
     private static boolean addFlag=false;       //Флаг активации режима добавления светильника
     static boolean addMultiple_flag=false;       //Флаг активации режима добавления светильника
@@ -91,6 +96,7 @@ public class Variables {
     static Spinner spinLines;               //Спиннер строк(создание множества светильников по рядам и столбцам)
     static Spinner roofTypeDefault;
     static EditText roofTypeDefaultText;
+    static Vector<VerticalTextView> lampsPanels = new Vector<VerticalTextView>();
     static RelativeLayout planLay;          //Layout плана
     static ImageView image;                     //Изображение(план)
     static EditText lampRoom;                   //Поле информации о привязке светильника к комнате
@@ -126,21 +132,9 @@ public class Variables {
     static double lastHeight;                //Высота плана, при разметке на сайте
     static double currentWidth;                //Ширина плана в приложении
     static double currentHeight;                //Высота плана в приложении
-    public static final String[] lampNames = {             //Названия светильников
-            "4*18Вт","2*36Вт","ЛН 60Вт"
-    };
-
-    public static  final Integer[] imageid = {              //Изображения светильников
-            R.drawable.lum4_18, R.drawable.lum2_36,R.drawable.lampnakal
-    };
-
-    public static  final Integer[] imageidBold = {              //Изображения светильников
-            R.drawable.lum4_18bold, R.drawable.lum2_36bold,R.drawable.lampnakalbold
-    };
-
-    public static  final String[] lampsName = {"lum4_18","lum2_36","lampnakal"};
 
     static String[] roofTypes = {"Бетон","Армстронг","ПВХ","Гипрок"};        //Типы потолков
+    static String[] montagneTypeArr = {"Накладной","Встраиваемый"};        //Типы потолков
     static String[] typeOfBuildingArr = {"Детский сад","Школа","Больница"};
     static String[] typesOfRoomsDetSad = { "Игровая","Гардероб", "Спальная", "Санузел", "Коридор", "Тамбур","Лестница","Кабинет","Пищеблок","Прачечная","Моечная","Кладовая","Служебное помещение","Спортзал","Актовый зал","Медкабинет"};            //Типы помещений(детские сады)
     static String[] typesOfRoomsSchools = { "Учебный кабинет", "Кабинет", "Санузел", "Коридор", "Тамбур","Лестница","Спортзал","Пищеблок","Актовый зал","Медкабинет","Кладовая","Служебное помещение"};            //Типы помещений(школы)
@@ -153,8 +147,82 @@ public class Variables {
     static String[] spinLinesArr = {"2","3","4","5","6","7","8","9","10"};       //Количество светильников в рядах
 
 
+    public static  final Integer[] VstraivaemieImageId = {              //Изображения светильников
+            R.drawable.lum4_18
+    };
+    public static  final Integer[] NakladnieImageId = {              //Изображения светильников
+            R.drawable.lum2_36
+    };
+    public static  final Integer[] LampsImageId = {              //Изображения светильников
+            R.drawable.lampnakal,R.drawable.lampdiod
+    };
+    public static  final Integer[] DiodsImageId = {              //Изображения светильников
+            R.drawable.diod4_18,R.drawable.diod2_36
+    };
+    public static  final Integer[] OthersImageId = {              //Изображения светильников
+
+    };
+    public static  final Integer[] OutsideImageId = {              //Изображения светильников
+
+    };
+
+
+
+    public static  final Integer[] VstraivaemieImageIdBold = {              //Изображения светильников
+            R.drawable.lum4_18bold
+    };
+
+    public static  final Integer[] NakladnieImageIdBold = {              //Изображения светильников
+            R.drawable.lum2_36bold
+    };
+
+    public static  final Integer[] LampsImageIdBold = {              //Изображения светильников
+            R.drawable.lampnakalbold,R.drawable.lampdiodbold
+    };
+    public static  final Integer[] DiodsImageIdBold = {              //Изображения светильников
+            R.drawable.diod4_18bold,R.drawable.diod2_36bold
+    };
+    public static  final Integer[] OthersImageIdBold = {              //Изображения светильников
+
+    };
+    public static  final Integer[] OutsideImageIdBold = {              //Изображения светильников
+
+    };
+
+
+
+    public static final String[] lampVstraivaemieNames = {             //Названия светильников
+            "4*18Вт"
+    };
+    public static final String[] lampNakladnieNames = {             //Названия светильников
+            "2*36Вт"
+    };
+    public static final String[] lampLampsNames = {             //Названия светильников
+            "накаливания 60Вт","светодиодная 12Вт"
+    };
+    public static final String[] lampDiodsNames = {             //Названия светильников
+            "36Вт","36Вт"
+    };
+    public static final String[] lampOthersNames = {             //Названия светильников
+
+    };
+    public static final String[] lampOutsideNames = {             //Названия светильников
+
+    };
+
+
+    public static  final String[] lampsVstraivaemieName = {"lum4_18"};
+    public static  final String[] lampsNakladnieName = {"lum2_36"};
+    public static  final String[] lampsLampsName = {"lampnakal","lampdiod"};
+    public static  final String[] lampsDiodsName = {"diod4_18","diod2_36"};
+    public static  final String[] lampsOthersName = {};
+    public static  final String[] lampsOutsideName = {};
+
+
 
     public static void init(){                //Инициализация переменных
+        montagneType=activity.findViewById(R.id.montagneType);
+        initLampsPanels();
         hoursPerSunday = activity.findViewById(R.id.roomHoursSunday);
         daysOfWorkDefault = activity.findViewById(R.id.daysOfWorkDefault);
         typeOfBuilding = activity.findViewById(R.id.typeOfBuilding);
@@ -237,6 +305,9 @@ public class Variables {
         adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,typeOfBuildingArr);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         typeOfBuilding.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,montagneTypeArr);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        montagneType.setAdapter(adapter);
     }
 
     public static void clearFields(){           //Очистка полей при переключении плана
@@ -406,11 +477,130 @@ public class Variables {
     }
 
     public static int findIndexOfLamp(String type){
-        for (int i=0;i<lampsName.length;i++){
-            if (lampsName[i].equals(type)){
-                return i;
-            }
+        switch (currentLampsPanelIndex){
+            case 0:
+                for (int i=0;i<lampsVstraivaemieName.length;i++){
+                    if (lampsVstraivaemieName[i].equals(type)){
+                        return i;
+                    }
+                }
+                break;
+            case 1:
+                for (int i=0;i<lampsNakladnieName.length;i++){
+                    if (lampsNakladnieName[i].equals(type)){
+                        return i;
+                    }
+                }
+                break;
+            case 2:
+                for (int i=0;i<lampsLampsName.length;i++){
+                    if (lampsLampsName[i].equals(type)){
+                        return i;
+                    }
+                }
+                break;
+            case 3:
+                for (int i=0;i<lampsDiodsName.length;i++){
+                    if (lampsDiodsName[i].equals(type)){
+                        return i;
+                    }
+                }
+                break;
+            case 4:
+                for (int i=0;i<lampsOthersName.length;i++){
+                    if (lampsOthersName[i].equals(type)){
+                        return i;
+                    }
+                }
+                break;
+            case 5:
+                for (int i=0;i<lampsOutsideName.length;i++){
+                    if (lampsOutsideName[i].equals(type)){
+                        return i;
+                    }
+                }
+                break;
         }
         return -1;
     }
+
+    public static LinearLayout getCurrentPanelLayout(){
+        VerticalTextView txt = lampsPanels.elementAt(currentLampsPanelIndex);
+        LinearLayout temp = (LinearLayout) txt.getParent();
+        return temp;
+    }
+    private static void initLampsPanels(){
+        LinearLayout lampsLayoutsWrapper = activity.findViewById(R.id.lampTypesPanelsLayout);
+        lampsLayoutsWrapper.post(new Runnable() {
+            @Override
+            public void run() {
+                lampsList = new LampsList(activity, lampVstraivaemieNames, VstraivaemieImageId);
+                listView.setAdapter(lampsList);
+                lampsPanels.add(activity.findViewById(R.id.VstraivaemiePanel));
+                lampsPanels.add(activity.findViewById(R.id.NakladniePanel));
+                lampsPanels.add(activity.findViewById(R.id.LampsPanel));
+                lampsPanels.add(activity.findViewById(R.id.DiodsPanel));
+                lampsPanels.add(activity.findViewById(R.id.OthersPanel));
+                lampsPanels.add(activity.findViewById(R.id.OutsidePanel));
+                LinearLayout lampsLayoutsWrapper = activity.findViewById(R.id.lampTypesPanelsLayout);
+                int heightOfParentView = lampsLayoutsWrapper.getHeight();
+                int heightOfEachElem = heightOfParentView/lampsPanels.size();
+                LinearLayout.LayoutParams paramsForWrap = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) heightOfEachElem);
+                LinearLayout.LayoutParams paramsForText = new LinearLayout.LayoutParams((int) heightOfEachElem,(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, Variables.activity.getResources().getDisplayMetrics()));
+                for (VerticalTextView lay:lampsPanels){
+                    LinearLayout temp = (LinearLayout) lay.getParent();
+                    temp.setLayoutParams(paramsForWrap);
+                    temp.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            for (int i=0;i<lampsPanels.size();i++){
+                                LinearLayout temp1 = (LinearLayout) lampsPanels.elementAt(i).getParent();
+                                if (temp1==v){
+                                    if (i!=currentLampsPanelIndex) {
+                                        for (VerticalTextView lay1:lampsPanels){
+                                            LinearLayout temp2 = (LinearLayout) lay1.getParent();
+                                            temp2.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
+                                        }
+                                        currentLampsPanelIndex = i;
+                                        temp1.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                                        switch (currentLampsPanelIndex){
+                                            case 0:
+                                                lampsList = new LampsList(activity, lampVstraivaemieNames, VstraivaemieImageId);
+                                                listView.setAdapter(lampsList);
+                                                break;
+                                            case 1:
+                                                lampsList = new LampsList(activity, lampNakladnieNames, NakladnieImageId);
+                                                listView.setAdapter(lampsList);
+                                                break;
+                                            case 2:
+                                                lampsList = new LampsList(activity, lampLampsNames, LampsImageId);
+                                                listView.setAdapter(lampsList);
+                                                break;
+                                            case 3:
+                                                lampsList = new LampsList(activity, lampDiodsNames, DiodsImageId);
+                                                listView.setAdapter(lampsList);
+                                                break;
+                                            case 4:
+                                                lampsList = new LampsList(activity, lampOthersNames, OthersImageId);
+                                                listView.setAdapter(lampsList);
+                                                break;
+                                            case 5:
+                                                lampsList = new LampsList(activity, lampOutsideNames, OutsideImageId);
+                                                listView.setAdapter(lampsList);
+                                                break;
+                                        }
+                                    }
+                                }
+                            }
+                            return false;
+                        }
+                    });
+                    lay.setLayoutParams(paramsForText);
+                }
+            }
+        });
+    }
+    /*public static int getTypeOfLampByPower(){
+
+    }*/
 }

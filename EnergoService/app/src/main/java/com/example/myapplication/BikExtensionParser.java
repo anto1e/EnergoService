@@ -183,7 +183,7 @@ public class BikExtensionParser {
                     }
                 }
                 else if (lampsInfo){        //Если информация о светильниках
-                    if (line.length()>9 && line.charAt(0) != '/'){
+                    if (line.length()>10 && line.charAt(0) != '/'){
                         String[] split_number = line.split("%");
                         if (split_number.length>1){
                             String number = split_number[0];
@@ -225,8 +225,9 @@ public class BikExtensionParser {
                                 Variables.plan.setListener(imageView);
                                 lamp.setImage(imageView);
                                 Variables.plan.rotateImg(rotationAngle,imageView,type_image,-1);
-                            if (split_room_info.length>10){      //Если есть пути к фотографиям и сами файлы существуют - добавляем
-                                String paths = split_room_info[10];
+                                int montagneType = Integer.parseInt(split_room_info[10]);
+                            if (split_room_info.length>11){      //Если есть пути к фотографиям и сами файлы существуют - добавляем
+                                String paths = split_room_info[11];
                                 String[] split_room_photos = paths.split("!");
                                 for (int i=0;i<split_room_photos.length;i++){
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -237,6 +238,7 @@ public class BikExtensionParser {
                                 }
                                 //room.photoPaths.addAll(Arrays.asList(split_room_photos));
                             }
+                            lamp.setMontagneType(montagneType);
                                 if (Objects.equals(lampRoom, "-1") && !Objects.equals(usedOrNot, "used")){  //Если светильник не привязан никуда, пытаемся привязать по координатам, если не выходит - не привязываем
                                     Room detectedRoom=null;
                                     for (Room temp:Variables.current_floor.rooms){
@@ -350,7 +352,7 @@ public class BikExtensionParser {
                     for (int i=0;i<tempFloor.rooms.size();i++){
                         for (int j=0;j<tempFloor.rooms.elementAt(i).lamps.size();j++){
                             Lamp temp = tempFloor.rooms.elementAt(i).lamps.elementAt(j);
-                            String str12 = tempFloor.rooms.elementAt(i).getNumber()+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle()+"@"+temp.getLampRoom()+"@"+"used";
+                            String str12 = tempFloor.rooms.elementAt(i).getNumber()+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle()+"@"+temp.getLampRoom()+"@"+"used"+"@"+temp.getMontagneType();
                             String str2="@";
                             if (temp.photoPaths.size()!=0){
                                 for (String str:temp.photoPaths){
@@ -363,7 +365,7 @@ public class BikExtensionParser {
                     }
                     for (int i=0;i<tempFloor.unusedLamps.size();i++){
                             Lamp temp = tempFloor.unusedLamps.elementAt(i);
-                            String str12 = "-1"+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle()+"@"+temp.getLampRoom()+"@"+"unused";
+                            String str12 = "-1"+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle()+"@"+temp.getLampRoom()+"@"+"unused"+"@"+temp.getMontagneType();
                              String str2="@";
                             if (temp.photoPaths.size()!=0){
                                 for (String str:temp.photoPaths){
