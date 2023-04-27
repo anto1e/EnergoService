@@ -173,8 +173,14 @@ public class ExcelExporter {
                     Room room = temp.rooms.elementAt(i);
                     Vector<Lamp> lamps = room.getLamps();
                     for (int j = 0; j < lamps.size(); j++) {        //Типы светильников
-                        if (!types.contains(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getComments())) {
-                            types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getComments());
+                        String comments = lamps.elementAt(j).getComments();
+                        if (lamps.elementAt(j).getTypeImage().equals("lampdiodspot") || lamps.elementAt(j).getTypeImage().equals("lampnakalspot") || lamps.elementAt(j).getTypeImage().equals("lampkll15spot")){
+                            comments+="Спот";
+                        }else
+                        if (lamps.elementAt(j).getGroupIndex()==2)
+                            comments+="Плафон";
+                            if (!types.contains(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getComments())) {
+                            types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + comments);
                         }
                     }
                     for (int j = 0; j < types.size(); j++) {       //Находим и считаем светильники, чьи типы есть в Векторе
@@ -183,7 +189,13 @@ public class ExcelExporter {
                         String montagneType="";
                         String otherInfo="";
                         for (int z = 0; z < lamps.size(); z++) {
-                            if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " " + lamps.elementAt(z).getComments())) {
+                            String comments = lamps.elementAt(z).getComments();
+                            if (lamps.elementAt(z).getTypeImage().equals("lampdiodspot") || lamps.elementAt(z).getTypeImage().equals("lampnakalspot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot")){
+                                comments+="Спот";
+                            }else
+                            if (lamps.elementAt(z).getGroupIndex()==2)
+                                comments+="Плафон";
+                            if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " " + comments)) {
                                 //if (lamps.elementAt(z).getComments()==null){
                                 count++;
                                 type = lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower();
@@ -210,8 +222,14 @@ public class ExcelExporter {
                     Vector<String> types = new Vector<String>();
                     Vector<Lamp> lamps = temp.unusedLamps;
                     for (int j = 0; j < lamps.size(); j++) {        //Типы светильников
+                        String comments = lamps.elementAt(j).getComments();
+                        if (lamps.elementAt(j).getTypeImage().equals("lampdiodspot") || lamps.elementAt(j).getTypeImage().equals("lampnakalspot") || lamps.elementAt(j).getTypeImage().equals("lampkll15spot")){
+                            comments+="Спот";
+                        }else
+                        if (lamps.elementAt(j).getGroupIndex()==2)
+                            comments+="Плафон";
                         if (!types.contains(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getComments()+" "+lamps.elementAt(j).getLampRoom())) {
-                            types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getComments()+" "+lamps.elementAt(j).getLampRoom());
+                            types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + comments+" "+lamps.elementAt(j).getLampRoom());
                         }
                     }
                     for (int j = 0; j < types.size(); j++) {       //Находим и считаем светильники, чьи типы есть в Векторе
@@ -221,7 +239,13 @@ public class ExcelExporter {
                         String montagneType="";
                         String otherInfo="";
                         for (int z = 0; z < lamps.size(); z++) {
-                            if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " " + lamps.elementAt(z).getComments()+" "+lamps.elementAt(z).getLampRoom())) {
+                            String comments = lamps.elementAt(z).getComments();
+                            if (lamps.elementAt(z).getTypeImage().equals("lampdiodspot") || lamps.elementAt(z).getTypeImage().equals("lampnakalspot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot")){
+                                comments+="Спот";
+                            }else
+                            if (lamps.elementAt(z).getGroupIndex()==2)
+                                comments+="Плафон";
+                            if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " " + comments+" "+lamps.elementAt(z).getLampRoom())) {
                                 //if (lamps.elementAt(z).getComments()==null){
                                 count++;
                                 type = lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower();

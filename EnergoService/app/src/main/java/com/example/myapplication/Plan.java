@@ -415,12 +415,12 @@ public class Plan {
                             if (lampName.equals("lampnakalspot")){
                                 lamp.setType("Лампа");
                                 lamp.setPower("накаливания 60Вт");
-                                lamp.setComments("Спот");
+                                //lamp.setComments("Спот");
                                 escapePowerSet=true;
                             }else if (lampName.equals("lampkll15spot")){
                                 lamp.setType("КЛЛ");
                                 lamp.setPower("15Вт");
-                                lamp.setComments("Спот");
+                                //lamp.setComments("Спот");
                                 escapePowerSet=true;
                             }
                         }
@@ -439,7 +439,7 @@ public class Plan {
                         }else if (lampName.equals("lampdiodspot")){
                             lamp.setType("Лампа");
                             lamp.setPower("светодиодная 12Вт");
-                            lamp.setComments("Спот");
+                            //lamp.setComments("Спот");
                             escapePowerSet=true;
                             lamp.setMontagneType(1);
                         }
@@ -466,12 +466,12 @@ public class Plan {
                             if (lampName.equals("lampnakalspot")){
                                 lamp.setType("Лампа");
                                 lamp.setPower("накаливания 60Вт");
-                                lamp.setComments("Спот");
+                                //lamp.setComments("Спот");
                                 escapePowerSet=true;
                             }else if (lampName.equals("lampkll15spot")){
                                 lamp.setType("КЛЛ");
                                 lamp.setPower("15Вт");
-                                lamp.setComments("Спот");
+                                //lamp.setComments("Спот");
                                 escapePowerSet=true;
                             }
                         }
@@ -490,7 +490,7 @@ public class Plan {
                         }else if (lampName.equals("lampdiodspot")){
                             lamp.setType("Лампа");
                             lamp.setPower("светодиодная 12Вт");
-                            lamp.setComments("Спот");
+                            //lamp.setComments("Спот");
                             escapePowerSet=true;
                             lamp.setMontagneType(1);
                         }
