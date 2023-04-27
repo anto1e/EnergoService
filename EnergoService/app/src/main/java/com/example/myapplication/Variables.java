@@ -150,16 +150,16 @@ public class Variables {
 
 
     public static  final Integer[] VstraivaemieImageId = {              //Изображения светильников
-            R.drawable.lum4_18
+            R.drawable.lum4_18,R.drawable.lum2_36vstr,R.drawable.lampnakalspot,R.drawable.lampkll15spot
     };
     public static  final Integer[] NakladnieImageId = {              //Изображения светильников
-            R.drawable.lum2_36
+            R.drawable.lum4_18nakl,R.drawable.lum2_36,R.drawable.lum2_18,R.drawable.lum1_36,R.drawable.lum1_18,R.drawable.lum2_58,R.drawable.lum2_80,R.drawable.lum4_36,R.drawable.lum4_58,R.drawable.lum4_80
     };
     public static  final Integer[] LampsImageId = {              //Изображения светильников
-            R.drawable.lampnakal,R.drawable.lampdiod
+            R.drawable.lampnakal,R.drawable.lampdiod,R.drawable.lampkll15
     };
     public static  final Integer[] DiodsImageId = {              //Изображения светильников
-            R.drawable.diod4_18,R.drawable.diod2_36
+            R.drawable.diod4_18,R.drawable.diod2_36,R.drawable.lampdiodspot
     };
     public static  final Integer[] OthersImageId = {              //Изображения светильников
 
@@ -171,18 +171,18 @@ public class Variables {
 
 
     public static  final Integer[] VstraivaemieImageIdBold = {              //Изображения светильников
-            R.drawable.lum4_18bold
+            R.drawable.lum4_18bold,R.drawable.lum2_36vstrbold,R.drawable.lampnakalspotbold,R.drawable.lampkll15spotbold
     };
 
     public static  final Integer[] NakladnieImageIdBold = {              //Изображения светильников
-            R.drawable.lum2_36bold
+            R.drawable.lum4_18naklbold,R.drawable.lum2_36bold,R.drawable.lum2_18bold,R.drawable.lum1_36bold,R.drawable.lum1_18bold,R.drawable.lum2_58bold,R.drawable.lum2_80bold,R.drawable.lum4_36bold,R.drawable.lum4_58bold,R.drawable.lum4_80bold
     };
 
     public static  final Integer[] LampsImageIdBold = {              //Изображения светильников
-            R.drawable.lampnakalbold,R.drawable.lampdiodbold
+            R.drawable.lampnakalbold,R.drawable.lampdiodbold,R.drawable.lampkll15bold
     };
     public static  final Integer[] DiodsImageIdBold = {              //Изображения светильников
-            R.drawable.diod4_18bold,R.drawable.diod2_36bold
+            R.drawable.diod4_18bold,R.drawable.diod2_36bold,R.drawable.lampdiodspotbold
     };
     public static  final Integer[] OthersImageIdBold = {              //Изображения светильников
 
@@ -194,19 +194,19 @@ public class Variables {
 
 
     public static final String[] lampVstraivaemieNames = {             //Названия светильников
-            "4*18Вт"
+            "4*18Вт","2*36Вт","ЛН 60Вт","КЛЛ 15Вт"
     };
     public static final String[] lampNakladnieNames = {             //Названия светильников
-            "2*36Вт"
+            "4*18Вт","2*36Вт","2*18Вт","1*36Вт","1*18Вт","2*58Вт","2*80Вт","4*36Вт","4*58Вт","4*80Вт"
     };
     public static final String[] lampLampsNames = {             //Названия светильников
-            "ЛН 60Вт","СД 12Вт"
+            "ЛН 60Вт","СД 12Вт","КЛЛ 15Вт"
     };
     public static final String[] lampLampsNamesForOutput = {             //Названия светильников
-            "накаливания 60Вт","светодиодная 12Вт"
+            "накаливания 60Вт","светодиодная 12Вт","КЛЛ 15Вт"
     };
     public static final String[] lampDiodsNames = {             //Названия светильников
-            "36Вт","36Вт"
+            "36Вт","36Вт","12Вт"
     };
     public static final String[] lampOthersNames = {             //Названия светильников
 
@@ -216,10 +216,10 @@ public class Variables {
     };
 
 
-    public static  final String[] lampsVstraivaemieName = {"lum4_18"};
-    public static  final String[] lampsNakladnieName = {"lum2_36"};
-    public static  final String[] lampsLampsName = {"lampnakal","lampdiod"};
-    public static  final String[] lampsDiodsName = {"diod4_18","diod2_36"};
+    public static  final String[] lampsVstraivaemieName = {"lum4_18","lum2_36vstr","lampnakalspot","lampkll15spot"};
+    public static  final String[] lampsNakladnieName = {"lum4_18nakl","lum2_36","lum2_18","lum1_36","lum1_18","lum2_58","lum2_80","lum4_36","lum4_58","lum4_80"};
+    public static  final String[] lampsLampsName = {"lampnakal","lampdiod","lampkll15"};
+    public static  final String[] lampsDiodsName = {"diod4_18","diod2_36","lampdiodspot"};
     public static  final String[] lampsOthersName = {};
     public static  final String[] lampsOutsideName = {};
 

@@ -169,6 +169,7 @@ public class ExcelExporter {
                 for (int i = 0; i < temp.rooms.size(); i++) {
                     int count = 0;
                     Vector<String> types = new Vector<String>();
+                    Vector<String> typesImages = new Vector<String>();
                     Room room = temp.rooms.elementAt(i);
                     Vector<Lamp> lamps = room.getLamps();
                     for (int j = 0; j < lamps.size(); j++) {        //Типы светильников
@@ -180,6 +181,7 @@ public class ExcelExporter {
                         String type = "";
                         String comm = "";
                         String montagneType="";
+                        String otherInfo="";
                         for (int z = 0; z < lamps.size(); z++) {
                             if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " " + lamps.elementAt(z).getComments())) {
                                 //if (lamps.elementAt(z).getComments()==null){
@@ -187,13 +189,18 @@ public class ExcelExporter {
                                 type = lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower();
                                 comm = lamps.elementAt(z).getComments();
                                 montagneType = Variables.montagneTypeArr[lamps.elementAt(z).getMontagneType()];
+                                if (lamps.elementAt(z).getTypeImage().equals("lampdiodspot") || lamps.elementAt(z).getTypeImage().equals("lampnakalspot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot")){
+                                    otherInfo="Спот";
+                                }else
+                                if (lamps.elementAt(z).getGroupIndex()==2)
+                                    otherInfo="Плафон";
                                 //}else{
                                 //writeToFile(room,types.elementAt(j),1,lamps.elementAt(z).getComments());
                                 //}
                             }
                         }
                         if (count > 0) {
-                            writeToFile(temp,room, type, count, comm,"0",montagneType);       //Запись данных в файл
+                            writeToFile(temp,room, type, count, comm,"0",montagneType,otherInfo);       //Запись данных в файл
                         }
                         count = 0;
                     }
@@ -212,6 +219,7 @@ public class ExcelExporter {
                         String comm = "";
                         String number="0.0";
                         String montagneType="";
+                        String otherInfo="";
                         for (int z = 0; z < lamps.size(); z++) {
                             if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " " + lamps.elementAt(z).getComments()+" "+lamps.elementAt(z).getLampRoom())) {
                                 //if (lamps.elementAt(z).getComments()==null){
@@ -220,13 +228,18 @@ public class ExcelExporter {
                                 comm = lamps.elementAt(z).getComments();
                                 number=lamps.elementAt(z).getLampRoom();
                                 montagneType = Variables.montagneTypeArr[lamps.elementAt(z).getMontagneType()];
+                                if (lamps.elementAt(z).getTypeImage().equals("lampdiodspot") || lamps.elementAt(z).getTypeImage().equals("lampnakalspot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot")){
+                                    otherInfo="Спот";
+                                }else
+                                if (lamps.elementAt(z).getGroupIndex()==2)
+                                    otherInfo="Плафон";
                                 //}else{
                                 //writeToFile(room,types.elementAt(j),1,lamps.elementAt(z).getComments());
                                 //}
                             }
                         }
                         if (count > 0) {
-                            writeToFile(temp,null, type, count, comm,number,montagneType);       //Запись данных в файл
+                            writeToFile(temp,null, type, count, comm,number,montagneType,otherInfo);       //Запись данных в файл
                         }
                         count = 0;
                     }
@@ -236,7 +249,7 @@ public class ExcelExporter {
         save();
     }
 
-    public void writeToFile(Floor floor ,Room room,String type, int amount,String comments,String number,String montagneType) throws Exception {       //Запись в файл по ячейкам
+    public void writeToFile(Floor floor ,Room room,String type, int amount,String comments,String number,String montagneType,String otherInfo) throws Exception {       //Запись в файл по ячейкам
 
 // Obtaining the reference of the first worksheet
 // Adding some sample value to cells
@@ -283,6 +296,10 @@ public class ExcelExporter {
         cell.setValue(type);
         cell = cells.get("M"+Integer.toString(rowCount));
         cell.setValue(amount);
+        if (otherInfo.equals("Плафон") || otherInfo.equals("Спот")){
+            cell = cells.get("N"+Integer.toString(rowCount));
+            cell.setValue(otherInfo);
+        }
         cell = cells.get("O"+Integer.toString(rowCount));
         cell.setValue(montagneType);
         cell = cells.get("P"+Integer.toString(rowCount));

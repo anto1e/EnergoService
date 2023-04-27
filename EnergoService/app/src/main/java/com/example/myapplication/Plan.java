@@ -381,7 +381,8 @@ public class Plan {
     @SuppressLint("ResourceAsColor")
     //Функция создания и отображения светильника на плане
     public void spawnLamp(Integer type, int pos,String lampName,int placeType,int groupIndex,float cordX,float cordY,boolean type_spawning,float rotation,float scaleType) {
-            if (tempView != null || type_spawning) {                   //Если активная функция добавления светильника
+        boolean escapePowerSet=false;
+        if (tempView != null || type_spawning) {                   //Если активная функция добавления светильника
                 ImageView imageView = new ImageView(Variables.activity);
                 imageView.setImageResource(type);
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
@@ -411,12 +412,35 @@ public class Plan {
                         lamp.setType("Люминесцентный");
                         if (groupIndex==0){
                             lamp.setMontagneType(1);
+                            if (lampName.equals("lampnakalspot")){
+                                lamp.setType("Лампа");
+                                lamp.setPower("накаливания 60Вт");
+                                lamp.setComments("Спот");
+                                escapePowerSet=true;
+                            }else if (lampName.equals("lampkll15spot")){
+                                lamp.setType("КЛЛ");
+                                lamp.setPower("15Вт");
+                                lamp.setComments("Спот");
+                                escapePowerSet=true;
+                            }
                         }
                     }else if(groupIndex==2){
-                        lamp.setType("Лампа");
+                        if (!lampName.equals("lampkll15")) {
+                            lamp.setType("Лампа");
+                        }else{
+                            lamp.setType("КЛЛ");
+                            lamp.setPower("15Вт");
+                            escapePowerSet=true;
+                        }
                     }else if (groupIndex==3){
                         lamp.setType("Светодиодный");
                         if (lampName.equals("diod4_18")){
+                            lamp.setMontagneType(1);
+                        }else if (lampName.equals("lampdiodspot")){
+                            lamp.setType("Лампа");
+                            lamp.setPower("светодиодная 12Вт");
+                            lamp.setComments("Спот");
+                            escapePowerSet=true;
                             lamp.setMontagneType(1);
                         }
                     }
@@ -424,6 +448,14 @@ public class Plan {
                     lamp.setTypeImage(lampName);
                     lamp.setLampRoom(touchedRoom.getNumber());
                     lamp.setImage(imageView);
+                    if (touchedRoom!=null && touchedRoom.lamps.size()==0 && groupIndex==0){
+                        touchedRoom.setRoofType(1);
+                        Variables.roofType.setSelection(1);
+                        if (Variables.roomHeightDefaultCheck.isChecked()){
+                            touchedRoom.setHeight((String) Variables.current_floor.roofHeightDefault.elementAt(1));
+                            Variables.roomHeight.setText(touchedRoom.getHeight());
+                        }
+                    }
                     touchedRoom.lampPush(lamp);     //Добавляем светильник в вектор светильников нажатой комнаты
                     lamp.setView();                 //Добавляем картинку светильника на экран
                 } else {                           //Иначе, если нажатая комната не размечена
@@ -431,12 +463,35 @@ public class Plan {
                         lamp.setType("Люминесцентный");
                         if (groupIndex==0){
                             lamp.setMontagneType(1);
+                            if (lampName.equals("lampnakalspot")){
+                                lamp.setType("Лампа");
+                                lamp.setPower("накаливания 60Вт");
+                                lamp.setComments("Спот");
+                                escapePowerSet=true;
+                            }else if (lampName.equals("lampkll15spot")){
+                                lamp.setType("КЛЛ");
+                                lamp.setPower("15Вт");
+                                lamp.setComments("Спот");
+                                escapePowerSet=true;
+                            }
                         }
                     }else if(groupIndex==2){
-                        lamp.setType("Лампа");
+                        if (!lampName.equals("lampkll15")) {
+                            lamp.setType("Лампа");
+                        }else{
+                            lamp.setType("КЛЛ");
+                            lamp.setPower("15Вт");
+                            escapePowerSet=true;
+                        }
                     }else if (groupIndex==3){
                         lamp.setType("Светодиодный");
                         if (lampName.equals("diod4_18")){
+                            lamp.setMontagneType(1);
+                        }else if (lampName.equals("lampdiodspot")){
+                            lamp.setType("Лампа");
+                            lamp.setPower("светодиодная 12Вт");
+                            lamp.setComments("Спот");
+                            escapePowerSet=true;
                             lamp.setMontagneType(1);
                         }
                     }
@@ -450,25 +505,27 @@ public class Plan {
                 }
                 lamp.setPlaceType(placeType);
                 lamp.setGroupIndex(groupIndex);
-                switch (groupIndex){
-                    case 0:
-                        lamp.setPower(Variables.lampVstraivaemieNames[pos]);
-                        break;
-                    case 1:
-                        lamp.setPower(Variables.lampNakladnieNames[pos]);
-                        break;
-                    case 2:
-                        lamp.setPower(Variables.lampLampsNamesForOutput[pos]);
-                        break;
-                    case 3:
-                        lamp.setPower(Variables.lampDiodsNames[pos]);
-                        break;
-                    case 4:
-                        lamp.setPower(Variables.lampOthersNames[pos]);
-                        break;
-                    case 5:
-                        lamp.setPower(Variables.lampOutsideNames[pos]);
-                        break;
+                if (!escapePowerSet) {
+                    switch (groupIndex) {
+                        case 0:
+                            lamp.setPower(Variables.lampVstraivaemieNames[pos]);
+                            break;
+                        case 1:
+                            lamp.setPower(Variables.lampNakladnieNames[pos]);
+                            break;
+                        case 2:
+                            lamp.setPower(Variables.lampLampsNamesForOutput[pos]);
+                            break;
+                        case 3:
+                            lamp.setPower(Variables.lampDiodsNames[pos]);
+                            break;
+                        case 4:
+                            lamp.setPower(Variables.lampOthersNames[pos]);
+                            break;
+                        case 5:
+                            lamp.setPower(Variables.lampOutsideNames[pos]);
+                            break;
+                    }
                 }
                 tempView = null;
             }
