@@ -940,6 +940,21 @@
                     android:id="@+id/lampPower"
                     />
                 <TextView
+                    android:visibility="gone"
+                    android:id="@+id/lampAmountText"
+                    android:text="Ламп:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+                <EditText
+                    android:visibility="gone"
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="100dp"
+                    android:textSize="12dp"
+                    android:id="@+id/lampAmountEdit"
+                    />
+                <TextView
+                    android:id="@+id/montagneTypeTxt"
                     android:text="Монтаж:"
                     android:textColor="@color/black"
                     android:textSize="12dp"
@@ -965,6 +980,50 @@
                     android:layout_height="30dp"
                     android:background="@android:drawable/btn_dropdown"
                     android:spinnerMode="dropdown" />
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/montagneOutsideTypeTxt"
+                    android:text="Крепление:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+                <Spinner
+                    android:visibility="gone"
+                    android:verticalScrollbarPosition="right"
+                    android:id="@+id/montagneOutsideType"
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown" />
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/positionOutsideTxt"
+                    android:text="Где:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+                <Spinner
+                    android:visibility="gone"
+                    android:verticalScrollbarPosition="right"
+                    android:id="@+id/positionOutside"
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown" />
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/isStolbTxt"
+                    android:text="Столб:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+                <CheckBox
+                    android:layout_marginLeft="-50dp"
+                    android:id="@+id/isStolbCheck"
+                    android:visibility="gone"
+                    />
                 <TextView
                     android:text="Комментарии:"
                     android:textColor="@color/black"

@@ -25,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -450,6 +451,11 @@ public class Buttons {
                                 tempLamp.setPower(lamp.getPower());
                                 tempLamp.setTypeImage(lamp.getTypeImage());
                                 tempLamp.setComments(lamp.getComments());
+                                tempLamp.setStolb(lamp.isStolb());
+                                tempLamp.setMontagneType(lamp.getMontagneType());
+                                tempLamp.setPositionOutside(lamp.getPositionOutside());
+                                tempLamp.setGroupIndex(lamp.getGroupIndex());
+                                tempLamp.setPlaceType(lamp.getPlaceType());
                                 ImageView imageView = new ImageView(Variables.activity);
                                 Resources resources = Variables.activity.getResources();
                                 final int resourceId = resources.getIdentifier(lamp.getTypeImage(), "drawable",
@@ -498,6 +504,11 @@ public class Buttons {
                                 tempLamp.setPower(Variables.plan.touchedLamp.getPower());
                                 tempLamp.setTypeImage(Variables.plan.touchedLamp.getTypeImage());
                                 tempLamp.setComments(Variables.plan.touchedLamp.getComments());
+                                tempLamp.setStolb(Variables.plan.touchedLamp.isStolb());
+                                tempLamp.setMontagneType(Variables.plan.touchedLamp.getMontagneType());
+                                tempLamp.setPositionOutside(Variables.plan.touchedLamp.getPositionOutside());
+                                tempLamp.setGroupIndex(Variables.plan.touchedLamp.getGroupIndex());
+                                tempLamp.setPlaceType(Variables.plan.touchedLamp.getPlaceType());
                                 ImageView imageView = new ImageView(Variables.activity);
                                 Resources resources = Variables.activity.getResources();
                                 final int resourceId = resources.getIdentifier(Variables.plan.touchedLamp.getTypeImage(), "drawable",
@@ -647,6 +658,11 @@ public class Buttons {
                                     tempLamp.setPower(lamp.getPower());
                                     tempLamp.setTypeImage(lamp.getTypeImage());
                                     tempLamp.setComments(lamp.getComments());
+                                    tempLamp.setStolb(lamp.isStolb());
+                                    tempLamp.setMontagneType(lamp.getMontagneType());
+                                    tempLamp.setPositionOutside(lamp.getPositionOutside());
+                                    tempLamp.setGroupIndex(lamp.getGroupIndex());
+                                    tempLamp.setPlaceType(lamp.getPlaceType());
                                     ImageView imageView = new ImageView(Variables.activity);
                                     Resources resources = Variables.activity.getResources();
                                     final int resourceId = resources.getIdentifier(lamp.getTypeImage(), "drawable",
@@ -701,7 +717,7 @@ public class Buttons {
                                     for (Lamp lamp : Variables.copyVector) {
                                         boolean found = false;
                                         for (Room room : Variables.current_floor.rooms) {
-                                            if (room.detectTouch(lamp.getImage().getX(), lamp.getImage().getY())) {
+                                            if (room.detectTouch((lamp.getImage().getX())+(lamp.getImage().getWidth()/2), (lamp.getImage().getY())+(lamp.getImage().getHeight()/2))) {
                                                 room.lamps.add(lamp);
                                                 lamp.setLampRoom(room.getNumber());
                                                 found = true;
@@ -867,7 +883,7 @@ public class Buttons {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         for (Lamp lamp:Variables.copyVector){
-                                            Room temp = Variables.getRoomByNumber(lamp.getLampRoom());
+                                            Room temp = Variables.getRoomByNumber(lamp.getLampRoom(),Variables.current_floor);
                                             if (temp!=null) {
                                                 temp.lamps.remove(lamp);
                                             }else{
@@ -1514,6 +1530,47 @@ public class Buttons {
 
         });
 
+        Variables.montagneOutsideType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (Variables.plan.touchedLamp!=null && Variables.plan.touchedLamp.getGroupIndex()==5){
+                    Variables.plan.touchedLamp.setMontagneType(Variables.montagneOutsideType.getSelectedItemPosition());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        Variables.positionOutside.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (Variables.plan.touchedLamp!=null && Variables.plan.touchedLamp.getGroupIndex()==5){
+                    Variables.plan.touchedLamp.setPositionOutside(Variables.positionOutside.getSelectedItemPosition());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        Variables.isStolbCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (Variables.plan.touchedLamp!=null && Variables.plan.touchedLamp.getGroupIndex()==5){
+                    if (Variables.isStolbCheck.isChecked()){
+                        Variables.plan.touchedLamp.setStolb(true);
+                    }else{
+                        Variables.plan.touchedLamp.setStolb(false);
+                    }
+                }
+            }
+        });
+
         Variables.lampRoom.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -1589,6 +1646,30 @@ public class Buttons {
                 if (!Variables.selectZoneFlag && !Variables.getMoveFlag()) {
                     if (Variables.plan.touchedLamp != null) {
                         Variables.plan.touchedLamp.setPower(String.valueOf(Variables.lampPower.getText()));
+                    }
+                }
+            }
+        });
+        Variables.lampAmountEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (Variables.plan.touchedLamp != null) {
+                    try {
+                        if (Variables.lampAmountEdit.length()>0) {
+                            Variables.plan.touchedLamp.setLampsAmount(Integer.parseInt(String.valueOf(Variables.lampAmountEdit.getText())));
+                        }
+                    } catch (Exception ex){
+
                     }
                 }
             }

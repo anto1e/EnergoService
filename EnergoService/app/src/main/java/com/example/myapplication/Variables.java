@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -109,6 +110,12 @@ public class Variables {
     static boolean showPhotoLampFlag=false;
     static CheckBox roomHeightDefaultCheck;
     static boolean takePhotoFlag=false;
+    static TextView montagneOutsideTypeTxt;
+    static Spinner montagneOutsideType;
+    static TextView positionOutsideTxt;
+    static Spinner positionOutside;
+    static TextView isStolbTxt;
+    static CheckBox isStolbCheck;
     static Spinner hoursPerDay;            //Поле для часов работы в день помещения
     static Spinner hoursPerWeekend;            //Поле для часов работы в выходные помещения
     static Spinner roofType;                //Поле типа потолка
@@ -120,7 +127,10 @@ public class Variables {
     static EditText lampPower;                  //Поле мощности светильника
     static EditText lampComments;              //Поле комментариев к светильнику
     static FrameLayout photoFrame;              //Layout для отображения выбранной фотографии
+    static TextView lampAmountText;
+    static EditText lampAmountEdit;
     static Spinner placeType;
+    static TextView montagneTypeTxt;
 
     static EditText roomComments;               //Поле комментариев к комнате
     static int indexOfPhoto=-1;
@@ -133,9 +143,10 @@ public class Variables {
     static double lastHeight;                //Высота плана, при разметке на сайте
     static double currentWidth;                //Ширина плана в приложении
     static double currentHeight;                //Высота плана в приложении
-
+    static String[] montagneOutsideTypeArr = {"Консоль","Кронштейн"};
+    static String [] positionOutsideArr = {"Крыльцо","Фасад","Территория","Футбольное поле","Игровая площадка"};
     static String[] roofTypes = {"Бетон","Армстронг","ПВХ","Гипрок"};        //Типы потолков
-    static String[] montagneTypeArr = {"Накладной","Встраиваемый"};        //Типы потолков
+    static String[] montagneTypeArr = {"Накладной","Встраиваемый","Подвесной"};        //Типы потолков
     static String[] placeTypeArr = {"В здании","Наружный"};        //Типы потолков
     static String[] typeOfBuildingArr = {"Детский сад","Школа","Больница"};
     static String[] typesOfRoomsDetSad = { "Игровая","Гардероб", "Спальная", "Санузел", "Коридор", "Тамбур","Лестница","Кабинет","Пищеблок","Прачечная","Моечная","Кладовая","Служебное помещение","Спортзал","Актовый зал","Медкабинет"};            //Типы помещений(детские сады)
@@ -150,7 +161,7 @@ public class Variables {
 
 
     public static  final Integer[] VstraivaemieImageId = {              //Изображения светильников
-            R.drawable.lum4_18,R.drawable.lum2_36vstr,R.drawable.lampnakalspot,R.drawable.lampkll15spot
+            R.drawable.lum4_18,R.drawable.lum2_36vstr,R.drawable.lampnakalspot,R.drawable.lampkll15spot,R.drawable.lampgalogen35
     };
     public static  final Integer[] NakladnieImageId = {              //Изображения светильников
             R.drawable.lum4_18nakl,R.drawable.lum2_36,R.drawable.lum2_18,R.drawable.lum1_36,R.drawable.lum1_18,R.drawable.lum2_58,R.drawable.lum2_80,R.drawable.lum4_36,R.drawable.lum4_58,R.drawable.lum4_80
@@ -159,19 +170,19 @@ public class Variables {
             R.drawable.lampnakal,R.drawable.lampdiod,R.drawable.lampkll15
     };
     public static  final Integer[] DiodsImageId = {              //Изображения светильников
-            R.drawable.diod4_18,R.drawable.diod2_36,R.drawable.lampdiodspot
+            R.drawable.diod4_18,R.drawable.diod4_18nakl,R.drawable.diod2_36,R.drawable.lampdiodspot,R.drawable.lustradiod
     };
     public static  final Integer[] OthersImageId = {              //Изображения светильников
-
+            R.drawable.diod4_18lampsvstr,R.drawable.diod4_18lampsnakl,R.drawable.diod2_36lampsnakl,R.drawable.diod2_18lampsnakl,R.drawable.diod1_36lampsnakl,R.drawable.diod1_18lampsnakl,R.drawable.lustranakal,R.drawable.lustrakll
     };
     public static  final Integer[] OutsideImageId = {              //Изображения светильников
-
+            R.drawable.drlfasad,R.drawable.dnatfasad,R.drawable.mglfasad,R.drawable.diodfasad
     };
 
 
 
     public static  final Integer[] VstraivaemieImageIdBold = {              //Изображения светильников
-            R.drawable.lum4_18bold,R.drawable.lum2_36vstrbold,R.drawable.lampnakalspotbold,R.drawable.lampkll15spotbold
+            R.drawable.lum4_18bold,R.drawable.lum2_36vstrbold,R.drawable.lampnakalspotbold,R.drawable.lampkll15spotbold,R.drawable.lampgalogen35bold
     };
 
     public static  final Integer[] NakladnieImageIdBold = {              //Изображения светильников
@@ -182,19 +193,19 @@ public class Variables {
             R.drawable.lampnakalbold,R.drawable.lampdiodbold,R.drawable.lampkll15bold
     };
     public static  final Integer[] DiodsImageIdBold = {              //Изображения светильников
-            R.drawable.diod4_18bold,R.drawable.diod2_36bold,R.drawable.lampdiodspotbold
+            R.drawable.diod4_18bold,R.drawable.diod4_18naklbold,R.drawable.diod2_36bold,R.drawable.lampdiodspotbold,R.drawable.lustradiodbold
     };
     public static  final Integer[] OthersImageIdBold = {              //Изображения светильников
-
+            R.drawable.diod4_18lampsvstrbold,R.drawable.diod4_18lampsnaklbold,R.drawable.diod2_36lampsnaklbold,R.drawable.diod2_18lampsnaklbold,R.drawable.diod1_36lampsnaklbold,R.drawable.diod1_18lampsnaklbold,R.drawable.lustranakalbold,R.drawable.lustrakllbold
     };
     public static  final Integer[] OutsideImageIdBold = {              //Изображения светильников
-
+            R.drawable.drlfasadbold,R.drawable.dnatfasadbold,R.drawable.mglfasadbold,R.drawable.diodfasadbold
     };
 
 
 
     public static final String[] lampVstraivaemieNames = {             //Названия светильников
-            "4*18Вт","2*36Вт","ЛН 60Вт","КЛЛ 15Вт"
+            "4*18Вт","2*36Вт","ЛН 60Вт","КЛЛ 15Вт","Гал. 35Вт"
     };
     public static final String[] lampNakladnieNames = {             //Названия светильников
             "4*18Вт","2*36Вт","2*18Вт","1*36Вт","1*18Вт","2*58Вт","2*80Вт","4*36Вт","4*58Вт","4*80Вт"
@@ -206,26 +217,35 @@ public class Variables {
             "накаливания 60Вт","светодиодная 12Вт","КЛЛ 15Вт"
     };
     public static final String[] lampDiodsNames = {             //Названия светильников
-            "36Вт","36Вт","12Вт"
+            "36Вт","36Вт","36Вт","12Вт","12Вт"
     };
     public static final String[] lampOthersNames = {             //Названия светильников
-
+            "36Вт","36Вт","36Вт","18Вт","18Вт","9Вт","ЛН 60Вт","КЛЛ 15Вт"
     };
     public static final String[] lampOutsideNames = {             //Названия светильников
-
+            "ДРЛ-250Вт","ДНаТ-250Вт","МГЛ-250Вт","СД-50Вт"
     };
 
 
-    public static  final String[] lampsVstraivaemieName = {"lum4_18","lum2_36vstr","lampnakalspot","lampkll15spot"};
+    public static  final String[] lampsVstraivaemieName = {"lum4_18","lum2_36vstr","lampnakalspot","lampkll15spot","lampgalogen35"};
     public static  final String[] lampsNakladnieName = {"lum4_18nakl","lum2_36","lum2_18","lum1_36","lum1_18","lum2_58","lum2_80","lum4_36","lum4_58","lum4_80"};
     public static  final String[] lampsLampsName = {"lampnakal","lampdiod","lampkll15"};
-    public static  final String[] lampsDiodsName = {"diod4_18","diod2_36","lampdiodspot"};
-    public static  final String[] lampsOthersName = {};
-    public static  final String[] lampsOutsideName = {};
+    public static  final String[] lampsDiodsName = {"diod4_18","diod4_18nakl","diod2_36","lampdiodspot","lustradiod"};
+    public static  final String[] lampsOthersName = {"diod4_18lampsvstr","diod4_18lampsnakl","diod2_36lampsnakl","diod2_18lampsnakl","diod1_36lampsnakl","diod1_18lampsnakl","lustranakal","lustrakll"};
+    public static  final String[] lampsOutsideName = {"drlfasad","dnatfasad","mglfasad","diodfasad"};
 
 
 
     public static void init(){                //Инициализация переменных
+        montagneTypeTxt = activity.findViewById(R.id.montagneTypeTxt);
+        isStolbCheck = activity.findViewById(R.id.isStolbCheck);
+        isStolbTxt = activity.findViewById(R.id.isStolbTxt);
+        positionOutside = activity.findViewById(R.id.positionOutside);
+        positionOutsideTxt = activity.findViewById(R.id.positionOutsideTxt);
+        montagneOutsideType = activity.findViewById(R.id.montagneOutsideType);
+        montagneOutsideTypeTxt = activity.findViewById(R.id.montagneOutsideTypeTxt);
+        lampAmountText = activity.findViewById(R.id.lampAmountText);
+        lampAmountEdit = activity.findViewById(R.id.lampAmountEdit);
         placeType = activity.findViewById(R.id.placeType);
         montagneType=activity.findViewById(R.id.montagneType);
         initLampsPanels();
@@ -317,6 +337,12 @@ public class Variables {
         adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,placeTypeArr);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         placeType.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,montagneOutsideTypeArr);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        montagneOutsideType.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,positionOutsideArr);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        positionOutside.setAdapter(adapter);
     }
 
     public static void clearFields(){           //Очистка полей при переключении плана
@@ -353,10 +379,10 @@ public class Variables {
         else
             moveFlag=true;
     }
-    public static Room getRoomByNumber(String number){
-        for (int i=0;i<current_floor.rooms.size();i++){
-            if (Objects.equals(current_floor.rooms.elementAt(i).getNumber(), number))
-                return current_floor.rooms.elementAt(i);
+    public static Room getRoomByNumber(String number,Floor floor){
+        for (int i=0;i<floor.rooms.size();i++){
+            if (Objects.equals(floor.rooms.elementAt(i).getNumber(), number))
+                return floor.rooms.elementAt(i);
         }
         return null;
     }
@@ -402,8 +428,9 @@ public class Variables {
             Buttons.createNewPhotoRoom(f,false);
         }
     }
-    public static void refreshLampsToRooms(Floor floor){
-        for (Room room: floor.rooms){
+
+    public static void resetRoomHeight(Floor floor){
+        for (Room room: floor.rooms) {
             if (Variables.roomHeightDefaultCheck.isChecked()) {
                 if (Objects.equals(room.getHeight(), "0.0")) {
                     if (!Objects.equals(floor.roofHeightDefault.elementAt(room.getRoofType()), "0.0")) {
@@ -411,9 +438,15 @@ public class Variables {
                     }
                 }
             }
+        }
+    }
+    public static void refreshLampsToRooms(Floor floor){
+        resetRoomHeight(floor);
+
+        for (Room room: floor.rooms){
             Vector<Lamp> tempVec= new Vector<Lamp>(room.lamps);
             for (Lamp lamp: tempVec){
-                Room temp = getRoomByNumber(lamp.getLampRoom());
+                Room temp = getRoomByNumber(lamp.getLampRoom(),floor);
                 if (temp!=null && !temp.lamps.contains(lamp)){
                     temp.lamps.add(lamp);
                     if (floor.unusedLamps.contains(lamp)){
@@ -424,7 +457,7 @@ public class Variables {
         }
         Vector<Lamp> tempVec = new Vector<Lamp>(floor.unusedLamps);
          for (Lamp lamp: tempVec){
-            Room temp = getRoomByNumber(lamp.getLampRoom());
+            Room temp = getRoomByNumber(lamp.getLampRoom(),floor);
             if (temp!=null && !temp.lamps.contains(lamp)){
                 temp.lamps.add(lamp);
                 if (floor.unusedLamps.contains(lamp)){
@@ -608,6 +641,23 @@ public class Variables {
                 }
             }
         });
+    }
+
+    public static void removeLampByView(ImageView imageView){
+        for (Room room:Variables.current_floor.rooms){
+            for (Lamp lamp:room.lamps){
+                if (lamp.getImage()==imageView){
+                    room.lamps.remove(lamp);
+                    return;
+                }
+            }
+        }
+            for (Lamp lamp:Variables.current_floor.unusedLamps){
+                if (lamp.getImage()==imageView){
+                    Variables.current_floor.unusedLamps.remove(lamp);
+                    return;
+                }
+        }
     }
     /*public static int getTypeOfLampByPower(){
 

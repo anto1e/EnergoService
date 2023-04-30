@@ -36,33 +36,38 @@ public class SavePlanToJpgThread extends Thread{
             for (Room room:Variables.current_floor.rooms) {
                 for (Lamp lamp: room.lamps){
                     Variables.activity.runOnUiThread(() -> {           //Выключаем вращение и выводим текст об удачном экспорте в эксель
-                    lamp.getImage().setImageResource(0);
+                    if (lamp.getPower().equals("2*58Вт")){
+                        System.out.println("");
+                    }
                     int index = Variables.findIndexOfLamp(lamp.getTypeImage(),lamp.getGroupIndex());
-                    switch (lamp.getGroupIndex()){
-                        case 0:
-                            lamp.getImage().setImageResource(Variables.VstraivaemieImageIdBold[index]);
-                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.VstraivaemieImageIdBold[index]);
-                            break;
-                        case 1:
-                            lamp.getImage().setImageResource(Variables.NakladnieImageIdBold[index]);
-                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.NakladnieImageIdBold[index]);
-                            break;
-                        case 2:
-                            lamp.getImage().setImageResource(Variables.LampsImageIdBold[index]);
-                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.LampsImageIdBold[index]);
-                            break;
-                        case 3:
-                            lamp.getImage().setImageResource(Variables.DiodsImageIdBold[index]);
-                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.DiodsImageIdBold[index]);
-                            break;
-                        case 4:
-                            lamp.getImage().setImageResource(Variables.OthersImageIdBold[index]);
-                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.OthersImageIdBold[index]);
-                            break;
-                        case 5:
-                            lamp.getImage().setImageResource(Variables.OutsideImageIdBold[index]);
-                            Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.OutsideImageIdBold[index]);
-                            break;
+                    if (index!=-1) {
+                        lamp.getImage().setImageResource(0);
+                        switch (lamp.getGroupIndex()) {
+                            case 0:
+                                lamp.getImage().setImageResource(Variables.VstraivaemieImageIdBold[index]);
+                                Variables.plan.rotateImg(lamp.getRotationAngle(), lamp.getImage(), "", Variables.VstraivaemieImageIdBold[index]);
+                                break;
+                            case 1:
+                                lamp.getImage().setImageResource(Variables.NakladnieImageIdBold[index]);
+                                Variables.plan.rotateImg(lamp.getRotationAngle(), lamp.getImage(), "", Variables.NakladnieImageIdBold[index]);
+                                break;
+                            case 2:
+                                lamp.getImage().setImageResource(Variables.LampsImageIdBold[index]);
+                                Variables.plan.rotateImg(lamp.getRotationAngle(), lamp.getImage(), "", Variables.LampsImageIdBold[index]);
+                                break;
+                            case 3:
+                                lamp.getImage().setImageResource(Variables.DiodsImageIdBold[index]);
+                                Variables.plan.rotateImg(lamp.getRotationAngle(), lamp.getImage(), "", Variables.DiodsImageIdBold[index]);
+                                break;
+                            case 4:
+                                lamp.getImage().setImageResource(Variables.OthersImageIdBold[index]);
+                                Variables.plan.rotateImg(lamp.getRotationAngle(), lamp.getImage(), "", Variables.OthersImageIdBold[index]);
+                                break;
+                            case 5:
+                                lamp.getImage().setImageResource(Variables.OutsideImageIdBold[index]);
+                                Variables.plan.rotateImg(lamp.getRotationAngle(), lamp.getImage(), "", Variables.OutsideImageIdBold[index]);
+                                break;
+                        }
                     }
                     });
                 }
@@ -145,34 +150,36 @@ public class SavePlanToJpgThread extends Thread{
             for (Room room:Variables.current_floor.rooms) {
                 for (Lamp lamp: room.lamps){
                     Variables.activity.runOnUiThread(() -> {           //Выключаем вращение и выводим текст об удачном экспорте в эксель
-                    lamp.getImage().setImageResource(0);
                     int index = Variables.findIndexOfLamp(lamp.getTypeImage(),lamp.getGroupIndex());
-                        switch (lamp.getGroupIndex()){
+                    if (index!=-1) {
+                        lamp.getImage().setImageResource(0);
+                        switch (lamp.getGroupIndex()) {
                             case 0:
                                 lamp.getImage().setImageResource(Variables.VstraivaemieImageId[index]);
-                                Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.VstraivaemieImageId[index]);
+                                Variables.plan.rotateImg(lamp.getRotationAngle(), lamp.getImage(), "", Variables.VstraivaemieImageId[index]);
                                 break;
                             case 1:
                                 lamp.getImage().setImageResource(Variables.NakladnieImageId[index]);
-                                Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.NakladnieImageId[index]);
+                                Variables.plan.rotateImg(lamp.getRotationAngle(), lamp.getImage(), "", Variables.NakladnieImageId[index]);
                                 break;
                             case 2:
                                 lamp.getImage().setImageResource(Variables.LampsImageId[index]);
-                                Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.LampsImageId[index]);
+                                Variables.plan.rotateImg(lamp.getRotationAngle(), lamp.getImage(), "", Variables.LampsImageId[index]);
                                 break;
                             case 3:
                                 lamp.getImage().setImageResource(Variables.DiodsImageId[index]);
-                                Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.DiodsImageId[index]);
+                                Variables.plan.rotateImg(lamp.getRotationAngle(), lamp.getImage(), "", Variables.DiodsImageId[index]);
                                 break;
                             case 4:
                                 lamp.getImage().setImageResource(Variables.OthersImageId[index]);
-                                Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.OthersImageId[index]);
+                                Variables.plan.rotateImg(lamp.getRotationAngle(), lamp.getImage(), "", Variables.OthersImageId[index]);
                                 break;
                             case 5:
                                 lamp.getImage().setImageResource(Variables.OutsideImageId[index]);
-                                Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),"",Variables.OutsideImageId[index]);
+                                Variables.plan.rotateImg(lamp.getRotationAngle(), lamp.getImage(), "", Variables.OutsideImageId[index]);
                                 break;
                         }
+                    }
                     });
                 }
             }

@@ -398,7 +398,7 @@ public class Plan {
                 if (type_spawning){     //Если тип появления - не по нажатию кнопки добавления - берем переданные в метод параметры
                     imageView.setX(cordX);
                     imageView.setY(cordY);
-                    rotateImg(90, imageView, lampName,-1);
+                    rotateImg(rotation, imageView, lampName,-1);
                 }else {         //Иначе берем данные из маркера
                     imageView.setX(tempView.getX());
                     imageView.setY(tempView.getY());
@@ -408,42 +408,6 @@ public class Plan {
                 }
                 Lamp lamp = new Lamp();     //Создаем новый светильник
                 if (touchedRoom != null) {        //Если нажатая комната размечена
-                    if (groupIndex == 0 || groupIndex == 1) {
-                        lamp.setType("Люминесцентный");
-                        if (groupIndex==0){
-                            lamp.setMontagneType(1);
-                            if (lampName.equals("lampnakalspot")){
-                                lamp.setType("Лампа");
-                                lamp.setPower("накаливания 60Вт");
-                                //lamp.setComments("Спот");
-                                escapePowerSet=true;
-                            }else if (lampName.equals("lampkll15spot")){
-                                lamp.setType("КЛЛ");
-                                lamp.setPower("15Вт");
-                                //lamp.setComments("Спот");
-                                escapePowerSet=true;
-                            }
-                        }
-                    }else if(groupIndex==2){
-                        if (!lampName.equals("lampkll15")) {
-                            lamp.setType("Лампа");
-                        }else{
-                            lamp.setType("КЛЛ");
-                            lamp.setPower("15Вт");
-                            escapePowerSet=true;
-                        }
-                    }else if (groupIndex==3){
-                        lamp.setType("Светодиодный");
-                        if (lampName.equals("diod4_18")){
-                            lamp.setMontagneType(1);
-                        }else if (lampName.equals("lampdiodspot")){
-                            lamp.setType("Лампа");
-                            lamp.setPower("светодиодная 12Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet=true;
-                            lamp.setMontagneType(1);
-                        }
-                    }
                     lamp.setRotationAngle(rotation);
                     lamp.setTypeImage(lampName);
                     lamp.setLampRoom(touchedRoom.getNumber());
@@ -459,42 +423,6 @@ public class Plan {
                     touchedRoom.lampPush(lamp);     //Добавляем светильник в вектор светильников нажатой комнаты
                     lamp.setView();                 //Добавляем картинку светильника на экран
                 } else {                           //Иначе, если нажатая комната не размечена
-                    if (groupIndex == 0 || groupIndex == 1) {
-                        lamp.setType("Люминесцентный");
-                        if (groupIndex==0){
-                            lamp.setMontagneType(1);
-                            if (lampName.equals("lampnakalspot")){
-                                lamp.setType("Лампа");
-                                lamp.setPower("накаливания 60Вт");
-                                //lamp.setComments("Спот");
-                                escapePowerSet=true;
-                            }else if (lampName.equals("lampkll15spot")){
-                                lamp.setType("КЛЛ");
-                                lamp.setPower("15Вт");
-                                //lamp.setComments("Спот");
-                                escapePowerSet=true;
-                            }
-                        }
-                    }else if(groupIndex==2){
-                        if (!lampName.equals("lampkll15")) {
-                            lamp.setType("Лампа");
-                        }else{
-                            lamp.setType("КЛЛ");
-                            lamp.setPower("15Вт");
-                            escapePowerSet=true;
-                        }
-                    }else if (groupIndex==3){
-                        lamp.setType("Светодиодный");
-                        if (lampName.equals("diod4_18")){
-                            lamp.setMontagneType(1);
-                        }else if (lampName.equals("lampdiodspot")){
-                            lamp.setType("Лампа");
-                            lamp.setPower("светодиодная 12Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet=true;
-                            lamp.setMontagneType(1);
-                        }
-                    }
                     lamp.setRotationAngle(rotation);
                     lamp.setLampRoom("-1");
                     imageView.setBackgroundResource(R.color.blue);
@@ -503,6 +431,112 @@ public class Plan {
                     Variables.current_floor.unusedLamps.add(lamp);          //Добавляем светильник в вектор непривязанных светильников
                     lamp.setView();                 //Добавляем картинку светильника на экран
                 }
+            if (groupIndex == 0 || groupIndex == 1) {
+                lamp.setType("Люминесцентный");
+                if (groupIndex==0){
+                    lamp.setMontagneType(1);
+                    if (lampName.equals("lampnakalspot")){
+                        lamp.setType("Лампа");
+                        lamp.setPower("накаливания 60Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet=true;
+                    }else if (lampName.equals("lampkll15spot")){
+                        lamp.setType("КЛЛ");
+                        lamp.setPower("15Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet=true;
+                    }else if (lampName.equals("lampgalogen35")){
+                        lamp.setType("Лампа галогенная");
+                        lamp.setPower("35Вт");
+                        lamp.setComments("Цоколь G5.3");
+                        escapePowerSet=true;
+                    }
+                }
+            }else if(groupIndex==2){
+                if (!lampName.equals("lampkll15")) {
+                    lamp.setType("Лампа");
+                }else{
+                    lamp.setType("КЛЛ");
+                    lamp.setPower("15Вт");
+                    escapePowerSet=true;
+                }
+            }else if (groupIndex==3){
+                lamp.setType("Светодиодный");
+                if (lampName.equals("diod4_18") || lampName.equals("diod4_18nakl")){
+                    lamp.setComments("Аналог 4*18");
+                    if (lampName.equals("diod4_18")) {
+                        lamp.setMontagneType(1);
+                    }
+                }else if (lampName.equals("diod2_36")){
+                    lamp.setComments("Аналог 2*36");
+                }
+                else if (lampName.equals("lampdiodspot") || lampName.equals("lustradiod")){
+                    lamp.setType("Лампа");
+                    lamp.setPower("светодиодная 12Вт");
+                    //lamp.setComments("Спот");
+                    escapePowerSet=true;
+                    if (lampName.equals("lampdiodspot")) {
+                        lamp.setMontagneType(1);
+                    }
+                    if (lampName.equals("lustradiod")){
+                        lamp.setLampsAmount(3);
+                    }
+                }
+            }else if (groupIndex==4){
+                if (!lampName.equals("lustranakal") && !lampName.equals("lustrakll")){
+                    lamp.setType("Светодиодный");
+                    switch (lampName){
+                        case "diod4_18lampsvstr":
+                            lamp.setComments("Светодиодные лампы в плафоне 4*18Вт");
+                            lamp.setMontagneType(1);
+                        case "diod4_18lampsnakl":
+                            lamp.setComments("Светодиодные лампы в плафоне 4*18Вт");
+                            break;
+                        case "diod2_36lampsnakl":
+                            lamp.setComments("Светодиодные лампы в плафоне 2*36Вт");
+                            break;
+                        case "diod2_18lampsnakl":
+                            lamp.setComments("Светодиодные лампы в плафоне 2*18Вт");
+                            break;
+                        case "diod1_36lampsnakl":
+                            lamp.setComments("Светодиодные лампы в плафоне 1*36Вт");
+                            break;
+                        case "diod1_18lampsnakl":
+                            lamp.setComments("Светодиодные лампы в плафоне 1*18Вт");
+                            break;
+                    }
+                }else{
+                    if (lampName.equals("lustranakal")){
+                        lamp.setType("Лампа");
+                        lamp.setPower("накаливания 60Вт");
+                    }else if (lampName.equals("lustrakll")){
+                        lamp.setType("КЛЛ");
+                        lamp.setPower("15Вт");
+                    }
+                        lamp.setLampsAmount(3);
+                        escapePowerSet=true;
+                }
+            }else if (groupIndex==5){
+                escapePowerSet=true;
+                switch (lampName){
+                    case "drlfasad":
+                        lamp.setType("ДРЛ");
+                        lamp.setPower("250Вт");
+                    break;
+                    case "dnatfasad":
+                        lamp.setType("ДНаТ");
+                        lamp.setPower("250Вт");
+                        break;
+                    case "mglfasad":
+                        lamp.setType("МГЛ");
+                        lamp.setPower("250Вт");
+                        break;
+                    case "diodfasad":
+                        lamp.setType("Светодиодный");
+                        lamp.setPower("50Вт");
+                        break;
+                }
+            }
                 lamp.setPlaceType(placeType);
                 lamp.setGroupIndex(groupIndex);
                 if (!escapePowerSet) {
@@ -594,7 +628,7 @@ public class Plan {
                             Variables.planLay.removeView(touchedLamp.getImage());
                         });
                         if (touchedLamp.getLampRoom()!="-1"){
-                            Room room = Variables.getRoomByNumber(touchedLamp.getLampRoom());
+                            Room room = Variables.getRoomByNumber(touchedLamp.getLampRoom(),Variables.current_floor);
                             if (room!=null && room.lamps.contains(touchedLamp)){        //Если светильник привязан - удаляем из привязанной комнаты
                                 room.lamps.remove(touchedLamp);
                             }else{          //Иначе удаляем из неиспользуемых светильников
@@ -603,6 +637,9 @@ public class Plan {
                         }else{      //Иначе удаляем из неиспользуемых светильников
                             Variables.current_floor.unusedLamps.remove(touchedLamp);
                         }
+                    }else if (touchedLamp==null){
+                        Variables.planLay.removeView(imageView);
+                        Variables.removeLampByView(imageView);
                     }
                 }else {
                     switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {        //Иначе если не функция удаления
@@ -642,7 +679,7 @@ public class Plan {
                             } else if (Variables.rotateMode) {      //Если режим поворота - поворачиваем
                                 isReleased = false;
                                 float angle = getDegreesFromTouchEvent(event, imageView, x, y);
-                                if (!Variables.selectZoneFlag) {
+                                if (!Variables.selectZoneFlag && touchedLamp!=null) {
                                     touchedLamp.setRotationAngle(angle);        //Устанавливаем в светильник угол поворота
                                     rotateImg(angle, imageView, touchedLamp.getTypeImage(),-1);        //Выполняем поворот картинки
                                 }else{
@@ -712,6 +749,36 @@ public class Plan {
             Variables.montagneType.setSelection(lamp.getMontagneType());
             Variables.placeType.setSelection(lamp.getPlaceType());
             Variables.showLampsAllPhotos(lamp);
+            if (lamp.getTypeImage().equals("lustranakal") || lamp.getTypeImage().equals("lustrakll") || lamp.getTypeImage().equals("lustradiod")){
+                Variables.lampAmountText.setVisibility(View.VISIBLE);
+                Variables.lampAmountEdit.setVisibility(View.VISIBLE);
+                Variables.lampAmountEdit.setText(String.valueOf(lamp.getLampsAmount()));
+            }else{
+                Variables.lampAmountText.setVisibility(View.GONE);
+                Variables.lampAmountEdit.setVisibility(View.GONE);
+            }
+            if (lamp.getGroupIndex()==5){
+                Variables.montagneOutsideTypeTxt.setVisibility(View.VISIBLE);
+                Variables.montagneOutsideType.setVisibility(View.VISIBLE);
+                Variables.positionOutsideTxt.setVisibility(View.VISIBLE);
+                Variables.positionOutside.setVisibility(View.VISIBLE);
+                Variables.isStolbTxt.setVisibility(View.VISIBLE);
+                Variables.isStolbCheck.setVisibility(View.VISIBLE);
+                Variables.montagneTypeTxt.setVisibility(View.GONE);
+                Variables.montagneType.setVisibility(View.GONE);
+                Variables.montagneOutsideType.setSelection(lamp.getMontagneType());
+                Variables.positionOutside.setSelection(lamp.getPositionOutside());
+                Variables.isStolbCheck.setChecked(lamp.isStolb());
+            }else{
+                Variables.montagneOutsideTypeTxt.setVisibility(View.GONE);
+                Variables.montagneOutsideType.setVisibility(View.GONE);
+                Variables.positionOutsideTxt.setVisibility(View.GONE);
+                Variables.positionOutside.setVisibility(View.GONE);
+                Variables.isStolbTxt.setVisibility(View.GONE);
+                Variables.isStolbCheck.setVisibility(View.GONE);
+                Variables.montagneTypeTxt.setVisibility(View.VISIBLE);
+                Variables.montagneType.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -723,6 +790,17 @@ public class Plan {
         Variables.lampType.setText("");
         Variables.lampPower.setText("");
         Variables.lampComments.setText("");
+        Variables.lampAmountText.setVisibility(View.GONE);
+        Variables.lampAmountEdit.setVisibility(View.GONE);
+        Variables.lampAmountEdit.setText("");
+        Variables.montagneOutsideTypeTxt.setVisibility(View.GONE);
+        Variables.montagneOutsideType.setVisibility(View.GONE);
+        Variables.positionOutsideTxt.setVisibility(View.GONE);
+        Variables.positionOutside.setVisibility(View.GONE);
+        Variables.isStolbTxt.setVisibility(View.GONE);
+        Variables.isStolbCheck.setVisibility(View.GONE);
+        Variables.montagneTypeTxt.setVisibility(View.VISIBLE);
+        Variables.montagneType.setVisibility(View.VISIBLE);
         Variables.clearLampGrid();
     }
 

@@ -18,12 +18,40 @@ public class Lamp {
     Vector<String> photoPaths = new Vector<String>();
     private String comments;            //Комментарии к светильнику
     private int montagneType=0;
+
+
+    private int positionOutside=0;
+    private int lampsAmount=0;
+    private boolean isStolb=false;
+
     private int placeType;
     private int groupIndex;
 
 
 
     ////Геттеры и сеттеры////
+    public boolean isStolb() {
+        return isStolb;
+    }
+
+    public void setStolb(boolean stolb) {
+        isStolb = stolb;
+    }
+
+    public int getPositionOutside() {
+        return positionOutside;
+    }
+
+    public void setPositionOutside(int positionOutside) {
+        this.positionOutside = positionOutside;
+    }
+    public int getLampsAmount() {
+        return lampsAmount;
+    }
+
+    public void setLampsAmount(int lampsAmount) {
+        this.lampsAmount = lampsAmount;
+    }
     public int getPlaceType() {
         return placeType;
     }
