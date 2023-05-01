@@ -530,6 +530,7 @@ public class Plan {
                     case "mglfasad":
                         lamp.setType("МГЛ");
                         lamp.setPower("250Вт");
+                        lamp.setMontagneType(1);
                         break;
                     case "diodfasad":
                         lamp.setType("Светодиодный");
@@ -757,18 +758,24 @@ public class Plan {
                 Variables.lampAmountText.setVisibility(View.GONE);
                 Variables.lampAmountEdit.setVisibility(View.GONE);
             }
-            if (lamp.getGroupIndex()==5){
-                Variables.montagneOutsideTypeTxt.setVisibility(View.VISIBLE);
-                Variables.montagneOutsideType.setVisibility(View.VISIBLE);
-                Variables.positionOutsideTxt.setVisibility(View.VISIBLE);
-                Variables.positionOutside.setVisibility(View.VISIBLE);
-                Variables.isStolbTxt.setVisibility(View.VISIBLE);
-                Variables.isStolbCheck.setVisibility(View.VISIBLE);
-                Variables.montagneTypeTxt.setVisibility(View.GONE);
-                Variables.montagneType.setVisibility(View.GONE);
-                Variables.montagneOutsideType.setSelection(lamp.getMontagneType());
-                Variables.positionOutside.setSelection(lamp.getPositionOutside());
-                Variables.isStolbCheck.setChecked(lamp.isStolb());
+            if (lamp.getPlaceType()==1){
+                if (lamp.getGroupIndex()==5) {
+                    Variables.montagneOutsideTypeTxt.setVisibility(View.VISIBLE);
+                    Variables.montagneOutsideType.setVisibility(View.VISIBLE);
+                    Variables.positionOutsideTxt.setVisibility(View.VISIBLE);
+                    Variables.positionOutside.setVisibility(View.VISIBLE);
+                    Variables.isStolbTxt.setVisibility(View.VISIBLE);
+                    Variables.isStolbCheck.setVisibility(View.VISIBLE);
+                    Variables.montagneTypeTxt.setVisibility(View.GONE);
+                    Variables.montagneType.setVisibility(View.GONE);
+                    Variables.montagneOutsideType.setSelection(lamp.getMontagneType());
+                    Variables.positionOutside.setSelection(lamp.getPositionOutside());
+                    Variables.isStolbCheck.setChecked(lamp.isStolb());
+                }else{
+                    Variables.positionOutsideTxt.setVisibility(View.VISIBLE);
+                    Variables.positionOutside.setVisibility(View.VISIBLE);
+                    Variables.positionOutside.setSelection(lamp.getPositionOutside());
+                }
             }else{
                 Variables.montagneOutsideTypeTxt.setVisibility(View.GONE);
                 Variables.montagneOutsideType.setVisibility(View.GONE);

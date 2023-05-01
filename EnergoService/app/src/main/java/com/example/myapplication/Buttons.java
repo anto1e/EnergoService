@@ -1476,6 +1476,34 @@ public class Buttons {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (Variables.plan.touchedLamp!=null){
                     Variables.plan.touchedLamp.setPlaceType(Variables.placeType.getSelectedItemPosition());
+                    if (Variables.plan.touchedLamp.getPlaceType()==1){
+                        if (Variables.plan.touchedLamp.getGroupIndex()==5) {
+                            Variables.montagneOutsideTypeTxt.setVisibility(View.VISIBLE);
+                            Variables.montagneOutsideType.setVisibility(View.VISIBLE);
+                            Variables.positionOutsideTxt.setVisibility(View.VISIBLE);
+                            Variables.positionOutside.setVisibility(View.VISIBLE);
+                            Variables.isStolbTxt.setVisibility(View.VISIBLE);
+                            Variables.isStolbCheck.setVisibility(View.VISIBLE);
+                            Variables.montagneTypeTxt.setVisibility(View.GONE);
+                            Variables.montagneType.setVisibility(View.GONE);
+                            Variables.montagneOutsideType.setSelection(Variables.plan.touchedLamp.getMontagneType());
+                            Variables.positionOutside.setSelection(Variables.plan.touchedLamp.getPositionOutside());
+                            Variables.isStolbCheck.setChecked(Variables.plan.touchedLamp.isStolb());
+                        }else{
+                            Variables.positionOutsideTxt.setVisibility(View.VISIBLE);
+                            Variables.positionOutside.setVisibility(View.VISIBLE);
+                            Variables.positionOutside.setSelection(Variables.plan.touchedLamp.getPositionOutside());
+                        }
+                    }else{
+                        Variables.montagneOutsideTypeTxt.setVisibility(View.GONE);
+                        Variables.montagneOutsideType.setVisibility(View.GONE);
+                        Variables.positionOutsideTxt.setVisibility(View.GONE);
+                        Variables.positionOutside.setVisibility(View.GONE);
+                        Variables.isStolbTxt.setVisibility(View.GONE);
+                        Variables.isStolbCheck.setVisibility(View.GONE);
+                        Variables.montagneTypeTxt.setVisibility(View.VISIBLE);
+                        Variables.montagneType.setVisibility(View.VISIBLE);
+                    }
                 }
             }
 
@@ -1547,7 +1575,7 @@ public class Buttons {
         Variables.positionOutside.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (Variables.plan.touchedLamp!=null && Variables.plan.touchedLamp.getGroupIndex()==5){
+                if (Variables.plan.touchedLamp!=null){
                     Variables.plan.touchedLamp.setPositionOutside(Variables.positionOutside.getSelectedItemPosition());
                 }
             }

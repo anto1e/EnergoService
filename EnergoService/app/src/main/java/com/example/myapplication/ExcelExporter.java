@@ -302,8 +302,10 @@ public class ExcelExporter {
                                 if (lamps.elementAt(z).getPlaceType()==1){
                                     isOutside=true;
                                     positionOutside = Variables.positionOutsideArr[lamps.elementAt(z).getPositionOutside()];
-                                    montagneType=Variables.montagneOutsideTypeArr[lamps.elementAt(z).getMontagneType()];
-                                    isStolb = lamps.elementAt(z).isStolb();
+                                    if (lamps.elementAt(z).getGroupIndex()==5) {
+                                        montagneType = Variables.montagneOutsideTypeArr[lamps.elementAt(z).getMontagneType()];
+                                        isStolb = lamps.elementAt(z).isStolb();
+                                    }
                                 }else {
                                     if (lamps.elementAt(z).getTypeImage().equals("lampdiodspot") || lamps.elementAt(z).getTypeImage().equals("lampnakalspot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot")) {
                                         otherInfo = "Спот";
@@ -429,7 +431,7 @@ public class ExcelExporter {
             if (Objects.equals(montagneType, "Консоль")) {
                 cell.setValue("Светильник");
             }
-            else {
+            else if (Objects.equals(montagneType, "Кронштейн")) {
                 cell.setValue("Прожектор");
             }
             cell = cells.get("J" + Integer.toString(outsideRowCount));

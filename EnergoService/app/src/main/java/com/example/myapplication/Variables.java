@@ -662,4 +662,5 @@ public class Variables {
     /*public static int getTypeOfLampByPower(){
 
     }*/
+
 }
