@@ -24,7 +24,7 @@ public class Room {
     private Polygon polygon;                //Многоугольник, построенный по координатам точек помещения
     public double[] arrayX;                 //Массив координат Х точек помещения
     public double[] arrayY;                 //Массив координат У точек помещения
-    Vector<String> photoPaths = new Vector<String>();
+    Vector<String> photoPaths = new Vector<String>();       //Вектор путей к фотографиям комнаты
 
     public Room()
     {

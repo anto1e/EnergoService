@@ -339,7 +339,7 @@ public class ExcelExporter {
 
 // Obtaining the reference of the first worksheet
 // Adding some sample value to cells
-        if (!isOutside) {
+        if (!isOutside) {           //Если это внутреннее освещение
             sheet = worksheets.get(1);
             cells = sheet.getCells();
             Cell cell = cells.get("A" + Integer.toString(rowCount));
@@ -366,7 +366,7 @@ public class ExcelExporter {
             }
             cell = cells.get("G" + Integer.toString(rowCount));
             if (room != null) {
-                cell.setValue(Integer.valueOf((String) Variables.daysPerWeek.getItemAtPosition(room.getDays())));
+                cell.setValue((String) Variables.daysPerWeek.getItemAtPosition(room.getDays()));
             }
             cell = cells.get("H" + Integer.toString(rowCount));
             if (room != null) {
@@ -416,7 +416,7 @@ public class ExcelExporter {
             value = cell.getFormula();
             cell.setFormula(value);
             rowCount++;
-        }else{
+        }else{      //Иначе это наружное освещение
             sheet = worksheets.get(2);
             cells = sheet.getCells();
             Cell cell = cells.get("A" + Integer.toString(outsideRowCount));

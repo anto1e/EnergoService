@@ -37,7 +37,7 @@ public class Variables {
     static boolean selectZoneFlag=false;        //Флаг выбора зона
     static Vector<Lamp> copyVector = new Vector<Lamp>();        //Временный вектор
     static Vector<Float> distX = new Vector<Float>();           //Вектор расстояний от выбранного светильника по Х
-    static Spinner hoursPerSunday;
+    static Spinner hoursPerSunday;              //Спиннер рабочих дней по воскресеньям
     static Vector<Float> distY = new Vector<Float>();           //Вектор расстояний от выбранного светильника по У
     static Lamp tempCopiedLamp;         //Временный скопированный светильник
     static Lamp tempCopiedBufLamp;      //Временный скопированный светильник в буфер
@@ -49,15 +49,15 @@ public class Variables {
     static boolean confirmBtnActive=false;      //Флаг активации кнопки подтверждения
     static boolean moveOnlySelectedZone=false;      //Флаг активации перемещения выбранной зоны
     static boolean cancelBtnActive=false;           //Флаг активации кнопки отмены
-    static Spinner montagneType;
+    static Spinner montagneType;                //Спинер типа монтажа
     static boolean copyFlag=false;                  //Флаг активации функции копирования
     static boolean planLayCleared=false;            //Флаг очистки плана
     static Vector<LinearLayout> FloorPanelsVec = new Vector<LinearLayout>();        //Вектор вкладок на экране
-    static LinearLayout floorPanelLay;
+    static LinearLayout floorPanelLay;              //Layout вкладок этажей
     static ExcelExporter exporter;                  //Экспортер данных в эксель
     static RelativeLayout roomInfoView;             //Панель инфрмации о комнате
-    static Spinner typeOfBuilding;
-    static Spinner daysOfWorkDefault;
+    static Spinner typeOfBuilding;                  //Спиннер типа строения
+    static Spinner daysOfWorkDefault;               //Спиннер дней работы по умолчанию
 
     static RelativeLayout buildingInfoView;             //Панель инфрмации о здании
     static boolean fileSaved=true;                      //Флаг сохранен ли файл
@@ -80,9 +80,9 @@ public class Variables {
     static Uri selectedfile;             //Выбранный текущий файл
     static Activity activity=null;          //Главное activity
     static ImageView photoImage;       //Поле для отображения фотографии
-    static int currentLampsPanelIndex = 0;
+    static int currentLampsPanelIndex = 0;      //Текущий индекс открытой панели с типами светильников
     static boolean opened = false;          //Если файл был открыт
-    static LampsList lampsList=null;
+    static LampsList lampsList=null;        //Список, отображающий светильники текущей открытой вкладки
     static BikExtensionParser parser = new BikExtensionParser();        //Парсер данных из .bik
     private static boolean addFlag=false;       //Флаг активации режима добавления светильника
     static boolean addMultiple_flag=false;       //Флаг активации режима добавления светильника
@@ -95,27 +95,27 @@ public class Variables {
     static Plan plan = new Plan();          //План этажа
     static Spinner spinRows;                //Спиннер столбцов(создание множества светильников по рядам и столбцам)
     static Spinner spinLines;               //Спиннер строк(создание множества светильников по рядам и столбцам)
-    static Spinner roofTypeDefault;
-    static EditText roofTypeDefaultText;
-    static Vector<VerticalTextView> lampsPanels = new Vector<VerticalTextView>();
+    static Spinner roofTypeDefault;         //Спинер типа потолка по умолчанию
+    static EditText roofTypeDefaultText;        //Поле для ввода высоты по умолчанию
+    static Vector<VerticalTextView> lampsPanels = new Vector<VerticalTextView>();       //Вектор панелей с типами светильников
     static RelativeLayout planLay;          //Layout плана
     static ImageView image;                     //Изображение(план)
     static EditText lampRoom;                   //Поле информации о привязке светильника к комнате
     static GridLayout roomGrid;                 //Grid layout для отображения фотографий комнаты
-    static GridLayout lampGrid;
+    static GridLayout lampGrid;                  //Grid layout для отображения фотографий светильника
     static EditText roomNumber=null;            //Поле для номера помещения
     static EditText roomHeight;            //Поле для высоты помещения
     static Spinner daysPerWeek;            //Поле для дней работы помещения
-    static boolean showPhotoFlag=false;
-    static boolean showPhotoLampFlag=false;
-    static CheckBox roomHeightDefaultCheck;
-    static boolean takePhotoFlag=false;
-    static TextView montagneOutsideTypeTxt;
-    static Spinner montagneOutsideType;
-    static TextView positionOutsideTxt;
-    static Spinner positionOutside;
-    static TextView isStolbTxt;
-    static CheckBox isStolbCheck;
+    static boolean showPhotoFlag=false;     //Флаг просмотра фотографии комнаты
+    static boolean showPhotoLampFlag=false; //Флаг просмотра фотографии светильника
+    static CheckBox roomHeightDefaultCheck; //Чекбокс использования высоты по умолчанию
+    static boolean takePhotoFlag=false;     //Флаг съемки фотографии
+    static TextView montagneOutsideTypeTxt;     //Текст наружного монтажа
+    static Spinner montagneOutsideType;         //Спинер наружного монтажа свеитльника
+    static TextView positionOutsideTxt;         //Текст позиции снаружи светильника
+    static Spinner positionOutside;             //Спинер позиции снаружи светильника
+    static TextView isStolbTxt;                 //Текст находится ли светильник на столбе
+    static CheckBox isStolbCheck;               //Чекбокс находится ли светильник на столбе
     static Spinner hoursPerDay;            //Поле для часов работы в день помещения
     static Spinner hoursPerWeekend;            //Поле для часов работы в выходные помещения
     static Spinner roofType;                //Поле типа потолка
@@ -127,13 +127,13 @@ public class Variables {
     static EditText lampPower;                  //Поле мощности светильника
     static EditText lampComments;              //Поле комментариев к светильнику
     static FrameLayout photoFrame;              //Layout для отображения выбранной фотографии
-    static TextView lampAmountText;
-    static EditText lampAmountEdit;
-    static Spinner placeType;
-    static TextView montagneTypeTxt;
+    static TextView lampAmountText;             //Текст количества ламп(для люстр)
+    static EditText lampAmountEdit;             //Поле ввода количества ламп(для люстр)
+    static Spinner placeType;                   //Спинер месторасположения светильнка(для наружного освещения)
+    static TextView montagneTypeTxt;            //Текст типа монтажа
 
     static EditText roomComments;               //Поле комментариев к комнате
-    static int indexOfPhoto=-1;
+    static int indexOfPhoto=-1;                 //Индекс текущей просматриваемой фотографии
 
     static Vector<Floor> floors= new Vector<Floor>();       //Вектор, хранящий открытые этаж
 
@@ -143,16 +143,16 @@ public class Variables {
     static double lastHeight;                //Высота плана, при разметке на сайте
     static double currentWidth;                //Ширина плана в приложении
     static double currentHeight;                //Высота плана в приложении
-    static String[] montagneOutsideTypeArr = {"Консоль","Кронштейн"};
-    static String [] positionOutsideArr = {"Крыльцо","Фасад","Территория","Футбольное поле","Игровая площадка"};
+    static String[] montagneOutsideTypeArr = {"Консоль","Кронштейн"};           //Типы монтажа наружного освещения
+    static String [] positionOutsideArr = {"Крыльцо","Фасад","Территория","Футбольное поле","Игровая площадка"};        //Типы расположения светильника снаружи
     static String[] roofTypes = {"Бетон","Армстронг","ПВХ","Гипрок"};        //Типы потолков
-    static String[] montagneTypeArr = {"Накладной","Встраиваемый","Подвесной"};        //Типы потолков
-    static String[] placeTypeArr = {"В здании","Наружный"};        //Типы потолков
-    static String[] typeOfBuildingArr = {"Детский сад","Школа","Больница"};
+    static String[] montagneTypeArr = {"Накладной","Встраиваемый","Подвесной"};        //Типы монтажа светильника
+    static String[] placeTypeArr = {"В здании","Наружный"};        //Типы нахождения светильника(снаружи/в здании)
+    static String[] typeOfBuildingArr = {"Детский сад","Школа","Больница"};         //Тип здания
     static String[] typesOfRoomsDetSad = { "Игровая","Гардероб", "Спальная", "Санузел", "Коридор", "Тамбур","Лестница","Кабинет","Пищеблок","Прачечная","Моечная","Кладовая","Служебное помещение","Спортзал","Актовый зал","Медкабинет"};            //Типы помещений(детские сады)
     static String[] typesOfRoomsSchools = { "Учебный кабинет", "Кабинет", "Санузел", "Коридор", "Тамбур","Лестница","Спортзал","Пищеблок","Актовый зал","Медкабинет","Кладовая","Служебное помещение"};            //Типы помещений(школы)
     static String[] typesOfRoomsHospitals = { "Кабинет врача", "Кабинет", "Санузел", "Коридор", "Тамбур","Лестница","Спортзал","Пищеблок","Актовый зал","Медкабинет","Кладовая","Служебное помещение","Палата","Процедурная"};            //Типы помещений(больницы)
-    static String[] daysPerWeekArr = {"0","1","2","3","4","5","6","7"};         //Дней работы в неделю
+    static String[] daysPerWeekArr = {"0","1/мес","1","2","3","4","5","6","7"};         //Дней работы в неделю
     static String[] hoursPerDayArr = {"0","0.5","1","2","4","6","8","12","16","20","24"};       //Часов работы по будням
     static String[] hoursPerWeekendArr = {"0","0.5","1","2","4","6","8","12","16","20","24"};       //Часов работы по выходным
 
@@ -160,79 +160,79 @@ public class Variables {
     static String[] spinLinesArr = {"2","3","4","5","6","7","8","9","10"};       //Количество светильников в рядах
 
 
-    public static  final Integer[] VstraivaemieImageId = {              //Изображения светильников
+    public static  final Integer[] VstraivaemieImageId = {              //Изображения встраиваемых светильников
             R.drawable.lum4_18,R.drawable.lum2_36vstr,R.drawable.lampnakalspot,R.drawable.lampkll15spot,R.drawable.lampgalogen35
     };
-    public static  final Integer[] NakladnieImageId = {              //Изображения светильников
+    public static  final Integer[] NakladnieImageId = {              //Изображения накладных светильников
             R.drawable.lum4_18nakl,R.drawable.lum2_36,R.drawable.lum2_18,R.drawable.lum1_36,R.drawable.lum1_18,R.drawable.lum2_58,R.drawable.lum2_80,R.drawable.lum4_36,R.drawable.lum4_58,R.drawable.lum4_80
     };
-    public static  final Integer[] LampsImageId = {              //Изображения светильников
+    public static  final Integer[] LampsImageId = {              //Изображения ламп
             R.drawable.lampnakal,R.drawable.lampdiod,R.drawable.lampkll15
     };
-    public static  final Integer[] DiodsImageId = {              //Изображения светильников
+    public static  final Integer[] DiodsImageId = {              //Изображения светодиодных светильников
             R.drawable.diod4_18,R.drawable.diod4_18nakl,R.drawable.diod2_36,R.drawable.lampdiodspot,R.drawable.lustradiod
     };
-    public static  final Integer[] OthersImageId = {              //Изображения светильников
+    public static  final Integer[] OthersImageId = {              //Изображения других светильников
             R.drawable.diod4_18lampsvstr,R.drawable.diod4_18lampsnakl,R.drawable.diod2_36lampsnakl,R.drawable.diod2_18lampsnakl,R.drawable.diod1_36lampsnakl,R.drawable.diod1_18lampsnakl,R.drawable.lustranakal,R.drawable.lustrakll
     };
-    public static  final Integer[] OutsideImageId = {              //Изображения светильников
+    public static  final Integer[] OutsideImageId = {              //Изображения наружных светильников
             R.drawable.drlfasad,R.drawable.dnatfasad,R.drawable.mglfasad,R.drawable.diodfasad
     };
 
 
 
-    public static  final Integer[] VstraivaemieImageIdBold = {              //Изображения светильников
+    public static  final Integer[] VstraivaemieImageIdBold = {              //Изображения встраиваемх светильников
             R.drawable.lum4_18bold,R.drawable.lum2_36vstrbold,R.drawable.lampnakalspotbold,R.drawable.lampkll15spotbold,R.drawable.lampgalogen35bold
     };
 
-    public static  final Integer[] NakladnieImageIdBold = {              //Изображения светильников
+    public static  final Integer[] NakladnieImageIdBold = {              //Изображения накладных светильников
             R.drawable.lum4_18naklbold,R.drawable.lum2_36bold,R.drawable.lum2_18bold,R.drawable.lum1_36bold,R.drawable.lum1_18bold,R.drawable.lum2_58bold,R.drawable.lum2_80bold,R.drawable.lum4_36bold,R.drawable.lum4_58bold,R.drawable.lum4_80bold
     };
 
-    public static  final Integer[] LampsImageIdBold = {              //Изображения светильников
+    public static  final Integer[] LampsImageIdBold = {              //Изображения ламп
             R.drawable.lampnakalbold,R.drawable.lampdiodbold,R.drawable.lampkll15bold
     };
-    public static  final Integer[] DiodsImageIdBold = {              //Изображения светильников
+    public static  final Integer[] DiodsImageIdBold = {              //Изображения светодиодных светильников
             R.drawable.diod4_18bold,R.drawable.diod4_18naklbold,R.drawable.diod2_36bold,R.drawable.lampdiodspotbold,R.drawable.lustradiodbold
     };
-    public static  final Integer[] OthersImageIdBold = {              //Изображения светильников
+    public static  final Integer[] OthersImageIdBold = {              //Изображения других светильников
             R.drawable.diod4_18lampsvstrbold,R.drawable.diod4_18lampsnaklbold,R.drawable.diod2_36lampsnaklbold,R.drawable.diod2_18lampsnaklbold,R.drawable.diod1_36lampsnaklbold,R.drawable.diod1_18lampsnaklbold,R.drawable.lustranakalbold,R.drawable.lustrakllbold
     };
-    public static  final Integer[] OutsideImageIdBold = {              //Изображения светильников
+    public static  final Integer[] OutsideImageIdBold = {              //Изображения наружных светильников
             R.drawable.drlfasadbold,R.drawable.dnatfasadbold,R.drawable.mglfasadbold,R.drawable.diodfasadbold
     };
 
 
 
-    public static final String[] lampVstraivaemieNames = {             //Названия светильников
+    public static final String[] lampVstraivaemieNames = {             //Названия встраиваемых светильников
             "4*18Вт","2*36Вт","ЛН 60Вт","КЛЛ 15Вт","Гал. 35Вт"
     };
-    public static final String[] lampNakladnieNames = {             //Названия светильников
+    public static final String[] lampNakladnieNames = {             //Названия накладных светильников
             "4*18Вт","2*36Вт","2*18Вт","1*36Вт","1*18Вт","2*58Вт","2*80Вт","4*36Вт","4*58Вт","4*80Вт"
     };
-    public static final String[] lampLampsNames = {             //Названия светильников
+    public static final String[] lampLampsNames = {             //Названия ламп
             "ЛН 60Вт","СД 12Вт","КЛЛ 15Вт"
     };
-    public static final String[] lampLampsNamesForOutput = {             //Названия светильников
+    public static final String[] lampLampsNamesForOutput = {             //Названия ламп(для экспорта в Excel)
             "накаливания 60Вт","светодиодная 12Вт","КЛЛ 15Вт"
     };
-    public static final String[] lampDiodsNames = {             //Названия светильников
+    public static final String[] lampDiodsNames = {             //Названия светодиодных светильников
             "36Вт","36Вт","36Вт","12Вт","12Вт"
     };
-    public static final String[] lampOthersNames = {             //Названия светильников
+    public static final String[] lampOthersNames = {             //Названия остальных светильников
             "36Вт","36Вт","36Вт","18Вт","18Вт","9Вт","ЛН 60Вт","КЛЛ 15Вт"
     };
-    public static final String[] lampOutsideNames = {             //Названия светильников
+    public static final String[] lampOutsideNames = {             //Названия наружных светильников
             "ДРЛ-250Вт","ДНаТ-250Вт","МГЛ-250Вт","СД-50Вт"
     };
 
 
-    public static  final String[] lampsVstraivaemieName = {"lum4_18","lum2_36vstr","lampnakalspot","lampkll15spot","lampgalogen35"};
-    public static  final String[] lampsNakladnieName = {"lum4_18nakl","lum2_36","lum2_18","lum1_36","lum1_18","lum2_58","lum2_80","lum4_36","lum4_58","lum4_80"};
-    public static  final String[] lampsLampsName = {"lampnakal","lampdiod","lampkll15"};
-    public static  final String[] lampsDiodsName = {"diod4_18","diod4_18nakl","diod2_36","lampdiodspot","lustradiod"};
-    public static  final String[] lampsOthersName = {"diod4_18lampsvstr","diod4_18lampsnakl","diod2_36lampsnakl","diod2_18lampsnakl","diod1_36lampsnakl","diod1_18lampsnakl","lustranakal","lustrakll"};
-    public static  final String[] lampsOutsideName = {"drlfasad","dnatfasad","mglfasad","diodfasad"};
+    public static  final String[] lampsVstraivaemieName = {"lum4_18","lum2_36vstr","lampnakalspot","lampkll15spot","lampgalogen35"};        //Название ресурса встраиваемых светильников
+    public static  final String[] lampsNakladnieName = {"lum4_18nakl","lum2_36","lum2_18","lum1_36","lum1_18","lum2_58","lum2_80","lum4_36","lum4_58","lum4_80"};       //Название ресурса накладных светильников
+    public static  final String[] lampsLampsName = {"lampnakal","lampdiod","lampkll15"};        //Название ресурса ламп
+    public static  final String[] lampsDiodsName = {"diod4_18","diod4_18nakl","diod2_36","lampdiodspot","lustradiod"};      //Название ресурса светодиодных светильников
+    public static  final String[] lampsOthersName = {"diod4_18lampsvstr","diod4_18lampsnakl","diod2_36lampsnakl","diod2_18lampsnakl","diod1_36lampsnakl","diod1_18lampsnakl","lustranakal","lustrakll"};        //Название ресурса других светильников
+    public static  final String[] lampsOutsideName = {"drlfasad","dnatfasad","mglfasad","diodfasad"};       //Название ресурса наружных светильников
 
 
 
@@ -571,13 +571,14 @@ public class Variables {
         LinearLayout temp = (LinearLayout) txt.getParent();
         return temp;
     }
-    private static void initLampsPanels(){
+    private static void initLampsPanels(){          //Инициализация панелей с типами светильников
         LinearLayout lampsLayoutsWrapper = activity.findViewById(R.id.lampTypesPanelsLayout);
-        lampsLayoutsWrapper.post(new Runnable() {
+        lampsLayoutsWrapper.post(new Runnable() {       //После полной загрузки Layout
             @Override
             public void run() {
                 lampsList = new LampsList(activity, lampVstraivaemieNames, VstraivaemieImageId);
                 listView.setAdapter(lampsList);
+                //Добавляем панели
                 lampsPanels.add(activity.findViewById(R.id.VstraivaemiePanel));
                 lampsPanels.add(activity.findViewById(R.id.NakladniePanel));
                 lampsPanels.add(activity.findViewById(R.id.LampsPanel));
@@ -585,11 +586,14 @@ public class Variables {
                 lampsPanels.add(activity.findViewById(R.id.OthersPanel));
                 lampsPanels.add(activity.findViewById(R.id.OutsidePanel));
                 LinearLayout lampsLayoutsWrapper = activity.findViewById(R.id.lampTypesPanelsLayout);
+                //Высчитываем высоты,требуемые для каждой панели
                 int heightOfParentView = lampsLayoutsWrapper.getHeight();
                 int heightOfEachElem = heightOfParentView/lampsPanels.size();
+                //Создаем параметры
                 LinearLayout.LayoutParams paramsForWrap = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) heightOfEachElem);
                 LinearLayout.LayoutParams paramsForText = new LinearLayout.LayoutParams((int) heightOfEachElem,(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, Variables.activity.getResources().getDisplayMetrics()));
                 for (VerticalTextView lay:lampsPanels){
+                    //Задаем параметры и слушатель нажатий на панели
                     LinearLayout temp = (LinearLayout) lay.getParent();
                     temp.setLayoutParams(paramsForWrap);
                     temp.setOnTouchListener(new View.OnTouchListener() {
@@ -643,7 +647,7 @@ public class Variables {
         });
     }
 
-    public static void removeLampByView(ImageView imageView){
+    public static void removeLampByView(ImageView imageView){       //Удалить лампу по изображению
         for (Room room:Variables.current_floor.rooms){
             for (Lamp lamp:room.lamps){
                 if (lamp.getImage()==imageView){

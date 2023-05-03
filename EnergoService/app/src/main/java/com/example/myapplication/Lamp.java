@@ -15,17 +15,17 @@ public class Lamp {
 
     private String typeImage;           //Тип светильника
 
-    Vector<String> photoPaths = new Vector<String>();
+    Vector<String> photoPaths = new Vector<String>();       //Вектор путей к фотографиям светильника
     private String comments;            //Комментарии к светильнику
-    private int montagneType=0;
+    private int montagneType=0;         //Тип монтажа
 
 
-    private int positionOutside=0;
-    private int lampsAmount=0;
-    private boolean isStolb=false;
+    private int positionOutside=0;      //Позиция(внутри/снаружи)
+    private int lampsAmount=0;          //Количество ламп(для люстр)
+    private boolean isStolb=false;      //Является ли столбом(для наружного освещения)
 
-    private int placeType;
-    private int groupIndex;
+    private int placeType;              //Место расположения(для наружного освещения)
+    private int groupIndex;             //Групповой индекс
 
 
 

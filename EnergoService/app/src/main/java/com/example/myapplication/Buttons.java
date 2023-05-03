@@ -83,10 +83,10 @@ public class Buttons {
     ImageView photoRightArrow;  //Кнопка перехода к следующей фотографии
     ImageView photoLeftArrow;   //Кнопка перехода к предыдущей фотографии
     ImageView takePicLampPhoto;     //Кнопка активации камеры(вкладка светильников)
-    ImageView screenShotBtn;
-    Button submitHeightFloor;
-    int lastIndex=-1;
-    private int lastWorkdays=5;
+    ImageView screenShotBtn;        //Кнопка сохранения скриншота экрана
+    Button submitHeightFloor;       //Кнопка подтверждения задания стандартной высоты потолка
+    int lastIndex=-1;               //Последний индекс типа потолка(для автовысоты)
+    int lastWorkdays=5;
 
 
 
@@ -198,10 +198,10 @@ public class Buttons {
         photoRightArrow = Variables.activity.findViewById(R.id.photoArrowRight);  //Кнопка перехода к следующей фотографии
         photoLeftArrow = Variables.activity.findViewById(R.id.photoArrowLeft);   //Кнопка перехода к предыдущей фотографии
         takePicLampPhoto = Variables.activity.findViewById(R.id.takePicLampBtn);    //Кнопка активации камеры(Вкладка со светильниками)
-        submitHeightFloor = Variables.activity.findViewById(R.id.submitHeightFloor);
-        screenShotBtn = Variables.activity.findViewById(R.id.screenShotBtn);
+        submitHeightFloor = Variables.activity.findViewById(R.id.submitHeightFloor);    //Кнопка подтверждения задания стандартной высоты потолка
+        screenShotBtn = Variables.activity.findViewById(R.id.screenShotBtn);    //Кнопка сохранения скриншота экрана
 
-        screenShotBtn.setOnTouchListener(new View.OnTouchListener() {
+        screenShotBtn.setOnTouchListener(new View.OnTouchListener() {       //Активация кнопки создания скриншота
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 SavePlanToJpgThread thread = new SavePlanToJpgThread(); //Создаем новый поток для экспорта плана в JPG
@@ -210,7 +210,7 @@ public class Buttons {
             }
         });
 
-        submitHeightFloor.setOnTouchListener(new View.OnTouchListener() {
+        submitHeightFloor.setOnTouchListener(new View.OnTouchListener() {       //Активация подтверждения задания стандартной высоты потолка
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (!String.valueOf(Variables.roofTypeDefaultText.getText()).equals("0.0")) {
@@ -221,7 +221,7 @@ public class Buttons {
             }
         });
 
-        takePicLampPhoto.setOnTouchListener(new View.OnTouchListener() {
+        takePicLampPhoto.setOnTouchListener(new View.OnTouchListener() {        //Кнопка активации сохранения фотографии светильника
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                     if (Variables.plan.touchedLamp != null) {
@@ -231,18 +231,18 @@ public class Buttons {
             }
         });
 
-        photoDelete.setOnTouchListener(new View.OnTouchListener() {
+        photoDelete.setOnTouchListener(new View.OnTouchListener() {     //Слушатель нажатий на кнопку удаления фотографии
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (Variables.showPhotoFlag) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(Variables.activity);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Variables.activity);      //Создаем диалоговое окно
                     builder.setCancelable(true);
                     builder.setTitle("Удалить");
                     builder.setMessage("Вы действительно хотите удалить фотографию?");
                     builder.setPositiveButton("Удалить",
                             new DialogInterface.OnClickListener() {
                                 @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                                public void onClick(DialogInterface dialog, int which) {        //Если подтверждено - удаляем фотографию
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                         try {
                                             Files.delete(Paths.get(Variables.plan.touchedRoom.photoPaths.elementAt(Variables.indexOfPhoto)));
@@ -326,7 +326,7 @@ public class Buttons {
         });
 
 
-        photoLeftArrow.setOnTouchListener(new View.OnTouchListener() {
+        photoLeftArrow.setOnTouchListener(new View.OnTouchListener() {      //Слушатель нажатий на кнопку пролистывания влево светильников
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (Variables.showPhotoFlag) {
@@ -354,7 +354,7 @@ public class Buttons {
             }
         });
 
-        photoRightArrow.setOnTouchListener(new View.OnTouchListener() {
+        photoRightArrow.setOnTouchListener(new View.OnTouchListener() {     //Слушатель нажатий на кнопку пролистывания вправо светильников
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (Variables.showPhotoFlag) {
@@ -382,7 +382,7 @@ public class Buttons {
             }
         });
 
-        photoClose.setOnTouchListener(new View.OnTouchListener() {
+        photoClose.setOnTouchListener(new View.OnTouchListener() {      //Прослушиватель нажатий на кнопку закрытия фотографии
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                         disablePhotoShow();
@@ -1940,12 +1940,12 @@ public class Buttons {
         Variables.showPhotoLampFlag=false;
     }
 
-    public static void createNewPhotoRoom(File f,boolean type){
+    public static void createNewPhotoRoom(File f,boolean type){     //Создание новой фотографии комнаты(светильника)
         ImageView view = new ImageView(Variables.activity);
         view.setLayoutParams(new ViewGroup.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, Variables.activity.getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, Variables.activity.getResources().getDisplayMetrics())));
         //lay.setBackgroundResource(R.drawable.txtviewborder);
         view.setImageURI(Uri.fromFile(f));
-        if (type){
+        if (type){      //Если сфотографирована комната
         view.setOnTouchListener(new View.OnTouchListener() {
             @SuppressLint("ClickableViewAccessibility")
             @Override
@@ -1970,7 +1970,7 @@ public class Buttons {
                 return false;
             }
         });Variables.roomGrid.addView(view);}
-        else{
+        else{   //иначе - светильник
             view.setOnTouchListener(new View.OnTouchListener() {
                 @SuppressLint("ClickableViewAccessibility")
                 @Override
@@ -1995,13 +1995,6 @@ public class Buttons {
                     return false;
                 }
             });Variables.lampGrid.addView(view);
-        }
-    }
-    private static void setMargins (View view, int left, int top, int right, int bottom) {
-        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-            p.setMargins(left, top, right, bottom);
-            view.requestLayout();
         }
     }
     //Конец деактивации функций

@@ -176,6 +176,12 @@ public class Plan {
                                         }
                                     }
                                 }
+                                for (int i=0;i<Variables.current_floor.unusedLamps.size();i++){
+                                    if ((Variables.current_floor.unusedLamps.elementAt(i).getImage().getX() >= selectionZone.getX() && Variables.current_floor.unusedLamps.elementAt(i).getImage().getX() <= (selectionZone.getX() + selectionZone.getWidth())) && (Variables.current_floor.unusedLamps.elementAt(i).getImage().getY() >= selectionZone.getY() && Variables.current_floor.unusedLamps.elementAt(i).getImage().getY() <= (selectionZone.getY() + selectionZone.getHeight()))) {
+                                        Variables.copyVector.add(Variables.current_floor.unusedLamps.elementAt(i));
+                                        Variables.current_floor.unusedLamps.elementAt(i).getImage().setBackgroundResource(R.color.blue);
+                                    }
+                                }
                                 Variables.planLay.removeView(selectionZone);
                                 Variables.firstTouch = false;
                             }
