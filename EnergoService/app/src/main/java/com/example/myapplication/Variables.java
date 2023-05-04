@@ -347,6 +347,7 @@ public class Variables {
 
     public static void clearFields(){           //Очистка полей при переключении плана
         roomInfoView.setVisibility(View.GONE);
+        Variables.plan.touchedLamp=null;
         lampType.setText("");
         lampPower.setText("");
         lampComments.setText("");
@@ -379,9 +380,24 @@ public class Variables {
         else
             moveFlag=true;
     }
-    public static Room getRoomByNumber(String number,Floor floor){
+
+    public static Room getRoomByNumberAndCoords(String number,double cordX,double cordY,Floor floor){
         for (int i=0;i<floor.rooms.size();i++){
-            if (Objects.equals(floor.rooms.elementAt(i).getNumber(), number))
+            if (Objects.equals(floor.rooms.elementAt(i).getNumber(),number) && floor.rooms.elementAt(i).arrayX[0]==cordX && floor.rooms.elementAt(i).arrayY[0]==cordY)
+                return floor.rooms.elementAt(i);
+        }
+        return null;
+    }
+    public static Room getRoomOnlyByNumber(String number,Floor floor){
+        for (int i=0;i<floor.rooms.size();i++){
+            if (Objects.equals(floor.rooms.elementAt(i).getNumber(),number))
+                return floor.rooms.elementAt(i);
+        }
+        return null;
+    }
+    public static Room getRoomByNumber(String number,float cordX,float cordY,float scale,Floor floor){
+        for (int i=0;i<floor.rooms.size();i++){
+            if (Objects.equals(floor.rooms.elementAt(i).getNumber(), number) && floor.rooms.elementAt(i).detectTouch((cordX+((15*scale)/2)),(cordY+((15*scale)/2))))
                 return floor.rooms.elementAt(i);
         }
         return null;
@@ -446,18 +462,19 @@ public class Variables {
         for (Room room: floor.rooms){
             Vector<Lamp> tempVec= new Vector<Lamp>(room.lamps);
             for (Lamp lamp: tempVec){
-                Room temp = getRoomByNumber(lamp.getLampRoom(),floor);
+                Room temp = getRoomByNumber(lamp.getLampRoom(),lamp.getImage().getX(),lamp.getImage().getY(),lamp.getImage().getScaleX(),floor);
                 if (temp!=null && !temp.lamps.contains(lamp)){
                     temp.lamps.add(lamp);
                     if (floor.unusedLamps.contains(lamp)){
                         floor.unusedLamps.remove(lamp);
-                    }
+                    }else
+                        Variables.plan.removeFromEveryWhere(lamp);
                 }
             }
         }
         Vector<Lamp> tempVec = new Vector<Lamp>(floor.unusedLamps);
          for (Lamp lamp: tempVec){
-            Room temp = getRoomByNumber(lamp.getLampRoom(),floor);
+            Room temp = getRoomByNumber(lamp.getLampRoom(),lamp.getImage().getX(),lamp.getImage().getY(),lamp.getImage().getScaleX(),floor);
             if (temp!=null && !temp.lamps.contains(lamp)){
                 temp.lamps.add(lamp);
                 if (floor.unusedLamps.contains(lamp)){

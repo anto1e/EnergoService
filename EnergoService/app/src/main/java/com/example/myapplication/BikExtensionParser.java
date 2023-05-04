@@ -135,7 +135,7 @@ public class BikExtensionParser {
                     }
             }
                 else if (roomInfo){         //Если информация о комнатах
-                    if (line.length()>8 && line.charAt(0) != '/'){
+                    if (line.length()>10 && line.charAt(0) != '/'){
                         String[] split_number = line.split("%");
                         if (split_number.length>1){
                             String number = split_number[0];
@@ -156,10 +156,12 @@ public class BikExtensionParser {
                                 if (Objects.equals(comments, "null"))
                                     comments = "";
                             }
-                            Room room = Variables.getRoomByNumber(number,Variables.current_floor);
+                            double cordX = Double.parseDouble(split_room_info[8]);
+                            double cordY = Double.parseDouble(split_room_info[9]);
+                            Room room = Variables.getRoomByNumberAndCoords(number,cordX,cordY,Variables.current_floor);
                             if (room!=null) {
-                                if (split_room_info.length>8){      //Если есть пути к фотографиям и сами файлы существуют - добавляем
-                                    String paths = split_room_info[8];
+                                if (split_room_info.length>10){      //Если есть пути к фотографиям и сами файлы существуют - добавляем
+                                    String paths = split_room_info[10];
                                     String[] split_room_photos = paths.split("!");
                                     for (int i=0;i<split_room_photos.length;i++){
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -202,7 +204,7 @@ public class BikExtensionParser {
                             String usedOrNot = split_room_info[9];
                             Room room=null;
                             if (!Objects.equals(number, "-1")) {
-                                room = Variables.getRoomByNumber(number,Variables.current_floor);
+                                room = Variables.getRoomByNumber(number,cordX,cordY,scale,Variables.current_floor);
                             }
                                 Lamp lamp = new Lamp();
                                 lamp.setType(type);
@@ -350,7 +352,7 @@ public class BikExtensionParser {
                     out.println();
                     out.println("///INFORMATION ABOUT ROOMS///");
                     for (int i=0;i<tempFloor.rooms.size();i++){
-                        String str12 = tempFloor.rooms.elementAt(i).getNumber()+"%"+tempFloor.rooms.elementAt(i).getHeight()+"@"+tempFloor.rooms.elementAt(i).getType_pos()+"@"+tempFloor.rooms.elementAt(i).getDays()+"@"+tempFloor.rooms.elementAt(i).getHoursPerDay()+"@"+tempFloor.rooms.elementAt(i).getHoursPerWeekend()+"@"+tempFloor.rooms.elementAt(i).getHoursPerSunday()+"@"+tempFloor.rooms.elementAt(i).getRoofType()+"@"+tempFloor.rooms.elementAt(i).getComments();
+                        String str12 = tempFloor.rooms.elementAt(i).getNumber()+"%"+tempFloor.rooms.elementAt(i).getHeight()+"@"+tempFloor.rooms.elementAt(i).getType_pos()+"@"+tempFloor.rooms.elementAt(i).getDays()+"@"+tempFloor.rooms.elementAt(i).getHoursPerDay()+"@"+tempFloor.rooms.elementAt(i).getHoursPerWeekend()+"@"+tempFloor.rooms.elementAt(i).getHoursPerSunday()+"@"+tempFloor.rooms.elementAt(i).getRoofType()+"@"+tempFloor.rooms.elementAt(i).getComments()+"@"+tempFloor.rooms.elementAt(i).arrayX[0]+"@"+tempFloor.rooms.elementAt(i).arrayY[0];
                         String str2="@";
                         if (tempFloor.rooms.elementAt(i).photoPaths.size()!=0){
                             for (String str:tempFloor.rooms.elementAt(i).photoPaths){

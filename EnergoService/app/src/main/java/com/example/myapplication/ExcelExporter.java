@@ -170,9 +170,6 @@ public class ExcelExporter {
                 Variables.refreshLampsToRooms(temp);
                 //Variables.refreshLampsToRooms(temp);        //Перепривязка светильников к помещениям
                 for (int i = 0; i < temp.rooms.size(); i++) {
-                    if (temp.rooms.elementAt(i).getNumber().equals("50")){
-                        System.out.println("");
-                    }
                     int count = 0;
                     Vector<String> types = new Vector<String>();
                     Vector<String> typesImages = new Vector<String>();

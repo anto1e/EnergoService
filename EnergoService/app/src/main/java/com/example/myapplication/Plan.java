@@ -413,6 +413,10 @@ public class Plan {
                     Variables.planLay.removeView(tempView);
                 }
                 Lamp lamp = new Lamp();     //Создаем новый светильник
+                if (Variables.rotateMode){
+                    rotateImg(90, imageView, lampName,-1);
+                    rotation=90;
+                }
                 if (touchedRoom != null) {        //Если нажатая комната размечена
                     lamp.setRotationAngle(rotation);
                     lamp.setTypeImage(lampName);
@@ -635,7 +639,7 @@ public class Plan {
                             Variables.planLay.removeView(touchedLamp.getImage());
                         });
                         if (!Objects.equals(touchedLamp.getLampRoom(), "-1")){
-                            Room room = Variables.getRoomByNumber(touchedLamp.getLampRoom(),Variables.current_floor);
+                            Room room = Variables.getRoomByNumber(touchedLamp.getLampRoom(),touchedLamp.getImage().getX(),touchedLamp.getImage().getY(),touchedLamp.getImage().getScaleX(),Variables.current_floor);
                             if (room!=null && room.lamps.contains(touchedLamp)){        //Если светильник привязан - удаляем из привязанной комнаты
                                 room.lamps.remove(touchedLamp);
                             }else if (Variables.current_floor.unusedLamps.contains(touchedLamp)){          //Иначе удаляем из неиспользуемых светильников
@@ -720,7 +724,7 @@ public class Plan {
                     }
 
                     if (Variables.getMoveFlag()){       //Если обычное перемещение светильника - перепривязка светильников к комнатам
-                        if (!Variables.scalemode && !Variables.removeMode && !Variables.moveOnlySelectedZone) {
+                        if (!Variables.scalemode && !Variables.removeMode && !Variables.moveOnlySelectedZone && !Variables.rotateMode) {
                             if (touchedRoom != lastRoom && touchedLamp != null && isReleased) {   //Если светильник в процессе перемещения оказался в другой комнате, то убираем его из старой комнаты и привязываем к новой
                                 if (lastRoom != null) {
                                     //if (lastRoom.lamps.contains(touchedLamp)) {

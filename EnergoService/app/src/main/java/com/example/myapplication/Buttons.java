@@ -547,6 +547,7 @@ public class Buttons {
                             selectZone.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
                             Variables.plan.setListenerToPlan();
                             activateConfirmBtn();
+                            //Variables.plan.touchedLamp=null;
                             Variables.lampRoom.setText("");
                             Variables.lampType.setText("");
                             Variables.lampPower.setText("");
@@ -883,7 +884,7 @@ public class Buttons {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         for (Lamp lamp:Variables.copyVector){
-                                            Room temp = Variables.getRoomByNumber(lamp.getLampRoom(),Variables.current_floor);
+                                            Room temp = Variables.getRoomByNumber(lamp.getLampRoom(),lamp.getImage().getX(),lamp.getImage().getY(),lamp.getImage().getScaleX(),Variables.current_floor);
                                             if (temp!=null) {
                                                 temp.lamps.remove(lamp);
                                             }else
@@ -1463,7 +1464,7 @@ public class Buttons {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if (Variables.current_floor!=null) {
                     for (Room room : Variables.current_floor.rooms) {
-                            room.setDays(Integer.parseInt(String.valueOf(Variables.daysOfWorkDefault.getSelectedItemPosition())));
+                            room.setDays(Variables.daysOfWorkDefault.getSelectedItemPosition());
                     }
                     lastWorkdays = Variables.daysOfWorkDefault.getSelectedItemPosition();
                 }
