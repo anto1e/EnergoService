@@ -86,7 +86,7 @@ public class Buttons {
     ImageView screenShotBtn;        //Кнопка сохранения скриншота экрана
     Button submitHeightFloor;       //Кнопка подтверждения задания стандартной высоты потолка
     int lastIndex=-1;               //Последний индекс типа потолка(для автовысоты)
-    int lastWorkdays=5;
+    int lastWorkdays=6;
 
 
 
@@ -886,11 +886,13 @@ public class Buttons {
                                             Room temp = Variables.getRoomByNumber(lamp.getLampRoom(),Variables.current_floor);
                                             if (temp!=null) {
                                                 temp.lamps.remove(lamp);
-                                            }else{
+                                            }else
                                                 if (Variables.current_floor.unusedLamps.contains(lamp)){
                                                     Variables.current_floor.unusedLamps.remove(lamp);
+                                                }else{
+                                                    Variables.plan.removeFromEveryWhere(lamp);
                                                 }
-                                            }
+
                                             Variables.activity.runOnUiThread(() -> {        //Удаляем светильник с экрана
                                                 Variables.planLay.removeView(lamp.getImage());
                                             });
@@ -1002,6 +1004,7 @@ public class Buttons {
                             Variables.floors.remove(Variables.current_floor);
                             if (active != null) {       //Если в текущий момент не открыта как минимум одна вкладка
                                 Variables.current_floor = Variables.floors.elementAt(Variables.FloorPanelsVec.indexOf(active));
+                                Variables.filePath = FileHelper.getRealPathFromURI(Variables.activity,Variables.current_floor.getImage());
                                 Variables.image.setImageURI(Variables.current_floor.getImage());
                                 Variables.planLay.setX(Variables.current_floor.cordX);
                                 Variables.planLay.setY(Variables.current_floor.cordY);
@@ -1012,10 +1015,12 @@ public class Buttons {
                                 Variables.buidlingFloor.setText(Variables.current_floor.getFloor());
                                 Variables.buildingAdress.setText(Variables.current_floor.getAdress());
                             } else {            //Иначе удаляем все вкладки
+                                Variables.floors.clear();
                                 Variables.floorsPanels.removeAllViews();
                                 Variables.planLayCleared=true;
                                 Variables.image.setImageResource(0);
                                 Variables.current_floor=null;
+                                Variables.filePath="";
                             }
                         }
                         break;
@@ -1432,17 +1437,17 @@ public class Buttons {
                     ArrayAdapter<String> adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsDetSad);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     Variables.type.setAdapter(adapter);
-                    Variables.daysOfWorkDefault.setSelection(5);
+                    Variables.daysOfWorkDefault.setSelection(6);
                 }else if (String.valueOf(Variables.typeOfBuilding.getSelectedItem()).equals("Школа")){
                     ArrayAdapter<String> adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsSchools);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     Variables.type.setAdapter(adapter);
-                    Variables.daysOfWorkDefault.setSelection(6);
+                    Variables.daysOfWorkDefault.setSelection(7);
                 }else if (String.valueOf(Variables.typeOfBuilding.getSelectedItem()).equals("Больница")){
                     ArrayAdapter<String> adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsHospitals);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     Variables.type.setAdapter(adapter);
-                    Variables.daysOfWorkDefault.setSelection(7);
+                    Variables.daysOfWorkDefault.setSelection(8);
                 }
             }
 
@@ -1458,7 +1463,7 @@ public class Buttons {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if (Variables.current_floor!=null) {
                     for (Room room : Variables.current_floor.rooms) {
-                            room.setDays(Integer.parseInt(String.valueOf(Variables.daysOfWorkDefault.getSelectedItem())));
+                            room.setDays(Integer.parseInt(String.valueOf(Variables.daysOfWorkDefault.getSelectedItemPosition())));
                     }
                     lastWorkdays = Variables.daysOfWorkDefault.getSelectedItemPosition();
                 }

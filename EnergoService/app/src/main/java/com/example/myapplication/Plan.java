@@ -170,14 +170,14 @@ public class Plan {
                                 for (int i = 0; i < Variables.current_floor.rooms.size(); i++) {
                                     Room temp = Variables.current_floor.rooms.elementAt(i);
                                     for (int j = 0; j < temp.lamps.size(); j++) {
-                                        if ((temp.lamps.elementAt(j).getImage().getX() >= selectionZone.getX() && temp.lamps.elementAt(j).getImage().getX() <= (selectionZone.getX() + selectionZone.getWidth())) && (temp.lamps.elementAt(j).getImage().getY() >= selectionZone.getY() && temp.lamps.elementAt(j).getImage().getY() <= (selectionZone.getY() + selectionZone.getHeight()))) {
+                                        if (((temp.lamps.elementAt(j).getImage().getX()+temp.lamps.elementAt(j).getImage().getWidth()/2.f) >= selectionZone.getX() && (temp.lamps.elementAt(j).getImage().getX()+temp.lamps.elementAt(j).getImage().getWidth()/2.f) <= (selectionZone.getX() + selectionZone.getWidth())) && ((temp.lamps.elementAt(j).getImage().getY()+temp.lamps.elementAt(j).getImage().getHeight()/2.f) >= selectionZone.getY() && (temp.lamps.elementAt(j).getImage().getY()+temp.lamps.elementAt(j).getImage().getHeight()/2.f) <= (selectionZone.getY() + selectionZone.getHeight()))) {
                                             Variables.copyVector.add(temp.lamps.elementAt(j));
                                             temp.lamps.elementAt(j).getImage().setBackgroundResource(R.color.blue);
                                         }
                                     }
                                 }
                                 for (int i=0;i<Variables.current_floor.unusedLamps.size();i++){
-                                    if ((Variables.current_floor.unusedLamps.elementAt(i).getImage().getX() >= selectionZone.getX() && Variables.current_floor.unusedLamps.elementAt(i).getImage().getX() <= (selectionZone.getX() + selectionZone.getWidth())) && (Variables.current_floor.unusedLamps.elementAt(i).getImage().getY() >= selectionZone.getY() && Variables.current_floor.unusedLamps.elementAt(i).getImage().getY() <= (selectionZone.getY() + selectionZone.getHeight()))) {
+                                    if (((Variables.current_floor.unusedLamps.elementAt(i).getImage().getX()+Variables.current_floor.unusedLamps.elementAt(i).getImage().getWidth()/2.f) >= selectionZone.getX() && (Variables.current_floor.unusedLamps.elementAt(i).getImage().getX()+Variables.current_floor.unusedLamps.elementAt(i).getImage().getWidth()/2.f) <= (selectionZone.getX() + selectionZone.getWidth())) && ((Variables.current_floor.unusedLamps.elementAt(i).getImage().getY()+Variables.current_floor.unusedLamps.elementAt(i).getImage().getHeight()/2.f) >= selectionZone.getY() && (Variables.current_floor.unusedLamps.elementAt(i).getImage().getY()+Variables.current_floor.unusedLamps.elementAt(i).getImage().getHeight()/2.f) <= (selectionZone.getY() + selectionZone.getHeight()))) {
                                         Variables.copyVector.add(Variables.current_floor.unusedLamps.elementAt(i));
                                         Variables.current_floor.unusedLamps.elementAt(i).getImage().setBackgroundResource(R.color.blue);
                                     }
@@ -634,15 +634,19 @@ public class Plan {
                         Variables.activity.runOnUiThread(() -> {        //Включаем вращение
                             Variables.planLay.removeView(touchedLamp.getImage());
                         });
-                        if (touchedLamp.getLampRoom()!="-1"){
+                        if (!Objects.equals(touchedLamp.getLampRoom(), "-1")){
                             Room room = Variables.getRoomByNumber(touchedLamp.getLampRoom(),Variables.current_floor);
                             if (room!=null && room.lamps.contains(touchedLamp)){        //Если светильник привязан - удаляем из привязанной комнаты
                                 room.lamps.remove(touchedLamp);
-                            }else{          //Иначе удаляем из неиспользуемых светильников
+                            }else if (Variables.current_floor.unusedLamps.contains(touchedLamp)){          //Иначе удаляем из неиспользуемых светильников
                                 Variables.current_floor.unusedLamps.remove(touchedLamp);
-                            }
+                            }else {removeFromEveryWhere(touchedLamp);}
                         }else{      //Иначе удаляем из неиспользуемых светильников
-                            Variables.current_floor.unusedLamps.remove(touchedLamp);
+                            if (Variables.current_floor.unusedLamps.contains(touchedLamp)) {
+                                Variables.current_floor.unusedLamps.remove(touchedLamp);
+                            }else{
+                                removeFromEveryWhere(touchedLamp);
+                            }
                         }
                     }else if (touchedLamp==null){
                         Variables.planLay.removeView(imageView);
@@ -817,6 +821,26 @@ public class Plan {
         Variables.clearLampGrid();
     }
 
+    void removeFromEveryWhere(Lamp lamp_to_del){
+        for (Room room:Variables.current_floor.rooms){
+            for (Lamp lamp: room.lamps){
+                if (lamp==lamp_to_del){
+                    room.lamps.remove(lamp);
+                    return;
+                }
+            }
+        }
+        for (int i=0;i<Variables.current_floor.unusedLamps.size();i++){         //Если не нашли - в непривязанных светильниках
+            if (Variables.current_floor.unusedLamps.elementAt(i)!=null) {
+                if (Variables.current_floor.unusedLamps.elementAt(i)==lamp_to_del) {
+                    Variables.current_floor.unusedLamps.remove(lamp_to_del);
+                    return;
+                }
+            }
+        }
+        return;
+    }
+
     private Lamp getLampByTouch(ImageView image){       //Функция получения информации о светильнике по нажатию на него
         if (touchedRoom!=null) {
             for (int i = 0; i < touchedRoom.lamps.size(); i++) {    //Сначала ищем в размеченных комнатах
@@ -830,6 +854,13 @@ public class Plan {
             if (Variables.current_floor.unusedLamps.elementAt(i)!=null) {
                 if (Variables.current_floor.unusedLamps.elementAt(i).getImage() == image)
                     return Variables.current_floor.unusedLamps.elementAt(i);
+            }
+        }
+        for (Room room:Variables.current_floor.rooms){
+            for (Lamp lamp: room.lamps){
+                if (lamp.getImage()==image){
+                    return lamp;
+                }
             }
         }
         return null;            //Иначе - светильник не найден
