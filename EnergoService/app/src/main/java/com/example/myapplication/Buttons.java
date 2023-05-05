@@ -54,7 +54,7 @@ import java.util.Vector;
 public class Buttons {
     public static final int CAMERA_PERM_CODE = 101;
     public static final int CAMERA_REQUEST_CODE = 102;
-    static LinearLayout active=null;
+    static LinearLayout active=null;        //Активная панель этажа
 
     ImageView addBtn;       //Кнопка добавления светильника
     ImageView moveBtn;      //Кнопка передвижения светильников
@@ -86,7 +86,7 @@ public class Buttons {
     ImageView screenShotBtn;        //Кнопка сохранения скриншота экрана
     Button submitHeightFloor;       //Кнопка подтверждения задания стандартной высоты потолка
     int lastIndex=-1;               //Последний индекс типа потолка(для автовысоты)
-    int lastWorkdays=6;
+    int lastWorkdays=6;             //Последний тип режима работы
 
 
 
@@ -797,7 +797,7 @@ public class Buttons {
                             if (column_amount > 0 && column != null && rows_amount > 0 && rows != null && Variables.multipleType != -1) {   //Создаем светильники
                                 for (int i = 0; i < rows_amount; i++) {
                                     for (int j = 0; j < column_amount; j++) {
-                                        switch (Variables.currentLampsPanelIndex){
+                                        switch (Variables.currentLampsPanelIndex){      //В зависимости от типа светильника добавляем соответствующие
                                             case 0:
                                                 Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsVstraivaemieName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
                                                 break;
@@ -882,7 +882,7 @@ public class Buttons {
                         builder.setPositiveButton("Удалить",
                                 new DialogInterface.OnClickListener() {
                                     @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                                    public void onClick(DialogInterface dialog, int which) {        //Если выбрано удалить - удаляем светильник с экрана
                                         for (Lamp lamp:Variables.copyVector){
                                             Room temp = Variables.getRoomByNumber(lamp.getLampRoom(),lamp.getImage().getX(),lamp.getImage().getY(),lamp.getImage().getScaleX(),Variables.current_floor);
                                             if (temp!=null) {
@@ -900,7 +900,7 @@ public class Buttons {
                                         }
                                     }
                                 });
-                        builder.setNegativeButton("Отменить", new DialogInterface.OnClickListener() {
+                        builder.setNegativeButton("Отменить", new DialogInterface.OnClickListener() {       //Иначе - отменяем удаление
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                             }
@@ -940,12 +940,12 @@ public class Buttons {
         scaleBtn.setOnTouchListener(new View.OnTouchListener() {            //При нажатии - активация/деактивация изменения размера светильника
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                        if (!Variables.scalemode) {     //Активация
+                        if (!Variables.scalemode) {     //Активация изменения размера
                             Variables.scalemode = true;
                             scaleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
                             disableRemoveBtn();
                             disableRotateBtn();
-                        }else{      //Деактивация
+                        }else{      //Деактивация изменения размера
                             disableScaleBtn();
                         }
                 return false;
@@ -957,12 +957,12 @@ public class Buttons {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_UP:
-                        if (!Variables.rotateMode){         //Активация
+                        if (!Variables.rotateMode){         //Активация поворота светильника
                             Variables.rotateMode=true;
                             rotateLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
                             disableScaleBtn();
                             disableRemoveBtn();
-                        }else{          //Деактивация
+                        }else{          //Деактивация поворота светильника
                             disableRotateBtn();
                         }
                         break;
@@ -1860,7 +1860,7 @@ public class Buttons {
         Variables.plan.disableListenerFromPlan();
     }
 
-    private void verifyPermissions(boolean type){
+    private void verifyPermissions(boolean type){       //Получение разрешений на использование камеры
         String[] permissions = {android.Manifest.permission.READ_EXTERNAL_STORAGE,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 android.Manifest.permission.CAMERA};
@@ -1878,7 +1878,7 @@ public class Buttons {
                     CAMERA_PERM_CODE);
         }
     }
-    public static void dispatchTakePictureIntent(boolean type) {
+    public static void dispatchTakePictureIntent(boolean type) {        //Функция создания изображения
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(Variables.activity.getPackageManager()) != null) {
@@ -1899,7 +1899,7 @@ public class Buttons {
             }
         }
     }
-    private static File createImageFile(boolean type) throws IOException {
+    private static File createImageFile(boolean type) throws IOException {          //Функция создания фотографии
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName="temp";
@@ -1936,7 +1936,7 @@ public class Buttons {
         return image;
     }
 
-    private static void disablePhotoShow(){
+    private static void disablePhotoShow(){         //Отключение отображения фотографий
         Variables.photoFrame.setVisibility(View.GONE);
         Variables.floorPanelLay.setVisibility(View.VISIBLE);
         Variables.planLay.setVisibility(View.VISIBLE);

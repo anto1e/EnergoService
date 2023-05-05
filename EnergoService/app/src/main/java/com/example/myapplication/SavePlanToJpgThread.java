@@ -1,14 +1,21 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.Environment;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -18,8 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SavePlanToJpgThread extends Thread{
     public void run() {
         try {
-            AtomicBoolean isReady1= new AtomicBoolean(false);
-            AtomicBoolean isReady2= new AtomicBoolean(false);
+            Variables.exportingJpg=true;
             ImageView rotationElement = Variables.loadingImage;     //Колесо вращения
             Animation an = new RotateAnimation(0.0f, 360.0f,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f); //Анимация
             an.setDuration(1000);               // duration in ms
@@ -31,6 +37,89 @@ public class SavePlanToJpgThread extends Thread{
                 rotationElement.setVisibility(View.VISIBLE);
                 rotationElement.setAnimation(an);
             });
+            String path1 = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
+            View layout = LayoutInflater.from(Variables.activity).inflate(R.layout.activity_main, null, false);
+            RelativeLayout mContImage = Variables.planLay;
+            Variables.activity.runOnUiThread(() -> {        //Включаем вращение
+
+            //reference View with image
+            float firstWidth = Variables.planLay.getWidth();
+            float firstHeight = Variables.planLay.getHeight();
+            mContImage.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                float secondWidth = mContImage.getMeasuredWidth();
+                float secondHeight = mContImage.getMeasuredHeight();
+                for (Room room:Variables.current_floor.rooms){
+                    for (Lamp lamp:room.lamps){
+                        float oldX = lamp.getImage().getX();
+                        float oldY = lamp.getImage().getY();
+                        float newX = oldX*(secondWidth/firstWidth);
+                        float newY = oldY * (secondHeight / firstHeight);
+                        lamp.getImage().setPivotX(0);
+                        lamp.getImage().setPivotY(0);
+                        lamp.getImage().setX(newX+lamp.getImage().getWidth()/2);
+                        lamp.getImage().setY(newY+lamp.getImage().getHeight()/2);
+                        lamp.getImage().setScaleX(lamp.getImage().getScaleX() + (secondWidth/firstWidth)*0.6f);
+                        lamp.getImage().setScaleY(lamp.getImage().getScaleY() + (secondHeight / firstHeight*0.6f));
+                    }
+                }
+                for (Lamp lamp:Variables.current_floor.unusedLamps){
+                    float oldX = lamp.getImage().getX();
+                    float oldY = lamp.getImage().getY();
+                    float newX = oldX*(secondWidth/firstWidth);
+                    float newY = oldY * (secondHeight / firstHeight);
+                    lamp.getImage().setPivotX(0);
+                    lamp.getImage().setPivotY(0);
+                    lamp.getImage().setX(newX+lamp.getImage().getWidth()/2);
+                    lamp.getImage().setY(newY+lamp.getImage().getHeight()/2);
+                    lamp.getImage().setScaleX(lamp.getImage().getScaleX() + (secondWidth/firstWidth)*0.6f);
+                    lamp.getImage().setScaleY(lamp.getImage().getScaleY() + (secondHeight / firstHeight*0.6f));
+                }
+            Bitmap bitmap = Bitmap.createBitmap(mContImage.getMeasuredWidth(), mContImage.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            mContImage.layout(0, 0, mContImage.getMeasuredWidth(), mContImage.getMeasuredHeight());
+            mContImage.draw(canvas);
+
+            //save to File
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+
+            File mediaStorageDir = new File(path1+"/"+Variables.current_floor.getName());
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                String imageName = "IMG_" + timeStamp + ".jpg";
+
+            File f = new File(mediaStorageDir + File.separator + imageName);
+            FileOutputStream fo = null;
+            try {
+                fo = new FileOutputStream(f);
+                fo.write(bytes.toByteArray());
+                fo.close();
+            } catch (Exception e) {
+                Log.d("Error File:"  , "" + e);
+            }
+                Variables.planLay.removeAllViews();
+                Variables.planLay.addView(Variables.image);
+                    Variables.planLayCleared=false;
+                    Variables.typeOpening=0;
+                    Variables.image.setImageResource(0);
+                Variables.image.setImageURI(Variables.selectedfile);
+            });
+            Variables.activity.runOnUiThread(() -> {           //Выключаем вращение и выводим текст об удачном экспорте в эксель
+                rotationElement.clearAnimation();
+                rotationElement.setVisibility(View.GONE);
+                Toast.makeText(Variables.activity.getApplicationContext(),"План экспортирован в JPG!",Toast.LENGTH_SHORT).show();
+                });
+            /*ImageView rotationElement = Variables.loadingImage;     //Колесо вращения
+            Animation an = new RotateAnimation(0.0f, 360.0f,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f); //Анимация
+            an.setDuration(1000);               // duration in ms
+            an.setRepeatCount(-1);                // -1 = infinite repeated
+            an.setFillAfter(true);               // keep rotation after animation
+
+            // Apply animation to image view
+            Variables.activity.runOnUiThread(() -> {        //Включаем вращение
+                rotationElement.setVisibility(View.VISIBLE);
+                rotationElement.setAnimation(an);
+            });
+
             Variables.refreshLampsToRooms(Variables.current_floor);     //Перепривязка светильников к комнате
             String path1 = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
             for (Room room:Variables.current_floor.rooms) {
@@ -125,13 +214,13 @@ public class SavePlanToJpgThread extends Thread{
             //bitmap = Bitmap.createScaledBitmap(bitmap, 1920, 1080, true);
             //bitmap = Bitmap.createScaledBitmap(bitmap, bWidth*5, bHeight*5, true);
 
-            /*if (bWidth > bHeight) {
-                int imageHeight = (int) Math.abs(maxSize * ((float)bitmap.getWidth() / (float) bitmap.getHeight()));
-                bitmap = Bitmap.createScaledBitmap(bitmap, maxSize, imageHeight, true);
-            } else {
-                int imageWidth = (int) Math.abs(maxSize * ((float)bitmap.getWidth() / (float) bitmap.getHeight()));
-                bitmap = Bitmap.createScaledBitmap(bitmap, imageWidth, maxSize, true);
-            }*/
+            //if (bWidth > bHeight) {
+                //int imageHeight = (int) Math.abs(maxSize * ((float)bitmap.getWidth() / (float) bitmap.getHeight()));
+                //bitmap = Bitmap.createScaledBitmap(bitmap, maxSize, imageHeight, true);
+            //} else {
+                //int imageWidth = (int) Math.abs(maxSize * ((float)bitmap.getWidth() / (float) bitmap.getHeight()));
+                //bitmap = Bitmap.createScaledBitmap(bitmap, imageWidth, maxSize, true);
+            //}
             Variables.planLay.setDrawingCacheEnabled(false);
             Variables.planLay.destroyDrawingCache();
 
@@ -219,7 +308,7 @@ public class SavePlanToJpgThread extends Thread{
                 rotationElement.clearAnimation();
                 rotationElement.setVisibility(View.GONE);
                 Toast.makeText(Variables.activity.getApplicationContext(),"План экспортирован в JPG!",Toast.LENGTH_SHORT).show();
-            });
+            });*/
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

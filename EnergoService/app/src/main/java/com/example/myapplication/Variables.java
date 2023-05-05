@@ -87,6 +87,7 @@ public class Variables {
     private static boolean addFlag=false;       //Флаг активации режима добавления светильника
     static boolean addMultiple_flag=false;       //Флаг активации режима добавления светильника
     static Integer multipleType=-1;             //Тип светильника
+    static LinearLayout imageWrap;          //Оболочка картинки
     static int multiplepos=-1;                  //Позиция в массиве светильнков
     static int multiplelampType=-1;             //Тип ламп
     private static boolean moveFlag=false;      //Флаг активации режима перемещния светильника
@@ -113,6 +114,7 @@ public class Variables {
     static TextView montagneOutsideTypeTxt;     //Текст наружного монтажа
     static Spinner montagneOutsideType;         //Спинер наружного монтажа свеитльника
     static TextView positionOutsideTxt;         //Текст позиции снаружи светильника
+    static boolean exportingJpg=false;
     static Spinner positionOutside;             //Спинер позиции снаружи светильника
     static TextView isStolbTxt;                 //Текст находится ли светильник на столбе
     static CheckBox isStolbCheck;               //Чекбокс находится ли светильник на столбе
@@ -237,6 +239,7 @@ public class Variables {
 
 
     public static void init(){                //Инициализация переменных
+        imageWrap = activity.findViewById(R.id.imageWrap);
         montagneTypeTxt = activity.findViewById(R.id.montagneTypeTxt);
         isStolbCheck = activity.findViewById(R.id.isStolbCheck);
         isStolbTxt = activity.findViewById(R.id.isStolbTxt);
@@ -381,28 +384,28 @@ public class Variables {
             moveFlag=true;
     }
 
-    public static Room getRoomByNumberAndCoords(String number,double cordX,double cordY,Floor floor){
+    public static Room getRoomByNumberAndCoords(String number,double cordX,double cordY,Floor floor){        //Поиск комнаты по номеру, к которому привязан светильник, и по координатам левой верхней точки комнаты
         for (int i=0;i<floor.rooms.size();i++){
             if (Objects.equals(floor.rooms.elementAt(i).getNumber(),number) && floor.rooms.elementAt(i).arrayX[0]==cordX && floor.rooms.elementAt(i).arrayY[0]==cordY)
                 return floor.rooms.elementAt(i);
         }
         return null;
     }
-    public static Room getRoomOnlyByNumber(String number,Floor floor){
+    public static Room getRoomOnlyByNumber(String number,Floor floor){              //Поиск комнату только по номеру
         for (int i=0;i<floor.rooms.size();i++){
             if (Objects.equals(floor.rooms.elementAt(i).getNumber(),number))
                 return floor.rooms.elementAt(i);
         }
         return null;
     }
-    public static Room getRoomByNumber(String number,float cordX,float cordY,float scale,Floor floor){
+    public static Room getRoomByNumber(String number,float cordX,float cordY,float scale,Floor floor){      //Поиск комнаты по номеру, к которому привязан светильник, и по его координатам
         for (int i=0;i<floor.rooms.size();i++){
             if (Objects.equals(floor.rooms.elementAt(i).getNumber(), number) && floor.rooms.elementAt(i).detectTouch((cordX+((15*scale)/2)),(cordY+((15*scale)/2))))
                 return floor.rooms.elementAt(i);
         }
         return null;
     }
-    public static void moveCopiedVector(float cordX,float cordY){
+    public static void moveCopiedVector(float cordX,float cordY){           //Передвижение светильников в векторе копирования
         tempCopiedLamp.getImage().setX(cordX);
         tempCopiedLamp.getImage().setY(cordY);
         for (int i=0;i<copyVector.size();i++){
@@ -412,7 +415,7 @@ public class Variables {
             }
         }
     }
-    public static void moveCopiedBufVector(float cordX,float cordY){
+    public static void moveCopiedBufVector(float cordX,float cordY){        //Передвижение светильников в буфере копирования
         tempCopiedBufLamp.getImage().setX(cordX);
         tempCopiedBufLamp.getImage().setY(cordY);
         for (int i=0;i<copyBuffer.size();i++){
@@ -422,7 +425,7 @@ public class Variables {
             }
         }
     }
-    public static void resetCordsCopiedVector(){
+    public static void resetCordsCopiedVector(){            //Перезадание координат скопированного вектора
         for (int i=0;i<copyVector.size();i++){
             copyVector.elementAt(i).getImage().setX(lastMovePosX.elementAt(i));
             copyVector.elementAt(i).getImage().setY(lastMovePosY.elementAt(i));
@@ -430,14 +433,14 @@ public class Variables {
         lastMovePosX.clear();
         lastMovePosY.clear();
     }
-    public static void showAllPhotos(Room room){
+    public static void showAllPhotos(Room room){            //Отображение всех фотографий помещения
         Variables.roomGrid.removeAllViews();
         for (String str:room.photoPaths){
             File f = new File(str);
             Buttons.createNewPhotoRoom(f,true);
         }
     }
-    public static void showLampsAllPhotos(Lamp lamp){
+    public static void showLampsAllPhotos(Lamp lamp){       //Отображение всех фотографий светильника
         Variables.lampGrid.removeAllViews();
         for (String str:lamp.photoPaths){
             File f = new File(str);
@@ -445,7 +448,7 @@ public class Variables {
         }
     }
 
-    public static void resetRoomHeight(Floor floor){
+    public static void resetRoomHeight(Floor floor){        //Перезадание высоты
         for (Room room: floor.rooms) {
             if (Variables.roomHeightDefaultCheck.isChecked()) {
                 if (Objects.equals(room.getHeight(), "0.0")) {
@@ -456,7 +459,7 @@ public class Variables {
             }
         }
     }
-    public static void refreshLampsToRooms(Floor floor){
+    public static void refreshLampsToRooms(Floor floor){            //Перепривязка светильников к комнатам
         resetRoomHeight(floor);
 
         for (Room room: floor.rooms){
@@ -491,13 +494,13 @@ public class Variables {
              }
          }
     }
-    public static void clearLampGrid(){
+    public static void clearLampGrid(){     //Очистка полей под фотографию
         if (!Variables.getMoveFlag()) {
             lampGrid.removeAllViews();
         }
     }
 
-    public static void copyFile(Uri pathOld, String pathNew){
+    public static void copyFile(Uri pathOld, String pathNew){           //Копирование файла в папку
         String pathOldFile = FileHelper.getRealPathFromURI(activity, pathOld);
         String[] pathOldSplitted =  pathOldFile.split("/");
         String name = pathOldSplitted[pathOldSplitted.length-1];
@@ -535,7 +538,7 @@ public class Variables {
         }
     }
 
-    public static int findIndexOfLamp(String type,int index){
+    public static int findIndexOfLamp(String type,int index){       //Функция поиска индекса светильника
         switch (index){
             case 0:
                 for (int i=0;i<lampsVstraivaemieName.length;i++){
@@ -583,14 +586,14 @@ public class Variables {
         return -1;
     }
 
-    public static LinearLayout getCurrentPanelLayout(){
+    public static LinearLayout getCurrentPanelLayout(){     //Получить текущую активную панель
         VerticalTextView txt = lampsPanels.elementAt(currentLampsPanelIndex);
         LinearLayout temp = (LinearLayout) txt.getParent();
         return temp;
     }
     private static void initLampsPanels(){          //Инициализация панелей с типами светильников
         LinearLayout lampsLayoutsWrapper = activity.findViewById(R.id.lampTypesPanelsLayout);
-        lampsLayoutsWrapper.post(new Runnable() {       //После полной загрузки Layout
+        lampsLayoutsWrapper.post(new Runnable() {       //После полной загрузки Layout отрисовываем вкладки типов светильников и светильники
             @Override
             public void run() {
                 lampsList = new LampsList(activity, lampVstraivaemieNames, VstraivaemieImageId);

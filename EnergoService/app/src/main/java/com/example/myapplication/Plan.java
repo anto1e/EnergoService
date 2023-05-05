@@ -99,12 +99,12 @@ public class Plan {
                                     tempView.setScaleY(Variables.lastScaletype);
                                     tempView.setBackgroundColor(Color.parseColor("#808080"));
                                 }       //Иначе устанавливаем ему координаты нажатия
-                                tempView.post(new Runnable() {
+                                tempView.post(new Runnable() {      //После появления маркера - создаем светильник
                                     @Override
                                     public void run() {
                                         tempView.setX(event.getX() - tempView.getWidth() / 2);
                                         tempView.setY(event.getY() - tempView.getHeight() / 2);
-                                        switch (Variables.currentLampsPanelIndex){
+                                        switch (Variables.currentLampsPanelIndex){      //Создаем светильник в зависимости от его типа
                                             case 0:
                                                 spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsVstraivaemieName[Variables.multiplepos], 0,0, 0,0, false, 0,0);
                                                 break;
@@ -238,7 +238,7 @@ public class Plan {
         touchedRoom=null;
     }
 
-    public void setTouchedRoomInfo(){
+    public void setTouchedRoomInfo(){           //Отображения информации о комнате
         if (touchedRoom!=null) {
             Variables.RoomInfo.setVisibility(View.VISIBLE);     //Отображаем данные о комнате
             Variables.roomNumber.setText(touchedRoom.getNumber());
@@ -254,7 +254,7 @@ public class Plan {
             tempText.setText(Integer.toString(touchedRoom.lamps.size()));
             Variables.roomGrid.removeAllViews();
             Variables.showAllPhotos(touchedRoom);
-            if (Variables.roomHeightDefaultCheck.isChecked()) {
+            if (Variables.roomHeightDefaultCheck.isChecked()) {     //Задание высоты по умолчанию
                 if (String.valueOf(Variables.roomHeight.getText()).equals("0.0")) {
                     int index = Variables.roofType.getSelectedItemPosition();
                     Variables.roomHeight.setText(Variables.current_floor.roofHeightDefault.elementAt(index));
@@ -349,14 +349,14 @@ public class Plan {
                             }
                             break;
                         case MotionEvent.ACTION_CANCEL:
-                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_UP:         //Если второй палец отпущен - включение перемещения по плану
                             if (event.getPointerCount() == 1)
                                 isReleased = true;
                             break;
                     }
             }
-                previousX = x;
-                previousY = y;
+                previousX = x;      //Предыдущее значение X
+                previousY = y;      //Предыдущее значение Y
                 return true;
             }
         });
@@ -422,7 +422,7 @@ public class Plan {
                     lamp.setTypeImage(lampName);
                     lamp.setLampRoom(touchedRoom.getNumber());
                     lamp.setImage(imageView);
-                    if (touchedRoom!=null && touchedRoom.lamps.size()==0 && groupIndex==0){
+                    if (touchedRoom!=null && touchedRoom.lamps.size()==0 && groupIndex==0){     //Если добавленный светильника встраиваемый - задаем тип потолка армстронг
                         touchedRoom.setRoofType(1);
                         Variables.roofType.setSelection(1);
                         if (Variables.roomHeightDefaultCheck.isChecked()){
@@ -441,7 +441,7 @@ public class Plan {
                     Variables.current_floor.unusedLamps.add(lamp);          //Добавляем светильник в вектор непривязанных светильников
                     lamp.setView();                 //Добавляем картинку светильника на экран
                 }
-            if (groupIndex == 0 || groupIndex == 1) {
+            if (groupIndex == 0 || groupIndex == 1) {           //Если это встраиваемый или накладной светильник
                 lamp.setType("Люминесцентный");
                 if (groupIndex==0){
                     lamp.setMontagneType(1);
@@ -462,7 +462,7 @@ public class Plan {
                         escapePowerSet=true;
                     }
                 }
-            }else if(groupIndex==2){
+            }else if(groupIndex==2){                    //Если это лампы
                 if (!lampName.equals("lampkll15")) {
                     lamp.setType("Лампа");
                 }else{
@@ -470,7 +470,7 @@ public class Plan {
                     lamp.setPower("15Вт");
                     escapePowerSet=true;
                 }
-            }else if (groupIndex==3){
+            }else if (groupIndex==3){               //Если это светодиодный светильник
                 lamp.setType("Светодиодный");
                 if (lampName.equals("diod4_18") || lampName.equals("diod4_18nakl")){
                     lamp.setComments("Аналог 4*18");
@@ -492,7 +492,7 @@ public class Plan {
                         lamp.setLampsAmount(3);
                     }
                 }
-            }else if (groupIndex==4){
+            }else if (groupIndex==4){           //Если это другой тип светильника
                 if (!lampName.equals("lustranakal") && !lampName.equals("lustrakll")){
                     lamp.setType("Светодиодный");
                     switch (lampName){
@@ -526,7 +526,7 @@ public class Plan {
                         lamp.setLampsAmount(3);
                         escapePowerSet=true;
                 }
-            }else if (groupIndex==5){
+            }else if (groupIndex==5){           //Если это наружное освещение
                 escapePowerSet=true;
                 switch (lampName){
                     case "drlfasad":
@@ -550,8 +550,8 @@ public class Plan {
             }
                 lamp.setPlaceType(placeType);
                 lamp.setGroupIndex(groupIndex);
-                if (!escapePowerSet) {
-                    switch (groupIndex) {
+                if (!escapePowerSet) {      //Если не задан режим игнорирования задания мощности - задаем мощность светильника
+                    switch (groupIndex) {       //В зависимости от группы светильника
                         case 0:
                             lamp.setPower(Variables.lampVstraivaemieNames[pos]);
                             break;
@@ -613,11 +613,6 @@ public class Plan {
             degrees=0;
         System.out.println(degrees);
         return degrees;
-        /*double delta_x = (view.getX() + (event.getX())) - (view.getWidth())/2;
-        double delta_y = view.getHeight()/2 - (view.getY() + (event.getY()));
-        double radians = Math.atan2(delta_y, delta_x);
-        System.out.println(Math.toDegrees(radians));
-        return Math.toDegrees(radians);*/
     }
 
 
@@ -764,6 +759,7 @@ public class Plan {
             Variables.montagneType.setSelection(lamp.getMontagneType());
             Variables.placeType.setSelection(lamp.getPlaceType());
             Variables.showLampsAllPhotos(lamp);
+            //Если это люстры - отображаем информацию о количестве лампочек
             if (lamp.getTypeImage().equals("lustranakal") || lamp.getTypeImage().equals("lustrakll") || lamp.getTypeImage().equals("lustradiod")){
                 Variables.lampAmountText.setVisibility(View.VISIBLE);
                 Variables.lampAmountEdit.setVisibility(View.VISIBLE);
@@ -772,8 +768,8 @@ public class Plan {
                 Variables.lampAmountText.setVisibility(View.GONE);
                 Variables.lampAmountEdit.setVisibility(View.GONE);
             }
-            if (lamp.getPlaceType()==1){
-                if (lamp.getGroupIndex()==5) {
+            if (lamp.getPlaceType()==1){        //Если это наружное освещение
+                if (lamp.getGroupIndex()==5) {                      //Если это прожектора
                     Variables.montagneOutsideTypeTxt.setVisibility(View.VISIBLE);
                     Variables.montagneOutsideType.setVisibility(View.VISIBLE);
                     Variables.positionOutsideTxt.setVisibility(View.VISIBLE);
@@ -790,7 +786,7 @@ public class Plan {
                     Variables.positionOutside.setVisibility(View.VISIBLE);
                     Variables.positionOutside.setSelection(lamp.getPositionOutside());
                 }
-            }else{
+            }else{              //Иначе это другие типы светильников
                 Variables.montagneOutsideTypeTxt.setVisibility(View.GONE);
                 Variables.montagneOutsideType.setVisibility(View.GONE);
                 Variables.positionOutsideTxt.setVisibility(View.GONE);
@@ -803,7 +799,7 @@ public class Plan {
         }
     }
 
-    private void clearInfoLamp(){
+    private void clearInfoLamp(){           //Очистка полей информации о светильнике
         if (!Variables.getMoveFlag()){
         touchedLamp=null;
         }
@@ -825,7 +821,7 @@ public class Plan {
         Variables.clearLampGrid();
     }
 
-    void removeFromEveryWhere(Lamp lamp_to_del){
+    void removeFromEveryWhere(Lamp lamp_to_del){        //Удаление светильника отовсюду
         for (Room room:Variables.current_floor.rooms){
             for (Lamp lamp: room.lamps){
                 if (lamp==lamp_to_del){

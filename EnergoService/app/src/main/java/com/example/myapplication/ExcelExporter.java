@@ -150,12 +150,12 @@ public class ExcelExporter {
                 }
             }
         }*/
-        for (int l=0;l<Variables.floors.size();l++) {
-            if (Objects.equals(Variables.floors.elementAt(l).getName(), Variables.current_floor.getName())) {
-                Floor temp = Variables.floors.elementAt(l);
-                for (int i=0;i<temp.rooms.size();i++){
+        for (int l=0;l<Variables.floors.size();l++) {       //Проходимся по активным этажам
+            if (Objects.equals(Variables.floors.elementAt(l).getName(), Variables.current_floor.getName())) {       //Если этаж от данного здания
+                Floor temp = Variables.floors.elementAt(l);         //Временный этаж
+                for (int i=0;i<temp.rooms.size();i++){              //Комнаты временного этажа
                     for (int j=i;j<temp.rooms.size();j++) {
-                        try{
+                        try{        //Сортировка комнат по номеру в порядке возрастания
                         if (Double.parseDouble(temp.rooms.elementAt(i).getNumber()) > Double.parseDouble(temp.rooms.elementAt(j).getNumber())) {
                             Room tempRoom = temp.rooms.elementAt(i);
                             temp.rooms.set(i, temp.rooms.elementAt(j));
@@ -166,30 +166,31 @@ public class ExcelExporter {
                     }
                 }
                 }
-                Variables.copyFile(temp.getImage(),path);
-                Variables.refreshLampsToRooms(temp);
+                Variables.copyFile(temp.getImage(),path);       //Копирование файла
+                Variables.refreshLampsToRooms(temp);            //Перепривязка светильников к комнатам
                 //Variables.refreshLampsToRooms(temp);        //Перепривязка светильников к помещениям
-                for (int i = 0; i < temp.rooms.size(); i++) {
+                for (int i = 0; i < temp.rooms.size(); i++) {       //Проходимся по комнатам этажа
                     int count = 0;
-                    Vector<String> types = new Vector<String>();
+                    Vector<String> types = new Vector<String>();        //Вектор с типами светильников
                     Vector<String> typesImages = new Vector<String>();
-                    Room room = temp.rooms.elementAt(i);
-                    Vector<Lamp> lamps = room.getLamps();
-                    for (int j = 0; j < lamps.size(); j++) {        //Типы светильников
-                        String comments = lamps.elementAt(j).getComments();
+                    Room room = temp.rooms.elementAt(i);            //Временная комната
+                    Vector<Lamp> lamps = room.getLamps();           //Вектор со светильниками временной комнаты
+                    for (int j = 0; j < lamps.size(); j++) {        //Задание типов светильников в Вектор
+                        String comments = lamps.elementAt(j).getComments();         //Комментарии светильника
                         if (lamps.elementAt(j).getTypeImage().equals("lampdiodspot") || lamps.elementAt(j).getTypeImage().equals("lampnakalspot") || lamps.elementAt(j).getTypeImage().equals("lampkll15spot")){
-                            comments+="Спот";
-                        }else {
+                            comments+="Спот";       //Если это спот - добавляем к комментам спот
+                        }else {             //Иначе если это лампа - добавляем к комментам - плафон
                             if (lamps.elementAt(j).getGroupIndex() == 2)
                                 comments += "Плафон";
                         }
+                        //Если это люстра - добавляем к комментам люстра
                         if (lamps.elementAt(j).getTypeImage().equals("lustranakal") || lamps.elementAt(j).getTypeImage().equals("lustrakll") || lamps.elementAt(j).getTypeImage().equals("lustradiod")){
-                            switch (lamps.elementAt(j).getTypeImage()){
+                            switch (lamps.elementAt(j).getTypeImage()){     //Добавляем к комментам количество и тип ламп в люстре
                                 case "lustranakal":comments+="Люстра на "+lamps.elementAt(j).getLampsAmount()+" ЛН ламп";break;
                                 case "lustrakll":comments+="Люстра на "+lamps.elementAt(j).getLampsAmount()+" КЛЛ ламп";break;
                                 case "lustradiod":comments+="Люстра на "+lamps.elementAt(j).getLampsAmount()+" СД ламп";break;
                             }
-                        }
+                        }           //Если такого типа еще нет - добавляем
                             if (!types.contains(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + comments)) {
                             types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + comments);
                         }
@@ -201,12 +202,13 @@ public class ExcelExporter {
                         String otherInfo="";
                         int lustrsCount=0;
                         for (int z = 0; z < lamps.size(); z++) {
-                            String comments = lamps.elementAt(z).getComments();
+                            String comments = lamps.elementAt(z).getComments();     //Комментарии светильника
                             if (lamps.elementAt(z).getTypeImage().equals("lampdiodspot") || lamps.elementAt(z).getTypeImage().equals("lampnakalspot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot")){
-                                comments+="Спот";
+                                comments+="Спот";       //Если это спорт - добавляем в комменты спот
                             }else
-                            if (lamps.elementAt(z).getGroupIndex()==2)
+                            if (lamps.elementAt(z).getGroupIndex()==2)      //Если это лампа - добавляем в комменты плафон
                                 comments+="Плафон";
+                            //Если это люстра - добавляем в комменты люстру и указываем тип и количество ламп в ней
                             if (lamps.elementAt(z).getTypeImage().equals("lustranakal") || lamps.elementAt(z).getTypeImage().equals("lustrakll") || lamps.elementAt(z).getTypeImage().equals("lustradiod")){
                                 switch (lamps.elementAt(z).getTypeImage()){
                                     case "lustranakal":comments+="Люстра на "+lamps.elementAt(z).getLampsAmount()+" ЛН ламп";break;
@@ -214,19 +216,20 @@ public class ExcelExporter {
                                     case "lustradiod":comments+="Люстра на "+lamps.elementAt(z).getLampsAmount()+" СД ламп";break;
                                 }
                             }
+                            //Если есть совпадение с существующим типом
                             if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " " + comments)) {
                                 //if (lamps.elementAt(z).getComments()==null){
-                                count++;
+                                count++;        //Увеличиваем значение счетчика количества светильников
                                 type = lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower();
                                 comm = lamps.elementAt(z).getComments();
-                                montagneType = Variables.montagneTypeArr[lamps.elementAt(z).getMontagneType()];
+                                montagneType = Variables.montagneTypeArr[lamps.elementAt(z).getMontagneType()];     //Тип монтажа
                                 if (lamps.elementAt(z).getTypeImage().equals("lampdiodspot") || lamps.elementAt(z).getTypeImage().equals("lampnakalspot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot")){
-                                    otherInfo="Спот";
+                                    otherInfo="Спот";       //Если светильник спот - пишем в комменты спот
                                 }else
                                 if (lamps.elementAt(z).getGroupIndex()==2)
-                                    otherInfo="Плафон";
+                                    otherInfo="Плафон";     //Если светильник лампа - пишем тип плафон
                                 if (lamps.elementAt(z).getTypeImage().equals("lustranakal") || lamps.elementAt(z).getTypeImage().equals("lustrakll") || lamps.elementAt(z).getTypeImage().equals("lustradiod")){
-                                    switch (lamps.elementAt(z).getTypeImage()){
+                                    switch (lamps.elementAt(z).getTypeImage()){     //Если светильник люстра - пишем количество и тип ламп в люстре
                                         case "lustranakal":lustrsCount++;otherInfo = lustrsCount+ " люстр на " + lamps.elementAt(z).getLampsAmount() + " ЛН ламп";count+=(lamps.elementAt(z).getLampsAmount()-1);break;
                                         case "lustrakll":lustrsCount++;otherInfo = lustrsCount+ " люстр на " + lamps.elementAt(z).getLampsAmount() + " КЛЛ ламп";count+=(lamps.elementAt(z).getLampsAmount()-1);break;
                                         case "lustradiod":lustrsCount++;otherInfo = lustrsCount+ " люстр на " + lamps.elementAt(z).getLampsAmount() + " СД ламп";count+=(lamps.elementAt(z).getLampsAmount()-1);break;
@@ -237,13 +240,13 @@ public class ExcelExporter {
                                 //}
                             }
                         }
-                        if (count > 0) {
+                        if (count > 0) {        //Если есть хотя бы один светильник - записываем в бдр
                             writeToFile(temp,room, type, count, comm,"0",montagneType,otherInfo,false,"",false);       //Запись данных в файл
                         }
                         count = 0;
                     }
                 }
-                if (temp.unusedLamps.size()>0) {
+                if (temp.unusedLamps.size()>0) {            //Проходим по неиспользуемым светильникам
                     int count = 0;
                     Vector<String> types = new Vector<String>();
                     Vector<Lamp> lamps = temp.unusedLamps;
@@ -290,7 +293,7 @@ public class ExcelExporter {
                                 }
                             }
                             if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " " + comments+" "+lamps.elementAt(z).getLampRoom()+" "+lamps.elementAt(z).getPositionOutside()+" "+lamps.elementAt(z).isStolb())) {
-                                //if (lamps.elementAt(z).getComments()==null){
+                                //if (lamps.elementAt(z).getComments()==null){      //Если это наружный светильник
                                 count++;
                                 type = lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower();
                                 comm = lamps.elementAt(z).getComments();

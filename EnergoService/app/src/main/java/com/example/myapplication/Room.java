@@ -19,12 +19,13 @@ public class Room {
     private int days=0;         //Дни работы
     private int hoursPerDay=0;     //Часы работы по будням
 
-    private int hoursPerWeekend=0;     //Часы работы по выходным
-    private int hoursPerSunday=0;
+    private int hoursPerWeekend=0;     //Часы работы по субботам
+    private int hoursPerSunday=0;       //Часы работы по воскресеньям
     private Polygon polygon;                //Многоугольник, построенный по координатам точек помещения
     public double[] arrayX;                 //Массив координат Х точек помещения
     public double[] arrayY;                 //Массив координат У точек помещения
     Vector<String> photoPaths = new Vector<String>();       //Вектор путей к фотографиям комнаты
+    public Vector<Lamp> lamps = new Vector<>();       //Список светильников в помещении
 
     public Room()
     {
@@ -58,7 +59,6 @@ public class Room {
         this.roofType = roofType;
     }
 
-    public Vector<Lamp> lamps = new Vector<>();       //Список светильников в помещении
 
 
 

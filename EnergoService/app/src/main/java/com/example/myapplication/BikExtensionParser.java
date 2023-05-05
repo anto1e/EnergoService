@@ -70,12 +70,14 @@ public class BikExtensionParser {
         Variables.planLay.setScaleY(floor.scale);   //Задаем этажу приближение
         if (Variables.typeOpening==0 && Variables.current_floor!=null) {        //Если открываем в текущей вкладке - переназначаем текущий этаж
             Variables.floors.set(Variables.floors.indexOf(Variables.current_floor), floor);
+        }else {
+            Variables.floors.add(floor);
         }
         currentFile = new File(path);
         BufferedReader reader;
         BufferedWriter writer;
         try {           //Если открываем в текущей вкладке - очищаем все комнаты текущео этажа
-            if (Variables.current_floor!=null && Variables.floors.size()>0 && Variables.typeOpening==0) {
+            if ((Variables.current_floor!=null && Variables.floors.size()>0 && Variables.typeOpening==0)) {
                 {
                     Variables.current_floor.rooms.clear();
                 }
@@ -138,16 +140,16 @@ public class BikExtensionParser {
                     if (line.length()>10 && line.charAt(0) != '/'){
                         String[] split_number = line.split("%");
                         if (split_number.length>1){
-                            String number = split_number[0];
+                            String number = split_number[0];        //Номер помещения
                             String[] split_room_info = split_number[1].split("@");
                             String height = split_room_info[0];
-                            int typeRoom = Integer.parseInt(split_room_info[1]);
-                            int days = Integer.parseInt(split_room_info[2]);
-                            int hours = Integer.parseInt(split_room_info[3]);
-                            int hoursPerWeekend = Integer.parseInt(split_room_info[4]);
-                            int hoursPerSunday = Integer.parseInt(split_room_info[5]);
-                            int roofType = Integer.parseInt(split_room_info[6]);
-                            String comments;
+                            int typeRoom = Integer.parseInt(split_room_info[1]);    //Тип помещения
+                            int days = Integer.parseInt(split_room_info[2]);         //Дни в неделю
+                            int hours = Integer.parseInt(split_room_info[3]);        //Часы работы в неделю
+                            int hoursPerWeekend = Integer.parseInt(split_room_info[4]);     //Часы работы в субботу
+                            int hoursPerSunday = Integer.parseInt(split_room_info[5]);      //Часы работы в выходные
+                            int roofType = Integer.parseInt(split_room_info[6]);            //Тип крыши
+                            String comments;                //Комментарии
                             if (split_room_info.length==7){
                                 comments="";
                             }else {
@@ -156,10 +158,10 @@ public class BikExtensionParser {
                                 if (Objects.equals(comments, "null"))
                                     comments = "";
                             }
-                            double cordX = Double.parseDouble(split_room_info[8]);
-                            double cordY = Double.parseDouble(split_room_info[9]);
-                            Room room = Variables.getRoomByNumberAndCoords(number,cordX,cordY,Variables.current_floor);
-                            if (room!=null) {
+                            double cordX = Double.parseDouble(split_room_info[8]);          //Первая координата комнаты по X
+                            double cordY = Double.parseDouble(split_room_info[9]);          //Первая координата комнаты по Y
+                            Room room = Variables.getRoomByNumberAndCoords(number,cordX,cordY,Variables.current_floor);     //Находим нужную комнату
+                            if (room!=null) {           //Если комната найдена
                                 if (split_room_info.length>10){      //Если есть пути к фотографиям и сами файлы существуют - добавляем
                                     String paths = split_room_info[10];
                                     String[] split_room_photos = paths.split("!");
@@ -188,23 +190,23 @@ public class BikExtensionParser {
                     if (line.length()>15 && line.charAt(0) != '/'){
                         String[] split_number = line.split("%");
                         if (split_number.length>1){
-                            String number = split_number[0];
+                            String number = split_number[0];        //номер комнаты, к которому привязан
                             String[] split_room_info = split_number[1].split("@");
-                            String type = split_room_info[0];
-                            String power = split_room_info[1];
-                            String type_image = split_room_info[2];
-                            String comments = split_room_info[3];
+                            String type = split_room_info[0];       //Тип светильника
+                            String power = split_room_info[1];      //Мощность светильника
+                            String type_image = split_room_info[2];     //Тип изображения
+                            String comments = split_room_info[3];       //Комментарии
                             if (Objects.equals(comments, "null"))
                                 comments="";
-                            float cordX = Float.parseFloat(split_room_info[4]);
-                            float cordY = Float.parseFloat(split_room_info[5]);
-                            float scale = Float.parseFloat(split_room_info[6]);
-                            float rotationAngle = Float.parseFloat(split_room_info[7]);
-                            String lampRoom = split_room_info[8];
-                            String usedOrNot = split_room_info[9];
-                            Room room=null;
-                            if (!Objects.equals(number, "-1")) {
-                                room = Variables.getRoomByNumber(number,cordX,cordY,scale,Variables.current_floor);
+                            float cordX = Float.parseFloat(split_room_info[4]);     //Координата X
+                            float cordY = Float.parseFloat(split_room_info[5]);     //Координата Y
+                            float scale = Float.parseFloat(split_room_info[6]);     //Коэффициент размера
+                            float rotationAngle = Float.parseFloat(split_room_info[7]);     //Угол поворота
+                            String lampRoom = split_room_info[8];       //Комната, к которой привязан светильник
+                            String usedOrNot = split_room_info[9];      //Поле используется или нет
+                            Room room=null;             //Комната, к которой привязан
+                            if (!Objects.equals(number, "-1")) {            //Если светильник привязан к какой-то комнате
+                                room = Variables.getRoomByNumber(number,cordX,cordY,scale,Variables.current_floor);         //Поиск комнтаты к которой привязан светильник
                             }
                                 Lamp lamp = new Lamp();
                                 lamp.setType(type);
@@ -227,12 +229,12 @@ public class BikExtensionParser {
                                 Variables.plan.setListener(imageView);
                                 lamp.setImage(imageView);
                                 Variables.plan.rotateImg(rotationAngle,imageView,type_image,-1);
-                                int montagneType = Integer.parseInt(split_room_info[10]);
-                                int placeType = Integer.parseInt(split_room_info[11]);
-                                int groupIndex = Integer.parseInt(split_room_info[12]);
-                                int lampsAmount = Integer.parseInt(split_room_info[13]);
-                                int positionOutside = Integer.parseInt(split_room_info[14]);
-                                boolean isStolb = Boolean.parseBoolean(split_room_info[15]);
+                                int montagneType = Integer.parseInt(split_room_info[10]);       //Тип монтажа светильника
+                                int placeType = Integer.parseInt(split_room_info[11]);          //Местонахождения светильника
+                                int groupIndex = Integer.parseInt(split_room_info[12]);         //Индекс группы светильника
+                                int lampsAmount = Integer.parseInt(split_room_info[13]);        //Количество ламп в светильнике(для люстр)
+                                int positionOutside = Integer.parseInt(split_room_info[14]);    //Место светильнка снаружи
+                                boolean isStolb = Boolean.parseBoolean(split_room_info[15]);    //Находится ли светильник на столбе(для наружного освещения)
                             if (split_room_info.length>16){      //Если есть пути к фотографиям и сами файлы существуют - добавляем
                                 String paths = split_room_info[16];
                                 String[] split_room_photos = paths.split("!");
@@ -281,15 +283,16 @@ public class BikExtensionParser {
             roomInfo=false;
             lampsInfo=false;
             floor.setImage(Variables.selectedfile);     //Передаем картинку этажа в созданный этаж
-            Variables.floors.add(floor);            //Добавляем этаж в вектор этажей
             if (Variables.typeOpening==0){      //Если открываем в текущей вкладке - меняем вкладку
-            if (Buttons.active==null){      //Если нужно добавить новую вкладку
-                Variables.buttons.addPanel(floor.getFloor());
-            }else{      //Иначе заменяем текущую
-                Variables.FloorPanelsVec.remove(Buttons.active);
-                Variables.floorsPanels.removeView(Buttons.active);
-                Variables.buttons.addPanel(floor.getFloor());
-            }
+                if (!Variables.exportingJpg) {
+                    if (Buttons.active == null) {      //Если нужно добавить новую вкладку
+                        Variables.buttons.addPanel(floor.getFloor());
+                    } else {      //Иначе заменяем текущую
+                        Variables.FloorPanelsVec.remove(Buttons.active);
+                        Variables.floorsPanels.removeView(Buttons.active);
+                        Variables.buttons.addPanel(floor.getFloor());
+                    }
+                }
             }else{              //Если создаем новую вкладку - добавляем новую вкладку
                 Variables.buttons.addPanel(floor.getFloor());
             }
@@ -301,6 +304,7 @@ public class BikExtensionParser {
                     }
                 }
             }
+            Variables.exportingJpg=false;
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
