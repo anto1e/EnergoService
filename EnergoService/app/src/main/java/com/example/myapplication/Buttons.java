@@ -204,8 +204,10 @@ public class Buttons {
         screenShotBtn.setOnTouchListener(new View.OnTouchListener() {       //Активация кнопки создания скриншота
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                SavePlanToJpgThread thread = new SavePlanToJpgThread(); //Создаем новый поток для экспорта плана в JPG
-                thread.start();     //Запускаем поток
+                SaveFileThread thread = new SaveFileThread();
+                thread.start();
+                SavePlanToJpgThread thread1 = new SavePlanToJpgThread(); //Создаем новый поток для экспорта плана в JPG
+                thread1.start();     //Запускаем поток
                 return false;
             }
         });
@@ -410,21 +412,23 @@ public class Buttons {
                             Variables.moveCopiedBufVector(Variables.plan.tempView.getX(),Variables.plan.tempView.getY());
                             for (Lamp lamp:Variables.copyBuffer){   //Для каждого светильника в буфере
                                 lamp.setView();     //Добавляем на экран
-                                Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),lamp.getTypeImage(),-1);      //Поворачиваем
-                            }
-                            for (Lamp lamp : Variables.copyBuffer) {        //Для каждого вставленного светильника ищем комнату куда привязать
-                                boolean found = false;
-                                for (Room room : Variables.current_floor.rooms) {
-                                    if (room.detectTouch(lamp.getImage().getX(), lamp.getImage().getY())) {
-                                        room.lamps.add(lamp);
-                                        lamp.setLampRoom(room.getNumber());
-                                        found = true;
+                                lamp.getImage().post(new Runnable() {
+                                    @Override
+                                    public void run() {boolean found = false;
+                                            for (Room room : Variables.current_floor.rooms) {
+                                                if (room.detectTouch(lamp.getImage().getX()+(lamp.getImage().getWidth()/2), lamp.getImage().getY()+(lamp.getImage().getHeight()/2))) {
+                                                    room.lamps.add(lamp);
+                                                    lamp.setLampRoom(room.getNumber());
+                                                    found = true;
+                                                }
+                                            }
+                                            if (!found) {       //Если не нашли - комната null
+                                                Variables.current_floor.unusedLamps.add(lamp);
+                                                lamp.getImage().setBackgroundColor(Variables.activity.getResources().getColor(R.color.blue));
+                                            }
                                     }
-                                }
-                                if (!found) {       //Если не нашли - комната null
-                                    Variables.current_floor.unusedLamps.add(lamp);
-                                    lamp.getImage().setBackgroundColor(Variables.activity.getResources().getColor(R.color.blue));
-                                }
+                                });
+                                Variables.plan.rotateImg(lamp.getRotationAngle(),lamp.getImage(),lamp.getTypeImage(),-1);      //Поворачиваем
                             }
                             Variables.copyBuffer.clear();       //Очистка буфера
                             copyToBufBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
@@ -516,8 +520,8 @@ public class Buttons {
                                 imageView.setImageResource(resourceId);
                                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
                                 imageView.setLayoutParams(params);
-                                imageView.setScaleX(Variables.lastScaletype);
-                                imageView.setScaleY(Variables.lastScaletype);
+                                imageView.setScaleX(Variables.plan.touchedLamp.getImage().getScaleX());
+                                imageView.setScaleY(Variables.plan.touchedLamp.getImage().getScaleY());
                                 Variables.plan.setListener(imageView);
                                 imageView.setX(Variables.plan.touchedLamp.getImage().getX());
                                 imageView.setY(Variables.plan.touchedLamp.getImage().getY());
@@ -552,6 +556,11 @@ public class Buttons {
                             Variables.lampType.setText("");
                             Variables.lampPower.setText("");
                             Variables.lampComments.setText("");
+                            Variables.montagneTypeTxt.setVisibility(View.GONE);
+                            Variables.montagneType.setVisibility(View.GONE);
+                            Variables.montagneTypeTxtTwo.setVisibility(View.VISIBLE);
+                            Variables.montagneTypeTwo.setVisibility(View.VISIBLE);
+                            Variables.montagneTypeTwo.setSelection(0);
                         }else{      //Деактивация
                             if (!Variables.moveOnlySelectedZone) {  //Выключение функцию выделения и подтверждающей кнопки
                                 disableConfirmBtn();
@@ -640,6 +649,11 @@ public class Buttons {
                                     lamp.setComments(old_comments + " "+txt);
                                 }else{
                                     lamp.setComments(txt);
+                                }
+                            }
+                            if (Variables.montagneTypeTwo.getSelectedItemPosition()!=0){
+                                for (Lamp lamp:Variables.copyVector){
+                                    lamp.setMontagneType(Variables.montagneTypeTwo.getSelectedItemPosition()-1);
                                 }
                             }
                         }
@@ -1533,6 +1547,7 @@ public class Buttons {
             }
         });
 
+
         Variables.roofType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -1858,6 +1873,13 @@ public class Buttons {
         }
         Variables.copyVector.clear();
         Variables.plan.disableListenerFromPlan();
+        Variables.montagneTypeTxt.setVisibility(View.VISIBLE);
+        Variables.montagneType.setVisibility(View.VISIBLE);
+        if (Variables.plan.touchedLamp!=null){
+            Variables.montagneType.setSelection(Variables.plan.touchedLamp.getMontagneType());
+        }
+        Variables.montagneTypeTxtTwo.setVisibility(View.GONE);
+        Variables.montagneTypeTwo.setVisibility(View.GONE);
     }
 
     private void verifyPermissions(boolean type){       //Получение разрешений на использование камеры

@@ -190,7 +190,6 @@ public class MainActivity extends AppCompatActivity {
 
                                 // Starting the thread
                                 run.start();
-                                return;
                             }
                             //Variables.buttons.drawLamps();
                             //Variables.filePath="";

@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SavePlanToJpgThread extends Thread{
     public void run() {
         try {
+            Variables.planLayCleared = true;
             Variables.exportingJpg=true;
             ImageView rotationElement = Variables.loadingImage;     //Колесо вращения
             Animation an = new RotateAnimation(0.0f, 360.0f,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f); //Анимация
@@ -85,7 +86,7 @@ public class SavePlanToJpgThread extends Thread{
 
             File mediaStorageDir = new File(path1+"/"+Variables.current_floor.getName());
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                String imageName = "IMG_" + timeStamp + ".jpg";
+                String imageName = Variables.current_floor.getName()+";"+Variables.current_floor.getAdress()+";"+Variables.current_floor.getFloor()+";" + timeStamp + ".jpg";
 
             File f = new File(mediaStorageDir + File.separator + imageName);
             FileOutputStream fo = null;
@@ -98,9 +99,9 @@ public class SavePlanToJpgThread extends Thread{
             }
                 Variables.planLay.removeAllViews();
                 Variables.planLay.addView(Variables.image);
-                    Variables.planLayCleared=false;
                     Variables.typeOpening=0;
                     Variables.image.setImageResource(0);
+                Variables.planLayCleared=false;
                 Variables.image.setImageURI(Variables.selectedfile);
             });
             Variables.activity.runOnUiThread(() -> {           //Выключаем вращение и выводим текст об удачном экспорте в эксель

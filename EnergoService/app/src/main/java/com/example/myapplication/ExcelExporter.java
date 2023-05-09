@@ -191,8 +191,8 @@ public class ExcelExporter {
                                 case "lustradiod":comments+="Люстра на "+lamps.elementAt(j).getLampsAmount()+" СД ламп";break;
                             }
                         }           //Если такого типа еще нет - добавляем
-                            if (!types.contains(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + comments)) {
-                            types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + comments);
+                            if (!types.contains(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getMontagneType()+" " + comments)) {
+                            types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " "+lamps.elementAt(j).getMontagneType()+" " + comments);
                         }
                     }
                     for (int j = 0; j < types.size(); j++) {       //Находим и считаем светильники, чьи типы есть в Векторе
@@ -217,7 +217,7 @@ public class ExcelExporter {
                                 }
                             }
                             //Если есть совпадение с существующим типом
-                            if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " " + comments)) {
+                            if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " "+lamps.elementAt(z).getMontagneType()+" " + comments)) {
                                 //if (lamps.elementAt(z).getComments()==null){
                                 count++;        //Увеличиваем значение счетчика количества светильников
                                 type = lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower();
@@ -264,8 +264,8 @@ public class ExcelExporter {
                                 case "lustradiod":comments+="Люстра на "+lamps.elementAt(j).getLampsAmount()+" СД ламп";break;
                             }
                         }
-                        if (!types.contains(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + comments+" "+lamps.elementAt(j).getLampRoom()+" "+lamps.elementAt(j).getPositionOutside()+" "+lamps.elementAt(j).isStolb())) {
-                            types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + comments+" "+lamps.elementAt(j).getLampRoom()+" "+lamps.elementAt(j).getPositionOutside()+" "+lamps.elementAt(j).isStolb());
+                        if (!types.contains(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " "+ lamps.elementAt(j).getMontagneType()+" " + comments+" "+lamps.elementAt(j).getLampRoom()+" "+lamps.elementAt(j).getPositionOutside()+" "+lamps.elementAt(j).isStolb())) {
+                            types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() +" "+lamps.elementAt(j).getMontagneType()+ " " + comments+" "+lamps.elementAt(j).getLampRoom()+" "+lamps.elementAt(j).getPositionOutside()+" "+lamps.elementAt(j).isStolb());
                         }
                     }
                     for (int j = 0; j < types.size(); j++) {       //Находим и считаем светильники, чьи типы есть в Векторе
@@ -292,7 +292,7 @@ public class ExcelExporter {
                                     case "lustradiod":comments+="Люстра на "+lamps.elementAt(z).getLampsAmount()+" СД ламп";break;
                                 }
                             }
-                            if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " " + comments+" "+lamps.elementAt(z).getLampRoom()+" "+lamps.elementAt(z).getPositionOutside()+" "+lamps.elementAt(z).isStolb())) {
+                            if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " "+lamps.elementAt(z).getMontagneType()+" " + comments+" "+lamps.elementAt(z).getLampRoom()+" "+lamps.elementAt(z).getPositionOutside()+" "+lamps.elementAt(z).isStolb())) {
                                 //if (lamps.elementAt(z).getComments()==null){      //Если это наружный светильник
                                 count++;
                                 type = lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower();

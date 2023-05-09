@@ -115,6 +115,8 @@ public class Variables {
     static Spinner montagneOutsideType;         //Спинер наружного монтажа свеитльника
     static TextView positionOutsideTxt;         //Текст позиции снаружи светильника
     static boolean exportingJpg=false;
+    static TextView montagneTypeTxtTwo;
+    static Spinner montagneTypeTwo;
     static Spinner positionOutside;             //Спинер позиции снаружи светильника
     static TextView isStolbTxt;                 //Текст находится ли светильник на столбе
     static CheckBox isStolbCheck;               //Чекбокс находится ли светильник на столбе
@@ -149,6 +151,7 @@ public class Variables {
     static String [] positionOutsideArr = {"Крыльцо","Фасад","Территория","Футбольное поле","Игровая площадка"};        //Типы расположения светильника снаружи
     static String[] roofTypes = {"Бетон","Армстронг","ПВХ","Гипрок"};        //Типы потолков
     static String[] montagneTypeArr = {"Накладной","Встраиваемый","Подвесной"};        //Типы монтажа светильника
+    static String[] montagneTypeTwoArr = {"Не указано","Накладной","Встраиваемый","Подвесной"};        //Типы монтажа светильника
     static String[] placeTypeArr = {"В здании","Наружный"};        //Типы нахождения светильника(снаружи/в здании)
     static String[] typeOfBuildingArr = {"Детский сад","Школа","Больница"};         //Тип здания
     static String[] typesOfRoomsDetSad = { "Игровая","Гардероб", "Спальная", "Санузел", "Коридор", "Тамбур","Лестница","Кабинет","Пищеблок","Прачечная","Моечная","Кладовая","Служебное помещение","Спортзал","Актовый зал","Медкабинет"};            //Типы помещений(детские сады)
@@ -239,6 +242,8 @@ public class Variables {
 
 
     public static void init(){                //Инициализация переменных
+        montagneTypeTwo = activity.findViewById(R.id.montagneTypeTwo);
+        montagneTypeTxtTwo = activity.findViewById(R.id.montagneTypeTxtTwo);
         imageWrap = activity.findViewById(R.id.imageWrap);
         montagneTypeTxt = activity.findViewById(R.id.montagneTypeTxt);
         isStolbCheck = activity.findViewById(R.id.isStolbCheck);
@@ -346,6 +351,9 @@ public class Variables {
         adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,positionOutsideArr);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         positionOutside.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,montagneTypeTwoArr);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        montagneTypeTwo.setAdapter(adapter);
     }
 
     public static void clearFields(){           //Очистка полей при переключении плана
@@ -465,7 +473,7 @@ public class Variables {
         for (Room room: floor.rooms){
             Vector<Lamp> tempVec= new Vector<Lamp>(room.lamps);
             for (Lamp lamp: tempVec){
-                Room temp = getRoomByNumber(lamp.getLampRoom(),lamp.getImage().getX(),lamp.getImage().getY(),lamp.getImage().getScaleX(),floor);
+                Room temp = getRoomByNumber(lamp.getLampRoom(),lamp.getImage().getX()+(lamp.getImage().getWidth()/2),lamp.getImage().getY()+(lamp.getImage().getHeight()/2),lamp.getImage().getScaleX(),floor);
                 if (temp!=null && !temp.lamps.contains(lamp)){
                     temp.lamps.add(lamp);
                     if (floor.unusedLamps.contains(lamp)){
@@ -477,7 +485,7 @@ public class Variables {
         }
         Vector<Lamp> tempVec = new Vector<Lamp>(floor.unusedLamps);
          for (Lamp lamp: tempVec){
-            Room temp = getRoomByNumber(lamp.getLampRoom(),lamp.getImage().getX(),lamp.getImage().getY(),lamp.getImage().getScaleX(),floor);
+            Room temp = getRoomByNumber(lamp.getLampRoom(),lamp.getImage().getX()+(lamp.getImage().getWidth()/2),lamp.getImage().getY()+(lamp.getImage().getHeight()/2),lamp.getImage().getScaleX(),floor);
             if (temp!=null && !temp.lamps.contains(lamp)){
                 temp.lamps.add(lamp);
                 if (floor.unusedLamps.contains(lamp)){
