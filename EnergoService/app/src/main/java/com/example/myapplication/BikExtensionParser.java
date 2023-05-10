@@ -300,7 +300,7 @@ public class BikExtensionParser {
             if (Variables.current_floor!=null) {
                 for (Room room : Variables.current_floor.rooms) {
                     if (room.getDays() == 0) {
-                        room.setDays(Integer.parseInt(String.valueOf(Variables.daysOfWorkDefault.getSelectedItem())));
+                        room.setDays(Integer.parseInt(String.valueOf(Variables.daysOfWorkDefault.getSelectedItemPosition())));
                     }
                 }
             }

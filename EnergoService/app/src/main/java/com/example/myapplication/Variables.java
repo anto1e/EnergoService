@@ -31,6 +31,7 @@ import java.util.Vector;
 public class Variables {
     static boolean isExpotedExcel=true;     //Флаг экспорта в эксель
     static ListView listView=null;          //Список светильников
+    static String path1;
     static Vector<Lamp> copyBuffer = new Vector<Lamp>();        //Буффер копирования
 
     static int typeOpening=0;           //Тип открытия нового файла
@@ -242,6 +243,7 @@ public class Variables {
 
 
     public static void init(){                //Инициализация переменных
+        path1 = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
         montagneTypeTwo = activity.findViewById(R.id.montagneTypeTwo);
         montagneTypeTxtTwo = activity.findViewById(R.id.montagneTypeTxtTwo);
         imageWrap = activity.findViewById(R.id.imageWrap);

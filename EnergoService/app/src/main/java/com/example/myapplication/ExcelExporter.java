@@ -28,8 +28,6 @@ import java.util.Vector;
 
 public class ExcelExporter {
 
-    String path1 = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
-
     String path;
 
     Workbook workbook;
@@ -41,13 +39,13 @@ public class ExcelExporter {
     public void init() throws Exception {       //Инициализация Эксель файла
         rowCount=4;
         outsideRowCount=4;
-        workbook = new Workbook(path1 + "/bdr.xlsx");
+        workbook = new Workbook(Variables.path1 + "/bdr.xlsx");
         worksheets = workbook.getWorksheets();
         sheet = worksheets.get(1);
         cells = sheet.getCells();
     }
     public void exportToExel() throws Exception {           //Функция экспорта в Эксель(дорабатывается)
-        File directory = new File(path1+"/"+Variables.current_floor.getName());
+        File directory = new File(Variables.path1+"/"+Variables.current_floor.getName());
         if (! directory.exists()){
             directory.mkdir();
             // If you require it to make the entire directory path including parents,
@@ -251,6 +249,9 @@ public class ExcelExporter {
                     Vector<String> types = new Vector<String>();
                     Vector<Lamp> lamps = temp.unusedLamps;
                     for (int j = 0; j < lamps.size(); j++) {        //Типы светильников
+                        if (lamps.elementAt(j).getLampRoom().equals("46")){
+                            System.out.println("");
+                        }
                         String comments = lamps.elementAt(j).getComments();
                         if (lamps.elementAt(j).getTypeImage().equals("lampdiodspot") || lamps.elementAt(j).getTypeImage().equals("lampnakalspot") || lamps.elementAt(j).getTypeImage().equals("lampkll15spot")){
                             comments+="Спот";
@@ -279,6 +280,9 @@ public class ExcelExporter {
                         String otherInfo="";
                         int lustrsCount=0;
                         for (int z = 0; z < lamps.size(); z++) {
+                            if (lamps.elementAt(z).getLampRoom().equals("46") && j==2){
+                                System.out.println("");
+                            }
                             String comments = lamps.elementAt(z).getComments();
                             if (lamps.elementAt(z).getTypeImage().equals("lampdiodspot") || lamps.elementAt(z).getTypeImage().equals("lampnakalspot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot")){
                                 comments+="Спот";

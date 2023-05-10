@@ -171,10 +171,8 @@ public class MainActivity extends AppCompatActivity {
                 if(v.getHeight() != heightWas && v.getWidth() != widthWas)    //Если размер изображения изменился
                 {
                     if (Variables.filePath!="") {
-                        while (Variables.currentHeight==0 || Variables.currentWidth==0) {
                             Variables.currentHeight = findViewById(R.id.imageView).getHeight();
                             Variables.currentWidth = findViewById(R.id.imageView).getWidth();
-                        }
                         try {   //Парсим файл
                             if (!Variables.planLayCleared) {
                                 Variables.parser.parseFile(Variables.filePath);

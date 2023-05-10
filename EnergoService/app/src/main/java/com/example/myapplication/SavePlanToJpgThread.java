@@ -38,7 +38,12 @@ public class SavePlanToJpgThread extends Thread{
                 rotationElement.setVisibility(View.VISIBLE);
                 rotationElement.setAnimation(an);
             });
-            String path1 = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
+            File directory = new File(Variables.path1+"/"+Variables.current_floor.getName());
+            if (! directory.exists()){
+                directory.mkdir();
+                // If you require it to make the entire directory path including parents,
+                // use directory.mkdirs(); here instead.
+            }
             View layout = LayoutInflater.from(Variables.activity).inflate(R.layout.activity_main, null, false);
             RelativeLayout mContImage = Variables.planLay;
             Variables.activity.runOnUiThread(() -> {        //Включаем вращение
@@ -84,7 +89,7 @@ public class SavePlanToJpgThread extends Thread{
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
 
-            File mediaStorageDir = new File(path1+"/"+Variables.current_floor.getName());
+            File mediaStorageDir = new File(Variables.path1+"/"+Variables.current_floor.getName());
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                 String imageName = Variables.current_floor.getName()+";"+Variables.current_floor.getAdress()+";"+Variables.current_floor.getFloor()+";" + timeStamp + ".jpg";
 
