@@ -825,9 +825,15 @@ public class Buttons {
                                                 Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsDiodsName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
                                                 break;
                                             case 4:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOthersName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsDoskiName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
                                                 break;
                                             case 5:
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsPodvesName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                break;
+                                            case 6:
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOthersName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                break;
+                                            case 7:
                                                 Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOutsideName[Variables.multiplepos],1,Variables.currentLampsPanelIndex,cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
                                                 break;
                                         }
@@ -1497,7 +1503,7 @@ public class Buttons {
                 if (Variables.plan.touchedLamp!=null){
                     Variables.plan.touchedLamp.setPlaceType(Variables.placeType.getSelectedItemPosition());
                     if (Variables.plan.touchedLamp.getPlaceType()==1){
-                        if (Variables.plan.touchedLamp.getGroupIndex()==5) {
+                        if (Variables.plan.touchedLamp.getGroupIndex()==7) {
                             Variables.montagneOutsideTypeTxt.setVisibility(View.VISIBLE);
                             Variables.montagneOutsideType.setVisibility(View.VISIBLE);
                             Variables.positionOutsideTxt.setVisibility(View.VISIBLE);
@@ -1582,7 +1588,7 @@ public class Buttons {
         Variables.montagneOutsideType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (Variables.plan.touchedLamp!=null && Variables.plan.touchedLamp.getGroupIndex()==5){
+                if (Variables.plan.touchedLamp!=null && Variables.plan.touchedLamp.getGroupIndex()==7){
                     Variables.plan.touchedLamp.setMontagneType(Variables.montagneOutsideType.getSelectedItemPosition());
                 }
             }
@@ -1610,7 +1616,7 @@ public class Buttons {
         Variables.isStolbCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (Variables.plan.touchedLamp!=null && Variables.plan.touchedLamp.getGroupIndex()==5){
+                if (Variables.plan.touchedLamp!=null && Variables.plan.touchedLamp.getGroupIndex()==7){
                     if (Variables.isStolbCheck.isChecked()){
                         Variables.plan.touchedLamp.setStolb(true);
                     }else{
@@ -1931,8 +1937,12 @@ public class Buttons {
             }
         }else{
             if (Variables.plan.touchedLamp != null) {
-                imageFileName = Variables.current_floor.getFloor() + ";Помещение:" + Variables.plan.touchedRoom.getNumber() + ";"+Variables.plan.touchedLamp.getType()+" "+Variables.plan.touchedLamp.getPower()+";";
-            }
+                if (Variables.plan.touchedRoom!=null) {
+                    imageFileName = Variables.current_floor.getFloor() + ";Помещение:" + Variables.plan.touchedRoom.getNumber() + ";" + Variables.plan.touchedLamp.getType() + " " + Variables.plan.touchedLamp.getPower() + ";";
+                }else{
+                    imageFileName = Variables.current_floor.getFloor() + ";Наружное освещение:"+Variables.plan.touchedLamp.getType()+" "+Variables.plan.touchedLamp.getPower()+";";
+                }
+                }
         }
 //        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         String path = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));

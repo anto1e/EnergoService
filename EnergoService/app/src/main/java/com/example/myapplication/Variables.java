@@ -151,8 +151,8 @@ public class Variables {
     static String[] montagneOutsideTypeArr = {"Консоль","Кронштейн"};           //Типы монтажа наружного освещения
     static String [] positionOutsideArr = {"Крыльцо","Фасад","Территория","Футбольное поле","Игровая площадка"};        //Типы расположения светильника снаружи
     static String[] roofTypes = {"Бетон","Армстронг","ПВХ","Гипрок"};        //Типы потолков
-    static String[] montagneTypeArr = {"Накладной","Встраиваемый","Подвесной"};        //Типы монтажа светильника
-    static String[] montagneTypeTwoArr = {"Не указано","Накладной","Встраиваемый","Подвесной"};        //Типы монтажа светильника
+    static String[] montagneTypeArr = {"Накладной","Встраиваемый","Настенный","Подвесной"};        //Типы монтажа светильника
+    static String[] montagneTypeTwoArr = {"Не указано","Накладной","Встраиваемый","Настенный","Подвесной"};        //Типы монтажа светильника
     static String[] placeTypeArr = {"В здании","Наружный"};        //Типы нахождения светильника(снаружи/в здании)
     static String[] typeOfBuildingArr = {"Детский сад","Школа","Больница"};         //Тип здания
     static String[] typesOfRoomsDetSad = { "Игровая","Гардероб", "Спальная", "Санузел", "Коридор", "Тамбур","Лестница","Кабинет","Пищеблок","Прачечная","Моечная","Кладовая","Служебное помещение","Спортзал","Актовый зал","Медкабинет"};            //Типы помещений(детские сады)
@@ -178,9 +178,16 @@ public class Variables {
     public static  final Integer[] DiodsImageId = {              //Изображения светодиодных светильников
             R.drawable.diod4_18,R.drawable.diod4_18nakl,R.drawable.diod2_36,R.drawable.lampdiodspot,R.drawable.lustradiod
     };
+    public static  final Integer[] DoskiImageId = {              //Изображения светодиодных светильников
+            R.drawable.diod4_18,R.drawable.diod4_18nakl,R.drawable.diod2_36,R.drawable.lampdiodspot,R.drawable.lustradiod
+    };
+    public static  final Integer[] PodvesImageId = {              //Изображения светодиодных светильников
+    };
+
     public static  final Integer[] OthersImageId = {              //Изображения других светильников
             R.drawable.diod4_18lampsvstr,R.drawable.diod4_18lampsnakl,R.drawable.diod2_36lampsnakl,R.drawable.diod2_18lampsnakl,R.drawable.diod1_36lampsnakl,R.drawable.diod1_18lampsnakl,R.drawable.lustranakal,R.drawable.lustrakll
     };
+
     public static  final Integer[] OutsideImageId = {              //Изображения наружных светильников
             R.drawable.drlfasad,R.drawable.dnatfasad,R.drawable.mglfasad,R.drawable.diodfasad
     };
@@ -200,6 +207,10 @@ public class Variables {
     };
     public static  final Integer[] DiodsImageIdBold = {              //Изображения светодиодных светильников
             R.drawable.diod4_18bold,R.drawable.diod4_18naklbold,R.drawable.diod2_36bold,R.drawable.lampdiodspotbold,R.drawable.lustradiodbold
+    };
+    public static  final Integer[] DoskiImageIdBold = {              //Изображения светодиодных светильников
+    };
+    public static  final Integer[] PodvesImageIdBold = {              //Изображения светодиодных светильников
     };
     public static  final Integer[] OthersImageIdBold = {              //Изображения других светильников
             R.drawable.diod4_18lampsvstrbold,R.drawable.diod4_18lampsnaklbold,R.drawable.diod2_36lampsnaklbold,R.drawable.diod2_18lampsnaklbold,R.drawable.diod1_36lampsnaklbold,R.drawable.diod1_18lampsnaklbold,R.drawable.lustranakalbold,R.drawable.lustrakllbold
@@ -225,6 +236,10 @@ public class Variables {
     public static final String[] lampDiodsNames = {             //Названия светодиодных светильников
             "36Вт","36Вт","36Вт","12Вт","12Вт"
     };
+    public static final String[] lampDoskiNames = {             //Названия светодиодных светильников
+    };
+    public static final String[] lampPodvesNames = {             //Названия светодиодных светильников
+    };
     public static final String[] lampOthersNames = {             //Названия остальных светильников
             "36Вт","36Вт","36Вт","18Вт","18Вт","9Вт","ЛН 60Вт","КЛЛ 15Вт"
     };
@@ -237,6 +252,8 @@ public class Variables {
     public static  final String[] lampsNakladnieName = {"lum4_18nakl","lum2_36","lum2_18","lum1_36","lum1_18","lum2_58","lum2_80","lum4_36","lum4_58","lum4_80"};       //Название ресурса накладных светильников
     public static  final String[] lampsLampsName = {"lampnakal","lampdiod","lampkll15"};        //Название ресурса ламп
     public static  final String[] lampsDiodsName = {"diod4_18","diod4_18nakl","diod2_36","lampdiodspot","lustradiod"};      //Название ресурса светодиодных светильников
+    public static  final String[] lampsDoskiName = {};      //Название ресурса светодиодных светильников
+    public static  final String[] lampsPodvesName = {"diod4_18","diod4_18nakl","diod2_36","lampdiodspot","lustradiod"};      //Название ресурса светодиодных светильников
     public static  final String[] lampsOthersName = {"diod4_18lampsvstr","diod4_18lampsnakl","diod2_36lampsnakl","diod2_18lampsnakl","diod1_36lampsnakl","diod1_18lampsnakl","lustranakal","lustrakll"};        //Название ресурса других светильников
     public static  final String[] lampsOutsideName = {"drlfasad","dnatfasad","mglfasad","diodfasad"};       //Название ресурса наружных светильников
 
@@ -579,13 +596,27 @@ public class Variables {
                 }
                 break;
             case 4:
+                for (int i=0;i<lampsDoskiName.length;i++){
+                    if (lampsDoskiName[i].equals(type)){
+                        return i;
+                    }
+                }
+                break;
+            case 5:
+                for (int i=0;i<lampsPodvesName.length;i++){
+                    if (lampsPodvesName[i].equals(type)){
+                        return i;
+                    }
+                }
+                break;
+            case 6:
                 for (int i=0;i<lampsOthersName.length;i++){
                     if (lampsOthersName[i].equals(type)){
                         return i;
                     }
                 }
                 break;
-            case 5:
+            case 7:
                 for (int i=0;i<lampsOutsideName.length;i++){
                     if (lampsOutsideName[i].equals(type)){
                         return i;
@@ -613,6 +644,8 @@ public class Variables {
                 lampsPanels.add(activity.findViewById(R.id.NakladniePanel));
                 lampsPanels.add(activity.findViewById(R.id.LampsPanel));
                 lampsPanels.add(activity.findViewById(R.id.DiodsPanel));
+                lampsPanels.add(activity.findViewById(R.id.DoskiPanel));
+                lampsPanels.add(activity.findViewById(R.id.PodvesPanel));
                 lampsPanels.add(activity.findViewById(R.id.OthersPanel));
                 lampsPanels.add(activity.findViewById(R.id.OutsidePanel));
                 LinearLayout lampsLayoutsWrapper = activity.findViewById(R.id.lampTypesPanelsLayout);
@@ -657,10 +690,18 @@ public class Variables {
                                                 listView.setAdapter(lampsList);
                                                 break;
                                             case 4:
-                                                lampsList = new LampsList(activity, lampOthersNames, OthersImageId);
+                                                lampsList = new LampsList(activity, lampDoskiNames, DoskiImageId);
                                                 listView.setAdapter(lampsList);
                                                 break;
                                             case 5:
+                                                lampsList = new LampsList(activity, lampPodvesNames, PodvesImageId);
+                                                listView.setAdapter(lampsList);
+                                                break;
+                                            case 6:
+                                                lampsList = new LampsList(activity, lampOthersNames, OthersImageId);
+                                                listView.setAdapter(lampsList);
+                                                break;
+                                            case 7:
                                                 lampsList = new LampsList(activity, lampOutsideNames, OutsideImageId);
                                                 listView.setAdapter(lampsList);
                                                 break;

@@ -48,7 +48,7 @@
                     android:layout_height="20dp"
                     android:layout_gravity="left|center_vertical"
                     android:padding="4dp"
-                    android:text="Встраиваемые"
+                    android:text="  Встраив."
                     android:textSize="12sp" />
             </LinearLayout>
             <LinearLayout
@@ -62,7 +62,7 @@
                     android:layout_height="20dp"
                     android:layout_gravity="left|center_vertical"
                     android:padding="4dp"
-                    android:text="    Накладные"
+                    android:text="Накладные"
                     android:textSize="12sp" />
             </LinearLayout>
             <LinearLayout
@@ -90,7 +90,35 @@
                     android:layout_height="20dp"
                     android:layout_gravity="left|center_vertical"
                     android:padding="4dp"
-                    android:text="Светодиодные"
+                    android:text="Светодиод."
+                    android:textSize="12sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/DoskiLayout"
+                android:layout_width="match_parent"
+                android:background="@color/grey"
+                android:layout_height="65dp">
+                <com.example.myapplication.VerticalTextView
+                    android:id="@+id/DoskiPanel"
+                    android:layout_width="65dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="left|center_vertical"
+                    android:padding="4dp"
+                    android:text="     Доски"
+                    android:textSize="12sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/PodvesLayout"
+                android:layout_width="match_parent"
+                android:background="@color/grey"
+                android:layout_height="65dp">
+                <com.example.myapplication.VerticalTextView
+                    android:id="@+id/PodvesPanel"
+                    android:layout_width="65dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="left|center_vertical"
+                    android:padding="4dp"
+                    android:text="Подвесные"
                     android:textSize="12sp" />
             </LinearLayout>
             <LinearLayout

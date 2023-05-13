@@ -118,10 +118,16 @@ public class Plan {
                                                 spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsDiodsName[Variables.multiplepos], 0,3, 0,0, false, 0,0);
                                                 break;
                                             case 4:
-                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOthersName[Variables.multiplepos], 0, 4,0,0, false, 0,0);
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsDoskiName[Variables.multiplepos], 0, 4,0,0, false, 0,0);
                                                 break;
                                             case 5:
-                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOutsideName[Variables.multiplepos], 1,5, 0,0, false, 0,0);
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsPodvesName[Variables.multiplepos], 0,5, 0,0, false, 0,0);
+                                                break;
+                                            case 6:
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOthersName[Variables.multiplepos], 0, 6,0,0, false, 0,0);
+                                                break;
+                                            case 7:
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOutsideName[Variables.multiplepos], 1,7, 0,0, false, 0,0);
                                                 break;
                                         }
                                         //spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsName[Variables.multiplepos], 0, 0, false, 0,0);
@@ -492,7 +498,7 @@ public class Plan {
                         lamp.setLampsAmount(3);
                     }
                 }
-            }else if (groupIndex==4){           //Если это другой тип светильника
+            }else if (groupIndex==6){           //Если это другой тип светильника
                 if (!lampName.equals("lustranakal") && !lampName.equals("lustrakll")){
                     lamp.setType("Светодиодный");
                     switch (lampName){
@@ -526,7 +532,7 @@ public class Plan {
                         lamp.setLampsAmount(3);
                         escapePowerSet=true;
                 }
-            }else if (groupIndex==5){           //Если это наружное освещение
+            }else if (groupIndex==7){           //Если это наружное освещение
                 escapePowerSet=true;
                 switch (lampName){
                     case "drlfasad":
@@ -565,9 +571,15 @@ public class Plan {
                             lamp.setPower(Variables.lampDiodsNames[pos]);
                             break;
                         case 4:
-                            lamp.setPower(Variables.lampOthersNames[pos]);
+                            lamp.setPower(Variables.lampDoskiNames[pos]);
                             break;
                         case 5:
+                            lamp.setPower(Variables.lampPodvesNames[pos]);
+                            break;
+                        case 6:
+                            lamp.setPower(Variables.lampOthersNames[pos]);
+                            break;
+                        case 7:
                             lamp.setPower(Variables.lampOutsideNames[pos]);
                             break;
                     }
@@ -769,7 +781,7 @@ public class Plan {
                 Variables.lampAmountEdit.setVisibility(View.GONE);
             }
             if (lamp.getPlaceType()==1){        //Если это наружное освещение
-                if (lamp.getGroupIndex()==5) {                      //Если это прожектора
+                if (lamp.getGroupIndex()==7) {                      //Если это прожектора
                     Variables.montagneOutsideTypeTxt.setVisibility(View.VISIBLE);
                     Variables.montagneOutsideType.setVisibility(View.VISIBLE);
                     Variables.positionOutsideTxt.setVisibility(View.VISIBLE);

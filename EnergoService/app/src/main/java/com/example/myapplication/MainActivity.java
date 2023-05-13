@@ -112,11 +112,21 @@ public class MainActivity extends AppCompatActivity {
                         Variables.plan.spawnLamp(Variables.DiodsImageId[position], position,Variables.lampsDiodsName[position],0,3,0,0,false,0,0);         //Создание светильника
                         break;
                     case 4:
-                        Variables.plan.spawnLamp(Variables.OthersImageId[position], position,Variables.lampsOthersName[position],0,4,0,0,false,0,0);         //Создание светильника
+                        Variables.plan.spawnLamp(Variables.DoskiImageId[position], position,Variables.lampsDoskiName[position],0,4,0,0,false,0,0);         //Создание светильника
                         break;
                     case 5:
-                        Variables.plan.spawnLamp(Variables.OutsideImageId[position], position,Variables.lampsOutsideName[position],1,5,0,0,false,0,0);         //Создание светильника
+                        Variables.plan.spawnLamp(Variables.PodvesImageId[position], position,Variables.lampsPodvesName[position],0,5,0,0,false,0,0);         //Создание светильника
                         break;
+                    case 6:
+                        Variables.plan.spawnLamp(Variables.OthersImageId[position], position,Variables.lampsOthersName[position],0,6,0,0,false,0,0);         //Создание светильника
+                        break;
+                    case 7:
+                        if (Variables.plan.touchedRoom!=null){
+                            Variables.plan.spawnLamp(Variables.OutsideImageId[position], position,Variables.lampsOutsideName[position],0,7,0,0,false,0,0);         //Создание светильника
+                        }else {
+                            Variables.plan.spawnLamp(Variables.OutsideImageId[position], position, Variables.lampsOutsideName[position], 1, 7, 0, 0, false, 0, 0);         //Создание светильника
+                        }
+                            break;
                 }
             }else if (Variables.addMultiple_flag || Variables.addMultipleRowsFlag){
                 Variables.resetListColor();
@@ -135,9 +145,15 @@ public class MainActivity extends AppCompatActivity {
                         Variables.multipleType = Variables.DiodsImageId[position];
                         break;
                     case 4:
-                        Variables.multipleType = Variables.OthersImageId[position];
+                        Variables.multipleType = Variables.DoskiImageId[position];
                         break;
                     case 5:
+                        Variables.multipleType = Variables.PodvesImageId[position];
+                        break;
+                    case 6:
+                        Variables.multipleType = Variables.OthersImageId[position];
+                        break;
+                    case 7:
                         Variables.multipleType = Variables.OutsideImageId[position];
                         break;
                 }
@@ -156,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
                     thread.start();
                 }
             }
-        }, 0, 180*1000); // каждые 3 минуты-сохранение файла
+        }, 0, 60*1000); // каждую 3 минуту-сохранение файла
 
 
         Variables.image.addOnLayoutChangeListener( new View.OnLayoutChangeListener()        //В момент изменения размеров изображения

@@ -35,24 +35,26 @@ public class ExcelExporter {
     Worksheet sheet;
     Cells cells;
     int rowCount = 4;
-    int outsideRowCount=4;
+    int outsideRowCount = 4;
+
     public void init() throws Exception {       //Инициализация Эксель файла
-        rowCount=4;
-        outsideRowCount=4;
+        rowCount = 4;
+        outsideRowCount = 4;
         workbook = new Workbook(Variables.path1 + "/bdr.xlsx");
         worksheets = workbook.getWorksheets();
         sheet = worksheets.get(1);
         cells = sheet.getCells();
     }
+
     public void exportToExel() throws Exception {           //Функция экспорта в Эксель(дорабатывается)
-        File directory = new File(Variables.path1+"/"+Variables.current_floor.getName());
-        if (! directory.exists()){
+        File directory = new File(Variables.path1 + "/" + Variables.current_floor.getName());
+        if (!directory.exists()) {
             directory.mkdir();
             // If you require it to make the entire directory path including parents,
             // use directory.mkdirs(); here instead.
         }
-         path = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS+"/"+Variables.current_floor.getName()));
-         init();
+        path = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS + "/" + Variables.current_floor.getName()));
+        init();
  /*           for (Room room:Variables.current_floor.rooms) {
                 for (Lamp lamp: room.lamps){
                     if (Objects.equals(lamp.getTypeImage(), "lum4_18")){
@@ -148,23 +150,23 @@ public class ExcelExporter {
                 }
             }
         }*/
-        for (int l=0;l<Variables.floors.size();l++) {       //Проходимся по активным этажам
+        for (int l = 0; l < Variables.floors.size(); l++) {       //Проходимся по активным этажам
             if (Objects.equals(Variables.floors.elementAt(l).getName(), Variables.current_floor.getName())) {       //Если этаж от данного здания
                 Floor temp = Variables.floors.elementAt(l);         //Временный этаж
-                for (int i=0;i<temp.rooms.size();i++){              //Комнаты временного этажа
-                    for (int j=i;j<temp.rooms.size();j++) {
-                        try{        //Сортировка комнат по номеру в порядке возрастания
-                        if (Double.parseDouble(temp.rooms.elementAt(i).getNumber()) > Double.parseDouble(temp.rooms.elementAt(j).getNumber())) {
-                            Room tempRoom = temp.rooms.elementAt(i);
-                            temp.rooms.set(i, temp.rooms.elementAt(j));
-                            temp.rooms.set(j, tempRoom);
-                        }
-                    } catch(NumberFormatException e){
+                for (int i = 0; i < temp.rooms.size(); i++) {              //Комнаты временного этажа
+                    for (int j = i; j < temp.rooms.size(); j++) {
+                        try {        //Сортировка комнат по номеру в порядке возрастания
+                            if (Double.parseDouble(temp.rooms.elementAt(i).getNumber()) > Double.parseDouble(temp.rooms.elementAt(j).getNumber())) {
+                                Room tempRoom = temp.rooms.elementAt(i);
+                                temp.rooms.set(i, temp.rooms.elementAt(j));
+                                temp.rooms.set(j, tempRoom);
+                            }
+                        } catch (NumberFormatException e) {
 
+                        }
                     }
                 }
-                }
-                Variables.copyFile(temp.getImage(),path);       //Копирование файла
+                Variables.copyFile(temp.getImage(), path);       //Копирование файла
                 Variables.refreshLampsToRooms(temp);            //Перепривязка светильников к комнатам
                 //Variables.refreshLampsToRooms(temp);        //Перепривязка светильников к помещениям
                 for (int i = 0; i < temp.rooms.size(); i++) {       //Проходимся по комнатам этажа
@@ -175,62 +177,84 @@ public class ExcelExporter {
                     Vector<Lamp> lamps = room.getLamps();           //Вектор со светильниками временной комнаты
                     for (int j = 0; j < lamps.size(); j++) {        //Задание типов светильников в Вектор
                         String comments = lamps.elementAt(j).getComments();         //Комментарии светильника
-                        if (lamps.elementAt(j).getTypeImage().equals("lampdiodspot") || lamps.elementAt(j).getTypeImage().equals("lampnakalspot") || lamps.elementAt(j).getTypeImage().equals("lampkll15spot")){
-                            comments+="Спот";       //Если это спот - добавляем к комментам спот
-                        }else {             //Иначе если это лампа - добавляем к комментам - плафон
+                        if (lamps.elementAt(j).getTypeImage().equals("lampdiodspot") || lamps.elementAt(j).getTypeImage().equals("lampnakalspot") || lamps.elementAt(j).getTypeImage().equals("lampkll15spot")) {
+                            comments += "Спот";       //Если это спот - добавляем к комментам спот
+                        } else {             //Иначе если это лампа - добавляем к комментам - плафон
                             if (lamps.elementAt(j).getGroupIndex() == 2)
                                 comments += "Плафон";
                         }
                         //Если это люстра - добавляем к комментам люстра
-                        if (lamps.elementAt(j).getTypeImage().equals("lustranakal") || lamps.elementAt(j).getTypeImage().equals("lustrakll") || lamps.elementAt(j).getTypeImage().equals("lustradiod")){
-                            switch (lamps.elementAt(j).getTypeImage()){     //Добавляем к комментам количество и тип ламп в люстре
-                                case "lustranakal":comments+="Люстра на "+lamps.elementAt(j).getLampsAmount()+" ЛН ламп";break;
-                                case "lustrakll":comments+="Люстра на "+lamps.elementAt(j).getLampsAmount()+" КЛЛ ламп";break;
-                                case "lustradiod":comments+="Люстра на "+lamps.elementAt(j).getLampsAmount()+" СД ламп";break;
+                        if (lamps.elementAt(j).getTypeImage().equals("lustranakal") || lamps.elementAt(j).getTypeImage().equals("lustrakll") || lamps.elementAt(j).getTypeImage().equals("lustradiod")) {
+                            switch (lamps.elementAt(j).getTypeImage()) {     //Добавляем к комментам количество и тип ламп в люстре
+                                case "lustranakal":
+                                    comments += "Люстра на " + lamps.elementAt(j).getLampsAmount() + " ЛН ламп";
+                                    break;
+                                case "lustrakll":
+                                    comments += "Люстра на " + lamps.elementAt(j).getLampsAmount() + " КЛЛ ламп";
+                                    break;
+                                case "lustradiod":
+                                    comments += "Люстра на " + lamps.elementAt(j).getLampsAmount() + " СД ламп";
+                                    break;
                             }
                         }           //Если такого типа еще нет - добавляем
-                            if (!types.contains(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getMontagneType()+" " + comments)) {
-                            types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " "+lamps.elementAt(j).getMontagneType()+" " + comments);
+                        if (!types.contains(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getMontagneType() + " " + comments)) {
+                            types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getMontagneType() + " " + comments);
                         }
                     }
                     for (int j = 0; j < types.size(); j++) {       //Находим и считаем светильники, чьи типы есть в Векторе
                         String type = "";
                         String comm = "";
-                        String montagneType="";
-                        String otherInfo="";
-                        int lustrsCount=0;
+                        String montagneType = "";
+                        String otherInfo = "";
+                        int lustrsCount = 0;
                         for (int z = 0; z < lamps.size(); z++) {
                             String comments = lamps.elementAt(z).getComments();     //Комментарии светильника
-                            if (lamps.elementAt(z).getTypeImage().equals("lampdiodspot") || lamps.elementAt(z).getTypeImage().equals("lampnakalspot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot")){
-                                comments+="Спот";       //Если это спорт - добавляем в комменты спот
-                            }else
-                            if (lamps.elementAt(z).getGroupIndex()==2)      //Если это лампа - добавляем в комменты плафон
-                                comments+="Плафон";
+                            if (lamps.elementAt(z).getTypeImage().equals("lampdiodspot") || lamps.elementAt(z).getTypeImage().equals("lampnakalspot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot")) {
+                                comments += "Спот";       //Если это спорт - добавляем в комменты спот
+                            } else if (lamps.elementAt(z).getGroupIndex() == 2)      //Если это лампа - добавляем в комменты плафон
+                                comments += "Плафон";
                             //Если это люстра - добавляем в комменты люстру и указываем тип и количество ламп в ней
-                            if (lamps.elementAt(z).getTypeImage().equals("lustranakal") || lamps.elementAt(z).getTypeImage().equals("lustrakll") || lamps.elementAt(z).getTypeImage().equals("lustradiod")){
-                                switch (lamps.elementAt(z).getTypeImage()){
-                                    case "lustranakal":comments+="Люстра на "+lamps.elementAt(z).getLampsAmount()+" ЛН ламп";break;
-                                    case "lustrakll":comments+="Люстра на "+lamps.elementAt(z).getLampsAmount()+" КЛЛ ламп";break;
-                                    case "lustradiod":comments+="Люстра на "+lamps.elementAt(z).getLampsAmount()+" СД ламп";break;
+                            if (lamps.elementAt(z).getTypeImage().equals("lustranakal") || lamps.elementAt(z).getTypeImage().equals("lustrakll") || lamps.elementAt(z).getTypeImage().equals("lustradiod")) {
+                                switch (lamps.elementAt(z).getTypeImage()) {
+                                    case "lustranakal":
+                                        comments += "Люстра на " + lamps.elementAt(z).getLampsAmount() + " ЛН ламп";
+                                        break;
+                                    case "lustrakll":
+                                        comments += "Люстра на " + lamps.elementAt(z).getLampsAmount() + " КЛЛ ламп";
+                                        break;
+                                    case "lustradiod":
+                                        comments += "Люстра на " + lamps.elementAt(z).getLampsAmount() + " СД ламп";
+                                        break;
                                 }
                             }
                             //Если есть совпадение с существующим типом
-                            if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " "+lamps.elementAt(z).getMontagneType()+" " + comments)) {
+                            if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " " + lamps.elementAt(z).getMontagneType() + " " + comments)) {
                                 //if (lamps.elementAt(z).getComments()==null){
                                 count++;        //Увеличиваем значение счетчика количества светильников
                                 type = lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower();
                                 comm = lamps.elementAt(z).getComments();
                                 montagneType = Variables.montagneTypeArr[lamps.elementAt(z).getMontagneType()];     //Тип монтажа
-                                if (lamps.elementAt(z).getTypeImage().equals("lampdiodspot") || lamps.elementAt(z).getTypeImage().equals("lampnakalspot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot")){
-                                    otherInfo="Спот";       //Если светильник спот - пишем в комменты спот
-                                }else
-                                if (lamps.elementAt(z).getGroupIndex()==2)
-                                    otherInfo="Плафон";     //Если светильник лампа - пишем тип плафон
-                                if (lamps.elementAt(z).getTypeImage().equals("lustranakal") || lamps.elementAt(z).getTypeImage().equals("lustrakll") || lamps.elementAt(z).getTypeImage().equals("lustradiod")){
-                                    switch (lamps.elementAt(z).getTypeImage()){     //Если светильник люстра - пишем количество и тип ламп в люстре
-                                        case "lustranakal":lustrsCount++;otherInfo = lustrsCount+ " люстр на " + lamps.elementAt(z).getLampsAmount() + " ЛН ламп";count+=(lamps.elementAt(z).getLampsAmount()-1);break;
-                                        case "lustrakll":lustrsCount++;otherInfo = lustrsCount+ " люстр на " + lamps.elementAt(z).getLampsAmount() + " КЛЛ ламп";count+=(lamps.elementAt(z).getLampsAmount()-1);break;
-                                        case "lustradiod":lustrsCount++;otherInfo = lustrsCount+ " люстр на " + lamps.elementAt(z).getLampsAmount() + " СД ламп";count+=(lamps.elementAt(z).getLampsAmount()-1);break;
+                                if (lamps.elementAt(z).getTypeImage().equals("lampdiodspot") || lamps.elementAt(z).getTypeImage().equals("lampnakalspot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot")) {
+                                    otherInfo = "Спот";       //Если светильник спот - пишем в комменты спот
+                                } else if (lamps.elementAt(z).getGroupIndex() == 2)
+                                    otherInfo = "Плафон";     //Если светильник лампа - пишем тип плафон
+                                if (lamps.elementAt(z).getTypeImage().equals("lustranakal") || lamps.elementAt(z).getTypeImage().equals("lustrakll") || lamps.elementAt(z).getTypeImage().equals("lustradiod")) {
+                                    switch (lamps.elementAt(z).getTypeImage()) {     //Если светильник люстра - пишем количество и тип ламп в люстре
+                                        case "lustranakal":
+                                            lustrsCount++;
+                                            otherInfo = lustrsCount + " люстр на " + lamps.elementAt(z).getLampsAmount() + " ЛН ламп";
+                                            count += (lamps.elementAt(z).getLampsAmount() - 1);
+                                            break;
+                                        case "lustrakll":
+                                            lustrsCount++;
+                                            otherInfo = lustrsCount + " люстр на " + lamps.elementAt(z).getLampsAmount() + " КЛЛ ламп";
+                                            count += (lamps.elementAt(z).getLampsAmount() - 1);
+                                            break;
+                                        case "lustradiod":
+                                            lustrsCount++;
+                                            otherInfo = lustrsCount + " люстр на " + lamps.elementAt(z).getLampsAmount() + " СД ламп";
+                                            count += (lamps.elementAt(z).getLampsAmount() - 1);
+                                            break;
                                     }
                                 }
                                 //}else{
@@ -239,87 +263,109 @@ public class ExcelExporter {
                             }
                         }
                         if (count > 0) {        //Если есть хотя бы один светильник - записываем в бдр
-                            writeToFile(temp,room, type, count, comm,"0",montagneType,otherInfo,false,"",false);       //Запись данных в файл
+                            writeToFile(temp, room, type, count, comm, "0", montagneType, otherInfo, false, "", false);       //Запись данных в файл
                         }
                         count = 0;
                     }
                 }
-                if (temp.unusedLamps.size()>0) {            //Проходим по неиспользуемым светильникам
+                if (temp.unusedLamps.size() > 0) {            //Проходим по неиспользуемым светильникам
                     int count = 0;
                     Vector<String> types = new Vector<String>();
                     Vector<Lamp> lamps = temp.unusedLamps;
                     for (int j = 0; j < lamps.size(); j++) {        //Типы светильников
-                        if (lamps.elementAt(j).getLampRoom().equals("46")){
+                        if (lamps.elementAt(j).getLampRoom().equals("46")) {
                             System.out.println("");
                         }
                         String comments = lamps.elementAt(j).getComments();
-                        if (lamps.elementAt(j).getTypeImage().equals("lampdiodspot") || lamps.elementAt(j).getTypeImage().equals("lampnakalspot") || lamps.elementAt(j).getTypeImage().equals("lampkll15spot")){
-                            comments+="Спот";
-                        }else
-                        if (lamps.elementAt(j).getGroupIndex()==2)
-                            comments+="Плафон";
-                        if (lamps.elementAt(j).getTypeImage().equals("lustranakal") || lamps.elementAt(j).getTypeImage().equals("lustrakll") || lamps.elementAt(j).getTypeImage().equals("lustradiod")){
-                            switch (lamps.elementAt(j).getTypeImage()){
-                                case "lustranakal":comments+="Люстра на "+lamps.elementAt(j).getLampsAmount()+" ЛН ламп";break;
-                                case "lustrakll":comments+="Люстра на "+lamps.elementAt(j).getLampsAmount()+" КЛЛ ламп";break;
-                                case "lustradiod":comments+="Люстра на "+lamps.elementAt(j).getLampsAmount()+" СД ламп";break;
+                        if (lamps.elementAt(j).getTypeImage().equals("lampdiodspot") || lamps.elementAt(j).getTypeImage().equals("lampnakalspot") || lamps.elementAt(j).getTypeImage().equals("lampkll15spot")) {
+                            comments += "Спот";
+                        } else if (lamps.elementAt(j).getGroupIndex() == 2)
+                            comments += "Плафон";
+                        if (lamps.elementAt(j).getTypeImage().equals("lustranakal") || lamps.elementAt(j).getTypeImage().equals("lustrakll") || lamps.elementAt(j).getTypeImage().equals("lustradiod")) {
+                            switch (lamps.elementAt(j).getTypeImage()) {
+                                case "lustranakal":
+                                    comments += "Люстра на " + lamps.elementAt(j).getLampsAmount() + " ЛН ламп";
+                                    break;
+                                case "lustrakll":
+                                    comments += "Люстра на " + lamps.elementAt(j).getLampsAmount() + " КЛЛ ламп";
+                                    break;
+                                case "lustradiod":
+                                    comments += "Люстра на " + lamps.elementAt(j).getLampsAmount() + " СД ламп";
+                                    break;
                             }
                         }
-                        if (!types.contains(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " "+ lamps.elementAt(j).getMontagneType()+" " + comments+" "+lamps.elementAt(j).getLampRoom()+" "+lamps.elementAt(j).getPositionOutside()+" "+lamps.elementAt(j).isStolb())) {
-                            types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() +" "+lamps.elementAt(j).getMontagneType()+ " " + comments+" "+lamps.elementAt(j).getLampRoom()+" "+lamps.elementAt(j).getPositionOutside()+" "+lamps.elementAt(j).isStolb());
+                        if (!types.contains(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getMontagneType() + " " + comments + " " + lamps.elementAt(j).getLampRoom() + " " + lamps.elementAt(j).getPositionOutside() + " " + lamps.elementAt(j).isStolb())) {
+                            types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getMontagneType() + " " + comments + " " + lamps.elementAt(j).getLampRoom() + " " + lamps.elementAt(j).getPositionOutside() + " " + lamps.elementAt(j).isStolb());
                         }
                     }
                     for (int j = 0; j < types.size(); j++) {       //Находим и считаем светильники, чьи типы есть в Векторе
-                        boolean isOutside=false;
-                        String positionOutside="";
-                        boolean isStolb=false;
+                        boolean isOutside = false;
+                        String positionOutside = "";
+                        boolean isStolb = false;
                         String type = "";
                         String comm = "";
-                        String number="0.0";
-                        String montagneType="";
-                        String otherInfo="";
-                        int lustrsCount=0;
+                        String number = "0.0";
+                        String montagneType = "";
+                        String otherInfo = "";
+                        int lustrsCount = 0;
                         for (int z = 0; z < lamps.size(); z++) {
-                            if (lamps.elementAt(z).getLampRoom().equals("46") && j==2){
+                            if (lamps.elementAt(z).getLampRoom().equals("46") && j == 2) {
                                 System.out.println("");
                             }
                             String comments = lamps.elementAt(z).getComments();
-                            if (lamps.elementAt(z).getTypeImage().equals("lampdiodspot") || lamps.elementAt(z).getTypeImage().equals("lampnakalspot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot")){
-                                comments+="Спот";
-                            }else
-                            if (lamps.elementAt(z).getGroupIndex()==2)
-                                comments+="Плафон";
-                            if (lamps.elementAt(z).getTypeImage().equals("lustranakal") || lamps.elementAt(z).getTypeImage().equals("lustrakll") || lamps.elementAt(z).getTypeImage().equals("lustradiod")){
-                                switch (lamps.elementAt(z).getTypeImage()){
-                                    case "lustranakal":comments+="Люстра на "+lamps.elementAt(z).getLampsAmount()+" ЛН ламп";break;
-                                    case "lustrakll":comments+="Люстра на "+lamps.elementAt(z).getLampsAmount()+" КЛЛ ламп";break;
-                                    case "lustradiod":comments+="Люстра на "+lamps.elementAt(z).getLampsAmount()+" СД ламп";break;
+                            if (lamps.elementAt(z).getTypeImage().equals("lampdiodspot") || lamps.elementAt(z).getTypeImage().equals("lampnakalspot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot")) {
+                                comments += "Спот";
+                            } else if (lamps.elementAt(z).getGroupIndex() == 2)
+                                comments += "Плафон";
+                            if (lamps.elementAt(z).getTypeImage().equals("lustranakal") || lamps.elementAt(z).getTypeImage().equals("lustrakll") || lamps.elementAt(z).getTypeImage().equals("lustradiod")) {
+                                switch (lamps.elementAt(z).getTypeImage()) {
+                                    case "lustranakal":
+                                        comments += "Люстра на " + lamps.elementAt(z).getLampsAmount() + " ЛН ламп";
+                                        break;
+                                    case "lustrakll":
+                                        comments += "Люстра на " + lamps.elementAt(z).getLampsAmount() + " КЛЛ ламп";
+                                        break;
+                                    case "lustradiod":
+                                        comments += "Люстра на " + lamps.elementAt(z).getLampsAmount() + " СД ламп";
+                                        break;
                                 }
                             }
-                            if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " "+lamps.elementAt(z).getMontagneType()+" " + comments+" "+lamps.elementAt(z).getLampRoom()+" "+lamps.elementAt(z).getPositionOutside()+" "+lamps.elementAt(z).isStolb())) {
+                            if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " " + lamps.elementAt(z).getMontagneType() + " " + comments + " " + lamps.elementAt(z).getLampRoom() + " " + lamps.elementAt(z).getPositionOutside() + " " + lamps.elementAt(z).isStolb())) {
                                 //if (lamps.elementAt(z).getComments()==null){      //Если это наружный светильник
                                 count++;
                                 type = lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower();
                                 comm = lamps.elementAt(z).getComments();
                                 number = lamps.elementAt(z).getLampRoom();
                                 montagneType = Variables.montagneTypeArr[lamps.elementAt(z).getMontagneType()];
-                                if (lamps.elementAt(z).getPlaceType()==1){
-                                    isOutside=true;
+                                if (lamps.elementAt(z).getPlaceType() == 1) {
+                                    isOutside = true;
                                     positionOutside = Variables.positionOutsideArr[lamps.elementAt(z).getPositionOutside()];
-                                    if (lamps.elementAt(z).getGroupIndex()==5) {
+                                    if (lamps.elementAt(z).getGroupIndex() == 7) {
                                         montagneType = Variables.montagneOutsideTypeArr[lamps.elementAt(z).getMontagneType()];
                                         isStolb = lamps.elementAt(z).isStolb();
                                     }
-                                }else {
+                                } else {
                                     if (lamps.elementAt(z).getTypeImage().equals("lampdiodspot") || lamps.elementAt(z).getTypeImage().equals("lampnakalspot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot")) {
                                         otherInfo = "Спот";
                                     } else if (lamps.elementAt(z).getGroupIndex() == 2)
                                         otherInfo = "Плафон";
                                     if (lamps.elementAt(z).getTypeImage().equals("lustranakal") || lamps.elementAt(z).getTypeImage().equals("lustrakll") || lamps.elementAt(z).getTypeImage().equals("lustradiod")) {
-                                        switch (lamps.elementAt(z).getTypeImage()){
-                                            case "lustranakal":lustrsCount++;otherInfo = lustrsCount+ " люстр на " + lamps.elementAt(z).getLampsAmount() + " ЛН ламп";count+=(lamps.elementAt(z).getLampsAmount()-1);break;
-                                            case "lustrakll":lustrsCount++;otherInfo = lustrsCount+ " люстр на " + lamps.elementAt(z).getLampsAmount() + " КЛЛ ламп";count+=(lamps.elementAt(z).getLampsAmount()-1);break;
-                                            case "lustradiod":lustrsCount++;otherInfo = lustrsCount+ " люстр на " + lamps.elementAt(z).getLampsAmount() + " СД ламп";count+=(lamps.elementAt(z).getLampsAmount()-1);break;
+                                        switch (lamps.elementAt(z).getTypeImage()) {
+                                            case "lustranakal":
+                                                lustrsCount++;
+                                                otherInfo = lustrsCount + " люстр на " + lamps.elementAt(z).getLampsAmount() + " ЛН ламп";
+                                                count += (lamps.elementAt(z).getLampsAmount() - 1);
+                                                break;
+                                            case "lustrakll":
+                                                lustrsCount++;
+                                                otherInfo = lustrsCount + " люстр на " + lamps.elementAt(z).getLampsAmount() + " КЛЛ ламп";
+                                                count += (lamps.elementAt(z).getLampsAmount() - 1);
+                                                break;
+                                            case "lustradiod":
+                                                lustrsCount++;
+                                                otherInfo = lustrsCount + " люстр на " + lamps.elementAt(z).getLampsAmount() + " СД ламп";
+                                                count += (lamps.elementAt(z).getLampsAmount() - 1);
+                                                break;
                                         }
                                     }
                                 }
@@ -329,7 +375,7 @@ public class ExcelExporter {
                             }
                         }
                         if (count > 0) {
-                            writeToFile(temp,null, type, count, comm,number,montagneType,otherInfo,isOutside,positionOutside,isStolb);       //Запись данных в файл
+                            writeToFile(temp, null, type, count, comm, number, montagneType, otherInfo, isOutside, positionOutside, isStolb);       //Запись данных в файл
                         }
                         count = 0;
                     }
@@ -339,7 +385,7 @@ public class ExcelExporter {
         save();
     }
 
-    public void writeToFile(Floor floor ,Room room,String type, int amount,String comments,String number,String montagneType,String otherInfo,boolean isOutside, String positionOutside,boolean isStolb) throws Exception {       //Запись в файл по ячейкам
+    public void writeToFile(Floor floor, Room room, String type, int amount, String comments, String number, String montagneType, String otherInfo, boolean isOutside, String positionOutside, boolean isStolb) throws Exception {       //Запись в файл по ячейкам
 
 // Obtaining the reference of the first worksheet
 // Adding some sample value to cells
@@ -420,7 +466,7 @@ public class ExcelExporter {
             value = cell.getFormula();
             cell.setFormula(value);
             rowCount++;
-        }else{      //Иначе это наружное освещение
+        } else {      //Иначе это наружное освещение
             sheet = worksheets.get(2);
             cells = sheet.getCells();
             Cell cell = cells.get("A" + Integer.toString(outsideRowCount));
@@ -434,8 +480,7 @@ public class ExcelExporter {
             cell = cells.get("I" + Integer.toString(outsideRowCount));
             if (Objects.equals(montagneType, "Консоль")) {
                 cell.setValue("Светильник");
-            }
-            else if (Objects.equals(montagneType, "Кронштейн")) {
+            } else if (Objects.equals(montagneType, "Кронштейн")) {
                 cell.setValue("Прожектор");
             }
             cell = cells.get("J" + Integer.toString(outsideRowCount));
@@ -485,6 +530,7 @@ public class ExcelExporter {
 // Write the Excel file
 
     }
+
     public void save() throws Exception {       //Сохранение в новый файл(Aspose Cells)
         sheet = worksheets.get(1);
         cells = sheet.getCells();
@@ -496,16 +542,16 @@ public class ExcelExporter {
         cell = cells.get("G24");
         value = cell.getFormula();
         cell.setFormula(value);
-        workbook.save(path + "/"+Variables.current_floor.getName()+".xlsx");
+        workbook.save(path + "/" + Variables.current_floor.getName() + ".xlsx");
         //Пересохранение файла, с удалением страницы о пробной лицензии(Apache POI Excel)
-        FileInputStream inputStream = new FileInputStream(new File(path + "/"+Variables.current_floor.getName()+".xlsx"));
+        FileInputStream inputStream = new FileInputStream(new File(path + "/" + Variables.current_floor.getName() + ".xlsx"));
         XSSFWorkbook workBook = new XSSFWorkbook(inputStream);
 
 //Delete Sheet
         workBook.removeSheetAt(7);
 
 //Save the file
-        FileOutputStream outFile = new FileOutputStream(new File(path + "/"+Variables.current_floor.getName()+".xlsx"));
+        FileOutputStream outFile = new FileOutputStream(new File(path + "/" + Variables.current_floor.getName() + ".xlsx"));
         workBook.write(outFile);
         outFile.close();
     }
