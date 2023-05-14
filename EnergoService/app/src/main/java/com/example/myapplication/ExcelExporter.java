@@ -177,10 +177,10 @@ public class ExcelExporter {
                     Vector<Lamp> lamps = room.getLamps();           //Вектор со светильниками временной комнаты
                     for (int j = 0; j < lamps.size(); j++) {        //Задание типов светильников в Вектор
                         String comments = lamps.elementAt(j).getComments();         //Комментарии светильника
-                        if (lamps.elementAt(j).getTypeImage().equals("lampdiodspot") || lamps.elementAt(j).getTypeImage().equals("lampnakalspot") || lamps.elementAt(j).getTypeImage().equals("lampkll15spot")) {
+                        if (lamps.elementAt(j).getTypeImage().equals("lampnakal60spot") || lamps.elementAt(j).getTypeImage().equals("lampkll15spot") || lamps.elementAt(j).getTypeImage().equals("lampgalogen35") || lamps.elementAt(j).getTypeImage().equals("lampnakal40spot") || lamps.elementAt(j).getTypeImage().equals("lampkll18spot") || lamps.elementAt(j).getTypeImage().equals("lampkll20spot") || lamps.elementAt(j).getTypeImage().equals("lampkll25spot") || lamps.elementAt(j).getTypeImage().equals("lampkll30spot") || lamps.elementAt(j).getTypeImage().equals("lampnakal75spot") || lamps.elementAt(j).getTypeImage().equals("lampnakal95spot") || lamps.elementAt(j).getTypeImage().equals("lampdiodspot12") || lamps.elementAt(j).getTypeImage().equals("lampdiodspot10") || lamps.elementAt(j).getTypeImage().equals("lampdiodspot15")) {
                             comments += "Спот";       //Если это спот - добавляем к комментам спот
                         } else {             //Иначе если это лампа - добавляем к комментам - плафон
-                            if (lamps.elementAt(j).getGroupIndex() == 2)
+                            if (lamps.elementAt(j).getGroupIndex() == 2 || lamps.elementAt(j).getGroupIndex() == 5 || lamps.elementAt(j).getTypeImage().equals("lampnakal60") || lamps.elementAt(j).getTypeImage().equals("lampnakal40") || lamps.elementAt(j).getTypeImage().equals("lampnakal75") || lamps.elementAt(j).getTypeImage().equals("lampnakal95"))
                                 comments += "Плафон";
                         }
                         //Если это люстра - добавляем к комментам люстра
@@ -209,9 +209,10 @@ public class ExcelExporter {
                         int lustrsCount = 0;
                         for (int z = 0; z < lamps.size(); z++) {
                             String comments = lamps.elementAt(z).getComments();     //Комментарии светильника
-                            if (lamps.elementAt(z).getTypeImage().equals("lampdiodspot") || lamps.elementAt(z).getTypeImage().equals("lampnakalspot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot")) {
+                            if (lamps.elementAt(z).getTypeImage().equals("lampnakal60spot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot") || lamps.elementAt(z).getTypeImage().equals("lampgalogen35") || lamps.elementAt(z).getTypeImage().equals("lampnakal40spot") || lamps.elementAt(z).getTypeImage().equals("lampkll18spot") || lamps.elementAt(z).getTypeImage().equals("lampkll20spot") || lamps.elementAt(z).getTypeImage().equals("lampkll25spot") || lamps.elementAt(z).getTypeImage().equals("lampkll30spot") || lamps.elementAt(z).getTypeImage().equals("lampnakal75spot") || lamps.elementAt(z).getTypeImage().equals("lampnakal95spot") || lamps.elementAt(z).getTypeImage().equals("lampdiodspot12") || lamps.elementAt(z).getTypeImage().equals("lampdiodspot10") || lamps.elementAt(z).getTypeImage().equals("lampdiodspot15")) {
                                 comments += "Спот";       //Если это спорт - добавляем в комменты спот
-                            } else if (lamps.elementAt(z).getGroupIndex() == 2)      //Если это лампа - добавляем в комменты плафон
+                            } else if (lamps.elementAt(z).getGroupIndex() == 2 || lamps.elementAt(z).getGroupIndex() == 5 || lamps.elementAt(z).getTypeImage().equals("lampnakal60") || lamps.elementAt(z).getTypeImage().equals("lampnakal40") || lamps.elementAt(z).getTypeImage().equals("lampnakal75") || lamps.elementAt(z).getTypeImage().equals("lampnakal95"))
+                                //Если это лампа - добавляем в комменты плафон
                                 comments += "Плафон";
                             //Если это люстра - добавляем в комменты люстру и указываем тип и количество ламп в ней
                             if (lamps.elementAt(z).getTypeImage().equals("lustranakal") || lamps.elementAt(z).getTypeImage().equals("lustrakll") || lamps.elementAt(z).getTypeImage().equals("lustradiod")) {
@@ -234,9 +235,9 @@ public class ExcelExporter {
                                 type = lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower();
                                 comm = lamps.elementAt(z).getComments();
                                 montagneType = Variables.montagneTypeArr[lamps.elementAt(z).getMontagneType()];     //Тип монтажа
-                                if (lamps.elementAt(z).getTypeImage().equals("lampdiodspot") || lamps.elementAt(z).getTypeImage().equals("lampnakalspot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot")) {
+                                if (lamps.elementAt(z).getTypeImage().equals("lampnakal60spot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot") || lamps.elementAt(z).getTypeImage().equals("lampgalogen35") || lamps.elementAt(z).getTypeImage().equals("lampnakal40spot") || lamps.elementAt(z).getTypeImage().equals("lampkll18spot") || lamps.elementAt(z).getTypeImage().equals("lampkll20spot") || lamps.elementAt(z).getTypeImage().equals("lampkll25spot") || lamps.elementAt(z).getTypeImage().equals("lampkll30spot") || lamps.elementAt(z).getTypeImage().equals("lampnakal75spot") || lamps.elementAt(z).getTypeImage().equals("lampnakal95spot") || lamps.elementAt(z).getTypeImage().equals("lampdiodspot12") || lamps.elementAt(z).getTypeImage().equals("lampdiodspot10") || lamps.elementAt(z).getTypeImage().equals("lampdiodspot15")) {
                                     otherInfo = "Спот";       //Если светильник спот - пишем в комменты спот
-                                } else if (lamps.elementAt(z).getGroupIndex() == 2)
+                                } else if (lamps.elementAt(z).getGroupIndex() == 2 || lamps.elementAt(z).getGroupIndex() == 5 || lamps.elementAt(z).getTypeImage().equals("lampnakal60") || lamps.elementAt(z).getTypeImage().equals("lampnakal40") || lamps.elementAt(z).getTypeImage().equals("lampnakal75") || lamps.elementAt(z).getTypeImage().equals("lampnakal95"))
                                     otherInfo = "Плафон";     //Если светильник лампа - пишем тип плафон
                                 if (lamps.elementAt(z).getTypeImage().equals("lustranakal") || lamps.elementAt(z).getTypeImage().equals("lustrakll") || lamps.elementAt(z).getTypeImage().equals("lustradiod")) {
                                     switch (lamps.elementAt(z).getTypeImage()) {     //Если светильник люстра - пишем количество и тип ламп в люстре
@@ -277,9 +278,9 @@ public class ExcelExporter {
                             System.out.println("");
                         }
                         String comments = lamps.elementAt(j).getComments();
-                        if (lamps.elementAt(j).getTypeImage().equals("lampdiodspot") || lamps.elementAt(j).getTypeImage().equals("lampnakalspot") || lamps.elementAt(j).getTypeImage().equals("lampkll15spot")) {
+                        if (lamps.elementAt(j).getTypeImage().equals("lampnakal60spot") || lamps.elementAt(j).getTypeImage().equals("lampkll15spot") || lamps.elementAt(j).getTypeImage().equals("lampgalogen35") || lamps.elementAt(j).getTypeImage().equals("lampnakal40spot") || lamps.elementAt(j).getTypeImage().equals("lampkll18spot") || lamps.elementAt(j).getTypeImage().equals("lampkll20spot") || lamps.elementAt(j).getTypeImage().equals("lampkll25spot") || lamps.elementAt(j).getTypeImage().equals("lampkll30spot") || lamps.elementAt(j).getTypeImage().equals("lampnakal75spot") || lamps.elementAt(j).getTypeImage().equals("lampnakal95spot") || lamps.elementAt(j).getTypeImage().equals("lampdiodspot12") || lamps.elementAt(j).getTypeImage().equals("lampdiodspot10") || lamps.elementAt(j).getTypeImage().equals("lampdiodspot15")) {
                             comments += "Спот";
-                        } else if (lamps.elementAt(j).getGroupIndex() == 2)
+                        } else  if (lamps.elementAt(j).getGroupIndex() == 2 || lamps.elementAt(j).getGroupIndex() == 5 || lamps.elementAt(j).getTypeImage().equals("lampnakal60") || lamps.elementAt(j).getTypeImage().equals("lampnakal40") || lamps.elementAt(j).getTypeImage().equals("lampnakal75") || lamps.elementAt(j).getTypeImage().equals("lampnakal95"))
                             comments += "Плафон";
                         if (lamps.elementAt(j).getTypeImage().equals("lustranakal") || lamps.elementAt(j).getTypeImage().equals("lustrakll") || lamps.elementAt(j).getTypeImage().equals("lustradiod")) {
                             switch (lamps.elementAt(j).getTypeImage()) {
@@ -313,9 +314,9 @@ public class ExcelExporter {
                                 System.out.println("");
                             }
                             String comments = lamps.elementAt(z).getComments();
-                            if (lamps.elementAt(z).getTypeImage().equals("lampdiodspot") || lamps.elementAt(z).getTypeImage().equals("lampnakalspot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot")) {
+                            if (lamps.elementAt(z).getTypeImage().equals("lampnakal60spot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot") || lamps.elementAt(z).getTypeImage().equals("lampgalogen35") || lamps.elementAt(z).getTypeImage().equals("lampnakal40spot") || lamps.elementAt(z).getTypeImage().equals("lampkll18spot") || lamps.elementAt(z).getTypeImage().equals("lampkll20spot") || lamps.elementAt(z).getTypeImage().equals("lampkll25spot") || lamps.elementAt(z).getTypeImage().equals("lampkll30spot") || lamps.elementAt(z).getTypeImage().equals("lampnakal75spot") || lamps.elementAt(z).getTypeImage().equals("lampnakal95spot") || lamps.elementAt(z).getTypeImage().equals("lampdiodspot12") || lamps.elementAt(z).getTypeImage().equals("lampdiodspot10") || lamps.elementAt(z).getTypeImage().equals("lampdiodspot15")) {
                                 comments += "Спот";
-                            } else if (lamps.elementAt(z).getGroupIndex() == 2)
+                            } else if (lamps.elementAt(z).getGroupIndex() == 2 || lamps.elementAt(z).getGroupIndex() == 5 || lamps.elementAt(z).getTypeImage().equals("lampnakal60") || lamps.elementAt(z).getTypeImage().equals("lampnakal40") || lamps.elementAt(z).getTypeImage().equals("lampnakal75") || lamps.elementAt(z).getTypeImage().equals("lampnakal95"))
                                 comments += "Плафон";
                             if (lamps.elementAt(z).getTypeImage().equals("lustranakal") || lamps.elementAt(z).getTypeImage().equals("lustrakll") || lamps.elementAt(z).getTypeImage().equals("lustradiod")) {
                                 switch (lamps.elementAt(z).getTypeImage()) {
@@ -345,9 +346,9 @@ public class ExcelExporter {
                                         isStolb = lamps.elementAt(z).isStolb();
                                     }
                                 } else {
-                                    if (lamps.elementAt(z).getTypeImage().equals("lampdiodspot") || lamps.elementAt(z).getTypeImage().equals("lampnakalspot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot")) {
+                                    if (lamps.elementAt(z).getTypeImage().equals("lampnakal60spot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot") || lamps.elementAt(z).getTypeImage().equals("lampgalogen35") || lamps.elementAt(z).getTypeImage().equals("lampnakal40spot") || lamps.elementAt(z).getTypeImage().equals("lampkll18spot") || lamps.elementAt(z).getTypeImage().equals("lampkll20spot") || lamps.elementAt(z).getTypeImage().equals("lampkll25spot") || lamps.elementAt(z).getTypeImage().equals("lampkll30spot") || lamps.elementAt(z).getTypeImage().equals("lampnakal75spot") || lamps.elementAt(z).getTypeImage().equals("lampnakal95spot") || lamps.elementAt(z).getTypeImage().equals("lampdiodspot12") || lamps.elementAt(z).getTypeImage().equals("lampdiodspot10") || lamps.elementAt(z).getTypeImage().equals("lampdiodspot15")) {
                                         otherInfo = "Спот";
-                                    } else if (lamps.elementAt(z).getGroupIndex() == 2)
+                                    } else if (lamps.elementAt(z).getGroupIndex() == 2 || lamps.elementAt(z).getGroupIndex() == 5 || lamps.elementAt(z).getTypeImage().equals("lampnakal60") || lamps.elementAt(z).getTypeImage().equals("lampnakal40") || lamps.elementAt(z).getTypeImage().equals("lampnakal75") || lamps.elementAt(z).getTypeImage().equals("lampnakal95"))
                                         otherInfo = "Плафон";
                                     if (lamps.elementAt(z).getTypeImage().equals("lustranakal") || lamps.elementAt(z).getTypeImage().equals("lustrakll") || lamps.elementAt(z).getTypeImage().equals("lustradiod")) {
                                         switch (lamps.elementAt(z).getTypeImage()) {
@@ -482,6 +483,8 @@ public class ExcelExporter {
                 cell.setValue("Светильник");
             } else if (Objects.equals(montagneType, "Кронштейн")) {
                 cell.setValue("Прожектор");
+            }else if (Objects.equals(montagneType, "Шар")){
+                cell.setValue("Шар");
             }
             cell = cells.get("J" + Integer.toString(outsideRowCount));
             if (isStolb) {
@@ -534,7 +537,7 @@ public class ExcelExporter {
     public void save() throws Exception {       //Сохранение в новый файл(Aspose Cells)
         sheet = worksheets.get(1);
         cells = sheet.getCells();
-        Cell cell = cells.get("M510");
+        Cell cell = cells.get("M1728");
         String value = cell.getFormula();
         cell.setFormula(value);
         sheet = worksheets.get(2);
@@ -548,7 +551,7 @@ public class ExcelExporter {
         XSSFWorkbook workBook = new XSSFWorkbook(inputStream);
 
 //Delete Sheet
-        workBook.removeSheetAt(7);
+        workBook.removeSheetAt(8);
 
 //Save the file
         FileOutputStream outFile = new FileOutputStream(new File(path + "/" + Variables.current_floor.getName() + ".xlsx"));
