@@ -382,10 +382,31 @@ public class ExcelExporter {
                     }
                 }
             }
+            for (Room room:Variables.floors.elementAt(l).rooms) {
+                if (room.lamps.size() == 0) {
+                    writeToFileAccessDenied(Variables.floors.elementAt(l), room);
+                }
+            }
         }
         save();
     }
 
+    public void writeToFileAccessDenied(Floor floor,Room room){
+        sheet = worksheets.get(1);
+        cells = sheet.getCells();
+        Cell cell = cells.get("A" + Integer.toString(rowCount));
+        cell.setValue(floor.getFloor());
+        cell = cells.get("B" + Integer.toString(rowCount));
+        if (room != null) {
+            cell.setValue(room.getNumber());
+        }
+        cell = cells.get("D" + Integer.toString(rowCount));
+        cell.setValue(floor.getAdress());
+        cell = cells.get("F" + Integer.toString(rowCount));
+        if (room != null)
+            cell.setValue("Нет доступа");
+        rowCount++;
+    }
     public void writeToFile(Floor floor, Room room, String type, int amount, String comments, String number, String montagneType, String otherInfo, boolean isOutside, String positionOutside, boolean isStolb) throws Exception {       //Запись в файл по ячейкам
 
 // Obtaining the reference of the first worksheet

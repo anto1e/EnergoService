@@ -1469,6 +1469,11 @@ public class Buttons {
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     Variables.type.setAdapter(adapter);
                     Variables.daysOfWorkDefault.setSelection(8);
+                }else if (String.valueOf(Variables.typeOfBuilding.getSelectedItem()).equals("Другое")) {
+                    ArrayAdapter<String> adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsOthers);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    Variables.type.setAdapter(adapter);
+                    Variables.daysOfWorkDefault.setSelection(6);
                 }
             }
 
