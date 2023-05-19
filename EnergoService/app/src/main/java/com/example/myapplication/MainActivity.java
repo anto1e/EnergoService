@@ -98,35 +98,35 @@ public class MainActivity extends AppCompatActivity {
         Variables.buttons.startDetecting();       //Начало отслеживания нажатия кнопок
         Variables.listView.setOnItemClickListener((adapterView, view, position, l) -> {       //Обработка нажатия на один из элементов списка светильников
             if (Variables.getAddFlag()) {
+                int placeType=0;
+                if (Variables.plan.touchedRoom==null){
+                    placeType=1;
+                }
                 switch (Variables.currentLampsPanelIndex){
                     case 0:
-                        Variables.plan.spawnLamp(Variables.VstraivaemieImageId[position], position,Variables.lampsVstraivaemieName[position],0,0,0,0,false,0,0);         //Создание светильника
+                        Variables.plan.spawnLamp(Variables.VstraivaemieImageId[position], position,Variables.lampsVstraivaemieName[position],placeType,0,0,0,false,0,0);         //Создание светильника
                         break;
                     case 1:
-                        Variables.plan.spawnLamp(Variables.NakladnieImageId[position], position,Variables.lampsNakladnieName[position],0,1,0,0,false,0,0);         //Создание светильника
+                        Variables.plan.spawnLamp(Variables.NakladnieImageId[position], position,Variables.lampsNakladnieName[position],placeType,1,0,0,false,0,0);         //Создание светильника
                         break;
                     case 2:
-                        Variables.plan.spawnLamp(Variables.LampsImageId[position], position,Variables.lampsLampsName[position],0,2,0,0,false,0,0);         //Создание светильника
+                        Variables.plan.spawnLamp(Variables.LampsImageId[position], position,Variables.lampsLampsName[position],placeType,2,0,0,false,0,0);         //Создание светильника
                         break;
                     case 3:
-                        Variables.plan.spawnLamp(Variables.DiodsImageId[position], position,Variables.lampsDiodsName[position],0,3,0,0,false,0,0);         //Создание светильника
+                        Variables.plan.spawnLamp(Variables.DiodsImageId[position], position,Variables.lampsDiodsName[position],placeType,3,0,0,false,0,0);         //Создание светильника
                         break;
                     case 4:
-                        Variables.plan.spawnLamp(Variables.DoskiImageId[position], position,Variables.lampsDoskiName[position],0,4,0,0,false,0,0);         //Создание светильника
+                        Variables.plan.spawnLamp(Variables.DoskiImageId[position], position,Variables.lampsDoskiName[position],placeType,4,0,0,false,0,0);         //Создание светильника
                         break;
                     case 5:
-                        Variables.plan.spawnLamp(Variables.PodvesImageId[position], position,Variables.lampsPodvesName[position],0,5,0,0,false,0,0);         //Создание светильника
+                        Variables.plan.spawnLamp(Variables.PodvesImageId[position], position,Variables.lampsPodvesName[position],placeType,5,0,0,false,0,0);         //Создание светильника
                         break;
                     case 6:
-                        Variables.plan.spawnLamp(Variables.OthersImageId[position], position,Variables.lampsOthersName[position],0,6,0,0,false,0,0);         //Создание светильника
+                        Variables.plan.spawnLamp(Variables.OthersImageId[position], position,Variables.lampsOthersName[position],placeType,6,0,0,false,0,0);         //Создание светильника
                         break;
                     case 7:
-                        if (Variables.plan.touchedRoom!=null){
-                            Variables.plan.spawnLamp(Variables.OutsideImageId[position], position,Variables.lampsOutsideName[position],0,7,0,0,false,0,0);         //Создание светильника
-                        }else {
-                            Variables.plan.spawnLamp(Variables.OutsideImageId[position], position, Variables.lampsOutsideName[position], 1, 7, 0, 0, false, 0, 0);         //Создание светильника
-                        }
-                            break;
+                        Variables.plan.spawnLamp(Variables.OutsideImageId[position], position,Variables.lampsOutsideName[position],placeType,7,0,0,false,0,0);         //Создание светильника
+                        break;
                 }
             }else if (Variables.addMultiple_flag || Variables.addMultipleRowsFlag){
                 Variables.resetListColor();

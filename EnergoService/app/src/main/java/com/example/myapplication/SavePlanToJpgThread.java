@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SavePlanToJpgThread extends Thread{
     public void run() {
         try {
+            Variables.isExportingToJpg=true;
             Variables.planLayCleared = true;
             Variables.exportingJpg=true;
             ImageView rotationElement = Variables.loadingImage;     //Колесо вращения

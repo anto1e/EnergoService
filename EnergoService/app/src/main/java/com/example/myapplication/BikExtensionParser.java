@@ -305,6 +305,7 @@ public class BikExtensionParser {
                 }
             }
             Variables.exportingJpg=false;
+            Variables.isExportingToJpg=false;
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {

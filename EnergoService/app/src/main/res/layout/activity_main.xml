@@ -541,14 +541,14 @@
                         <Spinner
                             android:verticalScrollbarPosition="right"
                             android:id="@+id/spinColumns"
-                            android:layout_marginLeft="-50dp"
+                            android:layout_marginLeft="-60dp"
                             android:layout_marginTop="5dp"
-                            android:layout_width="60dp"
+                            android:layout_width="80dp"
                             android:layout_height="30dp"
                             android:background="@android:drawable/btn_dropdown"
                             android:spinnerMode="dropdown" />
                     <EditText
-                        android:layout_marginLeft="-40dp"
+                        android:layout_marginLeft="-30dp"
                         android:layout_width="wrap_content"
                         android:textSize="12dp"
                         android:id="@+id/columnAmount"
@@ -561,14 +561,14 @@
                         <Spinner
                             android:verticalScrollbarPosition="right"
                             android:id="@+id/spinRows"
-                            android:layout_marginLeft="-50dp"
+                            android:layout_marginLeft="-60dp"
                             android:layout_marginTop="5dp"
-                            android:layout_width="60dp"
+                            android:layout_width="80dp"
                             android:layout_height="30dp"
                             android:background="@android:drawable/btn_dropdown"
                             android:spinnerMode="dropdown" />
                         <EditText
-                            android:layout_marginLeft="-40dp"
+                            android:layout_marginLeft="-30dp"
                             android:layout_width="wrap_content"
                             android:textSize="12dp"
                             android:id="@+id/rowsAmount"

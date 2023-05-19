@@ -146,6 +146,7 @@ public class Variables {
 
     static double lastWidth;                //Ширина плана, при разметке на сайте
     static double lastHeight;                //Высота плана, при разметке на сайте
+    static boolean isExportingToJpg=false;
     static double currentWidth;                //Ширина плана в приложении
     static double currentHeight;                //Высота плана в приложении
     static String[] montagneOutsideTypeArr = {"Консоль","Кронштейн","Шар"};           //Типы монтажа наружного освещения

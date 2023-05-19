@@ -104,30 +104,34 @@ public class Plan {
                                     public void run() {
                                         tempView.setX(event.getX() - tempView.getWidth() / 2);
                                         tempView.setY(event.getY() - tempView.getHeight() / 2);
+                                        int placeType=0;
+                                        if (touchedRoom==null){
+                                            placeType=1;
+                                        }
                                         switch (Variables.currentLampsPanelIndex){      //Создаем светильник в зависимости от его типа
                                             case 0:
-                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsVstraivaemieName[Variables.multiplepos], 0,0, 0,0, false, 0,0);
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsVstraivaemieName[Variables.multiplepos], placeType,0, 0,0, false, 0,0);
                                                 break;
                                             case 1:
-                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsNakladnieName[Variables.multiplepos],0, 1, 0,0, false, 0,0);
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsNakladnieName[Variables.multiplepos],placeType, 1, 0,0, false, 0,0);
                                                 break;
                                             case 2:
-                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsLampsName[Variables.multiplepos], 0, 2,0, 0,false, 0,0);
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsLampsName[Variables.multiplepos], placeType, 2,0, 0,false, 0,0);
                                                 break;
                                             case 3:
-                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsDiodsName[Variables.multiplepos], 0,3, 0,0, false, 0,0);
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsDiodsName[Variables.multiplepos], placeType,3, 0,0, false, 0,0);
                                                 break;
                                             case 4:
-                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsDoskiName[Variables.multiplepos], 0, 4,0,0, false, 0,0);
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsDoskiName[Variables.multiplepos], placeType, 4,0,0, false, 0,0);
                                                 break;
                                             case 5:
-                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsPodvesName[Variables.multiplepos], 0,5, 0,0, false, 0,0);
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsPodvesName[Variables.multiplepos], placeType,5, 0,0, false, 0,0);
                                                 break;
                                             case 6:
-                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOthersName[Variables.multiplepos], 0, 6,0,0, false, 0,0);
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOthersName[Variables.multiplepos], placeType, 6,0,0, false, 0,0);
                                                 break;
                                             case 7:
-                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOutsideName[Variables.multiplepos], 1,7, 0,0, false, 0,0);
+                                                spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOutsideName[Variables.multiplepos], placeType,7, 0,0, false, 0,0);
                                                 break;
                                         }
                                         //spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.multiplelampType, Variables.lampsName[Variables.multiplepos], 0, 0, false, 0,0);
@@ -723,7 +727,10 @@ public class Plan {
                 if (lampName.equals("unknowntype") || lampName.equals("unknowntypediod")) {
                     if (lampName.equals("unknowntypediod")){
                         lamp.setType("Светодиодный");
+                    }else{
+                        lamp.setType("Люминесцентный");
                     }
+                    lamp.setPower("?");
                     escapePowerSet=true;
                     }else
                 if (!lampName.equals("lustranakal") && !lampName.equals("lustrakll")){

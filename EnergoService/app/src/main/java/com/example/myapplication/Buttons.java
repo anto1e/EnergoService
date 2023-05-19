@@ -460,6 +460,7 @@ public class Buttons {
                                 tempLamp.setPositionOutside(lamp.getPositionOutside());
                                 tempLamp.setGroupIndex(lamp.getGroupIndex());
                                 tempLamp.setPlaceType(lamp.getPlaceType());
+                                tempLamp.setLampsAmount(lamp.getLampsAmount());
                                 ImageView imageView = new ImageView(Variables.activity);
                                 Resources resources = Variables.activity.getResources();
                                 final int resourceId = resources.getIdentifier(lamp.getTypeImage(), "drawable",
@@ -513,6 +514,7 @@ public class Buttons {
                                 tempLamp.setPositionOutside(Variables.plan.touchedLamp.getPositionOutside());
                                 tempLamp.setGroupIndex(Variables.plan.touchedLamp.getGroupIndex());
                                 tempLamp.setPlaceType(Variables.plan.touchedLamp.getPlaceType());
+                                tempLamp.setLampsAmount(Variables.plan.touchedLamp.getLampsAmount());
                                 ImageView imageView = new ImageView(Variables.activity);
                                 Resources resources = Variables.activity.getResources();
                                 final int resourceId = resources.getIdentifier(Variables.plan.touchedLamp.getTypeImage(), "drawable",
@@ -556,10 +558,13 @@ public class Buttons {
                             Variables.lampType.setText("");
                             Variables.lampPower.setText("");
                             Variables.lampComments.setText("");
+                            Variables.lampAmountEdit.setText("0");
                             Variables.montagneTypeTxt.setVisibility(View.GONE);
                             Variables.montagneType.setVisibility(View.GONE);
                             Variables.montagneTypeTxtTwo.setVisibility(View.VISIBLE);
                             Variables.montagneTypeTwo.setVisibility(View.VISIBLE);
+                            Variables.lampAmountText.setVisibility(View.VISIBLE);
+                            Variables.lampAmountEdit.setVisibility(View.VISIBLE);
                             Variables.montagneTypeTwo.setSelection(0);
                         }else{      //Деактивация
                             if (!Variables.moveOnlySelectedZone) {  //Выключение функцию выделения и подтверждающей кнопки
@@ -619,7 +624,7 @@ public class Buttons {
                             for (Lamp lamp : Variables.copyVector) {
                                 boolean found = false;
                                 for (Room room : Variables.current_floor.rooms) {
-                                    if (room.detectTouch(lamp.getImage().getX(), lamp.getImage().getY())) {
+                                    if (room.detectTouch(lamp.getImage().getX()+(lamp.getImage().getWidth()/2), lamp.getImage().getY()+(lamp.getImage().getHeight()/2))) {
                                         room.lamps.add(lamp);
                                         lamp.setLampRoom(room.getNumber());
                                         found = true;
@@ -638,8 +643,15 @@ public class Buttons {
                             moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
                             else
                                 moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-                            disableConfirmBtn();
-                            disableCancelBtn();
+                            if (!Variables.moveOnlySelectedZone) {  //Выключение функцию выделения и подтверждающей кнопки
+                                disableConfirmBtn();
+                                disableSelectZone();
+                                disableCancelBtn();
+                            }else{ //Иначе - выключаем функцию веделения
+                                Variables.selectZoneFlag=false;
+                                selectZone.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                                Variables.plan.disableListenerFromPlan();
+                            }
                         }
                         else if (Variables.selectZoneFlag){     //Если это флаг выбора зоны - сохраняем групповой комментарий к светильникам
                             String txt = Variables.lampComments.getText().toString();
@@ -655,6 +667,36 @@ public class Buttons {
                                 for (Lamp lamp:Variables.copyVector){
                                     lamp.setMontagneType(Variables.montagneTypeTwo.getSelectedItemPosition()-1);
                                 }
+                            }
+                            if (!String.valueOf(Variables.lampType.getText()).equals("")) {
+                                for (Lamp lamp:Variables.copyVector){
+                                    lamp.setType(String.valueOf(Variables.lampType.getText()));
+                                }
+                            }
+                            if (!String.valueOf(Variables.lampPower.getText()).equals("")) {
+                                for (Lamp lamp:Variables.copyVector){
+                                    lamp.setPower(String.valueOf(Variables.lampPower.getText()));
+                                }
+                            }
+                            if (!String.valueOf(Variables.lampPower.getText()).equals("")) {
+                                for (Lamp lamp:Variables.copyVector){
+                                    lamp.setPower(String.valueOf(Variables.lampPower.getText()));
+                                }
+                            }
+                            if (!String.valueOf(Variables.lampAmountEdit.getText()).equals("0")) {
+                                for (Lamp lamp:Variables.copyVector){
+                                    if (lamp.getTypeImage().equals("lustradiod") || lamp.getTypeImage().equals("lustranakal") || lamp.getTypeImage().equals("lustrakll")){
+                                        lamp.setLampsAmount(Integer.parseInt(String.valueOf(Variables.lampAmountEdit.getText())));
+                                    }
+                                }
+                            }
+                            if (!Variables.moveOnlySelectedZone) {  //Выключение функцию выделения и подтверждающей кнопки
+                                disableConfirmBtn();
+                                disableSelectZone();
+                            }else{ //Иначе - выключаем функцию веделения
+                                Variables.selectZoneFlag=false;
+                                selectZone.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                                Variables.plan.disableListenerFromPlan();
                             }
                         }
                         else if (Variables.copyFlag){       //Если это функция копирования по выбору зоны - сохраняем светильники в вектор, а затем вставляем скопированные светильники
@@ -678,6 +720,7 @@ public class Buttons {
                                     tempLamp.setPositionOutside(lamp.getPositionOutside());
                                     tempLamp.setGroupIndex(lamp.getGroupIndex());
                                     tempLamp.setPlaceType(lamp.getPlaceType());
+                                    tempLamp.setLampsAmount(lamp.getLampsAmount());
                                     ImageView imageView = new ImageView(Variables.activity);
                                     Resources resources = Variables.activity.getResources();
                                     final int resourceId = resources.getIdentifier(lamp.getTypeImage(), "drawable",
@@ -1884,6 +1927,8 @@ public class Buttons {
         }
         Variables.copyVector.clear();
         Variables.plan.disableListenerFromPlan();
+        Variables.lampAmountText.setVisibility(View.GONE);
+        Variables.lampAmountEdit.setVisibility(View.GONE);
         Variables.montagneTypeTxt.setVisibility(View.VISIBLE);
         Variables.montagneType.setVisibility(View.VISIBLE);
         if (Variables.plan.touchedLamp!=null){
