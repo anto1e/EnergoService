@@ -130,6 +130,11 @@ public class Variables {
     static RelativeLayout RoomInfo;            //Макет, где хранится информация о помещении
     static EditText lampType;                  //Поле типа светильника
     static EditText lampPower;                  //Поле мощности светильника
+    static Spinner typeLamp;
+    static Spinner daysLamp;
+    static Spinner hoursLamp;
+    static Spinner hoursPerWeekendLamp;
+    static Spinner hoursPerSundayLamp;
     static EditText lampComments;              //Поле комментариев к светильнику
     static FrameLayout photoFrame;              //Layout для отображения выбранной фотографии
     static TextView lampAmountText;             //Текст количества ламп(для люстр)
@@ -263,6 +268,11 @@ public class Variables {
 
 
     public static void init(){                //Инициализация переменных
+        hoursPerSundayLamp = activity.findViewById(R.id.roomHoursSundayLamp);
+        hoursPerWeekendLamp = activity.findViewById(R.id.roomHoursWeekendsLamp);
+        hoursLamp = activity.findViewById(R.id.roomHoursLamp);
+        daysLamp = activity.findViewById(R.id.roomDaysLamp);
+        typeLamp = activity.findViewById(R.id.spinTypesLamp);
         path1 = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
         montagneTypeTwo = activity.findViewById(R.id.montagneTypeTwo);
         montagneTypeTxtTwo = activity.findViewById(R.id.montagneTypeTxtTwo);
@@ -337,17 +347,22 @@ public class Variables {
         ArrayAdapter<String> adapter = new ArrayAdapter(activity, R.layout.spinner_item, typesOfRoomsDetSad);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         type.setAdapter(adapter);
+        typeLamp.setAdapter(adapter);
         adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,daysPerWeekArr);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         daysPerWeek.setAdapter(adapter);
+        daysLamp.setAdapter(adapter);
         daysOfWorkDefault.setAdapter(adapter);
         adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,hoursPerWeekendArr);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         hoursPerWeekend.setAdapter(adapter);
+        hoursPerWeekendLamp.setAdapter(adapter);
         hoursPerSunday.setAdapter(adapter);
+        hoursPerSundayLamp.setAdapter(adapter);
         adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,hoursPerDayArr);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         hoursPerDay.setAdapter(adapter);
+        hoursLamp.setAdapter(adapter);
         adapter = new ArrayAdapter<>(activity,R.layout.spinner_item,roofTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roofType.setAdapter(adapter);
@@ -432,11 +447,12 @@ public class Variables {
     }
     public static Room getRoomByNumber(String number,float cordX,float cordY,float scale,Floor floor){      //Поиск комнаты по номеру, к которому привязан светильник, и по его координатам
         for (int i=0;i<floor.rooms.size();i++){
-            if (Objects.equals(floor.rooms.elementAt(i).getNumber(), number) && floor.rooms.elementAt(i).detectTouch((cordX+((15*scale)/2)),(cordY+((15*scale)/2))))
+            if (Objects.equals(floor.rooms.elementAt(i).getNumber(), number) && floor.rooms.elementAt(i).detectTouch(cordX,(cordY)))
                 return floor.rooms.elementAt(i);
         }
         return null;
     }
+
     public static void moveCopiedVector(float cordX,float cordY){           //Передвижение светильников в векторе копирования
         tempCopiedLamp.getImage().setX(cordX);
         tempCopiedLamp.getImage().setY(cordY);

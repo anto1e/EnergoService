@@ -1080,6 +1080,75 @@
                     android:layout_width="80dp"
                     android:textSize="12dp"
                     />
+                <TextView
+                    android:text="Тип:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+
+                <Spinner
+                    android:verticalScrollbarPosition="right"
+                    android:id="@+id/spinTypesLamp"
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown" />
+                <TextView
+                    android:text="Дней:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+
+                <Spinner
+                    android:verticalScrollbarPosition="right"
+                    android:id="@+id/roomDaysLamp"
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown" />
+                <TextView
+                    android:text="Часы:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+
+                <Spinner
+                    android:verticalScrollbarPosition="right"
+                    android:id="@+id/roomHoursLamp"
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown" />
+                <TextView
+                    android:text="Суббота:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+
+                <Spinner
+                    android:verticalScrollbarPosition="right"
+                    android:id="@+id/roomHoursWeekendsLamp"
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown" />
+                <TextView
+                    android:text="Воскресенье:"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    />
+                <Spinner
+                    android:verticalScrollbarPosition="right"
+                    android:id="@+id/roomHoursSundayLamp"
+                    android:layout_marginLeft="-80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown" />
                 <Button
                     android:layout_height="20dp"
                     android:visibility="invisible"

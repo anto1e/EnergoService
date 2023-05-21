@@ -204,10 +204,6 @@ public class BikExtensionParser {
                             float rotationAngle = Float.parseFloat(split_room_info[7]);     //Угол поворота
                             String lampRoom = split_room_info[8];       //Комната, к которой привязан светильник
                             String usedOrNot = split_room_info[9];      //Поле используется или нет
-                            Room room=null;             //Комната, к которой привязан
-                            if (!Objects.equals(number, "-1")) {            //Если светильник привязан к какой-то комнате
-                                room = Variables.getRoomByNumber(number,cordX,cordY,scale,Variables.current_floor);         //Поиск комнтаты к которой привязан светильник
-                            }
                                 Lamp lamp = new Lamp();
                                 lamp.setType(type);
                                 lamp.setPower(power);
@@ -235,8 +231,13 @@ public class BikExtensionParser {
                                 int lampsAmount = Integer.parseInt(split_room_info[13]);        //Количество ламп в светильнике(для люстр)
                                 int positionOutside = Integer.parseInt(split_room_info[14]);    //Место светильнка снаружи
                                 boolean isStolb = Boolean.parseBoolean(split_room_info[15]);    //Находится ли светильник на столбе(для наружного освещения)
-                            if (split_room_info.length>16){      //Если есть пути к фотографиям и сами файлы существуют - добавляем
-                                String paths = split_room_info[16];
+                                int typeRoom = Integer.parseInt(split_room_info[16]);
+                                int daysOfWork = Integer.parseInt(split_room_info[17]);
+                                int hoursOfWork = Integer.parseInt(split_room_info[18]);
+                                int hoursOfWorkWeekend = Integer.parseInt(split_room_info[19]);
+                                int hoursOfWorkSunday = Integer.parseInt(split_room_info[20]);
+                            if (split_room_info.length>21){      //Если есть пути к фотографиям и сами файлы существуют - добавляем
+                                String paths = split_room_info[21];
                                 String[] split_room_photos = paths.split("!");
                                 for (int i=0;i<split_room_photos.length;i++){
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -253,27 +254,54 @@ public class BikExtensionParser {
                             lamp.setLampsAmount(lampsAmount);
                             lamp.setPositionOutside(positionOutside);
                             lamp.setStolb(isStolb);
-                                if (Objects.equals(lampRoom, "-1") && !Objects.equals(usedOrNot, "used")){  //Если светильник не привязан никуда, пытаемся привязать по координатам, если не выходит - не привязываем
-                                    Room detectedRoom=null;
-                                    for (Room temp:Variables.current_floor.rooms){
-                                        if (temp.detectTouch(cordX,cordY)) {
-                                            detectedRoom=temp;
+                            lamp.setTypeRoom(typeRoom);
+                            lamp.setDaysWork(daysOfWork);
+                            lamp.setHoursWork(hoursOfWork);
+                            lamp.setHoursWeekendWork(hoursOfWorkWeekend);
+                            lamp.setHoursSundayWork(hoursOfWorkSunday);
+                            Runnable myThread = () ->
+                            {
+
+                                lamp.setView();
+                                lamp.getImage().post(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        Room room=null;             //Комната, к которой привязан
+                                        if (!Objects.equals(number, "-1")) {            //Если светильник привязан к какой-то комнате
+                                            room = Variables.getRoomByNumber(number,lamp.getImage().getX()+(lamp.getImage().getWidth()/2),lamp.getImage().getY()+(lamp.getImage().getHeight()/2),scale,Variables.current_floor);         //Поиск комнтаты к которой привязан светильник
+                                        }
+                                        if (Objects.equals(lampRoom, "-1") && !Objects.equals(usedOrNot, "used")){  //Если светильник не привязан никуда, пытаемся привязать по координатам, если не выходит - не привязываем
+                                            Room detectedRoom=null;
+                                            for (Room temp:Variables.current_floor.rooms){
+                                                if (temp.detectTouch(cordX,cordY)) {
+                                                    detectedRoom=temp;
+                                                }
+                                            }
+                                            if (detectedRoom==null){
+                                                Variables.current_floor.unusedLamps.add(lamp);
+                                                imageView.setBackgroundResource(R.color.blue);
+                                            }else{
+                                                detectedRoom.lamps.add(lamp);
+                                            }
+                                        }else{
+                                            if (room!=null) {
+                                                room.lamps.add(lamp);
+                                            }else{
+                                                Variables.current_floor.unusedLamps.add(lamp);
+                                                lamp.getImage().setBackgroundResource(R.color.blue);
+                                            }
                                         }
                                     }
-                                    if (detectedRoom==null){
-                                        Variables.current_floor.unusedLamps.add(lamp);
-                                            imageView.setBackgroundResource(R.color.blue);
-                                    }else{
-                                        detectedRoom.lamps.add(lamp);
-                                    }
-                                }else{
-                                    if (room!=null) {
-                                        room.lamps.add(lamp);
-                                    }else{
-                                        Variables.current_floor.unusedLamps.add(lamp);
-                                        lamp.getImage().setBackgroundResource(R.color.blue);
-                                    }
-                                }
+                                });
+                            };
+
+                            // Instantiating Thread class by passing Runnable
+                            // reference to Thread constructor
+                            Thread run = new Thread(myThread);
+
+                            // Starting the thread
+                            run.start();
                         }
                     }
                 }
@@ -374,7 +402,7 @@ public class BikExtensionParser {
                     for (int i=0;i<tempFloor.rooms.size();i++){
                         for (int j=0;j<tempFloor.rooms.elementAt(i).lamps.size();j++){
                             Lamp temp = tempFloor.rooms.elementAt(i).lamps.elementAt(j);
-                            String str12 = tempFloor.rooms.elementAt(i).getNumber()+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle()+"@"+temp.getLampRoom()+"@"+"used"+"@"+temp.getMontagneType()+"@"+temp.getPlaceType()+"@"+temp.getGroupIndex()+"@"+temp.getLampsAmount()+"@"+temp.getPositionOutside()+"@"+temp.isStolb();
+                            String str12 = tempFloor.rooms.elementAt(i).getNumber()+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle()+"@"+temp.getLampRoom()+"@"+"used"+"@"+temp.getMontagneType()+"@"+temp.getPlaceType()+"@"+temp.getGroupIndex()+"@"+temp.getLampsAmount()+"@"+temp.getPositionOutside()+"@"+temp.isStolb()+"@"+temp.getTypeRoom()+"@"+temp.getDaysWork()+"@"+temp.getHoursWork()+"@"+temp.getHoursWeekendWork()+"@"+temp.getHoursSundayWork();
                             String str2="@";
                             if (temp.photoPaths.size()!=0){
                                 for (String str:temp.photoPaths){
@@ -387,7 +415,7 @@ public class BikExtensionParser {
                     }
                     for (int i=0;i<tempFloor.unusedLamps.size();i++){
                             Lamp temp = tempFloor.unusedLamps.elementAt(i);
-                            String str12 = "-1"+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle()+"@"+temp.getLampRoom()+"@"+"unused"+"@"+temp.getMontagneType()+"@"+temp.getPlaceType()+"@"+temp.getGroupIndex()+"@"+temp.getLampsAmount()+"@"+temp.getPositionOutside()+"@"+temp.isStolb();
+                            String str12 = "-1"+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle()+"@"+temp.getLampRoom()+"@"+"unused"+"@"+temp.getMontagneType()+"@"+temp.getPlaceType()+"@"+temp.getGroupIndex()+"@"+temp.getLampsAmount()+"@"+temp.getPositionOutside()+"@"+temp.isStolb()+"@"+temp.getTypeRoom()+"@"+temp.getDaysWork()+"@"+temp.getHoursWork()+"@"+temp.getHoursWeekendWork()+"@"+temp.getHoursSundayWork();
                              String str2="@";
                             if (temp.photoPaths.size()!=0){
                                 for (String str:temp.photoPaths){

@@ -250,6 +250,11 @@ public class Plan {
 
     public void setTouchedRoomInfo(){           //Отображения информации о комнате
         if (touchedRoom!=null) {
+            Variables.buttons.lastType = touchedRoom.getType_pos();
+            Variables.buttons.lastDays =touchedRoom.getDays();
+            Variables.buttons.lastHours = touchedRoom.getHoursPerDay();
+            Variables.buttons.lastHoursWeekend=touchedRoom.getHoursPerWeekend();
+            Variables.buttons.lastHoursSunday=touchedRoom.getHoursPerSunday();
             Variables.RoomInfo.setVisibility(View.VISIBLE);     //Отображаем данные о комнате
             Variables.roomNumber.setText(touchedRoom.getNumber());
             Variables.roomHeight.setText(touchedRoom.getHeight());
@@ -283,6 +288,11 @@ public class Plan {
                     clearInfoLamp();
                     Variables.RoomInfo.setVisibility(View.VISIBLE);     //Отображаем данные о комнате
                     touchedRoom = room;
+                    Variables.buttons.lastType = touchedRoom.getType_pos();
+                    Variables.buttons.lastDays =touchedRoom.getDays();
+                    Variables.buttons.lastHours = touchedRoom.getHoursPerDay();
+                    Variables.buttons.lastHoursWeekend=touchedRoom.getHoursPerWeekend();
+                    Variables.buttons.lastHoursSunday=touchedRoom.getHoursPerSunday();
                     Variables.roomNumber.setText(touchedRoom.getNumber());
                     Variables.roomHeight.setText(touchedRoom.getHeight());
                     Variables.type.setSelection(touchedRoom.getType_pos());
@@ -432,6 +442,11 @@ public class Plan {
                     lamp.setTypeImage(lampName);
                     lamp.setLampRoom(touchedRoom.getNumber());
                     lamp.setImage(imageView);
+                    lamp.setTypeRoom(touchedRoom.getType_pos());
+                    lamp.setDaysWork(touchedRoom.getDays());
+                    lamp.setHoursWork(touchedRoom.getHoursPerDay());
+                    lamp.setHoursWeekendWork(touchedRoom.getHoursPerWeekend());
+                    lamp.setHoursSundayWork(touchedRoom.getHoursPerSunday());
                     if (touchedRoom!=null && touchedRoom.lamps.size()==0 && ((groupIndex==0) || (lampName.equals("diod36vstr")) || (lampName.equals("diod40vstr")) || (lampName.equals("lampdiodspot12")) || (lampName.equals("lampdiodspot10")) || (lampName.equals("lampdiodspot15")))){     //Если добавленный светильника встраиваемый - задаем тип потолка армстронг
                         touchedRoom.setRoofType(1);
                         Variables.roofType.setSelection(1);
@@ -1059,6 +1074,20 @@ public class Plan {
                                     touchedRoom.lampPush(touchedLamp);
                                     touchedLamp.setLampRoom(touchedRoom.getNumber());
                                     touchedLamp.getImage().setBackgroundResource(0);
+                                    touchedLamp.setTypeRoom(touchedRoom.getType_pos());
+                                    Variables.typeLamp.setSelection(touchedLamp.getTypeRoom());
+                                    touchedLamp.setDaysWork(touchedRoom.getDays());
+                                    Variables.daysLamp.setSelection(touchedLamp.getDaysWork());
+                                    touchedLamp.setHoursWork(touchedRoom.getHoursPerDay());
+                                    Variables.hoursLamp.setSelection(touchedLamp.getHoursWork());
+                                    touchedLamp.setHoursWeekendWork(touchedRoom.getHoursPerWeekend());
+                                    Variables.hoursPerWeekendLamp.setSelection(touchedLamp.getHoursWeekendWork());
+                                    touchedLamp.setHoursSundayWork(touchedRoom.getHoursPerSunday());
+                                    Variables.hoursPerSundayLamp.setSelection(touchedLamp.getHoursSundayWork());
+                                    Variables.lampRoom.setText(touchedLamp.getLampRoom());
+                                    Variables.lampType.setText(touchedLamp.getType());
+                                    Variables.lampPower.setText(touchedLamp.getPower());
+                                    Variables.montagneType.setSelection(touchedLamp.getMontagneType());
                                     //}
                                 }
                             }
@@ -1079,6 +1108,16 @@ public class Plan {
             Variables.lampComments.setText(lamp.getComments());
             Variables.montagneType.setSelection(lamp.getMontagneType());
             Variables.placeType.setSelection(lamp.getPlaceType());
+            if (lamp.getPlaceType()==1){
+                Variables.typeLamp.setVisibility(View.GONE);
+            }else{
+                Variables.typeLamp.setVisibility(View.VISIBLE);
+            }
+            Variables.typeLamp.setSelection(lamp.getTypeRoom());
+            Variables.daysLamp.setSelection(lamp.getDaysWork());
+            Variables.hoursLamp.setSelection(lamp.getHoursWork());
+            Variables.hoursPerWeekendLamp.setSelection(lamp.getHoursWeekendWork());
+            Variables.hoursPerSundayLamp.setSelection(lamp.getHoursSundayWork());
             Variables.showLampsAllPhotos(lamp);
             //Если это люстры - отображаем информацию о количестве лампочек
             if (lamp.getTypeImage().equals("lustranakal") || lamp.getTypeImage().equals("lustrakll") || lamp.getTypeImage().equals("lustradiod")){
@@ -1131,6 +1170,11 @@ public class Plan {
         Variables.lampAmountText.setVisibility(View.GONE);
         Variables.lampAmountEdit.setVisibility(View.GONE);
         Variables.lampAmountEdit.setText("");
+        Variables.typeLamp.setSelection(0);
+        Variables.daysLamp.setSelection(0);
+        Variables.hoursLamp.setSelection(0);
+        Variables.hoursPerWeekendLamp.setSelection(0);
+        Variables.hoursPerSundayLamp.setSelection(0);
         Variables.montagneOutsideTypeTxt.setVisibility(View.GONE);
         Variables.montagneOutsideType.setVisibility(View.GONE);
         Variables.positionOutsideTxt.setVisibility(View.GONE);

@@ -192,18 +192,6 @@ public class MainActivity extends AppCompatActivity {
                         try {   //Парсим файл
                             if (!Variables.planLayCleared) {
                                 Variables.parser.parseFile(Variables.filePath);
-                                Runnable myThread = () ->
-                                {
-
-                                    Variables.buttons.drawLamps();
-                                };
-
-                                // Instantiating Thread class by passing Runnable
-                                // reference to Thread constructor
-                                Thread run = new Thread(myThread);
-
-                                // Starting the thread
-                                run.start();
                             }
                             //Variables.buttons.drawLamps();
                             //Variables.filePath="";

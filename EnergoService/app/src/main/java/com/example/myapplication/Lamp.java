@@ -26,10 +26,55 @@ public class Lamp {
 
     private int placeType;              //Место расположения(для наружного освещения)
     private int groupIndex;             //Групповой индекс
+    private int typeRoom=0;
+    private int daysWork=0;
+    private int hoursWork=0;
+    private int hoursWeekendWork=0;
+
+    private int hoursSundayWork=0;
 
 
 
     ////Геттеры и сеттеры////
+    public int getTypeRoom() {
+        return typeRoom;
+    }
+
+    public void setTypeRoom(int typeRoom) {
+        this.typeRoom = typeRoom;
+    }
+
+    public int getDaysWork() {
+        return daysWork;
+    }
+
+    public void setDaysWork(int daysWork) {
+        this.daysWork = daysWork;
+    }
+
+    public int getHoursWork() {
+        return hoursWork;
+    }
+
+    public void setHoursWork(int hoursWork) {
+        this.hoursWork = hoursWork;
+    }
+
+    public int getHoursWeekendWork() {
+        return hoursWeekendWork;
+    }
+
+    public void setHoursWeekendWork(int hoursWeekendWork) {
+        this.hoursWeekendWork = hoursWeekendWork;
+    }
+
+    public int getHoursSundayWork() {
+        return hoursSundayWork;
+    }
+
+    public void setHoursSundayWork(int hoursSundayWork) {
+        this.hoursSundayWork = hoursSundayWork;
+    }
     public boolean isStolb() {
         return isStolb;
     }

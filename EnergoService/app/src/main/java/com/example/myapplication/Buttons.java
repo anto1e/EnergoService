@@ -87,6 +87,11 @@ public class Buttons {
     Button submitHeightFloor;       //Кнопка подтверждения задания стандартной высоты потолка
     int lastIndex=-1;               //Последний индекс типа потолка(для автовысоты)
     int lastWorkdays=6;             //Последний тип режима работы
+    int lastType=0;
+    int lastDays=0;
+    int lastHours=0;
+    int lastHoursWeekend=0;
+    int lastHoursSunday=0;
 
 
 
@@ -1408,6 +1413,12 @@ public class Buttons {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if(Variables.plan.touchedRoom!=null) {
                     Variables.plan.touchedRoom.setType_pos(Variables.type.getSelectedItemPosition());
+                    for (Lamp lamp:Variables.plan.touchedRoom.lamps){
+                        if (lamp.getTypeRoom()==lastType) {
+                            lamp.setTypeRoom(Variables.type.getSelectedItemPosition());
+                        }
+                    }
+                    lastType=Variables.plan.touchedRoom.getType_pos();
                 }
             }
 
@@ -1417,11 +1428,48 @@ public class Buttons {
             }
 
         });
+
+        Variables.typeLamp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if(Variables.plan.touchedLamp!=null) {
+                    Variables.plan.touchedLamp.setTypeRoom(Variables.typeLamp.getSelectedItemPosition());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
         Variables.daysPerWeek.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if(Variables.plan.touchedRoom!=null) {
                     Variables.plan.touchedRoom.setDays(Variables.daysPerWeek.getSelectedItemPosition());
+                    for (Lamp lamp:Variables.plan.touchedRoom.lamps) {
+                        if (lamp.getDaysWork() == lastDays) {
+                            lamp.setDaysWork(Variables.daysPerWeek.getSelectedItemPosition());
+                        }
+                    }
+                    lastDays=Variables.plan.touchedRoom.getDays();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
+        Variables.daysLamp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if(Variables.plan.touchedLamp!=null) {
+                    Variables.plan.touchedLamp.setDaysWork(Variables.daysLamp.getSelectedItemPosition());
                 }
             }
 
@@ -1455,6 +1503,12 @@ public class Buttons {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if(Variables.plan.touchedRoom!=null) {
                     Variables.plan.touchedRoom.setHoursPerDay(Variables.hoursPerDay.getSelectedItemPosition());
+                    for (Lamp lamp:Variables.plan.touchedRoom.lamps) {
+                        if (lamp.getHoursWork() == lastHours) {
+                            lamp.setHoursWork(Variables.hoursPerDay.getSelectedItemPosition());
+                        }
+                    }
+                    lastHours = Variables.plan.touchedRoom.getHoursPerDay();
                 }
             }
 
@@ -1464,11 +1518,48 @@ public class Buttons {
             }
 
         });
+
+        Variables.hoursLamp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if(Variables.plan.touchedLamp!=null) {
+                    Variables.plan.touchedLamp.setHoursWork(Variables.hoursLamp.getSelectedItemPosition());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
         Variables.hoursPerWeekend.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if(Variables.plan.touchedRoom!=null) {
                     Variables.plan.touchedRoom.setHoursPerWeekend(Variables.hoursPerWeekend.getSelectedItemPosition());
+                    for (Lamp lamp:Variables.plan.touchedRoom.lamps) {
+                        if (lamp.getHoursWeekendWork() == lastHoursWeekend) {
+                            lamp.setHoursWeekendWork(Variables.hoursPerWeekend.getSelectedItemPosition());
+                        }
+                    }
+                    lastHoursWeekend = Variables.plan.touchedRoom.getHoursPerWeekend();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
+        Variables.hoursPerWeekendLamp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if(Variables.plan.touchedLamp!=null) {
+                    Variables.plan.touchedLamp.setHoursWeekendWork(Variables.hoursPerWeekendLamp.getSelectedItemPosition());
                 }
             }
 
@@ -1484,6 +1575,27 @@ public class Buttons {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if(Variables.plan.touchedRoom!=null) {
                     Variables.plan.touchedRoom.setHoursPerSunday(Variables.hoursPerSunday.getSelectedItemPosition());
+                    for (Lamp lamp:Variables.plan.touchedRoom.lamps) {
+                        if (lamp.getHoursSundayWork() == lastHoursSunday) {
+                            lamp.setHoursSundayWork(Variables.hoursPerSunday.getSelectedItemPosition());
+                        }
+                    }
+                    lastHoursSunday=Variables.plan.touchedRoom.getHoursPerSunday();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
+        Variables.hoursPerSundayLamp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if(Variables.plan.touchedLamp!=null) {
+                    Variables.plan.touchedLamp.setHoursSundayWork(Variables.hoursPerSundayLamp.getSelectedItemPosition());
                 }
             }
 
@@ -1501,21 +1613,25 @@ public class Buttons {
                     ArrayAdapter<String> adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsDetSad);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     Variables.type.setAdapter(adapter);
+                    Variables.typeLamp.setAdapter(adapter);
                     Variables.daysOfWorkDefault.setSelection(6);
                 }else if (String.valueOf(Variables.typeOfBuilding.getSelectedItem()).equals("Школа")){
                     ArrayAdapter<String> adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsSchools);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     Variables.type.setAdapter(adapter);
+                    Variables.typeLamp.setAdapter(adapter);
                     Variables.daysOfWorkDefault.setSelection(7);
                 }else if (String.valueOf(Variables.typeOfBuilding.getSelectedItem()).equals("Больница")){
                     ArrayAdapter<String> adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsHospitals);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     Variables.type.setAdapter(adapter);
+                    Variables.typeLamp.setAdapter(adapter);
                     Variables.daysOfWorkDefault.setSelection(8);
                 }else if (String.valueOf(Variables.typeOfBuilding.getSelectedItem()).equals("Другое")) {
                     ArrayAdapter<String> adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsOthers);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     Variables.type.setAdapter(adapter);
+                    Variables.typeLamp.setAdapter(adapter);
                     Variables.daysOfWorkDefault.setSelection(6);
                 }
             }

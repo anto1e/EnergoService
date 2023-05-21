@@ -197,11 +197,16 @@ public class ExcelExporter {
                                     break;
                             }
                         }           //Если такого типа еще нет - добавляем
-                        if (!types.contains(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getMontagneType() + " " + comments)) {
-                            types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getMontagneType() + " " + comments);
+                        if (!types.contains(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getMontagneType() + " " + comments + " " + lamps.elementAt(j).getTypeRoom() + " " + lamps.elementAt(j).getDaysWork() + " " + lamps.elementAt(j).getHoursWork() + " " +lamps.elementAt(j).getHoursWeekendWork()+ " " + lamps.elementAt(j).getHoursSundayWork())) {
+                            types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getMontagneType() + " " + comments  + " " + lamps.elementAt(j).getTypeRoom() + " " + lamps.elementAt(j).getDaysWork() + " " + lamps.elementAt(j).getHoursWork() + " " +lamps.elementAt(j).getHoursWeekendWork()+ " " + lamps.elementAt(j).getHoursSundayWork());
                         }
                     }
                     for (int j = 0; j < types.size(); j++) {       //Находим и считаем светильники, чьи типы есть в Векторе
+                        String typeRoom="";
+                        String daysWork="";
+                        String hoursWork="";
+                        String hoursWeedendWork="";
+                        String hoursSundayWork="";
                         String type = "";
                         String comm = "";
                         String montagneType = "";
@@ -229,9 +234,14 @@ public class ExcelExporter {
                                 }
                             }
                             //Если есть совпадение с существующим типом
-                            if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " " + lamps.elementAt(z).getMontagneType() + " " + comments)) {
+                            if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " " + lamps.elementAt(z).getMontagneType() + " " + comments  + " " + lamps.elementAt(z).getTypeRoom() + " " + lamps.elementAt(z).getDaysWork() + " " + lamps.elementAt(z).getHoursWork() + " " +lamps.elementAt(z).getHoursWeekendWork()+ " " + lamps.elementAt(z).getHoursSundayWork())) {
                                 //if (lamps.elementAt(z).getComments()==null){
                                 count++;        //Увеличиваем значение счетчика количества светильников
+                                typeRoom = String.valueOf(Variables.typeLamp.getItemAtPosition(lamps.elementAt(z).getTypeRoom()));
+                                daysWork = String.valueOf(Variables.daysLamp.getItemAtPosition(lamps.elementAt(z).getDaysWork()));
+                                hoursWork = String.valueOf(Variables.hoursLamp.getItemAtPosition(lamps.elementAt(z).getHoursWork()));
+                                hoursWeedendWork = String.valueOf(Variables.hoursPerWeekendLamp.getItemAtPosition(lamps.elementAt(z).getHoursWeekendWork()));
+                                hoursSundayWork = String.valueOf(Variables.hoursPerSundayLamp.getItemAtPosition(lamps.elementAt(z).getHoursSundayWork()));
                                 type = lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower();
                                 comm = lamps.elementAt(z).getComments();
                                 montagneType = Variables.montagneTypeArr[lamps.elementAt(z).getMontagneType()];     //Тип монтажа
@@ -264,7 +274,7 @@ public class ExcelExporter {
                             }
                         }
                         if (count > 0) {        //Если есть хотя бы один светильник - записываем в бдр
-                            writeToFile(temp, room, type, count, comm, "0", montagneType, otherInfo, false, "", false);       //Запись данных в файл
+                            writeToFile(temp, room, type, count, comm, "0", montagneType, otherInfo, false, "", false,typeRoom,daysWork,hoursWork,hoursWeedendWork,hoursSundayWork);       //Запись данных в файл
                         }
                         count = 0;
                     }
@@ -295,14 +305,19 @@ public class ExcelExporter {
                                     break;
                             }
                         }
-                        if (!types.contains(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getMontagneType() + " " + comments + " " + lamps.elementAt(j).getLampRoom() + " " + lamps.elementAt(j).getPositionOutside() + " " + lamps.elementAt(j).isStolb())) {
-                            types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getMontagneType() + " " + comments + " " + lamps.elementAt(j).getLampRoom() + " " + lamps.elementAt(j).getPositionOutside() + " " + lamps.elementAt(j).isStolb());
+                        if (!types.contains(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getMontagneType() + " " + comments + " " + lamps.elementAt(j).getLampRoom() + " " + lamps.elementAt(j).getPositionOutside() + " " + lamps.elementAt(j).isStolb() + " " + lamps.elementAt(j).getTypeRoom() + " " + lamps.elementAt(j).getDaysWork() + " " + lamps.elementAt(j).getHoursWork() + " " +lamps.elementAt(j).getHoursWeekendWork()+ " " + lamps.elementAt(j).getHoursSundayWork())) {
+                            types.add(lamps.elementAt(j).getType() + " " + lamps.elementAt(j).getPower() + " " + lamps.elementAt(j).getMontagneType() + " " + comments + " " + lamps.elementAt(j).getLampRoom() + " " + lamps.elementAt(j).getPositionOutside() + " " + lamps.elementAt(j).isStolb() + " " + lamps.elementAt(j).getTypeRoom() + " " + lamps.elementAt(j).getDaysWork() + " " + lamps.elementAt(j).getHoursWork() + " " +lamps.elementAt(j).getHoursWeekendWork()+ " " + lamps.elementAt(j).getHoursSundayWork());
                         }
                     }
                     for (int j = 0; j < types.size(); j++) {       //Находим и считаем светильники, чьи типы есть в Векторе
                         boolean isOutside = false;
                         String positionOutside = "";
                         boolean isStolb = false;
+                        String typeRoom="";
+                        String daysWork="";
+                        String hoursWork="";
+                        String hoursWeedendWork="";
+                        String hoursSundayWork="";
                         String type = "";
                         String comm = "";
                         String number = "0.0";
@@ -331,12 +346,17 @@ public class ExcelExporter {
                                         break;
                                 }
                             }
-                            if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " " + lamps.elementAt(z).getMontagneType() + " " + comments + " " + lamps.elementAt(z).getLampRoom() + " " + lamps.elementAt(z).getPositionOutside() + " " + lamps.elementAt(z).isStolb())) {
+                            if (Objects.equals(types.elementAt(j), lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower() + " " + lamps.elementAt(z).getMontagneType() + " " + comments + " " + lamps.elementAt(z).getLampRoom() + " " + lamps.elementAt(z).getPositionOutside() + " " + lamps.elementAt(z).isStolb() + " " + lamps.elementAt(z).getTypeRoom() + " " + lamps.elementAt(z).getDaysWork() + " " + lamps.elementAt(z).getHoursWork() + " " +lamps.elementAt(z).getHoursWeekendWork()+ " " + lamps.elementAt(z).getHoursSundayWork())) {
                                 //if (lamps.elementAt(z).getComments()==null){      //Если это наружный светильник
                                 count++;
                                 type = lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower();
                                 comm = lamps.elementAt(z).getComments();
                                 number = lamps.elementAt(z).getLampRoom();
+                                typeRoom = String.valueOf(Variables.typeLamp.getItemAtPosition(lamps.elementAt(z).getTypeRoom()));
+                                daysWork = String.valueOf(Variables.daysLamp.getItemAtPosition(lamps.elementAt(z).getDaysWork()));
+                                hoursWork = String.valueOf(Variables.hoursLamp.getItemAtPosition(lamps.elementAt(z).getHoursWork()));
+                                hoursWeedendWork = String.valueOf(Variables.hoursPerWeekendLamp.getItemAtPosition(lamps.elementAt(z).getHoursWeekendWork()));
+                                hoursSundayWork = String.valueOf(Variables.hoursPerSundayLamp.getItemAtPosition(lamps.elementAt(z).getHoursSundayWork()));
                                 montagneType = Variables.montagneTypeArr[lamps.elementAt(z).getMontagneType()];
                                 if (lamps.elementAt(z).getPlaceType() == 1) {
                                     isOutside = true;
@@ -376,7 +396,7 @@ public class ExcelExporter {
                             }
                         }
                         if (count > 0) {
-                            writeToFile(temp, null, type, count, comm, number, montagneType, otherInfo, isOutside, positionOutside, isStolb);       //Запись данных в файл
+                            writeToFile(temp, null, type, count, comm, number, montagneType, otherInfo, isOutside, positionOutside, isStolb,typeRoom,daysWork,hoursWork,hoursWeedendWork,hoursSundayWork);       //Запись данных в файл
                         }
                         count = 0;
                     }
@@ -407,7 +427,7 @@ public class ExcelExporter {
             cell.setValue("Нет доступа");
         rowCount++;
     }
-    public void writeToFile(Floor floor, Room room, String type, int amount, String comments, String number, String montagneType, String otherInfo, boolean isOutside, String positionOutside, boolean isStolb) throws Exception {       //Запись в файл по ячейкам
+    public void writeToFile(Floor floor, Room room, String type, int amount, String comments, String number, String montagneType, String otherInfo, boolean isOutside, String positionOutside, boolean isStolb,String typeRoom,String daysWork,String hoursWork,String hoursWorkWeekend,String hoursWorkSunday) throws Exception {       //Запись в файл по ячейкам
 
 // Obtaining the reference of the first worksheet
 // Adding some sample value to cells
@@ -433,25 +453,15 @@ public class ExcelExporter {
             cell = cells.get("D" + Integer.toString(rowCount));
             cell.setValue(floor.getAdress());
             cell = cells.get("F" + Integer.toString(rowCount));
-            if (room != null) {
-                cell.setValue(Variables.type.getItemAtPosition(room.getType_pos()));
-            }
+                cell.setValue(typeRoom);
             cell = cells.get("G" + Integer.toString(rowCount));
-            if (room != null) {
-                cell.setValue((String) Variables.daysPerWeek.getItemAtPosition(room.getDays()));
-            }
+                cell.setValue(daysWork);
             cell = cells.get("H" + Integer.toString(rowCount));
-            if (room != null) {
-                cell.setValue(Float.valueOf((String) Variables.hoursPerDay.getItemAtPosition(room.getHoursPerDay())));
-            }
+                cell.setValue(hoursWork);
             cell = cells.get("I" + Integer.toString(rowCount));
-            if (room != null) {
-                cell.setValue(Float.valueOf((String) Variables.hoursPerWeekend.getItemAtPosition(room.getHoursPerWeekend())));
-            }
+                cell.setValue(hoursWorkWeekend);
             cell = cells.get("J" + Integer.toString(rowCount));
-            if (room != null) {
-                cell.setValue(Float.valueOf((String) Variables.hoursPerWeekend.getItemAtPosition(room.getHoursPerWeekend())));
-            }
+                cell.setValue(hoursWorkSunday);
             cell = cells.get("K" + Integer.toString(rowCount));
             cell.setValue(type);
             cell = cells.get("M" + Integer.toString(rowCount));
