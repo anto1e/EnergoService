@@ -1109,9 +1109,11 @@ public class Plan {
             Variables.montagneType.setSelection(lamp.getMontagneType());
             Variables.placeType.setSelection(lamp.getPlaceType());
             if (lamp.getPlaceType()==1){
-                Variables.typeLamp.setVisibility(View.GONE);
+                Buttons.hideLampDop();
             }else{
-                Variables.typeLamp.setVisibility(View.VISIBLE);
+                if (Variables.lampDopShown) {
+                    Buttons.showLampDop();
+                }
             }
             Variables.typeLamp.setSelection(lamp.getTypeRoom());
             Variables.daysLamp.setSelection(lamp.getDaysWork());

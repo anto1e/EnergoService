@@ -20,6 +20,8 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -32,6 +34,13 @@ public class Variables {
     static boolean isExpotedExcel=true;     //Флаг экспорта в эксель
     static ListView listView=null;          //Список светильников
     static String path1;
+    static TextView lampDop;
+    static boolean lampDopShown=false;
+    static TextView typeLampTxt;
+    static TextView daysLampTxt;
+    static TextView hoursLampTxt;
+    static TextView hoursWeekendLampTxt;
+    static TextView hoursSundayLampTxt;
     static Vector<Lamp> copyBuffer = new Vector<Lamp>();        //Буффер копирования
 
     static int typeOpening=0;           //Тип открытия нового файла
@@ -268,6 +277,12 @@ public class Variables {
 
 
     public static void init(){                //Инициализация переменных
+        typeLampTxt = activity.findViewById(R.id.typeLampTxt);
+        daysLampTxt = activity.findViewById(R.id.daysLampTxt);
+        hoursLampTxt = activity.findViewById(R.id.hoursLampTxt);
+        hoursWeekendLampTxt = activity.findViewById(R.id.hoursWeekendLampTxt);
+        hoursSundayLampTxt = activity.findViewById(R.id.hoursSundayLampTxt);
+        lampDop = activity.findViewById(R.id.lampDop);
         hoursPerSundayLamp = activity.findViewById(R.id.roomHoursSundayLamp);
         hoursPerWeekendLamp = activity.findViewById(R.id.roomHoursWeekendsLamp);
         hoursLamp = activity.findViewById(R.id.roomHoursLamp);

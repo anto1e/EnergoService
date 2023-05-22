@@ -570,7 +570,56 @@ public class Buttons {
                             Variables.montagneTypeTwo.setVisibility(View.VISIBLE);
                             Variables.lampAmountText.setVisibility(View.VISIBLE);
                             Variables.lampAmountEdit.setVisibility(View.VISIBLE);
+                            showLampDop();
                             Variables.montagneTypeTwo.setSelection(0);
+                            String[] typeArr = new String[Variables.type.getCount()+1];
+                            String[] daysArr = new String[Variables.daysPerWeek.getCount()+1];
+                            String[] hoursArr = new String[Variables.hoursPerDay.getCount()+1];
+                            String[] hoursWeekendArr = new String[Variables.hoursPerWeekend.getCount()+1];
+                            String[] hoursSundayArr = new String[Variables.hoursPerSunday.getCount()+1];
+                            String[] placeTypeArr = new String[Variables.placeType.getCount()+1];
+                            typeArr[0] = "Не указано";
+                            for (int i=0;i<Variables.type.getCount();i++){
+                                typeArr[i+1] = String.valueOf(Variables.type.getItemAtPosition(i));
+                            }
+                            daysArr[0] = "Не указано";
+                            for (int i=0;i<Variables.daysPerWeek.getCount();i++){
+                                daysArr[i+1] = String.valueOf(Variables.daysPerWeek.getItemAtPosition(i));
+                            }
+                            hoursArr[0] = "Не указано";
+                            for (int i=0;i<Variables.hoursPerDay.getCount();i++){
+                                hoursArr[i+1] = String.valueOf(Variables.hoursPerDay.getItemAtPosition(i));
+                            }
+                            hoursWeekendArr[0] = "Не указано";
+                            for (int i=0;i<Variables.hoursPerWeekend.getCount();i++){
+                                hoursWeekendArr[i+1] = String.valueOf(Variables.hoursPerWeekend.getItemAtPosition(i));
+                            }
+                            hoursSundayArr[0] = "Не указано";
+                            for (int i=0;i<Variables.hoursPerSunday.getCount();i++){
+                                hoursSundayArr[i+1] = String.valueOf(Variables.hoursPerSunday.getItemAtPosition(i));
+                            }
+                            placeTypeArr[0]= "Не указано";
+                            for (int i=0;i<Variables.placeType.getCount();i++){
+                                placeTypeArr[i+1] = String.valueOf(Variables.placeType.getItemAtPosition(i));
+                            }
+                            ArrayAdapter<String> adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, typeArr);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            Variables.typeLamp.setAdapter(adapter);
+                            adapter = new ArrayAdapter<>(Variables.activity,R.layout.spinner_item,daysArr);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            Variables.daysLamp.setAdapter(adapter);
+                            adapter = new ArrayAdapter<>(Variables.activity,R.layout.spinner_item,hoursArr);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            Variables.hoursLamp.setAdapter(adapter);
+                            adapter = new ArrayAdapter<>(Variables.activity,R.layout.spinner_item,hoursWeekendArr);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            Variables.hoursPerWeekendLamp.setAdapter(adapter);
+                            adapter = new ArrayAdapter<>(Variables.activity,R.layout.spinner_item,hoursSundayArr);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            Variables.hoursPerSundayLamp.setAdapter(adapter);
+                            adapter = new ArrayAdapter<>(Variables.activity,R.layout.spinner_item,placeTypeArr);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            Variables.placeType.setAdapter(adapter);
                         }else{      //Деактивация
                             if (!Variables.moveOnlySelectedZone) {  //Выключение функцию выделения и подтверждающей кнопки
                                 disableConfirmBtn();
@@ -695,6 +744,41 @@ public class Buttons {
                                     }
                                 }
                             }
+                            if (!String.valueOf(Variables.lampRoom.getText()).equals("")){
+                                for (Lamp lamp:Variables.copyVector){
+                                    lamp.setLampRoom(String.valueOf(Variables.lampRoom.getText()));
+                                }
+                            }
+                            if (Variables.placeType.getSelectedItemPosition()!=0){
+                                for (Lamp lamp:Variables.copyVector){
+                                    lamp.setPlaceType(Variables.placeType.getSelectedItemPosition()-1);
+                                }
+                            }
+                            if (Variables.typeLamp.getSelectedItemPosition()!=0){
+                                for (Lamp lamp:Variables.copyVector){
+                                    lamp.setTypeRoom(Variables.typeLamp.getSelectedItemPosition()-1);
+                                }
+                            }
+                            if (Variables.daysLamp.getSelectedItemPosition()!=0){
+                                for (Lamp lamp:Variables.copyVector){
+                                    lamp.setDaysWork(Variables.daysLamp.getSelectedItemPosition()-1);
+                                }
+                            }
+                            if (Variables.hoursLamp.getSelectedItemPosition()!=0){
+                                for (Lamp lamp:Variables.copyVector){
+                                    lamp.setHoursWork(Variables.hoursLamp.getSelectedItemPosition()-1);
+                                }
+                            }
+                            if (Variables.hoursPerWeekendLamp.getSelectedItemPosition()!=0){
+                                for (Lamp lamp:Variables.copyVector){
+                                    lamp.setHoursWeekendWork(Variables.hoursPerWeekendLamp.getSelectedItemPosition()-1);
+                                }
+                            }
+                            if (Variables.hoursPerSundayLamp.getSelectedItemPosition()!=0){
+                                for (Lamp lamp:Variables.copyVector){
+                                    lamp.setHoursSundayWork(Variables.hoursPerSundayLamp.getSelectedItemPosition()-1);
+                                }
+                            }
                             if (!Variables.moveOnlySelectedZone) {  //Выключение функцию выделения и подтверждающей кнопки
                                 disableConfirmBtn();
                                 disableSelectZone();
@@ -703,6 +787,10 @@ public class Buttons {
                                 selectZone.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                                 Variables.plan.disableListenerFromPlan();
                             }
+                            if (!Variables.lampDopShown)
+                                hideLampDop();
+                            else
+                                showLampDop();
                         }
                         else if (Variables.copyFlag){       //Если это функция копирования по выбору зоны - сохраняем светильники в вектор, а затем вставляем скопированные светильники
                             if (Variables.copyType==0 && Variables.copyVector.size()>0){        //Сохранение светильников в памяти
@@ -1144,6 +1232,25 @@ public class Buttons {
             }
         });
 
+
+        Variables.lampDop.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                        if (!Variables.lampDopShown) {
+                            if (Variables.plan.touchedLamp!=null && Variables.plan.touchedLamp.getPlaceType()!=1){
+                                showLampDop();
+                                Variables.lampDopShown=true;
+                            }
+                        } else {
+                            if (Variables.plan.touchedLamp!=null && Variables.plan.touchedLamp.getPlaceType()!=1){
+                                hideLampDop();
+                                Variables.lampDopShown=false;
+                            }
+                        }
+                return false;
+            }
+        });
+
         roomInfo.setOnTouchListener(new View.OnTouchListener() {  //Обработчик нажатий на панель раскрытия информации о комнате
 
             @Override
@@ -1432,7 +1539,7 @@ public class Buttons {
         Variables.typeLamp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                if(Variables.plan.touchedLamp!=null) {
+                if(Variables.plan.touchedLamp!=null && !Variables.selectZoneFlag) {
                     Variables.plan.touchedLamp.setTypeRoom(Variables.typeLamp.getSelectedItemPosition());
                 }
             }
@@ -1468,7 +1575,7 @@ public class Buttons {
         Variables.daysLamp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                if(Variables.plan.touchedLamp!=null) {
+                if(Variables.plan.touchedLamp!=null  && !Variables.selectZoneFlag) {
                     Variables.plan.touchedLamp.setDaysWork(Variables.daysLamp.getSelectedItemPosition());
                 }
             }
@@ -1522,7 +1629,7 @@ public class Buttons {
         Variables.hoursLamp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                if(Variables.plan.touchedLamp!=null) {
+                if(Variables.plan.touchedLamp!=null  && !Variables.selectZoneFlag) {
                     Variables.plan.touchedLamp.setHoursWork(Variables.hoursLamp.getSelectedItemPosition());
                 }
             }
@@ -1558,7 +1665,7 @@ public class Buttons {
         Variables.hoursPerWeekendLamp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                if(Variables.plan.touchedLamp!=null) {
+                if(Variables.plan.touchedLamp!=null  && !Variables.selectZoneFlag) {
                     Variables.plan.touchedLamp.setHoursWeekendWork(Variables.hoursPerWeekendLamp.getSelectedItemPosition());
                 }
             }
@@ -1594,7 +1701,7 @@ public class Buttons {
         Variables.hoursPerSundayLamp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                if(Variables.plan.touchedLamp!=null) {
+                if(Variables.plan.touchedLamp!=null  && !Variables.selectZoneFlag) {
                     Variables.plan.touchedLamp.setHoursSundayWork(Variables.hoursPerSundayLamp.getSelectedItemPosition());
                 }
             }
@@ -1664,7 +1771,7 @@ public class Buttons {
         Variables.placeType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (Variables.plan.touchedLamp!=null){
+                if (Variables.plan.touchedLamp!=null && !Variables.selectZoneFlag){
                     Variables.plan.touchedLamp.setPlaceType(Variables.placeType.getSelectedItemPosition());
                     if (Variables.plan.touchedLamp.getPlaceType()==1){
                         if (Variables.plan.touchedLamp.getGroupIndex()==7) {
@@ -2047,6 +2154,38 @@ public class Buttons {
         Variables.lampAmountEdit.setVisibility(View.GONE);
         Variables.montagneTypeTxt.setVisibility(View.VISIBLE);
         Variables.montagneType.setVisibility(View.VISIBLE);
+        ArrayAdapter<String> adapter = null;
+        switch (Variables.typeOfBuilding.getSelectedItemPosition()){
+            case 0:
+                adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsDetSad);
+                break;
+            case 1:
+                adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsSchools);
+                break;
+            case 2:
+                adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsHospitals);
+                break;
+            case 3:
+                adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsOthers);
+                break;
+        }
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Variables.typeLamp.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(Variables.activity,R.layout.spinner_item,Variables.daysPerWeekArr);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Variables.daysLamp.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(Variables.activity,R.layout.spinner_item,Variables.hoursPerDayArr);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Variables.hoursLamp.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(Variables.activity,R.layout.spinner_item,Variables.hoursPerWeekendArr);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Variables.hoursPerWeekendLamp.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(Variables.activity,R.layout.spinner_item,Variables.hoursPerWeekendArr);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Variables.hoursPerSundayLamp.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(Variables.activity,R.layout.spinner_item,Variables.placeTypeArr);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Variables.placeType.setAdapter(adapter);
         if (Variables.plan.touchedLamp!=null){
             Variables.montagneType.setSelection(Variables.plan.touchedLamp.getMontagneType());
         }
@@ -2093,6 +2232,33 @@ public class Buttons {
             }
         }
     }
+
+    public static void showLampDop(){
+        Variables.typeLampTxt.setVisibility(View.VISIBLE);
+        Variables.typeLamp.setVisibility(View.VISIBLE);
+        Variables.daysLampTxt.setVisibility(View.VISIBLE);
+        Variables.daysLamp.setVisibility(View.VISIBLE);
+        Variables.hoursLampTxt.setVisibility(View.VISIBLE);
+        Variables.hoursLamp.setVisibility(View.VISIBLE);
+        Variables.hoursWeekendLampTxt.setVisibility(View.VISIBLE);
+        Variables.hoursPerWeekendLamp.setVisibility(View.VISIBLE);
+        Variables.hoursSundayLampTxt.setVisibility(View.VISIBLE);
+        Variables.hoursPerSundayLamp.setVisibility(View.VISIBLE);
+    }
+
+    public static void hideLampDop(){
+        Variables.typeLampTxt.setVisibility(View.GONE);
+        Variables.typeLamp.setVisibility(View.GONE);
+        Variables.daysLampTxt.setVisibility(View.GONE);
+        Variables.daysLamp.setVisibility(View.GONE);
+        Variables.hoursLampTxt.setVisibility(View.GONE);
+        Variables.hoursLamp.setVisibility(View.GONE);
+        Variables.hoursWeekendLampTxt.setVisibility(View.GONE);
+        Variables.hoursPerWeekendLamp.setVisibility(View.GONE);
+        Variables.hoursSundayLampTxt.setVisibility(View.GONE);
+        Variables.hoursPerSundayLamp.setVisibility(View.GONE);
+    }
+
     private static File createImageFile(boolean type) throws IOException {          //Функция создания фотографии
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -2143,6 +2309,7 @@ public class Buttons {
         Variables.showPhotoFlag=false;
         Variables.showPhotoLampFlag=false;
     }
+
 
     public static void createNewPhotoRoom(File f,boolean type){     //Создание новой фотографии комнаты(светильника)
         ImageView view = new ImageView(Variables.activity);
