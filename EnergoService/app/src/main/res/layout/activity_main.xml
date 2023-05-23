@@ -436,11 +436,10 @@
                 android:contentDescription="TODO">
             </ImageButton>
 
-
             <ImageButton
-                android:id="@+id/openFile"
+                android:id="@+id/selectByTouch"
                 android:scaleType="fitCenter"
-                android:src="@drawable/upload"
+                android:src="@drawable/selectbyclickbtn"
                 android:layout_width="30dp"
                 android:layout_marginTop="5dp"
                 android:background="@color/white"
@@ -448,6 +447,7 @@
                 android:layout_height="30dp"
                 android:contentDescription="TODO">
             </ImageButton>
+
 
             <ImageButton
                 android:id="@+id/saveFile"
@@ -496,10 +496,22 @@
                 android:layout_marginBottom="5dp"
                 android:layout_height="30dp">
             </ImageView>
+            <ImageButton
+                android:id="@+id/openFile"
+                android:scaleType="fitCenter"
+                android:src="@drawable/upload"
+                android:layout_width="30dp"
+                android:layout_marginTop="0dp"
+                android:background="@color/white"
+                android:layout_marginStart="0dp"
+                android:layout_height="30dp"
+                android:contentDescription="TODO">
+            </ImageButton>
             <ImageView
                 android:id="@+id/screenShotBtn"
                 android:scaleType="fitCenter"
                 android:src="@drawable/screenshot"
+                android:layout_marginLeft="10dp"
                 android:layout_width="30dp"
                 android:background="@color/white"
                 android:layout_marginBottom="5dp"

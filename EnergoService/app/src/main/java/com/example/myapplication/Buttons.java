@@ -77,6 +77,7 @@ public class Buttons {
     ImageButton selectZone;     //Кнопка выделения зоны
     ImageButton copyToBufBtn;   //Кнопка копирования в буфер
     ImageButton pasteBtn;       //Кнопка вставки
+    ImageButton selectByClickBtn;
     ImageView takePicBtn;       //Кнопка активации камеры
     ImageView photoClose;       //Кнопка закрытия просмотра фотографий
     ImageView photoDelete;      //Кнопка удаления фотографии
@@ -173,6 +174,7 @@ public class Buttons {
 
     @SuppressLint("ClickableViewAccessibility")
     public void startDetecting(){   //Начало отслеживания нажатия кнопок
+        selectByClickBtn = Variables.activity.findViewById(R.id.selectByTouch);
         addBtn = Variables.activity.findViewById(R.id.addBtn);        //Нажата кнопка добавления светильника
         addBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
         moveBtn = Variables.activity.findViewById(R.id.moveBtn);      //Нажата кнопка активации перемещения светильникв
@@ -205,6 +207,28 @@ public class Buttons {
         takePicLampPhoto = Variables.activity.findViewById(R.id.takePicLampBtn);    //Кнопка активации камеры(Вкладка со светильниками)
         submitHeightFloor = Variables.activity.findViewById(R.id.submitHeightFloor);    //Кнопка подтверждения задания стандартной высоты потолка
         screenShotBtn = Variables.activity.findViewById(R.id.screenShotBtn);    //Кнопка сохранения скриншота экрана
+
+        selectByClickBtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_UP:
+                        if (!Variables.selectByClickFlag) {
+                            disableSelectZone();
+                            selectByClickBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                            Variables.selectByClickFlag = true;
+                            clearFieldsSelectZone();
+                            activateCancelBtn();
+                            activateConfirmBtn();
+                        } else {
+                            disableSelectByTouch();
+                            fillFieldsSelectZone();
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
 
         screenShotBtn.setOnTouchListener(new View.OnTouchListener() {       //Активация кнопки создания скриншота
             @Override
@@ -555,71 +579,13 @@ public class Buttons {
                     case MotionEvent.ACTION_UP:
                         if (!Variables.selectZoneFlag) {        //Активация - установка флага, активация подтверждающих кнопок, очистка полей информации о светильнике
                             Variables.selectZoneFlag=true;
+                            disableSelectByTouch();
                             selectZone.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
                             Variables.plan.setListenerToPlan();
+                            clearFieldsSelectZone();
+                            activateCancelBtn();
                             activateConfirmBtn();
                             //Variables.plan.touchedLamp=null;
-                            Variables.lampRoom.setText("");
-                            Variables.lampType.setText("");
-                            Variables.lampPower.setText("");
-                            Variables.lampComments.setText("");
-                            Variables.lampAmountEdit.setText("0");
-                            Variables.montagneTypeTxt.setVisibility(View.GONE);
-                            Variables.montagneType.setVisibility(View.GONE);
-                            Variables.montagneTypeTxtTwo.setVisibility(View.VISIBLE);
-                            Variables.montagneTypeTwo.setVisibility(View.VISIBLE);
-                            Variables.lampAmountText.setVisibility(View.VISIBLE);
-                            Variables.lampAmountEdit.setVisibility(View.VISIBLE);
-                            showLampDop();
-                            Variables.montagneTypeTwo.setSelection(0);
-                            String[] typeArr = new String[Variables.type.getCount()+1];
-                            String[] daysArr = new String[Variables.daysPerWeek.getCount()+1];
-                            String[] hoursArr = new String[Variables.hoursPerDay.getCount()+1];
-                            String[] hoursWeekendArr = new String[Variables.hoursPerWeekend.getCount()+1];
-                            String[] hoursSundayArr = new String[Variables.hoursPerSunday.getCount()+1];
-                            String[] placeTypeArr = new String[Variables.placeType.getCount()+1];
-                            typeArr[0] = "Не указано";
-                            for (int i=0;i<Variables.type.getCount();i++){
-                                typeArr[i+1] = String.valueOf(Variables.type.getItemAtPosition(i));
-                            }
-                            daysArr[0] = "Не указано";
-                            for (int i=0;i<Variables.daysPerWeek.getCount();i++){
-                                daysArr[i+1] = String.valueOf(Variables.daysPerWeek.getItemAtPosition(i));
-                            }
-                            hoursArr[0] = "Не указано";
-                            for (int i=0;i<Variables.hoursPerDay.getCount();i++){
-                                hoursArr[i+1] = String.valueOf(Variables.hoursPerDay.getItemAtPosition(i));
-                            }
-                            hoursWeekendArr[0] = "Не указано";
-                            for (int i=0;i<Variables.hoursPerWeekend.getCount();i++){
-                                hoursWeekendArr[i+1] = String.valueOf(Variables.hoursPerWeekend.getItemAtPosition(i));
-                            }
-                            hoursSundayArr[0] = "Не указано";
-                            for (int i=0;i<Variables.hoursPerSunday.getCount();i++){
-                                hoursSundayArr[i+1] = String.valueOf(Variables.hoursPerSunday.getItemAtPosition(i));
-                            }
-                            placeTypeArr[0]= "Не указано";
-                            for (int i=0;i<Variables.placeType.getCount();i++){
-                                placeTypeArr[i+1] = String.valueOf(Variables.placeType.getItemAtPosition(i));
-                            }
-                            ArrayAdapter<String> adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, typeArr);
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            Variables.typeLamp.setAdapter(adapter);
-                            adapter = new ArrayAdapter<>(Variables.activity,R.layout.spinner_item,daysArr);
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            Variables.daysLamp.setAdapter(adapter);
-                            adapter = new ArrayAdapter<>(Variables.activity,R.layout.spinner_item,hoursArr);
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            Variables.hoursLamp.setAdapter(adapter);
-                            adapter = new ArrayAdapter<>(Variables.activity,R.layout.spinner_item,hoursWeekendArr);
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            Variables.hoursPerWeekendLamp.setAdapter(adapter);
-                            adapter = new ArrayAdapter<>(Variables.activity,R.layout.spinner_item,hoursSundayArr);
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            Variables.hoursPerSundayLamp.setAdapter(adapter);
-                            adapter = new ArrayAdapter<>(Variables.activity,R.layout.spinner_item,placeTypeArr);
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            Variables.placeType.setAdapter(adapter);
                         }else{      //Деактивация
                             if (!Variables.moveOnlySelectedZone) {  //Выключение функцию выделения и подтверждающей кнопки
                                 disableConfirmBtn();
@@ -657,6 +623,12 @@ public class Buttons {
                             disableCancelBtn();
                             disableCopyBtn();
                             Variables.copyType=0;
+                        }else if (Variables.selectByClickFlag){
+                            disableSelectByTouch();
+                        }else if (Variables.selectZoneFlag){
+                            disableSelectZone();
+                            disableCancelBtn();
+                            disableConfirmBtn();
                         }
                         break;
                 }
@@ -706,8 +678,11 @@ public class Buttons {
                                 selectZone.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                                 Variables.plan.disableListenerFromPlan();
                             }
+                            if (Variables.selectByClickFlag) {
+                                disableSelectByTouch();
+                            }
                         }
-                        else if (Variables.selectZoneFlag){     //Если это флаг выбора зоны - сохраняем групповой комментарий к светильникам
+                        else if (Variables.selectZoneFlag  || Variables.selectByClickFlag){     //Если это флаг выбора зоны - сохраняем групповой комментарий к светильникам
                             String txt = Variables.lampComments.getText().toString();
                             for (Lamp lamp:Variables.copyVector){
                                 String old_comments = lamp.getComments();
@@ -786,6 +761,8 @@ public class Buttons {
                                 Variables.selectZoneFlag=false;
                                 selectZone.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                                 Variables.plan.disableListenerFromPlan();
+                            }if (Variables.selectByClickFlag){
+                                disableSelectByTouch();
                             }
                             if (!Variables.lampDopShown)
                                 hideLampDop();
@@ -1334,7 +1311,7 @@ public class Buttons {
             @Override
             public boolean onTouch(View v, MotionEvent event)
             {
-                if (!Variables.selectZoneFlag) {
+                if (!Variables.selectZoneFlag && !Variables.selectByClickFlag) {
                     Variables.invertMoveFlag();
                     if (Variables.getMoveFlag()) {                                       //Активация перемещения
                         moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
@@ -2142,14 +2119,72 @@ public class Buttons {
         Variables.distX.clear();
         Variables.distY.clear();
     }
-    private void disableSelectZone(){
-        Variables.selectZoneFlag=false;
-        selectZone.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-        for (Lamp lamp : Variables.copyVector) {
-                lamp.getImage().setBackgroundResource(0);
+
+    private void clearFieldsSelectZone(){
+        Variables.lampRoom.setText("");
+        Variables.lampType.setText("");
+        Variables.lampPower.setText("");
+        Variables.lampComments.setText("");
+        Variables.lampAmountEdit.setText("0");
+        Variables.montagneTypeTxt.setVisibility(View.GONE);
+        Variables.montagneType.setVisibility(View.GONE);
+        Variables.montagneTypeTxtTwo.setVisibility(View.VISIBLE);
+        Variables.montagneTypeTwo.setVisibility(View.VISIBLE);
+        Variables.lampAmountText.setVisibility(View.VISIBLE);
+        Variables.lampAmountEdit.setVisibility(View.VISIBLE);
+        showLampDop();
+        Variables.montagneTypeTwo.setSelection(0);
+        String[] typeArr = new String[Variables.type.getCount()+1];
+        String[] daysArr = new String[Variables.daysPerWeek.getCount()+1];
+        String[] hoursArr = new String[Variables.hoursPerDay.getCount()+1];
+        String[] hoursWeekendArr = new String[Variables.hoursPerWeekend.getCount()+1];
+        String[] hoursSundayArr = new String[Variables.hoursPerSunday.getCount()+1];
+        String[] placeTypeArr = new String[Variables.placeType.getCount()+1];
+        typeArr[0] = "Не указано";
+        for (int i=0;i<Variables.type.getCount();i++){
+            typeArr[i+1] = String.valueOf(Variables.type.getItemAtPosition(i));
         }
-        Variables.copyVector.clear();
-        Variables.plan.disableListenerFromPlan();
+        daysArr[0] = "Не указано";
+        for (int i=0;i<Variables.daysPerWeek.getCount();i++){
+            daysArr[i+1] = String.valueOf(Variables.daysPerWeek.getItemAtPosition(i));
+        }
+        hoursArr[0] = "Не указано";
+        for (int i=0;i<Variables.hoursPerDay.getCount();i++){
+            hoursArr[i+1] = String.valueOf(Variables.hoursPerDay.getItemAtPosition(i));
+        }
+        hoursWeekendArr[0] = "Не указано";
+        for (int i=0;i<Variables.hoursPerWeekend.getCount();i++){
+            hoursWeekendArr[i+1] = String.valueOf(Variables.hoursPerWeekend.getItemAtPosition(i));
+        }
+        hoursSundayArr[0] = "Не указано";
+        for (int i=0;i<Variables.hoursPerSunday.getCount();i++){
+            hoursSundayArr[i+1] = String.valueOf(Variables.hoursPerSunday.getItemAtPosition(i));
+        }
+        placeTypeArr[0]= "Не указано";
+        for (int i=0;i<Variables.placeType.getCount();i++){
+            placeTypeArr[i+1] = String.valueOf(Variables.placeType.getItemAtPosition(i));
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, typeArr);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Variables.typeLamp.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(Variables.activity,R.layout.spinner_item,daysArr);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Variables.daysLamp.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(Variables.activity,R.layout.spinner_item,hoursArr);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Variables.hoursLamp.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(Variables.activity,R.layout.spinner_item,hoursWeekendArr);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Variables.hoursPerWeekendLamp.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(Variables.activity,R.layout.spinner_item,hoursSundayArr);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Variables.hoursPerSundayLamp.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(Variables.activity,R.layout.spinner_item,placeTypeArr);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Variables.placeType.setAdapter(adapter);
+    }
+
+    private void fillFieldsSelectZone(){
         Variables.lampAmountText.setVisibility(View.GONE);
         Variables.lampAmountEdit.setVisibility(View.GONE);
         Variables.montagneTypeTxt.setVisibility(View.VISIBLE);
@@ -2191,6 +2226,17 @@ public class Buttons {
         }
         Variables.montagneTypeTxtTwo.setVisibility(View.GONE);
         Variables.montagneTypeTwo.setVisibility(View.GONE);
+    }
+
+    private void disableSelectZone(){
+        Variables.selectZoneFlag=false;
+        selectZone.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+        for (Lamp lamp : Variables.copyVector) {
+                lamp.getImage().setBackgroundResource(0);
+        }
+        Variables.copyVector.clear();
+        Variables.plan.disableListenerFromPlan();
+        fillFieldsSelectZone();
     }
 
     private void verifyPermissions(boolean type){       //Получение разрешений на использование камеры
@@ -2308,6 +2354,17 @@ public class Buttons {
         Variables.indexOfPhoto=-1;
         Variables.showPhotoFlag=false;
         Variables.showPhotoLampFlag=false;
+    }
+
+    private void disableSelectByTouch(){
+        for (Lamp lamp:Variables.copyVector){
+            lamp.getImage().setBackgroundResource(0);
+        }
+        Variables.copyVector.clear();
+        selectByClickBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+        disableCancelBtn();
+        disableConfirmBtn();
+        Variables.selectByClickFlag=false;
     }
 
 

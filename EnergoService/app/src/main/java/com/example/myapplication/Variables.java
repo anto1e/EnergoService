@@ -31,6 +31,7 @@ import java.util.Vector;
 
 //Класс для хранения глобальных переменных
 public class Variables {
+    static boolean selectByClickFlag=false;
     static boolean isExpotedExcel=true;     //Флаг экспорта в эксель
     static ListView listView=null;          //Список светильников
     static String path1;
