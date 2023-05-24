@@ -63,10 +63,10 @@ public class SavePlanToJpgThread extends Thread{
                         float newY = oldY * (secondHeight / firstHeight);
                         lamp.getImage().setPivotX(0);
                         lamp.getImage().setPivotY(0);
-                        lamp.getImage().setX(newX+lamp.getImage().getWidth()/2);
-                        lamp.getImage().setY(newY+lamp.getImage().getHeight()/2);
                         lamp.getImage().setScaleX(lamp.getImage().getScaleX() + (secondWidth/firstWidth)*0.6f);
-                        lamp.getImage().setScaleY(lamp.getImage().getScaleY() + (secondHeight / firstHeight*0.6f));
+                        lamp.getImage().setScaleY(lamp.getImage().getScaleY() + (secondHeight / firstHeight)*0.6f);
+                        lamp.getImage().setX(newX);
+                        lamp.getImage().setY(newY);
                     }
                 }
                 for (Lamp lamp:Variables.current_floor.unusedLamps){

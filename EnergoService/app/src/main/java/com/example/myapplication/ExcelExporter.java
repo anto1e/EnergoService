@@ -420,9 +420,13 @@ public class ExcelExporter {
         if (room != null) {
             cell.setValue(room.getNumber());
         }
+        cell = cells.get("F" + Integer.toString(rowCount));
+        if (room != null) {
+            cell.setValue(Variables.type.getItemAtPosition(room.getType_pos()));
+        }
         cell = cells.get("D" + Integer.toString(rowCount));
         cell.setValue(floor.getAdress());
-        cell = cells.get("F" + Integer.toString(rowCount));
+        cell = cells.get("K" + Integer.toString(rowCount));
         if (room != null)
             cell.setValue("Нет доступа");
         rowCount++;
