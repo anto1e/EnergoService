@@ -1,0 +1,504 @@
+@startuml
+class com.example.myapplication.Variables {
+~ {static} boolean selectByClickFlag
+~ {static} boolean isExpotedExcel
+~ {static} ListView listView
+~ {static} String path1
+~ {static} TextView lampDop
+~ {static} boolean lampDopShown
+~ {static} TextView typeLampTxt
+~ {static} TextView daysLampTxt
+~ {static} TextView hoursLampTxt
+~ {static} TextView hoursWeekendLampTxt
+~ {static} TextView hoursSundayLampTxt
+~ {static} Vector<Lamp> copyBuffer
+~ {static} int typeOpening
+~ {static} boolean selectZoneFlag
+~ {static} Vector<Lamp> copyVector
+~ {static} Vector<Float> distX
+~ {static} Spinner hoursPerSunday
+~ {static} Vector<Float> distY
+~ {static} Lamp tempCopiedLamp
+~ {static} Lamp tempCopiedBufLamp
+~ {static} Vector<Float> distBufX
+~ {static} Vector<Float> distBufY
+~ {static} Vector<Float> lastMovePosX
+~ {static} Vector<Float> lastMovePosY
+~ {static} int copyType
+~ {static} boolean confirmBtnActive
+~ {static} boolean moveOnlySelectedZone
+~ {static} boolean cancelBtnActive
+~ {static} Spinner montagneType
+~ {static} boolean copyFlag
+~ {static} boolean planLayCleared
+~ {static} Vector<LinearLayout> FloorPanelsVec
+~ {static} LinearLayout floorPanelLay
+~ {static} ExcelExporter exporter
+~ {static} RelativeLayout roomInfoView
+~ {static} Spinner typeOfBuilding
+~ {static} Spinner daysOfWorkDefault
+~ {static} RelativeLayout buildingInfoView
+~ {static} boolean fileSaved
+~ {static} RelativeLayout lampInfoView
+~ {static} EditText buildingName
+~ {static} EditText buidlingFloor
+~ {static} RelativeLayout multipleRowsInfo
+~ {static} boolean scalemode
+~ {static} boolean rotateMode
+~ {static} boolean removeMode
+~ {static} boolean addMultipleRowsFlag
+~ {static} boolean firstTouch
+~ {static} float firstPointX
+~ {static} float firstPointY
+~ {static} boolean disableMovingPlan
+~ {static} float lastScaletype
+~ {static} EditText buildingAdress
+~ {static} String filePath
+~ {static} Uri selectedfile
+~ {static} Activity activity
+~ {static} ImageView photoImage
+~ {static} int currentLampsPanelIndex
+~ {static} boolean opened
+~ {static} LampsList lampsList
+~ {static} BikExtensionParser parser
+- {static} boolean addFlag
+~ {static} boolean addMultiple_flag
+~ {static} Integer multipleType
+~ {static} LinearLayout imageWrap
+~ {static} int multiplepos
+~ {static} int multiplelampType
+- {static} boolean moveFlag
+~ {static} ImageView loadingImage
+~ {static} LinearLayout floorsPanels
+~ {static} Plan plan
+~ {static} Spinner spinRows
+~ {static} Spinner spinLines
+~ {static} Spinner roofTypeDefault
+~ {static} EditText roofTypeDefaultText
+~ {static} Vector<VerticalTextView> lampsPanels
+~ {static} RelativeLayout planLay
+~ {static} ImageView image
+~ {static} EditText lampRoom
+~ {static} GridLayout roomGrid
+~ {static} GridLayout lampGrid
+~ {static} EditText roomNumber
+~ {static} EditText roomHeight
+~ {static} Spinner daysPerWeek
+~ {static} boolean showPhotoFlag
+~ {static} boolean showPhotoLampFlag
+~ {static} CheckBox roomHeightDefaultCheck
+~ {static} boolean takePhotoFlag
+~ {static} TextView montagneOutsideTypeTxt
+~ {static} Spinner montagneOutsideType
+~ {static} TextView positionOutsideTxt
+~ {static} boolean exportingJpg
+~ {static} TextView montagneTypeTxtTwo
+~ {static} Spinner montagneTypeTwo
+~ {static} Spinner positionOutside
+~ {static} TextView isStolbTxt
+~ {static} CheckBox isStolbCheck
+~ {static} Spinner hoursPerDay
+~ {static} Spinner hoursPerWeekend
+~ {static} Spinner roofType
+~ {static} Buttons buttons
+~ {static} Spinner type
+~ {static} RelativeLayout RoomInfo
+~ {static} EditText lampType
+~ {static} EditText lampPower
+~ {static} Spinner typeLamp
+~ {static} Spinner daysLamp
+~ {static} Spinner hoursLamp
+~ {static} Spinner hoursPerWeekendLamp
+~ {static} Spinner hoursPerSundayLamp
+~ {static} EditText lampComments
+~ {static} FrameLayout photoFrame
+~ {static} TextView lampAmountText
+~ {static} EditText lampAmountEdit
+~ {static} Spinner placeType
+~ {static} TextView montagneTypeTxt
+~ {static} EditText roomComments
+~ {static} int indexOfPhoto
+~ {static} Vector<Floor> floors
+~ {static} Floor current_floor
+~ {static} double lastWidth
+~ {static} double lastHeight
+~ {static} boolean isExportingToJpg
+~ {static} double currentWidth
+~ {static} double currentHeight
+~ {static} String[] montagneOutsideTypeArr
+~ {static} String[] positionOutsideArr
+~ {static} String[] roofTypes
+~ {static} String[] montagneTypeArr
+~ {static} String[] montagneTypeTwoArr
+~ {static} String[] placeTypeArr
+~ {static} String[] typeOfBuildingArr
+~ {static} String[] typesOfRoomsDetSad
+~ {static} String[] typesOfRoomsSchools
+~ {static} String[] typesOfRoomsHospitals
+~ {static} String[] typesOfRoomsOthers
+~ {static} String[] daysPerWeekArr
+~ {static} String[] hoursPerDayArr
+~ {static} String[] hoursPerWeekendArr
+~ {static} String[] spinRowsArr
+~ {static} String[] spinLinesArr
++ {static} Integer[] VstraivaemieImageId
++ {static} Integer[] NakladnieImageId
++ {static} Integer[] LampsImageId
++ {static} Integer[] DiodsImageId
++ {static} Integer[] DoskiImageId
++ {static} Integer[] PodvesImageId
++ {static} Integer[] OthersImageId
++ {static} Integer[] OutsideImageId
++ {static} Integer[] VstraivaemieImageIdBold
++ {static} Integer[] NakladnieImageIdBold
++ {static} Integer[] LampsImageIdBold
++ {static} Integer[] DiodsImageIdBold
++ {static} Integer[] DoskiImageIdBold
++ {static} Integer[] PodvesImageIdBold
++ {static} Integer[] OthersImageIdBold
++ {static} Integer[] OutsideImageIdBold
++ {static} String[] lampVstraivaemieNames
++ {static} String[] lampNakladnieNames
++ {static} String[] lampLampsNames
++ {static} String[] lampDiodsNames
++ {static} String[] lampDoskiNames
++ {static} String[] lampPodvesNames
++ {static} String[] lampOthersNames
++ {static} String[] lampOutsideNames
++ {static} String[] lampsVstraivaemieName
++ {static} String[] lampsNakladnieName
++ {static} String[] lampsLampsName
++ {static} String[] lampsDiodsName
++ {static} String[] lampsDoskiName
++ {static} String[] lampsPodvesName
++ {static} String[] lampsOthersName
++ {static} String[] lampsOutsideName
++ {static} void init()
++ {static} void resetListColor()
++ {static} void setSpinners()
++ {static} void clearFields()
++ {static} boolean getAddFlag()
++ {static} void setAddFlag(boolean)
++ {static} void invertAddFlag()
++ {static} boolean getMoveFlag()
++ {static} void setMoveFlag(boolean)
++ {static} void invertMoveFlag()
++ {static} Room getRoomByNumberAndCoords(String,double,double,Floor)
++ {static} Room getRoomOnlyByNumber(String,Floor)
++ {static} Room getRoomByNumber(String,float,float,float,Floor)
++ {static} void moveCopiedVector(float,float)
++ {static} void moveCopiedBufVector(float,float)
++ {static} void resetCordsCopiedVector()
++ {static} void showAllPhotos(Room)
++ {static} void showLampsAllPhotos(Lamp)
++ {static} void resetRoomHeight(Floor)
++ {static} void refreshLampsToRooms(Floor)
++ {static} void clearLampGrid()
++ {static} void copyFile(Uri,String)
++ {static} int findIndexOfLamp(String,int)
++ {static} LinearLayout getCurrentPanelLayout()
+- {static} void initLampsPanels()
++ {static} void removeLampByView(ImageView)
+}
+class com.example.myapplication.Lamp {
+- String type
+- float rotationAngle
+- String lampRoom
+- String power
+- ImageView image
+- String typeImage
+~ Vector<String> photoPaths
+- String comments
+- int montagneType
+- int positionOutside
+- int lampsAmount
+- boolean isStolb
+- int placeType
+- int groupIndex
+- int typeRoom
+- int daysWork
+- int hoursWork
+- int hoursWeekendWork
+- int hoursSundayWork
++ int getTypeRoom()
++ void setTypeRoom(int)
++ int getDaysWork()
++ void setDaysWork(int)
++ int getHoursWork()
++ void setHoursWork(int)
++ int getHoursWeekendWork()
++ void setHoursWeekendWork(int)
++ int getHoursSundayWork()
++ void setHoursSundayWork(int)
++ boolean isStolb()
++ void setStolb(boolean)
++ int getPositionOutside()
++ void setPositionOutside(int)
++ int getLampsAmount()
++ void setLampsAmount(int)
++ int getPlaceType()
++ void setPlaceType(int)
++ int getGroupIndex()
++ void setGroupIndex(int)
++ int getMontagneType()
++ void setMontagneType(int)
++ String getLampRoom()
++ void setLampRoom(String)
++ float getRotationAngle()
++ void setRotationAngle(float)
++ String getTypeImage()
++ void setTypeImage(String)
++ String getType()
++ void setType(String)
++ String getPower()
++ void setPower(String)
++ ImageView getImage()
++ void setImage(ImageView)
++ String getComments()
++ void setComments(String)
++ void setView()
+}
+class com.example.myapplication.Floor {
+- String name
+~ double resizeCoeffX
+~ double resizeCoeffY
+~ float cordX
+~ float cordY
+~ float scale
+- Uri image
+- String floor
+- String adress
++ Vector<Room> rooms
+~ Vector<Lamp> unusedLamps
+~ Vector<String> roofHeightDefault
++ String getName()
++ void setName(String)
++ String getFloor()
++ void setFloor(String)
++ String getAdress()
++ void setAdress(String)
++ Uri getImage()
++ void setImage(Uri)
++ void resizeCoeffs()
+}
+class com.example.myapplication.SaveFileThread {
++ void run()
+}
+class com.example.myapplication.SaveExcelThread {
++ void run()
+}
+class com.example.myapplication.Room {
+- String number
+- String height
+- int roofType
+- String comments
+- int type
+- int days
+- int hoursPerDay
+- int hoursPerWeekend
+- int hoursPerSunday
+- Polygon polygon
++ double[] arrayX
++ double[] arrayY
+~ Vector<String> photoPaths
++ Vector<Lamp> lamps
++ int getHoursPerSunday()
++ void setHoursPerSunday(int)
++ String getComments()
++ void setComments(String)
++ int getRoofType()
++ void setRoofType(int)
++ int getType_pos()
++ void lampPush(Lamp)
++ void lampRemove(Lamp)
++ Vector<Lamp> getLamps()
++ void setType_pos(int)
++ String getNumber()
++ void setNumber(String)
++ String getHeight()
++ void setHeight(String)
++ int getDays()
++ void setDays(int)
++ int getHoursPerDay()
++ void setHoursPerDay(int)
++ int getHoursPerWeekend()
++ void setHoursPerWeekend(int)
++ void buildPoligon()
++ boolean detectTouch(double,double)
+}
+class com.example.myapplication.Buttons {
++ {static} int CAMERA_PERM_CODE
++ {static} int CAMERA_REQUEST_CODE
+~ {static} LinearLayout active
+~ ImageView addBtn
+~ ImageView moveBtn
+~ ImageButton uploadBtn
+~ TextView roomInfo
+~ TextView buildingInfo
+~ TextView lampInfo
+~ ImageButton addPanel
+~ ImageButton removePanel
+~ ImageView scaleBtn
+~ ImageButton saveFile
+~ ImageButton rotateLamp
+~ ImageView removeLamp
+~ ImageView addMultipleBtn
+~ ImageView addMultipleRows
+~ Button multipleRowsSubmit
+~ ImageView copyBtn
+~ ImageView confirmBtn
+~ ImageButton cancelBtn
+~ ImageButton selectZone
+~ ImageButton copyToBufBtn
+~ ImageButton pasteBtn
+~ ImageButton selectByClickBtn
+~ ImageView takePicBtn
+~ ImageView photoClose
+~ ImageView photoDelete
+~ ImageView photoRightArrow
+~ ImageView photoLeftArrow
+~ ImageView takePicLampPhoto
+~ ImageView screenShotBtn
+~ Button submitHeightFloor
+~ int lastIndex
+~ int lastWorkdays
+~ int lastType
+~ int lastDays
+~ int lastHours
+~ int lastHoursWeekend
+~ int lastHoursSunday
++ void addPanel(String)
++ void startDetecting()
+- void animateHeightTo(View,int)
++ void drawLamps()
+- void disableAddBtn()
+- void disableMultipleAddBtn()
+- void disableMultipleRowsAddBtn()
+- void disableScaleBtn()
+- void disableRotateBtn()
+- void disableRemoveBtn()
+- void disableMoveBtn()
+- void activateConfirmBtn()
+- void activateCancelBtn()
+- void disableConfirmBtn()
+- void disableCancelBtn()
+- void disableCopyBtn()
+- void clearFieldsSelectZone()
+- void fillFieldsSelectZone()
+- void disableSelectZone()
+- void verifyPermissions(boolean)
++ {static} void dispatchTakePictureIntent(boolean)
++ {static} void showLampDop()
++ {static} void hideLampDop()
+- {static} File createImageFile(boolean)
+- {static} void disablePhotoShow()
+- void disableSelectByTouch()
++ {static} void createNewPhotoRoom(File,boolean)
+}
+class com.example.myapplication.Buttons$HeightProperty {
++ Integer get(View)
++ void set(View,Integer)
+}
+class com.example.myapplication.SavePlanToJpgThread {
++ void run()
+}
+class com.example.myapplication.Plan {
+~ View tempView
+- float previousX
+- float previousY
+- double prevLength
+- double sumXY
+~ View selectionZone
+~ Room touchedRoom
+~ Room lastRoom
+~ Lamp touchedLamp
+~ float x
+~ double lenght
+~ boolean isReleased
+~ float pivotX
+~ float pivotY
+- boolean ifReleased
++ void disableListenerFromPlan()
++ void setListenerToPlan()
++ void setListenerToImage()
++ void setTouchedRoom(float,float,boolean)
++ void setTouchedRoomInfo()
++ void detectRoomTouch(float,float)
++ void startDetecting()
++ void rotateImg(float,ImageView,String,int)
++ void spawnLamp(Integer,int,String,int,int,float,float,boolean,float,float)
++ void stopLampsTouchListener()
++ void setLampsTouchListener()
+- float getDegreesFromTouchEvent(MotionEvent,ImageView,float,float)
+~ void setListener(ImageView)
+- void setInfoLamp(Lamp)
+- void clearInfoLamp()
+~ void removeFromEveryWhere(Lamp)
+- Lamp getLampByTouch(ImageView)
+}
+class com.example.myapplication.VerticalTextView {
+- int _width
+- Rect _bounds
+# void onMeasure(int,int)
+# void onDraw(Canvas)
+- String text()
+}
+class com.example.myapplication.BikExtensionParser {
+~ boolean buildingInfo
+~ boolean lampsInfo
+~ boolean roomInfo
+~ File currentFile
++ void parseFile(String)
++ void saveFile(String)
+}
+class com.example.myapplication.PermissionUtils {
++ {static} boolean hasPermissions(Context)
++ {static} void requestPermissions(Activity,int)
+}
+class com.example.myapplication.LampsList {
+- String[] lampNames
+- Integer[] imageid
+- Activity context
++ View getView(int,View,ViewGroup)
+}
+class com.example.myapplication.MainActivity {
+- {static} int PERMISSION_STORAGE
+# void onCreate(Bundle)
+# void onActivityResult(int,int,Intent)
++ void onRequestPermissionsResult(int,String[],int[])
+}
+class com.example.myapplication.FileHelper {
++ {static} String getRealPathFromURI(Context,Uri)
+- {static} String processUri(Context,Uri)
+~ {static} String copyFile(Context,Uri)
+- {static} String getContentName(ContentResolver,Uri)
++ {static} String getDataColumn(Context,Uri,String,String[])
++ {static} boolean isExternalStorageDocument(Uri)
++ {static} boolean isDownloadsDocument(Uri)
++ {static} boolean isMediaDocument(Uri)
+}
+class com.example.myapplication.ExcelExporter {
+~ String path
+~ Workbook workbook
+~ WorksheetCollection worksheets
+~ Worksheet sheet
+~ Cells cells
+~ int rowCount
+~ int outsideRowCount
++ void init()
++ void exportToExel()
++ void writeToFileAccessDenied(Floor,Room)
++ void writeToFile(Floor,Room,String,int,String,String,String,String,boolean,String,boolean,String,String,String,String,String)
++ void save()
+}
+
+
+com.example.myapplication.Thread <|-- com.example.myapplication.SaveFileThread
+com.example.myapplication.Thread <|-- com.example.myapplication.SaveExcelThread
+com.example.myapplication.Buttons +.. com.example.myapplication.Buttons$HeightProperty
+com.example.myapplication.Property <|-- com.example.myapplication.Buttons$HeightProperty
+com.example.myapplication.Thread <|-- com.example.myapplication.SavePlanToJpgThread
+com.example.myapplication.AppCompatTextView <|-- com.example.myapplication.VerticalTextView
+android.widget.ArrayAdapter <|-- com.example.myapplication.LampsList
+androidx.appcompat.app.AppCompatActivity <|-- com.example.myapplication.MainActivity
+@enduml

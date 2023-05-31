@@ -192,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
                         try {   //Парсим файл
                             if (!Variables.planLayCleared) {
                                 Variables.parser.parseFile(Variables.filePath);
+                                //Variables.removeAllDupples();
                             }
                             //Variables.buttons.drawLamps();
                             //Variables.filePath="";

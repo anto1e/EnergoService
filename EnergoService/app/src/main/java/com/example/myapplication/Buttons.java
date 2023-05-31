@@ -490,6 +490,11 @@ public class Buttons {
                                 tempLamp.setGroupIndex(lamp.getGroupIndex());
                                 tempLamp.setPlaceType(lamp.getPlaceType());
                                 tempLamp.setLampsAmount(lamp.getLampsAmount());
+                                tempLamp.setTypeRoom(lamp.getTypeRoom());
+                                tempLamp.setDaysWork(lamp.getDaysWork());
+                                tempLamp.setHoursWork(lamp.getHoursWork());
+                                tempLamp.setHoursWeekendWork(lamp.getHoursWeekendWork());
+                                tempLamp.setHoursSundayWork(lamp.getHoursSundayWork());
                                 ImageView imageView = new ImageView(Variables.activity);
                                 Resources resources = Variables.activity.getResources();
                                 final int resourceId = resources.getIdentifier(lamp.getTypeImage(), "drawable",
@@ -544,6 +549,11 @@ public class Buttons {
                                 tempLamp.setGroupIndex(Variables.plan.touchedLamp.getGroupIndex());
                                 tempLamp.setPlaceType(Variables.plan.touchedLamp.getPlaceType());
                                 tempLamp.setLampsAmount(Variables.plan.touchedLamp.getLampsAmount());
+                                tempLamp.setTypeRoom(Variables.plan.touchedLamp.getTypeRoom());
+                                tempLamp.setDaysWork(Variables.plan.touchedLamp.getDaysWork());
+                                tempLamp.setHoursWork(Variables.plan.touchedLamp.getHoursWork());
+                                tempLamp.setHoursWeekendWork(Variables.plan.touchedLamp.getHoursWeekendWork());
+                                tempLamp.setHoursSundayWork(Variables.plan.touchedLamp.getHoursSundayWork());
                                 ImageView imageView = new ImageView(Variables.activity);
                                 Resources resources = Variables.activity.getResources();
                                 final int resourceId = resources.getIdentifier(Variables.plan.touchedLamp.getTypeImage(), "drawable",
@@ -791,6 +801,11 @@ public class Buttons {
                                     tempLamp.setGroupIndex(lamp.getGroupIndex());
                                     tempLamp.setPlaceType(lamp.getPlaceType());
                                     tempLamp.setLampsAmount(lamp.getLampsAmount());
+                                    tempLamp.setTypeRoom(lamp.getTypeRoom());
+                                    tempLamp.setDaysWork(lamp.getDaysWork());
+                                    tempLamp.setHoursWork(lamp.getHoursWork());
+                                    tempLamp.setHoursWeekendWork(lamp.getHoursWeekendWork());
+                                    tempLamp.setHoursSundayWork(lamp.getHoursSundayWork());
                                     ImageView imageView = new ImageView(Variables.activity);
                                     Resources resources = Variables.activity.getResources();
                                     final int resourceId = resources.getIdentifier(lamp.getTypeImage(), "drawable",

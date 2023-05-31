@@ -33,13 +33,17 @@ import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Vector;
 
 public class BikExtensionParser {
     boolean buildingInfo=false;     //Флаг начала информации о здании
     boolean lampsInfo = false;      //Флаг начала информации о светильниках
     boolean roomInfo = false;       //Флаг начала информации о комнатах
+    boolean lastThread=false;
+    Vector<Thread> threads = new Vector<Thread>();
     File currentFile;
     public void parseFile(String path) throws FileNotFoundException {   //Парсинг файла
+        threads.clear();
         Variables.setAddFlag(false);
         Variables.plan.disableListenerFromPlan();
         Variables.buttons.addBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
@@ -189,59 +193,62 @@ public class BikExtensionParser {
                 else if (lampsInfo){        //Если информация о светильниках
                     if (line.length()>15 && line.charAt(0) != '/'){
                         String[] split_number = line.split("%");
-                        if (split_number.length>1){
+                        if (split_number.length>1) {
                             String number = split_number[0];        //номер комнаты, к которому привязан
+                            if (number.equals("4")){
+                                System.out.println("");
+                            }
                             String[] split_room_info = split_number[1].split("@");
                             String type = split_room_info[0];       //Тип светильника
                             String power = split_room_info[1];      //Мощность светильника
                             String type_image = split_room_info[2];     //Тип изображения
                             String comments = split_room_info[3];       //Комментарии
                             if (Objects.equals(comments, "null"))
-                                comments="";
+                                comments = "";
                             float cordX = Float.parseFloat(split_room_info[4]);     //Координата X
                             float cordY = Float.parseFloat(split_room_info[5]);     //Координата Y
-                            float scale = Float.parseFloat(split_room_info[6]);     //Коэффициент размера
+                                float scale = Float.parseFloat(split_room_info[6]);     //Коэффициент размера
                             float rotationAngle = Float.parseFloat(split_room_info[7]);     //Угол поворота
                             String lampRoom = split_room_info[8];       //Комната, к которой привязан светильник
                             String usedOrNot = split_room_info[9];      //Поле используется или нет
-                                Lamp lamp = new Lamp();
-                                lamp.setType(type);
-                                lamp.setPower(power);
-                                lamp.setTypeImage(type_image);
-                                lamp.setLampRoom(lampRoom);
-                                lamp.setComments(comments);
-                                lamp.setRotationAngle(rotationAngle);
-                                ImageView imageView = new ImageView(Variables.activity);
-                                Resources resources = Variables.activity.getResources();
-                                final int resourceId = resources.getIdentifier(type, "drawable",
+                            Lamp lamp = new Lamp();
+                            lamp.setType(type);
+                            lamp.setPower(power);
+                            lamp.setTypeImage(type_image);
+                            lamp.setLampRoom(lampRoom);
+                            lamp.setComments(comments);
+                            lamp.setRotationAngle(rotationAngle);
+                            ImageView imageView = new ImageView(Variables.activity);
+                            Resources resources = Variables.activity.getResources();
+                            final int resourceId = resources.getIdentifier(type, "drawable",
                                     Variables.activity.getPackageName());
-                                imageView.setImageResource(resourceId);
-                                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
-                                imageView.setLayoutParams(params);
-                                imageView.setX(cordX);
-                                imageView.setY(cordY);
-                                imageView.setScaleX(scale);
-                                imageView.setScaleY(scale);
-                                Variables.plan.setListener(imageView);
-                                lamp.setImage(imageView);
-                                Variables.plan.rotateImg(rotationAngle,imageView,type_image,-1);
-                                int montagneType = Integer.parseInt(split_room_info[10]);       //Тип монтажа светильника
-                                int placeType = Integer.parseInt(split_room_info[11]);          //Местонахождения светильника
-                                int groupIndex = Integer.parseInt(split_room_info[12]);         //Индекс группы светильника
-                                int lampsAmount = Integer.parseInt(split_room_info[13]);        //Количество ламп в светильнике(для люстр)
-                                int positionOutside = Integer.parseInt(split_room_info[14]);    //Место светильнка снаружи
-                                boolean isStolb = Boolean.parseBoolean(split_room_info[15]);    //Находится ли светильник на столбе(для наружного освещения)
-                                int typeRoom = Integer.parseInt(split_room_info[16]);
-                                int daysOfWork = Integer.parseInt(split_room_info[17]);
-                                int hoursOfWork = Integer.parseInt(split_room_info[18]);
-                                int hoursOfWorkWeekend = Integer.parseInt(split_room_info[19]);
-                                int hoursOfWorkSunday = Integer.parseInt(split_room_info[20]);
-                            if (split_room_info.length>21){      //Если есть пути к фотографиям и сами файлы существуют - добавляем
+                            imageView.setImageResource(resourceId);
+                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
+                            imageView.setLayoutParams(params);
+                            imageView.setX(cordX);
+                            imageView.setY(cordY);
+                            imageView.setScaleX(scale);
+                            imageView.setScaleY(scale);
+                            Variables.plan.setListener(imageView);
+                            lamp.setImage(imageView);
+                            Variables.plan.rotateImg(rotationAngle, imageView, type_image, -1);
+                            int montagneType = Integer.parseInt(split_room_info[10]);       //Тип монтажа светильника
+                            int placeType = Integer.parseInt(split_room_info[11]);          //Местонахождения светильника
+                            int groupIndex = Integer.parseInt(split_room_info[12]);         //Индекс группы светильника
+                            int lampsAmount = Integer.parseInt(split_room_info[13]);        //Количество ламп в светильнике(для люстр)
+                            int positionOutside = Integer.parseInt(split_room_info[14]);    //Место светильнка снаружи
+                            boolean isStolb = Boolean.parseBoolean(split_room_info[15]);    //Находится ли светильник на столбе(для наружного освещения)
+                            int typeRoom = Integer.parseInt(split_room_info[16]);
+                            int daysOfWork = Integer.parseInt(split_room_info[17]);
+                            int hoursOfWork = Integer.parseInt(split_room_info[18]);
+                            int hoursOfWorkWeekend = Integer.parseInt(split_room_info[19]);
+                            int hoursOfWorkSunday = Integer.parseInt(split_room_info[20]);
+                            if (split_room_info.length > 21) {      //Если есть пути к фотографиям и сами файлы существуют - добавляем
                                 String paths = split_room_info[21];
                                 String[] split_room_photos = paths.split("!");
-                                for (int i=0;i<split_room_photos.length;i++){
+                                for (int i = 0; i < split_room_photos.length; i++) {
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                        if (Files.exists(Paths.get(split_room_photos[i]))){
+                                        if (Files.exists(Paths.get(split_room_photos[i]))) {
                                             lamp.photoPaths.add(split_room_photos[i]);
                                         }
                                     }
@@ -267,41 +274,71 @@ public class BikExtensionParser {
 
                                     @Override
                                     public void run() {
-                                        Room room=null;             //Комната, к которой привязан
-                                        if (!Objects.equals(number, "-1")) {            //Если светильник привязан к какой-то комнате
-                                            room = Variables.getRoomByNumber(number,lamp.getImage().getX()+(lamp.getImage().getWidth()/2),lamp.getImage().getY()+(lamp.getImage().getHeight()/2),scale,Variables.current_floor);         //Поиск комнтаты к которой привязан светильник
-                                        }
-                                        if (Objects.equals(lampRoom, "-1") && !Objects.equals(usedOrNot, "used")){  //Если светильник не привязан никуда, пытаемся привязать по координатам, если не выходит - не привязываем
-                                            Room detectedRoom=null;
-                                            for (Room temp:Variables.current_floor.rooms){
-                                                if (temp.detectTouch(cordX,cordY)) {
-                                                    detectedRoom=temp;
+                                            Room room = null;             //Комната, к которой привязан
+                                            if (!Objects.equals(number, "-1")) {            //Если светильник привязан к какой-то комнате
+                                                room = Variables.getRoomByNumber(number, lamp.getImage().getX() + (lamp.getImage().getWidth() / 2), lamp.getImage().getY() + (lamp.getImage().getHeight() / 2), scale, Variables.current_floor);         //Поиск комнтаты к которой привязан светильник
+                                            }
+                                            if (Objects.equals(lampRoom, "-1") && !Objects.equals(usedOrNot, "used")) {  //Если светильник не привязан никуда, пытаемся привязать по координатам, если не выходит - не привязываем
+                                                Room detectedRoom = null;
+                                                for (Room temp : Variables.current_floor.rooms) {
+                                                    if (temp.detectTouch(cordX, cordY)) {
+                                                        detectedRoom = temp;
+                                                    }
+                                                }
+                                                if (detectedRoom == null) {
+                                                    if (!Variables.ifUnusedContainsLamp(lamp.getImage().getX(),lamp.getImage().getY())) {
+                                                        Variables.current_floor.unusedLamps.add(lamp);
+                                                    }else{
+                                                        Variables.planLay.removeView(lamp.getImage());
+                                                    }
+                                                    imageView.setBackgroundResource(R.color.blue);
+                                                } else {
+                                                    if (!Variables.ifRoomContainsLamp(lamp.getImage().getX(),lamp.getImage().getY(),detectedRoom)) {
+                                                        detectedRoom.lamps.add(lamp);
+                                                    }else{
+                                                        Variables.planLay.removeView(lamp.getImage());
+                                                    }
+                                                }
+                                            } else {
+                                                if (room != null) {
+                                                    if (!Variables.ifRoomContainsLamp(lamp.getImage().getX(),lamp.getImage().getY(),room)) {
+                                                        room.lamps.add(lamp);
+                                                    }else{
+                                                        Variables.planLay.removeView(lamp.getImage());
+                                                    }
+                                                } else {
+                                                    if (!Variables.ifUnusedContainsLamp(lamp.getImage().getX(),lamp.getImage().getY())) {
+                                                        Variables.current_floor.unusedLamps.add(lamp);
+                                                    }else{
+                                                        Variables.planLay.removeView(lamp.getImage());
+                                                    }
+                                                    lamp.getImage().setBackgroundResource(R.color.blue);
                                                 }
                                             }
-                                            if (detectedRoom==null){
-                                                Variables.current_floor.unusedLamps.add(lamp);
-                                                imageView.setBackgroundResource(R.color.blue);
-                                            }else{
-                                                detectedRoom.lamps.add(lamp);
-                                            }
-                                        }else{
-                                            if (room!=null) {
-                                                room.lamps.add(lamp);
-                                            }else{
-                                                Variables.current_floor.unusedLamps.add(lamp);
-                                                lamp.getImage().setBackgroundResource(R.color.blue);
-                                            }
-                                        }
                                     }
                                 });
                             };
 
                             // Instantiating Thread class by passing Runnable
                             // reference to Thread constructor
-                            Thread run = new Thread(myThread);
+                            //if (!lastThread) {
+                                Thread run = new Thread(myThread);
 
-                            // Starting the thread
-                            run.start();
+                                // Starting the thread
+                                run.start();
+                            //}else{
+                                //t.start();
+                                //Thread runLast = new Thread(myThread);
+
+                                // Starting the thread
+                                //runLast.start();
+                                /*try{
+                                    runLast.join();
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }*/
+                                //t.start();
+                           // }
                         }
                     }
                 }
