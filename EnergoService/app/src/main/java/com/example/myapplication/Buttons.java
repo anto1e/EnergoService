@@ -789,7 +789,7 @@ public class Buttons {
                                     lamp1.getImage().setBackgroundResource(0);
                                 }
                                 Variables.copyVector.clear();
-
+                                Variables.plan.touchedLamp=null;
                                 for (Lamp lamp:temp){
                                     Lamp tempLamp = new Lamp();
                                     tempLamp.setType(lamp.getType());
@@ -854,6 +854,7 @@ public class Buttons {
                                 Variables.moveCopiedVector(-1,-1);
                                 Variables.copyType=1;
                             }else if (Variables.copyType==1){   //Если выбрано подтверждение - вставляем светильники в выбранную позицию
+                                Variables.plan.touchedLamp=null;
                                 if (Variables.tempCopiedLamp.getImage().getX()==-1 || Variables.tempCopiedLamp.getImage().getY()==-1){
                                     Variables.copyType=0;
                                     disableConfirmBtn();
@@ -866,6 +867,11 @@ public class Buttons {
                                             if (room.detectTouch((lamp.getImage().getX())+(lamp.getImage().getWidth()/2), (lamp.getImage().getY())+(lamp.getImage().getHeight()/2))) {
                                                 room.lamps.add(lamp);
                                                 lamp.setLampRoom(room.getNumber());
+                                                lamp.setTypeRoom(room.getType_pos());
+                                                lamp.setDaysWork(room.getDays());
+                                                lamp.setHoursWork(room.getHoursPerDay());
+                                                lamp.setHoursWeekendWork(room.getHoursPerWeekend());
+                                                lamp.setHoursSundayWork(room.getHoursPerSunday());
                                                 found = true;
                                             }
                                         }
@@ -874,6 +880,7 @@ public class Buttons {
                                             lamp.getImage().setBackgroundColor(Variables.activity.getResources().getColor(R.color.blue));
                                         }
                                     }
+                                    Variables.plan.touchedLamp=null;
                                     Variables.copyType = 0;
                                     disableCopyBtn();
                                     disableConfirmBtn();
