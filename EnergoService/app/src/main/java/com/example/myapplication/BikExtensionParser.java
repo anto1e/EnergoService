@@ -195,9 +195,6 @@ public class BikExtensionParser {
                         String[] split_number = line.split("%");
                         if (split_number.length>1) {
                             String number = split_number[0];        //номер комнаты, к которому привязан
-                            if (number.equals("4")){
-                                System.out.println("");
-                            }
                             String[] split_room_info = split_number[1].split("@");
                             String type = split_room_info[0];       //Тип светильника
                             String power = split_room_info[1];      //Мощность светильника

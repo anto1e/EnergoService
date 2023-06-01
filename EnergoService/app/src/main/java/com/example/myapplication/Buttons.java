@@ -221,6 +221,7 @@ public class Buttons {
                             activateCancelBtn();
                             activateConfirmBtn();
                         } else {
+                            Variables.plan.touchedLamp=null;
                             disableSelectByTouch();
                             fillFieldsSelectZone();
                         }
@@ -474,7 +475,7 @@ public class Buttons {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_UP:
-                        if (Variables.selectZoneFlag && Variables.copyVector.size()>0){ //Если выделена группа светильников
+                        if ((Variables.selectZoneFlag && Variables.copyVector.size()>0) || Variables.selectByClickFlag){ //Если выделена группа светильников
                             Variables.copyBuffer.clear();       //Очистка буффера копирования
                             for (Lamp lamp:Variables.copyVector){       //Переносим выделенные светильники в буфер копирование
                                 Lamp tempLamp = new Lamp();
@@ -598,6 +599,8 @@ public class Buttons {
                             //Variables.plan.touchedLamp=null;
                         }else{      //Деактивация
                             if (!Variables.moveOnlySelectedZone) {  //Выключение функцию выделения и подтверждающей кнопки
+                                Variables.plan.touchedLamp=null;
+                                disableCancelBtn();
                                 disableConfirmBtn();
                                 disableSelectZone();
                             }else{ //Иначе - выключаем функцию веделения
