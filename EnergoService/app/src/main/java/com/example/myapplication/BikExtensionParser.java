@@ -39,10 +39,12 @@ public class BikExtensionParser {
     boolean buildingInfo=false;     //Флаг начала информации о здании
     boolean lampsInfo = false;      //Флаг начала информации о светильниках
     boolean roomInfo = false;       //Флаг начала информации о комнатах
+    boolean floorInfo=false;
     boolean lastThread=false;
     Vector<Thread> threads = new Vector<Thread>();
     File currentFile;
     public void parseFile(String path) throws FileNotFoundException {   //Парсинг файла
+        Variables.loadingFlag=true;
         threads.clear();
         Variables.setAddFlag(false);
         Variables.plan.disableListenerFromPlan();
@@ -58,6 +60,7 @@ public class BikExtensionParser {
         Variables.plan.touchedRoom=null;
         Variables.plan.lastRoom=null;
         Floor floor = new Floor();          //Создание нового этажа
+        floor.fillVector();
         for (String type:Variables.roofTypes){
             floor.roofHeightDefault.add("0.0");
         }
@@ -103,6 +106,12 @@ public class BikExtensionParser {
                     roomInfo=false;
                     lampsInfo=true;
                 }
+                else if (line.equals("///INFORMATION ABOUT FLOOR///")){             //Если информация о светильниках
+                    buildingInfo=false;
+                    roomInfo=false;
+                    lampsInfo=false;
+                    floorInfo=true;
+                }
                 if (buildingInfo){      //Если информация о здании
                     if (line.length() > 2 && (line.charAt(0) == 'H' || line.charAt(0) == 'S' || line.charAt(0) == 'R') && line.charAt(1) == '@') {
                         if (line.charAt(0) == 'S') {  //Если это информация о размерах изображения
@@ -141,51 +150,53 @@ public class BikExtensionParser {
                     }
             }
                 else if (roomInfo){         //Если информация о комнатах
-                    if (line.length()>10 && line.charAt(0) != '/'){
+                    if (line.length()>10 && line.charAt(0) != '/') {
                         String[] split_number = line.split("%");
-                        if (split_number.length>1){
+                        if (split_number.length > 1) {
                             String number = split_number[0];        //Номер помещения
                             String[] split_room_info = split_number[1].split("@");
-                            String height = split_room_info[0];
-                            int typeRoom = Integer.parseInt(split_room_info[1]);    //Тип помещения
-                            int days = Integer.parseInt(split_room_info[2]);         //Дни в неделю
-                            int hours = Integer.parseInt(split_room_info[3]);        //Часы работы в неделю
-                            int hoursPerWeekend = Integer.parseInt(split_room_info[4]);     //Часы работы в субботу
-                            int hoursPerSunday = Integer.parseInt(split_room_info[5]);      //Часы работы в выходные
-                            int roofType = Integer.parseInt(split_room_info[6]);            //Тип крыши
-                            String comments;                //Комментарии
-                            if (split_room_info.length==7){
-                                comments="";
-                            }else {
-                                comments = split_room_info[7];
-
-                                if (Objects.equals(comments, "null"))
+                            if (split_room_info.length > 9) {
+                                String height = split_room_info[0];
+                                int typeRoom = Integer.parseInt(split_room_info[1]);    //Тип помещения
+                                int days = Integer.parseInt(split_room_info[2]);         //Дни в неделю
+                                int hours = Integer.parseInt(split_room_info[3]);        //Часы работы в неделю
+                                int hoursPerWeekend = Integer.parseInt(split_room_info[4]);     //Часы работы в субботу
+                                int hoursPerSunday = Integer.parseInt(split_room_info[5]);      //Часы работы в выходные
+                                int roofType = Integer.parseInt(split_room_info[6]);            //Тип крыши
+                                String comments;                //Комментарии
+                                if (split_room_info.length == 7) {
                                     comments = "";
-                            }
-                            double cordX = Double.parseDouble(split_room_info[8]);          //Первая координата комнаты по X
-                            double cordY = Double.parseDouble(split_room_info[9]);          //Первая координата комнаты по Y
-                            Room room = Variables.getRoomByNumberAndCoords(number,cordX,cordY,Variables.current_floor);     //Находим нужную комнату
-                            if (room!=null) {           //Если комната найдена
-                                if (split_room_info.length>10){      //Если есть пути к фотографиям и сами файлы существуют - добавляем
-                                    String paths = split_room_info[10];
-                                    String[] split_room_photos = paths.split("!");
-                                    for (int i=0;i<split_room_photos.length;i++){
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                            if (Files.exists(Paths.get(split_room_photos[i]))){
-                                                room.photoPaths.add(split_room_photos[i]);
+                                } else {
+                                    comments = split_room_info[7];
+
+                                    if (Objects.equals(comments, "null"))
+                                        comments = "";
+                                }
+                                double cordX = Double.parseDouble(split_room_info[8]);          //Первая координата комнаты по X
+                                double cordY = Double.parseDouble(split_room_info[9]);          //Первая координата комнаты по Y
+                                Room room = Variables.getRoomByNumberAndCoords(number, cordX, cordY, Variables.current_floor);     //Находим нужную комнату
+                                if (room != null) {           //Если комната найдена
+                                    if (split_room_info.length > 10) {      //Если есть пути к фотографиям и сами файлы существуют - добавляем
+                                        String paths = split_room_info[10];
+                                        String[] split_room_photos = paths.split("!");
+                                        for (int i = 0; i < split_room_photos.length; i++) {
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                if (Files.exists(Paths.get(split_room_photos[i]))) {
+                                                    room.photoPaths.add(split_room_photos[i]);
+                                                }
                                             }
                                         }
+                                        //room.photoPaths.addAll(Arrays.asList(split_room_photos));
                                     }
-                                    //room.photoPaths.addAll(Arrays.asList(split_room_photos));
+                                    room.setHeight(height);
+                                    room.setType_pos(typeRoom);
+                                    room.setDays(days);
+                                    room.setHoursPerDay(hours);
+                                    room.setHoursPerWeekend(hoursPerWeekend);
+                                    room.setRoofType(roofType);
+                                    room.setComments(comments);
+                                    room.setHoursPerSunday(hoursPerSunday);
                                 }
-                                room.setHeight(height);
-                                room.setType_pos(typeRoom);
-                                room.setDays(days);
-                                room.setHoursPerDay(hours);
-                                room.setHoursPerWeekend(hoursPerWeekend);
-                                room.setRoofType(roofType);
-                                room.setComments(comments);
-                                room.setHoursPerSunday(hoursPerSunday);
                             }
                         }
                     }
@@ -220,7 +231,7 @@ public class BikExtensionParser {
                             final int resourceId = resources.getIdentifier(type, "drawable",
                                     Variables.activity.getPackageName());
                             imageView.setImageResource(resourceId);
-                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
+                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(7, 7);
                             imageView.setLayoutParams(params);
                             imageView.setX(cordX);
                             imageView.setY(cordY);
@@ -338,12 +349,34 @@ public class BikExtensionParser {
                            // }
                         }
                     }
+                }else if (floorInfo){
+                    if (line.charAt(0) != '/') {
+                        String[] split_floor_info = line.split("@");
+                        int type = Integer.parseInt(String.valueOf(split_floor_info[0]));
+                        if (type>3){
+                            type=0;
+                        }
+                        floor.setTypeFloor(type);
+                        int days = Integer.parseInt(String.valueOf(split_floor_info[1]));
+                        if (days>8){
+                            days=0;
+                        }
+                        floor.setHoursWordDefault(days);
+                        floor.roofHeightDefault.set(0, split_floor_info[2]);
+                        floor.roofHeightDefault.set(1, split_floor_info[3]);
+                        floor.roofHeightDefault.set(3, split_floor_info[4]);
+                        floor.roofHeightDefault.set(4, split_floor_info[5]);
+                        Variables.typeOfBuilding.setSelection(floor.getTypeFloor());
+                        Variables.roomHeight.setText(floor.roofHeightDefault.elementAt(0));
+                        Variables.daysOfWorkDefault.setSelection(floor.getHoursWordDefault());
+                    }
                 }
                 line = reader.readLine();
             }
             buildingInfo=false;
             roomInfo=false;
             lampsInfo=false;
+            floorInfo=false;
             floor.setImage(Variables.selectedfile);     //Передаем картинку этажа в созданный этаж
             if (Variables.typeOpening==0){      //Если открываем в текущей вкладке - меняем вкладку
                 if (!Variables.exportingJpg) {
@@ -368,6 +401,7 @@ public class BikExtensionParser {
             }
             Variables.exportingJpg=false;
             Variables.isExportingToJpg=false;
+            Variables.setInfoEmpty(floor);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -459,6 +493,9 @@ public class BikExtensionParser {
                          }
                             out.println(str12+str2);
                     }
+                    out.println("///INFORMATION ABOUT FLOOR///");   //Начинаем записывать информацию об этаже
+                    String str = Variables.current_floor.getTypeFloor()+"@"+Variables.current_floor.getHoursWordDefault()+"@"+Variables.current_floor.roofHeightDefault.elementAt(0)+"@"+Variables.current_floor.roofHeightDefault.elementAt(1)+"@"+Variables.current_floor.roofHeightDefault.elementAt(2)+"@"+Variables.current_floor.roofHeightDefault.elementAt(3);
+                    out.println(str);
                 } catch (IOException e) {
                     //exception handling left as an exercise for the reader
                 }

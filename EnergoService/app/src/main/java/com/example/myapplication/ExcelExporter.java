@@ -3,6 +3,7 @@ package com.example.myapplication;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 
 import com.aspose.cells.Cell;
@@ -31,6 +32,7 @@ public class ExcelExporter {
     String path;
 
     Workbook workbook;
+    int lastIndex;
     WorksheetCollection worksheets;
     Worksheet sheet;
     Cells cells;
@@ -55,6 +57,7 @@ public class ExcelExporter {
         }
         path = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS + "/" + Variables.current_floor.getName()));
         init();
+        lastIndex=Variables.current_floor.getTypeFloor();
  /*           for (Room room:Variables.current_floor.rooms) {
                 for (Lamp lamp: room.lamps){
                     if (Objects.equals(lamp.getTypeImage(), "lum4_18")){
@@ -151,8 +154,42 @@ public class ExcelExporter {
             }
         }*/
         for (int l = 0; l < Variables.floors.size(); l++) {       //Проходимся по активным этажам
+
             if (Objects.equals(Variables.floors.elementAt(l).getName(), Variables.current_floor.getName())) {       //Если этаж от данного здания
+                Variables.setInfoEmpty(Variables.floors.elementAt(l));
                 Floor temp = Variables.floors.elementAt(l);         //Временный этаж
+                Variables.loadingFlag=true;
+                ArrayAdapter<String> adapter;
+                switch (temp.getTypeFloor()){
+                    case 0:
+                        adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsDetSad);
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        Variables.activity.runOnUiThread(() -> {
+                            Variables.typeLamp.setAdapter(adapter);
+                        });
+                        break;
+                    case 1:
+                        adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsSchools);
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        Variables.activity.runOnUiThread(() -> {
+                            Variables.typeLamp.setAdapter(adapter);
+                        });
+                        break;
+                    case 2:
+                    adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsHospitals);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        Variables.activity.runOnUiThread(() -> {
+                            Variables.typeLamp.setAdapter(adapter);
+                        });
+                    break;
+                    case 3:
+                    adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsOthers);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        Variables.activity.runOnUiThread(() -> {
+                            Variables.typeLamp.setAdapter(adapter);
+                        });
+                    break;
+                }
                 for (int i = 0; i < temp.rooms.size(); i++) {              //Комнаты временного этажа
                     for (int j = i; j < temp.rooms.size(); j++) {
                         try {        //Сортировка комнат по номеру в порядке возрастания
@@ -409,6 +446,38 @@ public class ExcelExporter {
             }
         }
         save();
+        ArrayAdapter<String> adapter;
+        Variables.loadingFlag=true;
+        switch (lastIndex){
+            case 0:
+                adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsDetSad);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                Variables.activity.runOnUiThread(() -> {
+                    Variables.typeLamp.setAdapter(adapter);
+                });
+                break;
+            case 1:
+                adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsSchools);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                Variables.activity.runOnUiThread(() -> {
+                    Variables.typeLamp.setAdapter(adapter);
+                });
+                break;
+            case 2:
+                adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsHospitals);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                Variables.activity.runOnUiThread(() -> {
+                    Variables.typeLamp.setAdapter(adapter);
+                });
+                break;
+            case 3:
+                adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsOthers);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                Variables.activity.runOnUiThread(() -> {
+                    Variables.typeLamp.setAdapter(adapter);
+                });
+                break;
+        }
     }
 
     public void writeToFileAccessDenied(Floor floor,Room room){

@@ -71,7 +71,7 @@ public class Plan {
                                 if (tempView == null) {        //Если маркера появления светильника нет - отрисовываем его
                                     tempView = new View(Variables.activity);
                                     Variables.planLay.addView(tempView);
-                                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
+                                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(Variables.lampSize, Variables.lampSize);
                                     tempView.setLayoutParams(params);
                                     tempView.setScaleX(Variables.lastScaletype);
                                     tempView.setScaleY(Variables.lastScaletype);
@@ -93,7 +93,7 @@ public class Plan {
                                 if (tempView == null) {        //Если маркера появления светильника нет - отрисовываем его
                                     tempView = new View(Variables.activity);
                                     Variables.planLay.addView(tempView);
-                                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
+                                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(Variables.lampSize, Variables.lampSize);
                                     tempView.setLayoutParams(params);
                                     tempView.setScaleX(Variables.lastScaletype);
                                     tempView.setScaleY(Variables.lastScaletype);
@@ -411,7 +411,7 @@ public class Plan {
         if (tempView != null || type_spawning) {                   //Если активная функция добавления светильника
                 ImageView imageView = new ImageView(Variables.activity);
                 imageView.setImageResource(type);
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(Variables.lampSize, Variables.lampSize);
                 imageView.setLayoutParams(params);
                 if (type_spawning){     //Если создание светильника не по нажатию кнопки добавления - берем данные из переданных параметров
                     imageView.setScaleX(scaleType);
@@ -667,6 +667,14 @@ public class Plan {
             }else if (groupIndex==4){
                 lamp.setMontagneType(2);
                 lamp.setComments("Над доской");
+                if (touchedRoom!=null){
+                    if (touchedRoom.getDays()==6){
+                        lamp.setHoursWork(3);
+                    }else if (touchedRoom.getDays()==7){
+                        lamp.setHoursWork(3);
+                        lamp.setHoursWeekendWork(2);
+                    }
+                }
                 if (lampName.equals("diod18dosk") || lampName.equals("diod24dosk") || lampName.equals("diod20dosk")){
                     lamp.setType("Светодиодный");
                 }else{

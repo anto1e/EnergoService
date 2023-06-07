@@ -8,8 +8,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.KeyguardManager;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -86,6 +89,11 @@ public class MainActivity extends AppCompatActivity {
         Variables.listView=(ListView)findViewById(R.id.LampsListView);           //Лист со списком светильников
         Variables.lampsList = new LampsList(this, Variables.lampVstraivaemieNames, Variables.VstraivaemieImageId);        //Заполнение списка светильников
         Variables.listView.setAdapter(Variables.lampsList);
+        PhoneUnlockedReciever receiver = new PhoneUnlockedReciever();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_USER_PRESENT);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(receiver, filter);
         /*if (Build.VERSION.SDK_INT >= 30){
             if (!Environment.isExternalStorageManager()){
                 Intent getpermission = new Intent();
@@ -167,12 +175,13 @@ public class MainActivity extends AppCompatActivity {
 
         myTimer.schedule(new TimerTask() {
             public void run() {
-                if (Variables.current_floor!=null) {
+                if (Variables.current_floor!=null && !Variables.loadingFlag) {
                     SaveFileThread thread = new SaveFileThread();
                     thread.start();
                 }
             }
         }, 0, 60*1000); // каждую 3 минуту-сохранение файла
+
 
 
         Variables.image.addOnLayoutChangeListener( new View.OnLayoutChangeListener()        //В момент изменения размеров изображения
@@ -190,10 +199,11 @@ public class MainActivity extends AppCompatActivity {
                             Variables.currentHeight = findViewById(R.id.imageView).getHeight();
                             Variables.currentWidth = findViewById(R.id.imageView).getWidth();
                         try {   //Парсим файл
-                            if (!Variables.planLayCleared) {
+                            if (!Variables.planLayCleared && !Variables.wasUnlocked) {
                                 Variables.parser.parseFile(Variables.filePath);
                                 //Variables.removeAllDupples();
                             }
+                            Variables.wasUnlocked=false;
                             //Variables.buttons.drawLamps();
                             //Variables.filePath="";
                             //Variables.parser.parseFile(String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS))+"/planTemp-6.bik");

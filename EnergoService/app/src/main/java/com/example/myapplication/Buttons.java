@@ -139,6 +139,7 @@ public class Buttons {
                         }
                     }
                     active= (LinearLayout) v;
+                    Variables.loadingFlag=true;
                     Variables.current_floor = Variables.floors.elementAt(Variables.FloorPanelsVec.indexOf(active));
                     Variables.image.setImageURI(Variables.current_floor.getImage());
                     Variables.planLay.setX(Variables.current_floor.cordX);
@@ -150,6 +151,9 @@ public class Buttons {
                     Variables.buildingName.setText(Variables.current_floor.getName());
                     Variables.buidlingFloor.setText(Variables.current_floor.getFloor());
                     Variables.buildingAdress.setText(Variables.current_floor.getAdress());
+                    Variables.typeOfBuilding.setSelection(Variables.current_floor.getTypeFloor());
+                    Variables.daysOfWorkDefault.setSelection(Variables.current_floor.getHoursWordDefault());
+                    Variables.roomHeightDefaultCheck.setChecked(false);
                     Variables.setAddFlag(false);
                     addBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                     Variables.plan.disableListenerFromPlan();
@@ -501,7 +505,7 @@ public class Buttons {
                                 final int resourceId = resources.getIdentifier(lamp.getTypeImage(), "drawable",
                                         Variables.activity.getPackageName());
                                 imageView.setImageResource(resourceId);
-                                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
+                                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(Variables.lampSize, Variables.lampSize);
                                 imageView.setLayoutParams(params);
                                 imageView.setScaleX(lamp.getImage().getScaleX());
                                 imageView.setScaleY(lamp.getImage().getScaleY());
@@ -560,7 +564,7 @@ public class Buttons {
                                 final int resourceId = resources.getIdentifier(Variables.plan.touchedLamp.getTypeImage(), "drawable",
                                         Variables.activity.getPackageName());
                                 imageView.setImageResource(resourceId);
-                                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
+                                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(Variables.lampSize, Variables.lampSize);
                                 imageView.setLayoutParams(params);
                                 imageView.setScaleX(Variables.plan.touchedLamp.getImage().getScaleX());
                                 imageView.setScaleY(Variables.plan.touchedLamp.getImage().getScaleY());
@@ -590,6 +594,7 @@ public class Buttons {
                     case MotionEvent.ACTION_UP:
                         if (!Variables.selectZoneFlag) {        //Активация - установка флага, активация подтверждающих кнопок, очистка полей информации о светильнике
                             Variables.selectZoneFlag=true;
+                            Variables.plan.touchedLamp=null;
                             disableSelectByTouch();
                             selectZone.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
                             Variables.plan.setListenerToPlan();
@@ -814,7 +819,7 @@ public class Buttons {
                                     final int resourceId = resources.getIdentifier(lamp.getTypeImage(), "drawable",
                                             Variables.activity.getPackageName());
                                     imageView.setImageResource(resourceId);
-                                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(15, 15);
+                                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(Variables.lampSize, Variables.lampSize);
                                     imageView.setLayoutParams(params);
                                     imageView.setScaleX(lamp.getImage().getScaleX());
                                     imageView.setScaleY(lamp.getImage().getScaleY());
@@ -933,15 +938,15 @@ public class Buttons {
                             CheckBox check = Variables.activity.findViewById(R.id.angleCheckbox);
                             float cordX = Variables.plan.selectionZone.getX();
                             float cordY = Variables.plan.selectionZone.getY();
-                            float height = (Variables.plan.selectionZone.getHeight())-(15*scaleType);       //Высчитываем высоту зоны
-                            float width = Variables.plan.selectionZone.getWidth()-(15*scaleType);           //Высчитываем ширину зону
+                            float height = ((Variables.plan.selectionZone.getHeight())-(Variables.lampSize*scaleType))-2;       //Высчитываем высоту зоны
+                            float width = (Variables.plan.selectionZone.getWidth()-(Variables.lampSize*scaleType))-2;           //Высчитываем ширину зону
                             float height_step = (height / (rows_amount-1));         //Расчитваем шаг по У
                             float width_step = (width / (column_amount-1));         //Расчитываем шаг по Х
                             float angle = 0;        //Угол поворота
-                            while ((cordX+15*scaleType)+2 > cordX+width_step){      //Если все светильники не умещаются - изменяем их масштаб
+                            while ((cordX+Variables.lampSize*scaleType)+0.3 > cordX+width_step){      //Если все светильники не умещаются - изменяем их масштаб
                                 scaleType-=0.1f;
                             }
-                            while ((cordY+15*scaleType)+2 > cordY+height_step){
+                            while ((cordY+Variables.lampSize*scaleType)+0.3 > cordY+height_step){
                                 scaleType-=0.1f;
                             }
                             if (check.isChecked())      //Если активирована функция поворота - поворачиваем на 90 градусов
@@ -1163,12 +1168,16 @@ public class Buttons {
                             Variables.floors.remove(Variables.current_floor);
                             if (active != null) {       //Если в текущий момент не открыта как минимум одна вкладка
                                 Variables.current_floor = Variables.floors.elementAt(Variables.FloorPanelsVec.indexOf(active));
+                                Variables.loadingFlag=true;
                                 Variables.filePath = FileHelper.getRealPathFromURI(Variables.activity,Variables.current_floor.getImage());
                                 Variables.image.setImageURI(Variables.current_floor.getImage());
                                 Variables.planLay.setX(Variables.current_floor.cordX);
                                 Variables.planLay.setY(Variables.current_floor.cordY);
                                 Variables.planLay.setScaleX(Variables.current_floor.scale);
                                 Variables.planLay.setScaleY(Variables.current_floor.scale);
+                                Variables.typeOfBuilding.setSelection(Variables.current_floor.getTypeFloor());
+                                Variables.daysOfWorkDefault.setSelection(Variables.current_floor.getHoursWordDefault());
+                                Variables.roomHeightDefaultCheck.setChecked(false);
                                 drawLamps();     //Рисуем светильники текущей комнаты
                                 Variables.buildingName.setText(Variables.current_floor.getName());
                                 Variables.buidlingFloor.setText(Variables.current_floor.getFloor());
@@ -1543,6 +1552,7 @@ public class Buttons {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if(Variables.plan.touchedLamp!=null && !Variables.selectZoneFlag) {
                     Variables.plan.touchedLamp.setTypeRoom(Variables.typeLamp.getSelectedItemPosition());
+                    Variables.current_floor.setTypeFloor(Variables.typeLamp.getSelectedItemPosition());
                 }
             }
 
@@ -1723,26 +1733,51 @@ public class Buttons {
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     Variables.type.setAdapter(adapter);
                     Variables.typeLamp.setAdapter(adapter);
+                    if (!Variables.loadingFlag)
                     Variables.daysOfWorkDefault.setSelection(6);
+                    if (Variables.current_floor!=null) {
+                        if (!Variables.loadingFlag)
+                        Variables.current_floor.setHoursWordDefault(6);
+                        Variables.current_floor.setTypeFloor(0);
+                    }
                 }else if (String.valueOf(Variables.typeOfBuilding.getSelectedItem()).equals("Школа")){
                     ArrayAdapter<String> adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsSchools);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     Variables.type.setAdapter(adapter);
                     Variables.typeLamp.setAdapter(adapter);
+                    if (!Variables.loadingFlag)
                     Variables.daysOfWorkDefault.setSelection(7);
+                    if (Variables.current_floor!=null) {
+                        if (!Variables.loadingFlag)
+                        Variables.current_floor.setHoursWordDefault(7);
+                        Variables.current_floor.setTypeFloor(1);
+                    }
                 }else if (String.valueOf(Variables.typeOfBuilding.getSelectedItem()).equals("Больница")){
                     ArrayAdapter<String> adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsHospitals);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     Variables.type.setAdapter(adapter);
                     Variables.typeLamp.setAdapter(adapter);
+                    if (!Variables.loadingFlag)
                     Variables.daysOfWorkDefault.setSelection(8);
+                    if (Variables.current_floor!=null) {
+                        if (!Variables.loadingFlag)
+                        Variables.current_floor.setHoursWordDefault(8);
+                        Variables.current_floor.setTypeFloor(2);
+                    }
                 }else if (String.valueOf(Variables.typeOfBuilding.getSelectedItem()).equals("Другое")) {
                     ArrayAdapter<String> adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsOthers);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     Variables.type.setAdapter(adapter);
                     Variables.typeLamp.setAdapter(adapter);
+                    if (!Variables.loadingFlag)
                     Variables.daysOfWorkDefault.setSelection(6);
+                    if (Variables.current_floor!=null) {
+                        if (!Variables.loadingFlag)
+                        Variables.current_floor.setHoursWordDefault(6);
+                        Variables.current_floor.setTypeFloor(3);
+                    }
                 }
+                Variables.loadingFlag=false;
             }
 
             @Override
@@ -1756,6 +1791,7 @@ public class Buttons {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if (Variables.current_floor!=null) {
+                    Variables.current_floor.setHoursWordDefault(Variables.daysOfWorkDefault.getSelectedItemPosition());
                     for (Room room : Variables.current_floor.rooms) {
                             room.setDays(Variables.daysOfWorkDefault.getSelectedItemPosition());
                     }
