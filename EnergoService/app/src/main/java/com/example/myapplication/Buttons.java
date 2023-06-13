@@ -154,6 +154,7 @@ public class Buttons {
                     Variables.typeOfBuilding.setSelection(Variables.current_floor.getTypeFloor());
                     Variables.daysOfWorkDefault.setSelection(Variables.current_floor.getHoursWordDefault());
                     Variables.roomHeightDefaultCheck.setChecked(false);
+                    Variables.roofTypeDefaultText.setText(Variables.current_floor.roofHeightDefault.elementAt(Variables.roofTypeDefault.getSelectedItemPosition()));
                     Variables.setAddFlag(false);
                     addBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                     Variables.plan.disableListenerFromPlan();
@@ -168,7 +169,6 @@ public class Buttons {
                     Variables.plan.touchedRoom=null;
                     Variables.plan.lastRoom=null;
                     Variables.selectedfile = Variables.current_floor.getImage();
-                    Variables.roofTypeDefaultText.setText("");
                     Variables.roomHeightDefaultCheck.setChecked(false);
                 }
                 return false;
@@ -481,6 +481,8 @@ public class Buttons {
                     case MotionEvent.ACTION_UP:
                         if ((Variables.selectZoneFlag && Variables.copyVector.size()>0) || Variables.selectByClickFlag){ //Если выделена группа светильников
                             Variables.copyBuffer.clear();       //Очистка буффера копирования
+                            Variables.distBufX.clear();
+                            Variables.distBufY.clear();
                             for (Lamp lamp:Variables.copyVector){       //Переносим выделенные светильники в буфер копирование
                                 Lamp tempLamp = new Lamp();
                                 tempLamp.setType(lamp.getType());
@@ -938,16 +940,22 @@ public class Buttons {
                             CheckBox check = Variables.activity.findViewById(R.id.angleCheckbox);
                             float cordX = Variables.plan.selectionZone.getX();
                             float cordY = Variables.plan.selectionZone.getY();
-                            float height = ((Variables.plan.selectionZone.getHeight())-(Variables.lampSize*scaleType))-2;       //Высчитываем высоту зоны
-                            float width = (Variables.plan.selectionZone.getWidth()-(Variables.lampSize*scaleType))-2;           //Высчитываем ширину зону
+                            float height = ((Variables.plan.selectionZone.getHeight())-(Variables.lampSize*scaleType));       //Высчитываем высоту зоны
+                            float width = (Variables.plan.selectionZone.getWidth()-(Variables.lampSize*scaleType));           //Высчитываем ширину зону
+                            if (height<0){
+                                height*=-1;
+                            }
+                            if (width<0){
+                                width*=-1;
+                            }
                             float height_step = (height / (rows_amount-1));         //Расчитваем шаг по У
                             float width_step = (width / (column_amount-1));         //Расчитываем шаг по Х
                             float angle = 0;        //Угол поворота
-                            while ((cordX+Variables.lampSize*scaleType)+0.3 > cordX+width_step){      //Если все светильники не умещаются - изменяем их масштаб
-                                scaleType-=0.1f;
+                            while ((cordX+Variables.lampSize*scaleType) > cordX+width_step){      //Если все светильники не умещаются - изменяем их масштаб
+                                scaleType-=0.01f;
                             }
-                            while ((cordY+Variables.lampSize*scaleType)+0.3 > cordY+height_step){
-                                scaleType-=0.1f;
+                            while ((cordY+Variables.lampSize*scaleType) > cordY+height_step){
+                                scaleType-=0.01f;
                             }
                             if (check.isChecked())      //Если активирована функция поворота - поворачиваем на 90 градусов
                                 angle = 90;
@@ -1089,7 +1097,7 @@ public class Buttons {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_UP:
-                        if (Variables.fileSaved) {      //Если файл не сохраняется  в данный момент
+                        if (Variables.fileSaved && Variables.current_floor!=null) {      //Если файл не сохраняется  в данный момент
                             Variables.fileSaved = false;
                             SaveFileThread thread = new SaveFileThread(); //Создаем новый поток для сохранения файла
                             thread.start();     //Запускаем поток
@@ -1178,6 +1186,7 @@ public class Buttons {
                                 Variables.typeOfBuilding.setSelection(Variables.current_floor.getTypeFloor());
                                 Variables.daysOfWorkDefault.setSelection(Variables.current_floor.getHoursWordDefault());
                                 Variables.roomHeightDefaultCheck.setChecked(false);
+                                Variables.roofTypeDefaultText.setText(Variables.current_floor.roofHeightDefault.elementAt(Variables.roofTypeDefault.getSelectedItemPosition()));
                                 drawLamps();     //Рисуем светильники текущей комнаты
                                 Variables.buildingName.setText(Variables.current_floor.getName());
                                 Variables.buidlingFloor.setText(Variables.current_floor.getFloor());
@@ -1728,16 +1737,19 @@ public class Buttons {
         Variables.typeOfBuilding.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                Variables.plan.touchedRoom=null;
                 if (String.valueOf(Variables.typeOfBuilding.getSelectedItem()).equals("Детский сад")){
                     ArrayAdapter<String> adapter = new ArrayAdapter(Variables.activity, R.layout.spinner_item, Variables.typesOfRoomsDetSad);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     Variables.type.setAdapter(adapter);
                     Variables.typeLamp.setAdapter(adapter);
-                    if (!Variables.loadingFlag)
-                    Variables.daysOfWorkDefault.setSelection(6);
+                    if (!Variables.loadingFlag) {
+                        Variables.daysOfWorkDefault.setSelection(6);
+                    }
                     if (Variables.current_floor!=null) {
-                        if (!Variables.loadingFlag)
-                        Variables.current_floor.setHoursWordDefault(6);
+                        if (!Variables.loadingFlag) {
+                            Variables.current_floor.setHoursWordDefault(6);
+                        }
                         Variables.current_floor.setTypeFloor(0);
                     }
                 }else if (String.valueOf(Variables.typeOfBuilding.getSelectedItem()).equals("Школа")){
@@ -1745,11 +1757,13 @@ public class Buttons {
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     Variables.type.setAdapter(adapter);
                     Variables.typeLamp.setAdapter(adapter);
-                    if (!Variables.loadingFlag)
-                    Variables.daysOfWorkDefault.setSelection(7);
+                    if (!Variables.loadingFlag) {
+                        Variables.daysOfWorkDefault.setSelection(7);
+                    }
                     if (Variables.current_floor!=null) {
-                        if (!Variables.loadingFlag)
-                        Variables.current_floor.setHoursWordDefault(7);
+                        if (!Variables.loadingFlag) {
+                            Variables.current_floor.setHoursWordDefault(7);
+                        }
                         Variables.current_floor.setTypeFloor(1);
                     }
                 }else if (String.valueOf(Variables.typeOfBuilding.getSelectedItem()).equals("Больница")){
@@ -1757,11 +1771,13 @@ public class Buttons {
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     Variables.type.setAdapter(adapter);
                     Variables.typeLamp.setAdapter(adapter);
-                    if (!Variables.loadingFlag)
-                    Variables.daysOfWorkDefault.setSelection(8);
+                    if (!Variables.loadingFlag) {
+                        Variables.daysOfWorkDefault.setSelection(8);
+                    }
                     if (Variables.current_floor!=null) {
-                        if (!Variables.loadingFlag)
-                        Variables.current_floor.setHoursWordDefault(8);
+                        if (!Variables.loadingFlag) {
+                            Variables.current_floor.setHoursWordDefault(8);
+                        }
                         Variables.current_floor.setTypeFloor(2);
                     }
                 }else if (String.valueOf(Variables.typeOfBuilding.getSelectedItem()).equals("Другое")) {
@@ -1769,11 +1785,13 @@ public class Buttons {
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     Variables.type.setAdapter(adapter);
                     Variables.typeLamp.setAdapter(adapter);
-                    if (!Variables.loadingFlag)
-                    Variables.daysOfWorkDefault.setSelection(6);
+                    if (!Variables.loadingFlag) {
+                        Variables.daysOfWorkDefault.setSelection(6);
+                    }
                     if (Variables.current_floor!=null) {
-                        if (!Variables.loadingFlag)
-                        Variables.current_floor.setHoursWordDefault(6);
+                        if (!Variables.loadingFlag) {
+                            Variables.current_floor.setHoursWordDefault(6);
+                        }
                         Variables.current_floor.setTypeFloor(3);
                     }
                 }
@@ -2295,6 +2313,8 @@ public class Buttons {
         for (Lamp lamp : Variables.copyVector) {
                 lamp.getImage().setBackgroundResource(0);
         }
+        Variables.distX.clear();
+        Variables.distY.clear();
         Variables.copyVector.clear();
         Variables.plan.disableListenerFromPlan();
         fillFieldsSelectZone();

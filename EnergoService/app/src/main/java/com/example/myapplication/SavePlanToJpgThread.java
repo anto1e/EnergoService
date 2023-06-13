@@ -63,8 +63,8 @@ public class SavePlanToJpgThread extends Thread{
                         float newY = oldY * (secondHeight / firstHeight);
                         lamp.getImage().setPivotX(0);
                         lamp.getImage().setPivotY(0);
-                        lamp.getImage().setScaleX(lamp.getImage().getScaleX() + (secondWidth/firstWidth)*0.6f);
-                        lamp.getImage().setScaleY(lamp.getImage().getScaleY() + (secondHeight / firstHeight)*0.6f);
+                        lamp.getImage().setScaleX(lamp.getImage().getScaleX() + (secondWidth/firstWidth)*0.8f);
+                        lamp.getImage().setScaleY(lamp.getImage().getScaleY() + (secondHeight / firstHeight)*0.8f);
                         lamp.getImage().setX(newX);
                         lamp.getImage().setY(newY);
                     }
@@ -78,8 +78,8 @@ public class SavePlanToJpgThread extends Thread{
                     lamp.getImage().setPivotY(0);
                     lamp.getImage().setX(newX+lamp.getImage().getWidth()/2);
                     lamp.getImage().setY(newY+lamp.getImage().getHeight()/2);
-                    lamp.getImage().setScaleX(lamp.getImage().getScaleX() + (secondWidth/firstWidth)*0.6f);
-                    lamp.getImage().setScaleY(lamp.getImage().getScaleY() + (secondHeight / firstHeight*0.6f));
+                    lamp.getImage().setScaleX(lamp.getImage().getScaleX() + (secondWidth/firstWidth)*0.8f);
+                    lamp.getImage().setScaleY(lamp.getImage().getScaleY() + (secondHeight / firstHeight*0.8f));
                 }
             Bitmap bitmap = Bitmap.createBitmap(mContImage.getMeasuredWidth(), mContImage.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);

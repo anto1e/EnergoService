@@ -281,6 +281,13 @@ public class ExcelExporter {
                                 hoursSundayWork = String.valueOf(Variables.hoursPerSundayLamp.getItemAtPosition(lamps.elementAt(z).getHoursSundayWork()));
                                 type = lamps.elementAt(z).getType() + " " + lamps.elementAt(z).getPower();
                                 comm = lamps.elementAt(z).getComments();
+                                if (typeRoom.equals("Другое")){
+                                    String com = room.getComments();
+                                    String[] split_number = com.split(" ");
+                                    if (split_number.length>0 && !split_number[0].equals("")) {
+                                        typeRoom = split_number[0];
+                                    }
+                                }
                                 montagneType = Variables.montagneTypeArr[lamps.elementAt(z).getMontagneType()];     //Тип монтажа
                                 if (lamps.elementAt(z).getTypeImage().equals("lampnakal60spot") || lamps.elementAt(z).getTypeImage().equals("lampkll15spot") || lamps.elementAt(z).getTypeImage().equals("lampgalogen35") || lamps.elementAt(z).getTypeImage().equals("lampnakal40spot") || lamps.elementAt(z).getTypeImage().equals("lampkll18spot") || lamps.elementAt(z).getTypeImage().equals("lampkll20spot") || lamps.elementAt(z).getTypeImage().equals("lampkll25spot") || lamps.elementAt(z).getTypeImage().equals("lampkll30spot") || lamps.elementAt(z).getTypeImage().equals("lampnakal75spot") || lamps.elementAt(z).getTypeImage().equals("lampnakal95spot") || lamps.elementAt(z).getTypeImage().equals("lampdiodspot12") || lamps.elementAt(z).getTypeImage().equals("lampdiodspot10") || lamps.elementAt(z).getTypeImage().equals("lampdiodspot15")) {
                                     otherInfo = "Спот";       //Если светильник спот - пишем в комменты спот
