@@ -71,6 +71,7 @@ public class Variables {
     static ExcelExporter exporter;                  //Экспортер данных в эксель
     static RelativeLayout roomInfoView;             //Панель инфрмации о комнате
     static Spinner typeOfBuilding;                  //Спиннер типа строения
+    static Uri tempImage;
     static Spinner daysOfWorkDefault;               //Спиннер дней работы по умолчанию
 
     static RelativeLayout buildingInfoView;             //Панель инфрмации о здании

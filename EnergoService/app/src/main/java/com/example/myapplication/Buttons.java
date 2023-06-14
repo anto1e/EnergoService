@@ -218,6 +218,7 @@ public class Buttons {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_UP:
                         if (!Variables.selectByClickFlag) {
+                            Variables.plan.touchedLamp=null;
                             disableSelectZone();
                             selectByClickBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
                             Variables.selectByClickFlag = true;
@@ -964,28 +965,28 @@ public class Buttons {
                                     for (int j = 0; j < column_amount; j++) {
                                         switch (Variables.currentLampsPanelIndex){      //В зависимости от типа светильника добавляем соответствующие
                                             case 0:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsVstraivaemieName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsVstraivaemieName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,(cordX + j * width_step)+((Variables.lampSize*scaleType)/2), (cordY + i * height_step)+((Variables.lampSize*scaleType)/2), true, angle,scaleType);
                                                 break;
                                             case 1:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsNakladnieName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsNakladnieName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,(cordX + j * width_step)+((Variables.lampSize*scaleType)/2), (cordY + i * height_step)+((Variables.lampSize*scaleType)/2), true, angle,scaleType);
                                                 break;
                                             case 2:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsLampsName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsLampsName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,(cordX + j * width_step)+((Variables.lampSize*scaleType)/2), (cordY + i * height_step)+((Variables.lampSize*scaleType)/2), true, angle,scaleType);
                                                 break;
                                             case 3:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsDiodsName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsDiodsName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,(cordX + j * width_step)+((Variables.lampSize*scaleType)/2), (cordY + i * height_step)+((Variables.lampSize*scaleType)/2), true, angle,scaleType);
                                                 break;
                                             case 4:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsDoskiName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsDoskiName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,(cordX + j * width_step)+((Variables.lampSize*scaleType)/2), (cordY + i * height_step)+((Variables.lampSize*scaleType)/2), true, angle,scaleType);
                                                 break;
                                             case 5:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsPodvesName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsPodvesName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,(cordX + j * width_step)+((Variables.lampSize*scaleType)/2), (cordY + i * height_step)+((Variables.lampSize*scaleType)/2), true, angle,scaleType);
                                                 break;
                                             case 6:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOthersName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOthersName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,(cordX + j * width_step)+((Variables.lampSize*scaleType)/2), (cordY + i * height_step)+((Variables.lampSize*scaleType)/2), true, angle,scaleType);
                                                 break;
                                             case 7:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOutsideName[Variables.multiplepos],1,Variables.currentLampsPanelIndex,cordX + j * width_step, cordY + i * height_step, true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOutsideName[Variables.multiplepos],1,Variables.currentLampsPanelIndex,(cordX + j * width_step)+((Variables.lampSize*scaleType)/2), (cordY + i * height_step)+((Variables.lampSize*scaleType)/2), true, angle,scaleType);
                                                 break;
                                         }
                                     }
@@ -1811,7 +1812,9 @@ public class Buttons {
                 if (Variables.current_floor!=null) {
                     Variables.current_floor.setHoursWordDefault(Variables.daysOfWorkDefault.getSelectedItemPosition());
                     for (Room room : Variables.current_floor.rooms) {
+                        if (room.getDays()==0) {
                             room.setDays(Variables.daysOfWorkDefault.getSelectedItemPosition());
+                        }
                     }
                     lastWorkdays = Variables.daysOfWorkDefault.getSelectedItemPosition();
                 }

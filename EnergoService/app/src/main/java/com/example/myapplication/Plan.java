@@ -422,6 +422,8 @@ public class Plan {
                 }
                 setListener(imageView);
                 if (type_spawning){     //Если тип появления - не по нажатию кнопки добавления - берем переданные в метод параметры
+                    //imageView.setPivotX(0);
+                    //imageView.setPivotY(0);
                     imageView.setX(cordX);
                     imageView.setY(cordY);
                     rotateImg(rotation, imageView, lampName,-1);
@@ -1058,8 +1060,12 @@ public class Plan {
                                 } else if (Variables.getMoveFlag()) {       //Иначе - если обычное перемещение - двигаем светильник
                                     //Иначе обычное перемещение
                                     //setTouchedRoom(imageView.getX() + (event.getX()), imageView.getY() + (event.getY()), true);  //Перемещение светильника
-                                    imageView.setX((imageView.getX() + (event.getX())) - imageView.getWidth() / 2);
-                                    imageView.setY((imageView.getY() + (event.getY())) - imageView.getHeight() / 2);
+                                    if (imageView.getX() + (event.getX())>=Variables.currentWidth || imageView.getY() + (event.getY())>=Variables.currentHeight){
+
+                                    }else {
+                                        imageView.setX((imageView.getX() + (event.getX())) - imageView.getWidth() / 2);
+                                        imageView.setY((imageView.getY() + (event.getY())) - imageView.getHeight() / 2);
+                                    }
                                 }
                                 break;
                             case MotionEvent.ACTION_CANCEL:

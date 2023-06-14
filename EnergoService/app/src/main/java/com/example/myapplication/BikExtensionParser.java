@@ -60,6 +60,9 @@ public class BikExtensionParser {
         Variables.buttons.removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
         Variables.plan.touchedRoom=null;
         Variables.plan.lastRoom=null;
+        if (Variables.exportingJpg){
+            Variables.tempImage = Variables.current_floor.getImage();
+        }
         Floor floor = new Floor();          //Создание нового этажа
         floor.fillVector();
         for (String type:Variables.roofTypes){
@@ -233,6 +236,8 @@ public class BikExtensionParser {
                                 final int resourceId = resources.getIdentifier(type, "drawable",
                                         Variables.activity.getPackageName());
                                 imageView.setImageResource(resourceId);
+                                //imageView.setPivotX(0);
+                                //imageView.setPivotY(0);
                                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(7, 7);
                                 imageView.setLayoutParams(params);
                                 imageView.setX(cordX);
@@ -381,7 +386,13 @@ public class BikExtensionParser {
             roomInfo=false;
             lampsInfo=false;
             floorInfo=false;
-            floor.setImage(Variables.selectedfile);     //Передаем картинку этажа в созданный этаж
+            if (Variables.exportingJpg){
+                floor.setImage(Variables.tempImage);
+                Variables.image.setImageURI(Variables.tempImage);
+            }
+            else {
+                floor.setImage(Variables.selectedfile);     //Передаем картинку этажа в созданный этаж
+            }
             if (Variables.typeOpening==0){      //Если открываем в текущей вкладке - меняем вкладку
                 if (!Variables.exportingJpg) {
                     if (Buttons.active == null) {      //Если нужно добавить новую вкладку
