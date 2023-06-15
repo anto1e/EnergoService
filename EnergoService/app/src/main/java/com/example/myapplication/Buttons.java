@@ -85,6 +85,7 @@ public class Buttons {
     ImageView photoLeftArrow;   //Кнопка перехода к предыдущей фотографии
     ImageView takePicLampPhoto;     //Кнопка активации камеры(вкладка светильников)
     ImageView screenShotBtn;        //Кнопка сохранения скриншота экрана
+    ImageView backUpFile;
     Button submitHeightFloor;       //Кнопка подтверждения задания стандартной высоты потолка
     int lastIndex=-1;               //Последний индекс типа потолка(для автовысоты)
     int lastWorkdays=6;             //Последний тип режима работы
@@ -211,6 +212,23 @@ public class Buttons {
         takePicLampPhoto = Variables.activity.findViewById(R.id.takePicLampBtn);    //Кнопка активации камеры(Вкладка со светильниками)
         submitHeightFloor = Variables.activity.findViewById(R.id.submitHeightFloor);    //Кнопка подтверждения задания стандартной высоты потолка
         screenShotBtn = Variables.activity.findViewById(R.id.screenShotBtn);    //Кнопка сохранения скриншота экрана
+        backUpFile = Variables.activity.findViewById(R.id.backupBtn);
+
+        backUpFile.setOnTouchListener(new View.OnTouchListener() {      //Бэкап файла
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                SaveFileThread thread = new SaveFileThread();
+                thread.start();
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                BackupThread thread1 = new BackupThread();
+                thread1.start();
+                return false;
+            }
+        });
 
         selectByClickBtn.setOnTouchListener(new View.OnTouchListener() {
             @Override

@@ -81,6 +81,7 @@ public class Variables {
     static EditText buidlingFloor;             //Поле номера этажа
     static RelativeLayout multipleRowsInfo;     //Поле выбора данных для создания множества светильников по рядам и столбцам
     static boolean scalemode = false;           //Флаг активации режима изменения размера
+    static boolean fileBackuping = false;
     static boolean rotateMode=false;            //Флаг активации режима поворота
     static boolean removeMode=false;            //Флаг активации режима удаления
     static boolean addMultipleRowsFlag=false;       //Флаг активации добавления множества светильников по рядам и столбцам

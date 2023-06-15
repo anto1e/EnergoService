@@ -517,6 +517,16 @@
                 android:layout_marginBottom="5dp"
                 android:layout_height="30dp">
             </ImageView>
+            <ImageView
+                android:id="@+id/backupBtn"
+                android:scaleType="fitCenter"
+                android:src="@drawable/backupbtn"
+                android:layout_marginLeft="10dp"
+                android:layout_width="30dp"
+                android:background="@color/white"
+                android:layout_marginBottom="5dp"
+                android:layout_height="30dp">
+            </ImageView>
 
         </GridLayout>
 
