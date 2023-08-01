@@ -123,7 +123,16 @@ public class Buttons {
         lay.setOnTouchListener(new View.OnTouchListener() {         //Обработчик нажатий на панели
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+
                 if (active!=v){             //Если нажата неактивная, делаем ее активной, предыдущую неактивной
+                    Variables.refreshLampsToRooms(Variables.current_floor);     //Перепривязка светильников к комнате
+                    try {
+                        Variables.parser.saveFile(Variables.filePath);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Variables.fileSaved = true;
+                    Variables.switchFlag=true;
                     Variables.planLayCleared=true;
                     Variables.clearFields();
                     active.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
@@ -142,35 +151,55 @@ public class Buttons {
                     active= (LinearLayout) v;
                     Variables.loadingFlag=true;
                     Variables.current_floor = Variables.floors.elementAt(Variables.FloorPanelsVec.indexOf(active));
-                    Variables.image.setImageURI(Variables.current_floor.getImage());
-                    Variables.planLay.setX(Variables.current_floor.cordX);
-                    Variables.planLay.setY(Variables.current_floor.cordY);
-                    Variables.planLay.setScaleX(Variables.current_floor.scale);
-                    Variables.planLay.setScaleY(Variables.current_floor.scale);
                     Variables.filePath = FileHelper.getRealPathFromURI(Variables.activity,Variables.current_floor.getImage());
-                    drawLamps();     //Рисуем светильники текущей комнаты
-                    Variables.buildingName.setText(Variables.current_floor.getName());
-                    Variables.buidlingFloor.setText(Variables.current_floor.getFloor());
-                    Variables.buildingAdress.setText(Variables.current_floor.getAdress());
-                    Variables.typeOfBuilding.setSelection(Variables.current_floor.getTypeFloor());
-                    Variables.daysOfWorkDefault.setSelection(Variables.current_floor.getHoursWordDefault());
-                    Variables.roomHeightDefaultCheck.setChecked(false);
-                    Variables.roofTypeDefaultText.setText(Variables.current_floor.roofHeightDefault.elementAt(Variables.roofTypeDefault.getSelectedItemPosition()));
-                    Variables.setAddFlag(false);
-                    addBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-                    Variables.plan.disableListenerFromPlan();
-                    Variables.setMoveFlag(false);
-                    moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-                    Variables.scalemode=false;
-                    scaleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-                    Variables.rotateMode=false;
-                    rotateLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-                    Variables.removeMode=false;
-                    removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-                    Variables.plan.touchedRoom=null;
-                    Variables.plan.lastRoom=null;
-                    Variables.selectedfile = Variables.current_floor.getImage();
-                    Variables.roomHeightDefaultCheck.setChecked(false);
+                    Variables.image.setImageURI(Variables.current_floor.getImage());
+                    try {
+                        Variables.planLay.setX(Variables.current_floor.cordX);
+                        Variables.planLay.setY(Variables.current_floor.cordY);
+                        Variables.planLay.setScaleX(Variables.current_floor.scale);
+                        Variables.planLay.setScaleY(Variables.current_floor.scale);
+                        Variables.buildingName.setText(Variables.current_floor.getName());
+                        Variables.buidlingFloor.setText(Variables.current_floor.getFloor());
+                        Variables.buildingAdress.setText(Variables.current_floor.getAdress());
+                        if (Variables.current_floor.getTypeFloor()>3){
+                            Variables.typeOfBuilding.setSelection(0);
+                        }else {
+                            Variables.typeOfBuilding.setSelection(Variables.current_floor.getTypeFloor());
+                        }
+                        //Variables.typeOfBuilding.setSelection(15);
+                        if (Variables.current_floor.getTypeFloor()>8){
+                            Variables.daysOfWorkDefault.setSelection(0);
+                        }else {
+                            Variables.daysOfWorkDefault.setSelection(Variables.current_floor.getHoursWordDefault());
+                        }
+                        Variables.roofTypeDefaultText.setText(Variables.current_floor.roofHeightDefault.elementAt(Variables.roofTypeDefault.getSelectedItemPosition()));
+                        Variables.setAddFlag(false);
+                        drawLamps();     //Рисуем светильники текущей комнаты
+                        addBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                        Variables.plan.disableListenerFromPlan();
+                        Variables.setMoveFlag(false);
+                        moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                        Variables.scalemode = false;
+                        scaleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                        Variables.rotateMode = false;
+                        rotateLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                        Variables.removeMode = false;
+                        removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                        Variables.plan.touchedRoom = null;
+                        Variables.plan.lastRoom = null;
+                        Variables.selectedfile = Variables.current_floor.getImage();
+                        Variables.switchFlag = false;
+                    }catch (Exception ex){
+                        Variables.isExportingToJpg=true;
+                        Variables.planLayCleared = true;
+                        Variables.exportingJpg=true;
+                        Variables.planLay.removeAllViews();
+                        Variables.planLay.addView(Variables.image);
+                        Variables.typeOpening=0;
+                        Variables.image.setImageResource(0);
+                        Variables.planLayCleared=false;
+                        Variables.image.setImageURI(Variables.selectedfile);
+                    }
                 }
                 return false;
             }
@@ -217,15 +246,17 @@ public class Buttons {
         backUpFile.setOnTouchListener(new View.OnTouchListener() {      //Бэкап файла
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                SaveFileThread thread = new SaveFileThread();
-                thread.start();
-                try {
-                    thread.join();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                if (!Variables.fileBackuping) {
+                    SaveFileThread thread = new SaveFileThread();
+                    thread.start();
+                    try {
+                        thread.join();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    BackupThread thread1 = new BackupThread();
+                    thread1.start();
                 }
-                BackupThread thread1 = new BackupThread();
-                thread1.start();
                 return false;
             }
         });
@@ -795,6 +826,7 @@ public class Buttons {
                             }
                             if (!Variables.moveOnlySelectedZone) {  //Выключение функцию выделения и подтверждающей кнопки
                                 disableConfirmBtn();
+                                disableCancelBtn();
                                 disableSelectZone();
                             }else{ //Иначе - выключаем функцию веделения
                                 Variables.selectZoneFlag=false;
@@ -844,6 +876,8 @@ public class Buttons {
                                     imageView.setLayoutParams(params);
                                     imageView.setScaleX(lamp.getImage().getScaleX());
                                     imageView.setScaleY(lamp.getImage().getScaleY());
+                                    imageView.setPivotX(lamp.getImage().getPivotX());
+                                    imageView.setPivotY(lamp.getImage().getPivotY());
                                     Variables.plan.setListener(imageView);
                                     imageView.setX(lamp.getImage().getX());
                                     imageView.setY(lamp.getImage().getY());
@@ -972,9 +1006,29 @@ public class Buttons {
                             float angle = 0;        //Угол поворота
                             while ((cordX+Variables.lampSize*scaleType) > cordX+width_step){      //Если все светильники не умещаются - изменяем их масштаб
                                 scaleType-=0.01f;
+                                height = ((Variables.plan.selectionZone.getHeight())-(Variables.lampSize*scaleType));       //Высчитываем высоту зоны
+                                width = (Variables.plan.selectionZone.getWidth()-(Variables.lampSize*scaleType));
+                                height_step = (height / (rows_amount-1));         //Расчитваем шаг по У
+                                width_step = (width / (column_amount-1));         //Расчитываем шаг по Х
+                                if (height<0){
+                                    height*=-1;
+                                }
+                                if (width<0){
+                                    width*=-1;
+                                }
                             }
                             while ((cordY+Variables.lampSize*scaleType) > cordY+height_step){
                                 scaleType-=0.01f;
+                                height = ((Variables.plan.selectionZone.getHeight())-(Variables.lampSize*scaleType));       //Высчитываем высоту зоны
+                                width = (Variables.plan.selectionZone.getWidth()-(Variables.lampSize*scaleType));
+                                height_step = (height / (rows_amount-1));         //Расчитваем шаг по У
+                                width_step = (width / (column_amount-1));         //Расчитываем шаг по Х
+                                if (height<0){
+                                    height*=-1;
+                                }
+                                if (width<0){
+                                    width*=-1;
+                                }
                             }
                             if (check.isChecked())      //Если активирована функция поворота - поворачиваем на 90 градусов
                                 angle = 90;
@@ -983,28 +1037,28 @@ public class Buttons {
                                     for (int j = 0; j < column_amount; j++) {
                                         switch (Variables.currentLampsPanelIndex){      //В зависимости от типа светильника добавляем соответствующие
                                             case 0:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsVstraivaemieName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,(cordX + j * width_step)+((Variables.lampSize*scaleType)/2), (cordY + i * height_step)+((Variables.lampSize*scaleType)/2), true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsVstraivaemieName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,(cordX + j * width_step), (cordY + i * height_step), true, angle,scaleType);
                                                 break;
                                             case 1:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsNakladnieName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,(cordX + j * width_step)+((Variables.lampSize*scaleType)/2), (cordY + i * height_step)+((Variables.lampSize*scaleType)/2), true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsNakladnieName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,(cordX + j * width_step), (cordY + i * height_step), true, angle,scaleType);
                                                 break;
                                             case 2:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsLampsName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,(cordX + j * width_step)+((Variables.lampSize*scaleType)/2), (cordY + i * height_step)+((Variables.lampSize*scaleType)/2), true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsLampsName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,(cordX + j * width_step), (cordY + i * height_step), true, angle,scaleType);
                                                 break;
                                             case 3:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsDiodsName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,(cordX + j * width_step)+((Variables.lampSize*scaleType)/2), (cordY + i * height_step)+((Variables.lampSize*scaleType)/2), true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsDiodsName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,(cordX + j * width_step), (cordY + i * height_step), true, angle,scaleType);
                                                 break;
                                             case 4:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsDoskiName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,(cordX + j * width_step)+((Variables.lampSize*scaleType)/2), (cordY + i * height_step)+((Variables.lampSize*scaleType)/2), true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsDoskiName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,(cordX + j * width_step), (cordY + i * height_step), true, angle,scaleType);
                                                 break;
                                             case 5:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsPodvesName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,(cordX + j * width_step)+((Variables.lampSize*scaleType)/2), (cordY + i * height_step)+((Variables.lampSize*scaleType)/2), true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsPodvesName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,(cordX + j * width_step), (cordY + i * height_step), true, angle,scaleType);
                                                 break;
                                             case 6:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOthersName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,(cordX + j * width_step)+((Variables.lampSize*scaleType)/2), (cordY + i * height_step)+((Variables.lampSize*scaleType)/2), true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOthersName[Variables.multiplepos],0,Variables.currentLampsPanelIndex,(cordX + j * width_step), (cordY + i * height_step), true, angle,scaleType);
                                                 break;
                                             case 7:
-                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOutsideName[Variables.multiplepos],1,Variables.currentLampsPanelIndex,(cordX + j * width_step)+((Variables.lampSize*scaleType)/2), (cordY + i * height_step)+((Variables.lampSize*scaleType)/2), true, angle,scaleType);
+                                                Variables.plan.spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsOutsideName[Variables.multiplepos],1,Variables.currentLampsPanelIndex,(cordX + j * width_step), (cordY + i * height_step), true, angle,scaleType);
                                                 break;
                                         }
                                     }
@@ -1830,7 +1884,7 @@ public class Buttons {
                 if (Variables.current_floor!=null) {
                     Variables.current_floor.setHoursWordDefault(Variables.daysOfWorkDefault.getSelectedItemPosition());
                     for (Room room : Variables.current_floor.rooms) {
-                        if (room.getDays()==0) {
+                        if (room.getDays()==0 || room.getHoursPerDay()==0) {
                             room.setDays(Variables.daysOfWorkDefault.getSelectedItemPosition());
                         }
                     }
@@ -2346,18 +2400,18 @@ public class Buttons {
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 android.Manifest.permission.CAMERA};
 
-        if(ContextCompat.checkSelfPermission(Variables.activity.getApplicationContext(),
+        /*if(ContextCompat.checkSelfPermission(Variables.activity.getApplicationContext(),
                 permissions[0]) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(Variables.activity.getApplicationContext(),
                 permissions[1]) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(Variables.activity.getApplicationContext(),
-                permissions[2]) == PackageManager.PERMISSION_GRANTED){
+                permissions[2]) == PackageManager.PERMISSION_GRANTED){*/
             dispatchTakePictureIntent(type);
-        }else{
+        /*}else{
             ActivityCompat.requestPermissions(Variables.activity,
                     permissions,
                     CAMERA_PERM_CODE);
-        }
+        }*/
     }
     public static void dispatchTakePictureIntent(boolean type) {        //Функция создания изображения
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

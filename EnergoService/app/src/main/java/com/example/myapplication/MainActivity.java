@@ -94,13 +94,13 @@ public class MainActivity extends AppCompatActivity {
         filter.addAction(Intent.ACTION_USER_PRESENT);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         registerReceiver(receiver, filter);
-        /*if (Build.VERSION.SDK_INT >= 30){
+        if (Build.VERSION.SDK_INT >= 30){
             if (!Environment.isExternalStorageManager()){
                 Intent getpermission = new Intent();
                 getpermission.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
                 startActivity(getpermission);
             }
-        }*/
+        }
 
 
         Variables.buttons.startDetecting();       //Начало отслеживания нажатия кнопок
@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
 
         myTimer.schedule(new TimerTask() {
             public void run() {
-                if (Variables.current_floor!=null && !Variables.loadingFlag) {
+                if (Variables.current_floor!=null && !Variables.loadingFlag && !Variables.fileBackuping) {
                     SaveFileThread thread = new SaveFileThread();
                     thread.start();
                 }
@@ -195,11 +195,11 @@ public class MainActivity extends AppCompatActivity {
                 int heightWas = bottomWas - topWas; // Bottom exclusive, top inclusive
                 if(v.getHeight() != heightWas && v.getWidth() != widthWas)    //Если размер изображения изменился
                 {
-                    if (Variables.filePath!="") {
+                    if (Variables.filePath!="" && !Variables.notSelected) {
                             Variables.currentHeight = findViewById(R.id.imageView).getHeight();
                             Variables.currentWidth = findViewById(R.id.imageView).getWidth();
                         try {   //Парсим файл
-                            if (!Variables.planLayCleared && !Variables.wasUnlocked) {
+                            if (!Variables.planLayCleared && !Variables.wasUnlocked && !Variables.switchFlag) {
                                 Variables.parser.parseFile(Variables.filePath);
                                 //Variables.removeAllDupples();
                             }
@@ -213,7 +213,14 @@ public class MainActivity extends AppCompatActivity {
                             throw new RuntimeException(e);
                         }
                     }
+                }else if (Variables.exportingJpg){
+                    try {
+                        Variables.parser.parseFile(Variables.filePath);
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
+                Variables.notSelected=false;
             }
         });
 
@@ -264,6 +271,8 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             Variables.image.setImageURI(Variables.selectedfile);
+            Variables.filePath = FileHelper.getRealPathFromURI(Variables.activity,Variables.current_floor.getImage());
+            Variables.notSelected=true;
         }
             Variables.opened = false;
     }

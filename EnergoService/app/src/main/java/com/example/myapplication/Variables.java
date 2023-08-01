@@ -70,6 +70,7 @@ public class Variables {
     static LinearLayout floorPanelLay;              //Layout вкладок этажей
     static ExcelExporter exporter;                  //Экспортер данных в эксель
     static RelativeLayout roomInfoView;             //Панель инфрмации о комнате
+    static boolean notSelected=false;
     static Spinner typeOfBuilding;                  //Спиннер типа строения
     static Uri tempImage;
     static Spinner daysOfWorkDefault;               //Спиннер дней работы по умолчанию
@@ -133,6 +134,7 @@ public class Variables {
     static boolean exportingJpg=false;
     static TextView montagneTypeTxtTwo;
     static Spinner montagneTypeTwo;
+    static boolean switchFlag=false;
     static Spinner positionOutside;             //Спинер позиции снаружи светильника
     static TextView isStolbTxt;                 //Текст находится ли светильник на столбе
     static CheckBox isStolbCheck;               //Чекбокс находится ли светильник на столбе
@@ -179,7 +181,7 @@ public class Variables {
     static String[] typesOfRoomsDetSad = {"Служебное помещение","Игровая","Гардероб", "Спальная", "Санузел", "Коридор", "Тамбур","Лестница","Кабинет","Пищеблок","Прачечная","Моечная","Кладовая","Спортзал","Актовый зал","Медкабинет","Гардероб","Техническое помещение","ГРЩ","Другое"};            //Типы помещений(детские сады)
     static String[] typesOfRoomsSchools = {"Служебное помещение","Учебный кабинет", "Кабинет", "Санузел", "Коридор", "Тамбур","Лестница","Спортзал","Пищеблок","Актовый зал","Медкабинет","Столовая","Кладовая","Гардероб","Техническое помещение","ГРЩ","Раздевалка","Библиотека","Бассейн","Другое"};            //Типы помещений(школы)
     static String[] typesOfRoomsHospitals = {"Служебное помещение","Кабинет врача", "Кабинет", "Санузел", "Коридор", "Тамбур","Лестница","Спортзал","Пищеблок","Актовый зал","Медкабинет","Кладовая","Столовая","Палата","Процедурная","Другое"};            //Типы помещений(больницы)
-    static String[] typesOfRoomsOthers = {"Служебное помещение","Коридор", "Кабинет", "Санузел", "Служебное помещение", "Тамбур","Лестница","Спортзал","Пищеблок","Актовый зал","Медкабинет","Кладовая","Столовая","Другое"};            //Типы помещений(больницы)
+    static String[] typesOfRoomsOthers = {"Служебное помещение","Коридор", "Кабинет", "Санузел", "Служебное помещение", "Тамбур","Лестница","Спортзал","Пищеблок","Актовый зал","Медкабинет","Кладовая","Столовая","Процедурный кабинет","Палата","Комната","Учебный кабинет","Душевая","Гардероб","Другое"};            //Типы помещений(больницы)
 
     static String[] daysPerWeekArr = {"0","1/мес","1","2","3","4","5","6","7"};         //Дней работы в неделю
     static String[] hoursPerDayArr = {"0","0.5","1","2","4","6","8","12","16","20","24"};       //Часов работы по будням
@@ -798,6 +800,20 @@ public class Variables {
         return false;
     }
 
+
+    public static boolean ifSomeRoomContainsLamp(float cordX,float cordY,Floor floor){
+        for (Room room:floor.rooms) {
+            for (Lamp lamp : room.lamps) {
+                lamp.getImage().setPivotX(0);
+                lamp.getImage().setPivotY(0);
+                if (lamp.getImage().getX() == cordX && lamp.getImage().getY() == cordY) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static void setInfoEmpty(Floor floor){
         for (Room room:floor.rooms){
             for (Lamp lamp:room.lamps){
@@ -811,6 +827,20 @@ public class Variables {
             }
         }
     }
+
+ /*   public static boolean planLayIfChild(ImageView img){
+        for (int i=0;i<Variables.planLay.getChildCount();i++){
+            if (Variables.planLay.getChildAt(i)==img)
+                return true;
+        }
+        return false;
+    }
+    public static void clearEmptyLamps(Floor floor){
+        for (Room room:floor.rooms){
+            for (Lamp lamp:room.lamps){
+            }
+        }
+    }*/
 
     /*public static int getTypeOfLampByPower(){
 

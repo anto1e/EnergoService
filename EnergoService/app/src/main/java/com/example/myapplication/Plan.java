@@ -36,9 +36,9 @@ public class Plan {
     View selectionZone=null;        //Зона выделения
 
 
-     Room touchedRoom=null;       //Текущая нажатая комната
-     Room lastRoom=null;          //Предыдущая нажатая комната
-     Lamp touchedLamp;          //Последний нажатый светильник
+    Room touchedRoom=null;       //Текущая нажатая комната
+    Room lastRoom=null;          //Предыдущая нажатая комната
+    Lamp touchedLamp;          //Последний нажатый светильник
     float x,y;                    //Текущая позиция пальца по Х,Y.
     double lenght;              //Текущая длина отрезка между двумя пальцами
     boolean isReleased=true;    //Разрешено ли перемещение пальцем по плану(Если было приближение, функция заблокирована пока все пальцы не оторвутся от экрана)
@@ -61,7 +61,7 @@ public class Plan {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 if (!Variables.moveOnlySelectedZone) {
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
                         case MotionEvent.ACTION_DOWN:
                             if (Variables.copyFlag && Variables.copyType == 1) {        //Если выбрано копирование по выделению зоны
                                 //float angle = getDegreesFromTouchEvent(event, imageView, x, y);
@@ -73,6 +73,8 @@ public class Plan {
                                     Variables.planLay.addView(tempView);
                                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(Variables.lampSize, Variables.lampSize);
                                     tempView.setLayoutParams(params);
+                                    tempView.setPivotX(0);
+                                    tempView.setPivotY(0);
                                     tempView.setScaleX(Variables.lastScaletype);
                                     tempView.setScaleY(Variables.lastScaletype);
                                     tempView.setBackgroundColor(Color.parseColor("#808080"));
@@ -80,18 +82,20 @@ public class Plan {
                                     tempView.post(new Runnable() {
                                         @Override
                                         public void run() {
-                                            tempView.setX(event.getX() - tempView.getWidth() / 2);
-                                            tempView.setY(event.getY() - tempView.getHeight() / 2);
+                                            tempView.setX(event.getX() - (tempView.getWidth()/2)*tempView.getScaleX());
+                                            tempView.setY(event.getY() - (tempView.getHeight()/2)*tempView.getScaleY());
                                         }
                                     });
                                 } else {      //Иначе устанавливаем ему координаты нажатия
-                                    tempView.setX(event.getX() - tempView.getWidth() / 2);
-                                    tempView.setY(event.getY() - tempView.getHeight() / 2);
+                                    tempView.setX(event.getX() - (tempView.getWidth()/2)*tempView.getScaleX());
+                                    tempView.setY(event.getY() - (tempView.getHeight()/2)*tempView.getScaleY());
                                 }
                                 // Log.d("Touched at: ",Float.toString(event.getX())+" , " + Float.toString(event.getY()));
                             } else if (Variables.addMultiple_flag && Variables.multiplepos != -1 && Variables.multipleType != -1 && Variables.multiplelampType != -1) {     //Если выбрана функция добавления множества светильников по нажатию
                                 if (tempView == null) {        //Если маркера появления светильника нет - отрисовываем его
                                     tempView = new View(Variables.activity);
+                                    tempView.setPivotX(0);
+                                    tempView.setPivotY(0);
                                     Variables.planLay.addView(tempView);
                                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(Variables.lampSize, Variables.lampSize);
                                     tempView.setLayoutParams(params);
@@ -102,8 +106,8 @@ public class Plan {
                                 tempView.post(new Runnable() {      //После появления маркера - создаем светильник
                                     @Override
                                     public void run() {
-                                        tempView.setX(event.getX() - tempView.getWidth() / 2);
-                                        tempView.setY(event.getY() - tempView.getHeight() / 2);
+                                        tempView.setX(event.getX() - (tempView.getWidth()/2)*tempView.getScaleX());
+                                        tempView.setY(event.getY() - (tempView.getHeight()/2)*tempView.getScaleY());
                                         int placeType=0;
                                         if (touchedRoom==null){
                                             placeType=1;
@@ -314,7 +318,7 @@ public class Plan {
                         }
                     }
                 }
-                    return;
+                return;
             }
         }
         touchedRoom=null;
@@ -374,7 +378,7 @@ public class Plan {
                                 isReleased = true;
                             break;
                     }
-            }
+                }
                 previousX = x;      //Предыдущее значение X
                 previousY = y;      //Предыдущее значение Y
                 return true;
@@ -409,263 +413,265 @@ public class Plan {
     public void spawnLamp(Integer type, int pos,String lampName,int placeType,int groupIndex,float cordX,float cordY,boolean type_spawning,float rotation,float scaleType) {
         boolean escapePowerSet=false;
         if (tempView != null || type_spawning) {                   //Если активная функция добавления светильника
-                ImageView imageView = new ImageView(Variables.activity);
-                imageView.setImageResource(type);
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(Variables.lampSize, Variables.lampSize);
-                imageView.setLayoutParams(params);
-                if (type_spawning){     //Если создание светильника не по нажатию кнопки добавления - берем данные из переданных параметров
-                    imageView.setScaleX(scaleType);
-                    imageView.setScaleY(scaleType);
-                }else {         //Иначе берем данные из последних
-                    imageView.setScaleX(Variables.lastScaletype);
-                    imageView.setScaleY(Variables.lastScaletype);
-                }
-                setListener(imageView);
-                if (type_spawning){     //Если тип появления - не по нажатию кнопки добавления - берем переданные в метод параметры
-                    //imageView.setPivotX(0);
-                    //imageView.setPivotY(0);
-                    imageView.setX(cordX);
-                    imageView.setY(cordY);
-                    rotateImg(rotation, imageView, lampName,-1);
-                }else {         //Иначе берем данные из маркера
-                    imageView.setX(tempView.getX());
-                    imageView.setY(tempView.getY());
-                }
-                if (!type_spawning) {       //Удаляем маркер если добавление светильника по нажатию кнопки добавления
-                    Variables.planLay.removeView(tempView);
-                }
-                Lamp lamp = new Lamp();     //Создаем новый светильник
-                if (Variables.rotateMode){
-                    rotateImg(90, imageView, lampName,-1);
-                    rotation=90;
-                }
-                if (touchedRoom != null) {        //Если нажатая комната размечена
-                    lamp.setRotationAngle(rotation);
-                    lamp.setTypeImage(lampName);
-                    lamp.setLampRoom(touchedRoom.getNumber());
-                    lamp.setImage(imageView);
-                    lamp.setTypeRoom(touchedRoom.getType_pos());
-                    lamp.setDaysWork(touchedRoom.getDays());
-                    lamp.setHoursWork(touchedRoom.getHoursPerDay());
-                    lamp.setHoursWeekendWork(touchedRoom.getHoursPerWeekend());
-                    lamp.setHoursSundayWork(touchedRoom.getHoursPerSunday());
-                    if (touchedRoom!=null && touchedRoom.lamps.size()==0 && ((groupIndex==0) || (lampName.equals("diod36vstr")) || (lampName.equals("diod40vstr")) || (lampName.equals("lampdiodspot12")) || (lampName.equals("lampdiodspot10")) || (lampName.equals("lampdiodspot15")))){     //Если добавленный светильника встраиваемый - задаем тип потолка армстронг
-                        touchedRoom.setRoofType(1);
-                        Variables.roofType.setSelection(1);
-                        if (Variables.roomHeightDefaultCheck.isChecked()){
-                            touchedRoom.setHeight((String) Variables.current_floor.roofHeightDefault.elementAt(1));
-                            Variables.roomHeight.setText(touchedRoom.getHeight());
-                        }
-                    }
-                    touchedRoom.lampPush(lamp);     //Добавляем светильник в вектор светильников нажатой комнаты
-                    lamp.setView();                 //Добавляем картинку светильника на экран
-                } else {                           //Иначе, если нажатая комната не размечена
-                    lamp.setRotationAngle(rotation);
-                    lamp.setLampRoom("-1");
-                    imageView.setBackgroundResource(R.color.blue);
-                    lamp.setTypeImage(lampName);
-                    lamp.setImage(imageView);
-                    Variables.current_floor.unusedLamps.add(lamp);          //Добавляем светильник в вектор непривязанных светильников
-                    lamp.setView();                 //Добавляем картинку светильника на экран
-                }
-                if (groupIndex==0) {
-                    lamp.setType("Люминесцентный");
-                    lamp.setMontagneType(1);
-                    switch (lampName) {
-                        case "lampnakal60spot":
-                            lamp.setType("Лампа накаливания");
-                            lamp.setPower("60Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
-                        case "lampkll15spot":
-                            lamp.setType("КЛЛ");
-                            lamp.setPower("15Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
-                        case "lampgalogen35":
-                            lamp.setType("Лампа галогенная");
-                            lamp.setPower("35Вт");
-                            lamp.setComments("Цоколь G5.3");
-                            escapePowerSet = true;
-                            break;
-                        case "lampnakal40spot":
-                            lamp.setType("Лампа накаливания");
-                            lamp.setPower("40Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
-                        case "lampkll18spot":
-                            lamp.setType("КЛЛ");
-                            lamp.setPower("18Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
-                        case "lampkll20spot":
-                            lamp.setType("КЛЛ");
-                            lamp.setPower("20Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
-                        case "lampkll25spot":
-                            lamp.setType("КЛЛ");
-                            lamp.setPower("25Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
-                        case "lampkll30spot":
-                            lamp.setType("КЛЛ");
-                            lamp.setPower("30Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
-                        case "lampnakal75spot":
-                            lamp.setType("Лампа накаливания");
-                            lamp.setPower("75Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
-                        case "lampnakal95spot":
-                            lamp.setType("Лампа накаливания");
-                            lamp.setPower("95Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
+            ImageView imageView = new ImageView(Variables.activity);
+            imageView.setPivotX(0);
+            imageView.setPivotY(0);
+            imageView.setImageResource(type);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(Variables.lampSize, Variables.lampSize);
+            imageView.setLayoutParams(params);
+            if (type_spawning){     //Если создание светильника не по нажатию кнопки добавления - берем данные из переданных параметров
+                imageView.setScaleX(scaleType);
+                imageView.setScaleY(scaleType);
+            }else {         //Иначе берем данные из последних
+                imageView.setScaleX(Variables.lastScaletype);
+                imageView.setScaleY(Variables.lastScaletype);
+            }
+            setListener(imageView);
+            if (type_spawning){     //Если тип появления - не по нажатию кнопки добавления - берем переданные в метод параметры
+                //imageView.setPivotX(0);
+                //imageView.setPivotY(0);
+                imageView.setX(cordX);
+                imageView.setY(cordY);
+                rotateImg(rotation, imageView, lampName,-1);
+            }else {         //Иначе берем данные из маркера
+                imageView.setX(tempView.getX());
+                imageView.setY(tempView.getY());
+            }
+            if (!type_spawning) {       //Удаляем маркер если добавление светильника по нажатию кнопки добавления
+                Variables.planLay.removeView(tempView);
+            }
+            Lamp lamp = new Lamp();     //Создаем новый светильник
+            if (Variables.rotateMode){
+                rotateImg(90, imageView, lampName,-1);
+                rotation=90;
+            }
+            if (touchedRoom != null) {        //Если нажатая комната размечена
+                lamp.setRotationAngle(rotation);
+                lamp.setTypeImage(lampName);
+                lamp.setLampRoom(touchedRoom.getNumber());
+                lamp.setImage(imageView);
+                lamp.setTypeRoom(touchedRoom.getType_pos());
+                lamp.setDaysWork(touchedRoom.getDays());
+                lamp.setHoursWork(touchedRoom.getHoursPerDay());
+                lamp.setHoursWeekendWork(touchedRoom.getHoursPerWeekend());
+                lamp.setHoursSundayWork(touchedRoom.getHoursPerSunday());
+                if (touchedRoom!=null && touchedRoom.lamps.size()==0 && ((groupIndex==0) || (lampName.equals("diod36vstr")) || (lampName.equals("diod40vstr")) || (lampName.equals("lampdiodspot12")) || (lampName.equals("lampdiodspot10")) || (lampName.equals("lampdiodspot15")))){     //Если добавленный светильника встраиваемый - задаем тип потолка армстронг
+                    touchedRoom.setRoofType(1);
+                    Variables.roofType.setSelection(1);
+                    if (Variables.roomHeightDefaultCheck.isChecked()){
+                        touchedRoom.setHeight((String) Variables.current_floor.roofHeightDefault.elementAt(1));
+                        Variables.roomHeight.setText(touchedRoom.getHeight());
                     }
                 }
+                touchedRoom.lampPush(lamp);     //Добавляем светильник в вектор светильников нажатой комнаты
+                lamp.setView();                 //Добавляем картинку светильника на экран
+            } else {                           //Иначе, если нажатая комната не размечена
+                lamp.setRotationAngle(rotation);
+                lamp.setLampRoom("-1");
+                imageView.setBackgroundResource(R.color.blue);
+                lamp.setTypeImage(lampName);
+                lamp.setImage(imageView);
+                Variables.current_floor.unusedLamps.add(lamp);          //Добавляем светильник в вектор непривязанных светильников
+                lamp.setView();                 //Добавляем картинку светильника на экран
+            }
+            if (groupIndex==0) {
+                lamp.setType("Люминесцентный");
+                lamp.setMontagneType(1);
+                switch (lampName) {
+                    case "lampnakal60spot":
+                        lamp.setType("Лампа накаливания");
+                        lamp.setPower("60Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
+                    case "lampkll15spot":
+                        lamp.setType("КЛЛ");
+                        lamp.setPower("15Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
+                    case "lampgalogen35":
+                        lamp.setType("Лампа галогенная");
+                        lamp.setPower("35Вт");
+                        lamp.setComments("Цоколь G5.3");
+                        escapePowerSet = true;
+                        break;
+                    case "lampnakal40spot":
+                        lamp.setType("Лампа накаливания");
+                        lamp.setPower("40Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
+                    case "lampkll18spot":
+                        lamp.setType("КЛЛ");
+                        lamp.setPower("18Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
+                    case "lampkll20spot":
+                        lamp.setType("КЛЛ");
+                        lamp.setPower("20Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
+                    case "lampkll25spot":
+                        lamp.setType("КЛЛ");
+                        lamp.setPower("25Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
+                    case "lampkll30spot":
+                        lamp.setType("КЛЛ");
+                        lamp.setPower("30Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
+                    case "lampnakal75spot":
+                        lamp.setType("Лампа накаливания");
+                        lamp.setPower("75Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
+                    case "lampnakal95spot":
+                        lamp.setType("Лампа накаливания");
+                        lamp.setPower("95Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
+                }
+            }
             else if (groupIndex == 1) {           //Если это встраиваемый или накладной светильник
                 lamp.setType("Люминесцентный");
-                    switch (lampName) {
-                        case "lampnakal60":
-                            lamp.setType("Лампа накаливания");
-                            lamp.setPower("60Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
-                        case "lampnakal40":
-                            lamp.setType("Лампа накаливания");
-                            lamp.setPower("40Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
-                        case "lampnakal75":
-                            lamp.setType("Лампа накаливания");
-                            lamp.setPower("75Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
-                        case "lampnakal95":
-                            lamp.setType("Лампа накаливания");
-                            lamp.setPower("95Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
-                    }
+                switch (lampName) {
+                    case "lampnakal60":
+                        lamp.setType("Лампа накаливания");
+                        lamp.setPower("60Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
+                    case "lampnakal40":
+                        lamp.setType("Лампа накаливания");
+                        lamp.setPower("40Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
+                    case "lampnakal75":
+                        lamp.setType("Лампа накаливания");
+                        lamp.setPower("75Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
+                    case "lampnakal95":
+                        lamp.setType("Лампа накаливания");
+                        lamp.setPower("95Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
                 }
+            }
             else if(groupIndex==2) {                    //Если это лампы
-                    switch (lampName) {
-                        case "lampkll15":
-                            lamp.setType("КЛЛ");
-                            lamp.setPower("15Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
-                        case "lampkll18":
-                            lamp.setType("КЛЛ");
-                            lamp.setPower("18Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
-                        case "lampkll20":
-                            lamp.setType("КЛЛ");
-                            lamp.setPower("20Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
-                        case "lampkll25":
-                            lamp.setType("КЛЛ");
-                            lamp.setPower("25Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
-                        case "lampkll30":
-                            lamp.setType("КЛЛ");
-                            lamp.setPower("30Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
-                        case "lampdiod12":
-                            lamp.setType("Лампа светодиодная");
-                            lamp.setPower("12Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
-                        case "lampdiod10":
-                            lamp.setType("Лампа светодиодная");
-                            lamp.setPower("10Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
-                        case "lampdiod15":
-                            lamp.setType("Лампа светодиодная");
-                            lamp.setPower("15Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
-                        case "lampdiod50":
-                            lamp.setType("Лампа светодиодная");
-                            lamp.setPower("50Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                            break;
-                    }
-        }
+                switch (lampName) {
+                    case "lampkll15":
+                        lamp.setType("КЛЛ");
+                        lamp.setPower("15Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
+                    case "lampkll18":
+                        lamp.setType("КЛЛ");
+                        lamp.setPower("18Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
+                    case "lampkll20":
+                        lamp.setType("КЛЛ");
+                        lamp.setPower("20Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
+                    case "lampkll25":
+                        lamp.setType("КЛЛ");
+                        lamp.setPower("25Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
+                    case "lampkll30":
+                        lamp.setType("КЛЛ");
+                        lamp.setPower("30Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
+                    case "lampdiod12":
+                        lamp.setType("Лампа светодиодная");
+                        lamp.setPower("12Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
+                    case "lampdiod10":
+                        lamp.setType("Лампа светодиодная");
+                        lamp.setPower("10Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
+                    case "lampdiod15":
+                        lamp.setType("Лампа светодиодная");
+                        lamp.setPower("15Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
+                    case "lampdiod50":
+                        lamp.setType("Лампа светодиодная");
+                        lamp.setPower("50Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        break;
+                }
+            }
             else if (groupIndex==3){               //Если это светодиодный светильник
                 lamp.setType("Светодиодный");
-                    switch (lampName) {
-                        case "diod36vstr":
-                        case "diod36nakl":
-                        case "diod40vstr":
-                        case "diod40nakl":
-                            lamp.setComments("Аналог 4*18");
-                            if (lampName.equals("diod36vstr") || lampName.equals("diod40vstr")) {
-                                lamp.setMontagneType(1);
-                            }
-                            break;
-                        case "diod36long":
-                        case "diod40long":
-                            lamp.setComments("Аналог 2*36");
-                            break;
-                        case "diod18nakl":
-                            lamp.setComments("Аналог 2*18");
-                            break;
-                        case "lustradiod":
-                            lamp.setType("Лампа светодиодная");
-                            lamp.setPower("12Вт");
-                            //lamp.setComments("Спот");
-                            escapePowerSet = true;
-                                lamp.setLampsAmount(3);
-                            break;
-                        case "lampdiodspot12":
-                            lamp.setType("Лампа светодиодная");
-                            lamp.setPower("12Вт");
+                switch (lampName) {
+                    case "diod36vstr":
+                    case "diod36nakl":
+                    case "diod40vstr":
+                    case "diod40nakl":
+                        lamp.setComments("Аналог 4*18");
+                        if (lampName.equals("diod36vstr") || lampName.equals("diod40vstr")) {
                             lamp.setMontagneType(1);
-                            escapePowerSet=true;
-                            break;
-                        case "lampdiodspot10":
-                            lamp.setType("Лампа светодиодная");
-                            lamp.setPower("10Вт");
-                            lamp.setMontagneType(1);
-                            escapePowerSet=true;
-                            break;
-                        case "lampdiodspot15":
-                            lamp.setType("Лампа светодиодная");
-                            lamp.setPower("15Вт");
-                            lamp.setMontagneType(1);
-                            escapePowerSet=true;
-                            break;
-                    }
+                        }
+                        break;
+                    case "diod36long":
+                    case "diod40long":
+                        lamp.setComments("Аналог 2*36");
+                        break;
+                    case "diod18nakl":
+                        lamp.setComments("Аналог 2*18");
+                        break;
+                    case "lustradiod":
+                        lamp.setType("Лампа светодиодная");
+                        lamp.setPower("12Вт");
+                        //lamp.setComments("Спот");
+                        escapePowerSet = true;
+                        lamp.setLampsAmount(3);
+                        break;
+                    case "lampdiodspot12":
+                        lamp.setType("Лампа светодиодная");
+                        lamp.setPower("12Вт");
+                        lamp.setMontagneType(1);
+                        escapePowerSet=true;
+                        break;
+                    case "lampdiodspot10":
+                        lamp.setType("Лампа светодиодная");
+                        lamp.setPower("10Вт");
+                        lamp.setMontagneType(1);
+                        escapePowerSet=true;
+                        break;
+                    case "lampdiodspot15":
+                        lamp.setType("Лампа светодиодная");
+                        lamp.setPower("15Вт");
+                        lamp.setMontagneType(1);
+                        escapePowerSet=true;
+                        break;
+                }
             }else if (groupIndex==4){
                 lamp.setMontagneType(2);
                 lamp.setComments("Над доской");
@@ -682,72 +688,72 @@ public class Plan {
                 }else{
                     lamp.setType("Люминесцентный");
                 }
-                }
+            }
             else if (groupIndex==5){
                 lamp.setMontagneType(3);
-                    switch (lampName) {
-                        case "lampnakal60podves":
-                            lamp.setType("Лампа накаливания");
-                            lamp.setPower("60Вт");
-                            escapePowerSet=true;
-                            break;
-                        case "lampnakal40podves":
-                            lamp.setType("Лампа накаливания");
-                            lamp.setPower("40Вт");
-                            escapePowerSet=true;
-                            break;
-                        case "lampnakal75podves":
-                            lamp.setType("Лампа накаливания");
-                            lamp.setPower("75Вт");
-                            escapePowerSet=true;
-                            break;
-                        case "lampnakal95podves":
-                            lamp.setType("Лампа накаливания");
-                            lamp.setPower("95Вт");
-                            escapePowerSet=true;
-                            break;
-                        case "lampkll15podves":
-                            lamp.setType("КЛЛ");
-                            lamp.setPower("15Вт");
-                            escapePowerSet=true;
-                            break;
-                        case "lampkll18podves":
-                            lamp.setType("КЛЛ");
-                            lamp.setPower("18Вт");
-                            escapePowerSet=true;
-                            break;
-                        case "lampkll20podves":
-                            lamp.setType("КЛЛ");
-                            lamp.setPower("20Вт");
-                            escapePowerSet=true;
-                            break;
-                        case "lampkll25podves":
-                            lamp.setType("КЛЛ");
-                            lamp.setPower("25Вт");
-                            escapePowerSet=true;
-                            break;
-                        case "lampkll30podves":
-                            lamp.setType("КЛЛ");
-                            lamp.setPower("30Вт");
-                            escapePowerSet=true;
-                            break;
-                        case "lampdiod12podves":
-                            lamp.setType("Лампа светодиодная");
-                            lamp.setPower("12Вт");
-                            escapePowerSet=true;
-                            break;
-                        case "lampdiod10podves":
-                            lamp.setType("Лампа светодиодная");
-                            lamp.setPower("10Вт");
-                            escapePowerSet=true;
-                            break;
-                        case "lampdiod15podves":
-                            lamp.setType("Лампа светодиодная");
-                            lamp.setPower("15Вт");
-                            escapePowerSet=true;
-                            break;
-                    }
+                switch (lampName) {
+                    case "lampnakal60podves":
+                        lamp.setType("Лампа накаливания");
+                        lamp.setPower("60Вт");
+                        escapePowerSet=true;
+                        break;
+                    case "lampnakal40podves":
+                        lamp.setType("Лампа накаливания");
+                        lamp.setPower("40Вт");
+                        escapePowerSet=true;
+                        break;
+                    case "lampnakal75podves":
+                        lamp.setType("Лампа накаливания");
+                        lamp.setPower("75Вт");
+                        escapePowerSet=true;
+                        break;
+                    case "lampnakal95podves":
+                        lamp.setType("Лампа накаливания");
+                        lamp.setPower("95Вт");
+                        escapePowerSet=true;
+                        break;
+                    case "lampkll15podves":
+                        lamp.setType("КЛЛ");
+                        lamp.setPower("15Вт");
+                        escapePowerSet=true;
+                        break;
+                    case "lampkll18podves":
+                        lamp.setType("КЛЛ");
+                        lamp.setPower("18Вт");
+                        escapePowerSet=true;
+                        break;
+                    case "lampkll20podves":
+                        lamp.setType("КЛЛ");
+                        lamp.setPower("20Вт");
+                        escapePowerSet=true;
+                        break;
+                    case "lampkll25podves":
+                        lamp.setType("КЛЛ");
+                        lamp.setPower("25Вт");
+                        escapePowerSet=true;
+                        break;
+                    case "lampkll30podves":
+                        lamp.setType("КЛЛ");
+                        lamp.setPower("30Вт");
+                        escapePowerSet=true;
+                        break;
+                    case "lampdiod12podves":
+                        lamp.setType("Лампа светодиодная");
+                        lamp.setPower("12Вт");
+                        escapePowerSet=true;
+                        break;
+                    case "lampdiod10podves":
+                        lamp.setType("Лампа светодиодная");
+                        lamp.setPower("10Вт");
+                        escapePowerSet=true;
+                        break;
+                    case "lampdiod15podves":
+                        lamp.setType("Лампа светодиодная");
+                        lamp.setPower("15Вт");
+                        escapePowerSet=true;
+                        break;
                 }
+            }
             else if (groupIndex==6){           //Если это другой тип светильника
                 if (lampName.equals("unknowntype") || lampName.equals("unknowntypediod")) {
                     if (lampName.equals("unknowntypediod")){
@@ -757,7 +763,7 @@ public class Plan {
                     }
                     lamp.setPower("?");
                     escapePowerSet=true;
-                    }else
+                }else
                 if (!lampName.equals("lustranakal") && !lampName.equals("lustrakll")){
                     lamp.setType("Светодиодный");
                     switch (lampName){
@@ -788,8 +794,8 @@ public class Plan {
                         lamp.setType("КЛЛ");
                         lamp.setPower("15Вт");
                     }
-                        lamp.setLampsAmount(3);
-                        escapePowerSet=true;
+                    lamp.setLampsAmount(3);
+                    escapePowerSet=true;
                 }
             }else if (groupIndex==7){           //Если это наружное освещение
                 escapePowerSet=true;
@@ -797,7 +803,7 @@ public class Plan {
                     case "drl250":
                         lamp.setType("ДРЛ");
                         lamp.setPower("250Вт");
-                    break;
+                        break;
                     case "drl400":
                         lamp.setType("ДРЛ");
                         lamp.setPower("400Вт");
@@ -888,38 +894,38 @@ public class Plan {
                         break;
                 }
             }
-                lamp.setPlaceType(placeType);
-                lamp.setGroupIndex(groupIndex);
-                if (!escapePowerSet) {      //Если не задан режим игнорирования задания мощности - задаем мощность светильника
-                    switch (groupIndex) {       //В зависимости от группы светильника
-                        case 0:
-                            lamp.setPower(Variables.lampVstraivaemieNames[pos]);
-                            break;
-                        case 1:
-                            lamp.setPower(Variables.lampNakladnieNames[pos]);
-                            break;
-                        case 2:
-                            //lamp.setPower(Variables.lampLampsNamesForOutput[pos]);
-                            break;
-                        case 3:
-                            lamp.setPower(Variables.lampDiodsNames[pos]);
-                            break;
-                        case 4:
-                            lamp.setPower(Variables.lampDoskiNames[pos]);
-                            break;
-                        case 5:
-                            lamp.setPower(Variables.lampPodvesNames[pos]);
-                            break;
-                        case 6:
-                            lamp.setPower(Variables.lampOthersNames[pos]);
-                            break;
-                        case 7:
-                            lamp.setPower(Variables.lampOutsideNames[pos]);
-                            break;
-                    }
+            lamp.setPlaceType(placeType);
+            lamp.setGroupIndex(groupIndex);
+            if (!escapePowerSet) {      //Если не задан режим игнорирования задания мощности - задаем мощность светильника
+                switch (groupIndex) {       //В зависимости от группы светильника
+                    case 0:
+                        lamp.setPower(Variables.lampVstraivaemieNames[pos]);
+                        break;
+                    case 1:
+                        lamp.setPower(Variables.lampNakladnieNames[pos]);
+                        break;
+                    case 2:
+                        //lamp.setPower(Variables.lampLampsNamesForOutput[pos]);
+                        break;
+                    case 3:
+                        lamp.setPower(Variables.lampDiodsNames[pos]);
+                        break;
+                    case 4:
+                        lamp.setPower(Variables.lampDoskiNames[pos]);
+                        break;
+                    case 5:
+                        lamp.setPower(Variables.lampPodvesNames[pos]);
+                        break;
+                    case 6:
+                        lamp.setPower(Variables.lampOthersNames[pos]);
+                        break;
+                    case 7:
+                        lamp.setPower(Variables.lampOutsideNames[pos]);
+                        break;
                 }
-                tempView = null;
             }
+            tempView = null;
+        }
     }
 
 
@@ -951,16 +957,15 @@ public class Plan {
         double var = Math.atan2((view.getY() + (event.getY()))-y, (view.getX() + (event.getX()))-x);
         float degrees = (float) Math.toDegrees(var);
         //Если углы равны определенному значению, светильник в рамках определенного угла не будет поворачиваться
-        if (degrees>80 && degrees <100)
+        if (degrees>70 && degrees <110)
             degrees=90;
-        else if (degrees>170 && degrees<-170)
-            degrees=170;
-        else if (degrees>-10 && degrees<10)
+        else if (degrees>160 && degrees<200)
+            degrees=180;
+        else if (degrees>-20 && degrees<20)
             degrees=0;
         System.out.println(degrees);
         return degrees;
     }
-
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -976,8 +981,8 @@ public class Plan {
                         imageView.setBackgroundResource(R.color.blue);
                     }
                 }else {
-                    float x = imageView.getX();
-                    float y = imageView.getY();
+                    float x = imageView.getX()+imageView.getWidth();
+                    float y = imageView.getY()+imageView.getHeight();
                     if (Variables.removeMode) {     //Если функция удаления светильника
                         setTouchedRoom(x, y, false);   //Первичное нажатие на светильник
                         touchedLamp = getLampByTouch(imageView);
@@ -1009,8 +1014,8 @@ public class Plan {
                         switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {        //Иначе если не функция удаления
                             case MotionEvent.ACTION_DOWN:       //Получаем нажатый светильнк
                                 if (!Variables.moveOnlySelectedZone) {      //Если не перемещение по выделенной зоне - двигаем светильник
-                                    sumXY = (imageView.getX() + (event.getX())) + (imageView.getY() + (event.getY()));
-                                    setTouchedRoom(imageView.getX() + (event.getX()), imageView.getY() + (event.getY()), false);   //Первичное нажатие на светильник
+                                    sumXY = (imageView.getX() + +imageView.getWidth()) + (imageView.getY() + +imageView.getHeight());
+                                    setTouchedRoom(x, y, false);   //Первичное нажатие на светильник
                                     touchedLamp = getLampByTouch(imageView);
                                     setInfoLamp(touchedLamp);
                                 }
@@ -1020,8 +1025,8 @@ public class Plan {
                                     float currentScale = imageView.getScaleX();
                                     double newSumXY = (imageView.getX() + (event.getX())) + (imageView.getY() + (event.getY()));
                                     double dx = newSumXY - sumXY;
-                                    imageView.setPivotX(imageView.getWidth());
-                                    imageView.setPivotY(imageView.getHeight());
+                                    //imageView.setPivotX(imageView.getWidth());
+                                    //imageView.setPivotY(imageView.getHeight());
                                     if ((currentScale + (float) dx / 50) > 0.5) {
                                         imageView.setScaleX(currentScale + (float) dx / 50);
                                         imageView.setScaleY(currentScale + (float) dx / 50);
@@ -1071,7 +1076,7 @@ public class Plan {
                             case MotionEvent.ACTION_CANCEL:
                             case MotionEvent.ACTION_UP:
                                 isReleased = true;
-                                setTouchedRoom(imageView.getX() + (event.getX()), imageView.getY() + (event.getY()), true);  //Перемещение светильника
+                                setTouchedRoom(x, y, true);  //Перемещение светильника
                                 //lastRoom = touchedRoom;
                                 break;
                         }
@@ -1185,7 +1190,7 @@ public class Plan {
 
     private void clearInfoLamp(){           //Очистка полей информации о светильнике
         if (!Variables.getMoveFlag()){
-        touchedLamp=null;
+            touchedLamp=null;
         }
         Variables.lampRoom.setText("");
         Variables.lampType.setText("");

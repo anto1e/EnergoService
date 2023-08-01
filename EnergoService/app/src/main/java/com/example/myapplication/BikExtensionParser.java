@@ -236,12 +236,8 @@ public class BikExtensionParser {
                                 final int resourceId = resources.getIdentifier(type, "drawable",
                                         Variables.activity.getPackageName());
                                 imageView.setImageResource(resourceId);
-                                //imageView.setPivotX(0);
-                                //imageView.setPivotY(0);
                                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(7, 7);
                                 imageView.setLayoutParams(params);
-                                imageView.setX(cordX);
-                                imageView.setY(cordY);
                                 imageView.setScaleX(scale);
                                 imageView.setScaleY(scale);
                                 Variables.plan.setListener(imageView);
@@ -258,8 +254,14 @@ public class BikExtensionParser {
                                 int hoursOfWork = Integer.parseInt(split_room_info[18]);
                                 int hoursOfWorkWeekend = Integer.parseInt(split_room_info[19]);
                                 int hoursOfWorkSunday = Integer.parseInt(split_room_info[20]);
-                                if (split_room_info.length > 21) {      //Если есть пути к фотографиям и сами файлы существуют - добавляем
-                                    String paths = split_room_info[21];
+                                float piv1 = Float.parseFloat(split_room_info[21]);
+                                float piv2 = Float.parseFloat(split_room_info[22]);
+                                imageView.setPivotX(piv1);
+                                imageView.setPivotY(piv2);
+                                imageView.setX(cordX);
+                                imageView.setY(cordY);
+                                if (split_room_info.length > 23) {      //Если есть пути к фотографиям и сами файлы существуют - добавляем
+                                    String paths = split_room_info[23];
                                     String[] split_room_photos = paths.split("!");
                                     for (int i = 0; i < split_room_photos.length; i++) {
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -289,26 +291,28 @@ public class BikExtensionParser {
 
                                         @Override
                                         public void run() {
+                                            //imageView.setX(cordX-imageView.getWidth());
+                                            //imageView.setY(cordY-imageView.getHeight());
                                             Room room = null;             //Комната, к которой привязан
                                             if (!Objects.equals(number, "-1")) {            //Если светильник привязан к какой-то комнате
-                                                room = Variables.getRoomByNumber(number, lamp.getImage().getX() + (lamp.getImage().getWidth() / 2), lamp.getImage().getY() + (lamp.getImage().getHeight() / 2), scale, Variables.current_floor);         //Поиск комнтаты к которой привязан светильник
+                                                room = Variables.getRoomByNumber(number, cordX+imageView.getWidth(), cordY+imageView.getHeight(), scale, Variables.current_floor);         //Поиск комнтаты к которой привязан светильник
                                             }
                                             if (Objects.equals(lampRoom, "-1") && !Objects.equals(usedOrNot, "used")) {  //Если светильник не привязан никуда, пытаемся привязать по координатам, если не выходит - не привязываем
                                                 Room detectedRoom = null;
                                                 for (Room temp : Variables.current_floor.rooms) {
-                                                    if (temp.detectTouch(cordX, cordY)) {
+                                                    if (temp.detectTouch(cordX+imageView.getWidth(), cordY+imageView.getHeight())) {
                                                         detectedRoom = temp;
                                                     }
                                                 }
                                                 if (detectedRoom == null) {
-                                                    if (!Variables.ifUnusedContainsLamp(lamp.getImage().getX(), lamp.getImage().getY())) {
+                                                    if (!Variables.ifUnusedContainsLamp(cordX, cordY) && !Variables.ifSomeRoomContainsLamp(cordX, cordY,floor)) {
                                                         Variables.current_floor.unusedLamps.add(lamp);
+                                                        imageView.setBackgroundResource(R.color.blue);
                                                     } else {
                                                         Variables.planLay.removeView(lamp.getImage());
                                                     }
-                                                    imageView.setBackgroundResource(R.color.blue);
                                                 } else {
-                                                    if (!Variables.ifRoomContainsLamp(lamp.getImage().getX(), lamp.getImage().getY(), detectedRoom)) {
+                                                    if (!Variables.ifRoomContainsLamp(cordX, cordY, detectedRoom)) {
                                                         detectedRoom.lamps.add(lamp);
                                                     } else {
                                                         Variables.planLay.removeView(lamp.getImage());
@@ -316,18 +320,18 @@ public class BikExtensionParser {
                                                 }
                                             } else {
                                                 if (room != null) {
-                                                    if (!Variables.ifRoomContainsLamp(lamp.getImage().getX(), lamp.getImage().getY(), room)) {
+                                                    if (!Variables.ifRoomContainsLamp(cordX, cordY, room)) {
                                                         room.lamps.add(lamp);
                                                     } else {
                                                         Variables.planLay.removeView(lamp.getImage());
                                                     }
                                                 } else {
-                                                    if (!Variables.ifUnusedContainsLamp(lamp.getImage().getX(), lamp.getImage().getY())) {
+                                                    if (!Variables.ifUnusedContainsLamp(cordX, cordY) && !Variables.ifSomeRoomContainsLamp(cordX, cordY,floor)) {
                                                         Variables.current_floor.unusedLamps.add(lamp);
+                                                        lamp.getImage().setBackgroundResource(R.color.blue);
                                                     } else {
                                                         Variables.planLay.removeView(lamp.getImage());
                                                     }
-                                                    lamp.getImage().setBackgroundResource(R.color.blue);
                                                 }
                                             }
                                         }
@@ -359,7 +363,7 @@ public class BikExtensionParser {
                         }
                     }
                 }else if (floorInfo){
-                    if (line.charAt(0) != '/') {
+                    if (line.length()>0 && line.charAt(0) != '/') {
                         String[] split_floor_info = line.split("@");
                         int type = Integer.parseInt(String.valueOf(split_floor_info[0]));
                         if (type>3){
@@ -416,6 +420,7 @@ public class BikExtensionParser {
             }
             Variables.exportingJpg=false;
             Variables.isExportingToJpg=false;
+            Variables.loadingFlag=false;
             Variables.setInfoEmpty(floor);
             Variables.roofTypeDefaultText.setText(floor.roofHeightDefault.elementAt(Variables.roofTypeDefault.getSelectedItemPosition()));
             for (Thread thread:threads){
@@ -491,7 +496,13 @@ public class BikExtensionParser {
                     for (int i=0;i<tempFloor.rooms.size();i++){
                         for (int j=0;j<tempFloor.rooms.elementAt(i).lamps.size();j++){
                             Lamp temp = tempFloor.rooms.elementAt(i).lamps.elementAt(j);
-                            String str12 = tempFloor.rooms.elementAt(i).getNumber()+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle()+"@"+temp.getLampRoom()+"@"+"used"+"@"+temp.getMontagneType()+"@"+temp.getPlaceType()+"@"+temp.getGroupIndex()+"@"+temp.getLampsAmount()+"@"+temp.getPositionOutside()+"@"+temp.isStolb()+"@"+temp.getTypeRoom()+"@"+temp.getDaysWork()+"@"+temp.getHoursWork()+"@"+temp.getHoursWeekendWork()+"@"+temp.getHoursSundayWork();
+                            float piv1 = temp.getImage().getPivotX();
+                            float piv2 = temp.getImage().getPivotY();
+                            //emp.getImage().setPivotX(piv1);
+                            //temp.getImage().setPivotY(piv2);
+                            //temp.getImage().setX(temp.getImage().getX()-temp.getImage().getWidth());
+                            //temp.getImage().setY(temp.getImage().getY()-temp.getImage().getHeight());
+                            String str12 = tempFloor.rooms.elementAt(i).getNumber()+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+(temp.getImage().getX())+"@"+(temp.getImage().getY())+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle()+"@"+temp.getLampRoom()+"@"+"used"+"@"+temp.getMontagneType()+"@"+temp.getPlaceType()+"@"+temp.getGroupIndex()+"@"+temp.getLampsAmount()+"@"+temp.getPositionOutside()+"@"+temp.isStolb()+"@"+temp.getTypeRoom()+"@"+temp.getDaysWork()+"@"+temp.getHoursWork()+"@"+temp.getHoursWeekendWork()+"@"+temp.getHoursSundayWork()+"@"+piv1+"@"+piv2;
                             String str2="@";
                             if (temp.photoPaths.size()!=0){
                                 for (String str:temp.photoPaths){
@@ -504,7 +515,13 @@ public class BikExtensionParser {
                     }
                     for (int i=0;i<tempFloor.unusedLamps.size();i++){
                             Lamp temp = tempFloor.unusedLamps.elementAt(i);
-                            String str12 = "-1"+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle()+"@"+temp.getLampRoom()+"@"+"unused"+"@"+temp.getMontagneType()+"@"+temp.getPlaceType()+"@"+temp.getGroupIndex()+"@"+temp.getLampsAmount()+"@"+temp.getPositionOutside()+"@"+temp.isStolb()+"@"+temp.getTypeRoom()+"@"+temp.getDaysWork()+"@"+temp.getHoursWork()+"@"+temp.getHoursWeekendWork()+"@"+temp.getHoursSundayWork();
+                        float piv1 = temp.getImage().getPivotX();
+                        float piv2 = temp.getImage().getPivotY();
+                        piv1=0;
+                        piv2=0;
+                        temp.getImage().setPivotX(piv1);
+                        temp.getImage().setPivotY(piv2);
+                            String str12 = "-1"+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle()+"@"+temp.getLampRoom()+"@"+"unused"+"@"+temp.getMontagneType()+"@"+temp.getPlaceType()+"@"+temp.getGroupIndex()+"@"+temp.getLampsAmount()+"@"+temp.getPositionOutside()+"@"+temp.isStolb()+"@"+temp.getTypeRoom()+"@"+temp.getDaysWork()+"@"+temp.getHoursWork()+"@"+temp.getHoursWeekendWork()+"@"+temp.getHoursSundayWork()+"@"+piv1+"@"+piv2;
                              String str2="@";
                             if (temp.photoPaths.size()!=0){
                                 for (String str:temp.photoPaths){
