@@ -158,6 +158,7 @@ public class ExcelExporter {
             if (Objects.equals(Variables.floors.elementAt(l).getName(), Variables.current_floor.getName())) {       //Если этаж от данного здания
                 Variables.setInfoEmpty(Variables.floors.elementAt(l));
                 Floor temp = Variables.floors.elementAt(l);         //Временный этаж
+                //Variables.removeDuppleLamps(temp);
                 //Variables.clearEmptyLamps(temp);
                 Variables.loadingFlag=true;
                 ArrayAdapter<String> adapter;

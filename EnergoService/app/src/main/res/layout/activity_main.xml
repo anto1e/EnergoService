@@ -350,10 +350,38 @@
                 android:background="@color/white"
                 android:src="@drawable/scalebtn"
                 />
+
+            <ImageView
+                android:id="@+id/rotatePlanBackBtn"
+                android:scaleType="fitCenter"
+                android:src="@drawable/rotateplanbtn"
+                android:padding="5dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="30dp"
+                android:background="@color/white"
+                android:layout_marginBottom="0dp"
+                android:layout_height="30dp">
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/rotatePlanBtn"
+                android:scaleType="fitCenter"
+                android:src="@drawable/rotateplanbtn"
+                android:scaleX="-1"
+                android:padding="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="30dp"
+                android:background="@color/white"
+                android:layout_marginBottom="0dp"
+                android:layout_height="30dp">
+            </ImageView>
+
             <ImageButton
                 android:id="@+id/rotateLamp"
                 android:scaleType="fitCenter"
-                android:layout_marginLeft="0dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_width="30dp"
                 android:background="@color/white"
@@ -378,7 +406,7 @@
             <ImageButton
                 android:id="@+id/addMultipleRowsBtn"
                 android:scaleType="fitCenter"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="0dp"
                 android:layout_marginTop="5dp"
                 android:layout_width="30dp"
                 android:background="@color/white"
@@ -407,7 +435,7 @@
                 android:layout_width="30dp"
                 android:layout_marginTop="5dp"
                 android:background="@color/grey"
-                android:layout_marginLeft="0dp"
+                android:layout_marginLeft="10dp"
                 android:layout_height="30dp"
                 android:contentDescription="TODO">
             </ImageButton>
@@ -431,7 +459,7 @@
                 android:layout_width="30dp"
                 android:layout_marginTop="5dp"
                 android:background="@color/white"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="0dp"
                 android:layout_height="30dp"
                 android:contentDescription="TODO">
             </ImageButton>
@@ -453,7 +481,7 @@
                 android:id="@+id/saveFile"
                 android:scaleType="fitCenter"
                 android:src="@drawable/save"
-                android:layout_marginLeft="0dp"
+                android:layout_marginLeft="10dp"
                 android:layout_width="30dp"
                 android:background="@color/white"
                 android:layout_marginTop="5dp"
@@ -473,29 +501,7 @@
                 android:layout_height="30dp"
                 android:contentDescription="TODO">
             </ImageButton>
-            <ImageButton
-                android:id="@+id/cancelBtn"
-                android:scaleType="fitCenter"
-                android:src="@drawable/close"
-                android:layout_width="30dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/grey"
-                android:layout_marginBottom="5dp"
-                android:layout_height="30dp">
-            </ImageButton>
-            <ImageView
-                android:id="@+id/confirmBtn"
-                android:scaleType="fitCenter"
-                android:src="@drawable/comfirmbtn"
-                android:layout_width="30dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:padding="2dp"
-                android:background="@color/grey"
-                android:layout_marginBottom="5dp"
-                android:layout_height="30dp">
-            </ImageView>
+
             <ImageButton
                 android:id="@+id/openFile"
                 android:scaleType="fitCenter"
@@ -517,11 +523,34 @@
                 android:layout_marginBottom="5dp"
                 android:layout_height="30dp">
             </ImageView>
+            <ImageButton
+                android:id="@+id/cancelBtn"
+                android:scaleType="fitCenter"
+                android:src="@drawable/close"
+                android:layout_width="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="0dp"
+                android:background="@color/grey"
+                android:layout_marginBottom="5dp"
+                android:layout_height="30dp">
+            </ImageButton>
+            <ImageView
+                android:id="@+id/confirmBtn"
+                android:scaleType="fitCenter"
+                android:src="@drawable/comfirmbtn"
+                android:layout_width="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="0dp"
+                android:padding="2dp"
+                android:background="@color/grey"
+                android:layout_marginBottom="5dp"
+                android:layout_height="30dp">
+            </ImageView>
             <ImageView
                 android:id="@+id/backupBtn"
                 android:scaleType="fitCenter"
                 android:src="@drawable/backupbtn"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="0dp"
                 android:layout_width="30dp"
                 android:background="@color/white"
                 android:layout_marginBottom="5dp"
@@ -1212,7 +1241,7 @@
                     android:layout_height="40dp"/>
             </GridLayout>
             <GridLayout
-                android:layout_marginBottom="180dp"
+                android:layout_marginBottom="215dp"
                 android:layout_below="@+id/gridLampInfo"
                 android:id="@+id/lampGrid"
                 android:layout_width="match_parent"

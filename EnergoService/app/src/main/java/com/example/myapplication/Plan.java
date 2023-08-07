@@ -109,9 +109,6 @@ public class Plan {
                                         tempView.setX(event.getX() - (tempView.getWidth()/2)*tempView.getScaleX());
                                         tempView.setY(event.getY() - (tempView.getHeight()/2)*tempView.getScaleY());
                                         int placeType=0;
-                                        if (touchedRoom==null){
-                                            placeType=1;
-                                        }
                                         switch (Variables.currentLampsPanelIndex){      //Создаем светильник в зависимости от его типа
                                             case 0:
                                                 spawnLamp(Variables.multipleType, Variables.multiplepos, Variables.lampsVstraivaemieName[Variables.multiplepos], placeType,0, 0,0, false, 0,0);
@@ -445,6 +442,7 @@ public class Plan {
                 rotateImg(90, imageView, lampName,-1);
                 rotation=90;
             }
+            lamp.setPlaceType(placeType);
             if (touchedRoom != null) {        //Если нажатая комната размечена
                 lamp.setRotationAngle(rotation);
                 lamp.setTypeImage(lampName);
@@ -466,6 +464,9 @@ public class Plan {
                 touchedRoom.lampPush(lamp);     //Добавляем светильник в вектор светильников нажатой комнаты
                 lamp.setView();                 //Добавляем картинку светильника на экран
             } else {                           //Иначе, если нажатая комната не размечена
+                if (groupIndex==7) {
+                    lamp.setPlaceType(1);
+                }
                 lamp.setRotationAngle(rotation);
                 lamp.setLampRoom("-1");
                 imageView.setBackgroundResource(R.color.blue);
@@ -894,7 +895,7 @@ public class Plan {
                         break;
                 }
             }
-            lamp.setPlaceType(placeType);
+            //lamp.setPlaceType(placeType);
             lamp.setGroupIndex(groupIndex);
             if (!escapePowerSet) {      //Если не задан режим игнорирования задания мощности - задаем мощность светильника
                 switch (groupIndex) {       //В зависимости от группы светильника

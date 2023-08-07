@@ -184,8 +184,8 @@ public class Variables {
     static String[] typesOfRoomsOthers = {"Служебное помещение","Коридор", "Кабинет", "Санузел", "Служебное помещение", "Тамбур","Лестница","Спортзал","Пищеблок","Актовый зал","Медкабинет","Кладовая","Столовая","Процедурный кабинет","Палата","Комната","Учебный кабинет","Душевая","Гардероб","Другое"};            //Типы помещений(больницы)
 
     static String[] daysPerWeekArr = {"0","1/мес","1","2","3","4","5","6","7"};         //Дней работы в неделю
-    static String[] hoursPerDayArr = {"0","0.5","1","2","4","6","8","12","16","20","24"};       //Часов работы по будням
-    static String[] hoursPerWeekendArr = {"0","0.5","1","2","4","6","8","12","16","20","24"};       //Часов работы по выходным
+    static String[] hoursPerDayArr = {"0","0.5","1","2","4","6","8","10","12","16","20","24"};       //Часов работы по будням
+    static String[] hoursPerWeekendArr = {"0","0.5","1","2","4","6","8","10","12","16","20","24"};       //Часов работы по выходным
 
     static String[] spinRowsArr = {"2","3","4","5","6","7","8","9","10"};       //Количество светильников в столбцах
     static String[] spinLinesArr = {"2","3","4","5","6","7","8","9","10"};       //Количество светильников в рядах
@@ -826,6 +826,24 @@ public class Variables {
                 }
             }
         }
+    }
+
+    public static void removeDuppleLamps(Floor floor){
+        for (Room room:floor.rooms){
+            for (Lamp lamp:room.lamps){
+                findAndRemoveLamp(floor,room,lamp);
+            }
+        }
+    }
+
+    public static void findAndRemoveLamp(Floor floor,Room room, Lamp lamp){
+        for (Lamp lamp1:room.lamps){
+            if (lamp1!=lamp && lamp1.getImage().getX() == lamp.getImage().getX() && lamp1.getImage().getY() == lamp.getImage().getY()){
+                room.lampRemove(lamp1);
+            }
+        }
+        //RelativeLayout r = (RelativeLayout) ((ViewGroup) lamp.getImage().getParent()).getParent();
+        //lamp.setView();
     }
 
  /*   public static boolean planLayIfChild(ImageView img){

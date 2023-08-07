@@ -76,6 +76,8 @@ public class Buttons {
     ImageButton cancelBtn;      //Кнопка отмены
     ImageButton selectZone;     //Кнопка выделения зоны
     ImageButton copyToBufBtn;   //Кнопка копирования в буфер
+    ImageView rotatePlanBtn;
+    ImageView rotatePlanBackBtn;
     ImageButton pasteBtn;       //Кнопка вставки
     ImageButton selectByClickBtn;
     ImageView takePicBtn;       //Кнопка активации камеры
@@ -242,7 +244,33 @@ public class Buttons {
         submitHeightFloor = Variables.activity.findViewById(R.id.submitHeightFloor);    //Кнопка подтверждения задания стандартной высоты потолка
         screenShotBtn = Variables.activity.findViewById(R.id.screenShotBtn);    //Кнопка сохранения скриншота экрана
         backUpFile = Variables.activity.findViewById(R.id.backupBtn);
+        rotatePlanBtn = Variables.activity.findViewById(R.id.rotatePlanBtn);
+        rotatePlanBackBtn = Variables.activity.findViewById(R.id.rotatePlanBackBtn);
 
+
+        rotatePlanBackBtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                float degrees = Variables.planLay.getRotation();
+                degrees+=90;
+                if (degrees>=360)
+                    degrees=0;
+                Variables.planLay.setRotation(degrees);
+                return false;
+            }
+        });
+
+        rotatePlanBtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                float degrees = Variables.planLay.getRotation();
+                degrees-=90;
+                if (degrees<=-360)
+                    degrees=0;
+                Variables.planLay.setRotation(degrees);
+                return false;
+            }
+        });
         backUpFile.setOnTouchListener(new View.OnTouchListener() {      //Бэкап файла
             @Override
             public boolean onTouch(View v, MotionEvent event) {

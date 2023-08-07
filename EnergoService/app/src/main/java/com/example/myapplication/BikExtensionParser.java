@@ -135,9 +135,12 @@ public class BikExtensionParser {
                                 tempX[i] = arrX.getDouble(i) / floor.resizeCoeffX;
                                 tempY[i] = arrY.getDouble(i) / floor.resizeCoeffY;
                             }
-                            Room room = new Room(roomObj.getString("number"), tempX, tempY);
-                            room.buildPoligon();
-                            floor.rooms.add(room);
+                            try{
+                                Room room = new Room(roomObj.getString("number"), tempX, tempY);
+                                room.buildPoligon();
+                                floor.rooms.add(room);
+                            }catch (RuntimeException ex){
+                            }
                         } else if (line.charAt(0) == 'H') {     //Информация о зданиии
                             String temp = line.substring(2);
                             String[] subStr = temp.split("@");

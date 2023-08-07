@@ -107,9 +107,6 @@ public class MainActivity extends AppCompatActivity {
         Variables.listView.setOnItemClickListener((adapterView, view, position, l) -> {       //Обработка нажатия на один из элементов списка светильников
             if (Variables.getAddFlag()) {
                 int placeType=0;
-                if (Variables.plan.touchedRoom==null){
-                    placeType=1;
-                }
                 switch (Variables.currentLampsPanelIndex){
                     case 0:
                         Variables.plan.spawnLamp(Variables.VstraivaemieImageId[position], position,Variables.lampsVstraivaemieName[position],placeType,0,0,0,false,0,0);         //Создание светильника
