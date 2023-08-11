@@ -292,6 +292,31 @@
                             android:src="@drawable/arrow"/>
 
                     </FrameLayout>
+                        <ScrollView
+                            android:id="@+id/BackUpFrame"
+                            android:layout_width="300dp"
+                            android:visibility="gone"
+                            android:layout_height="350dp"
+                            >
+                            <GridLayout
+                                android:visibility="visible"
+                                android:id="@+id/BackUpGrid"
+                                android:paddingStart="0dp"
+                                android:paddingEnd="30dp"
+                                android:numColumns="auto_fit"
+                                android:horizontalSpacing="10dp"
+                                android:verticalSpacing="10dp"
+                                android:layout_marginBottom="0dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                        <TextView
+                            android:background="@drawable/txtviewborder"
+                            android:layout_width="50dp"
+                            android:layout_height="60dp"
+                            android:text="17-05-2020 19:30:30"
+                            />
+                            </GridLayout>
+                        </ScrollView>
                 </LinearLayout>
         <!--Второй тул-бар -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -351,37 +376,11 @@
                 android:src="@drawable/scalebtn"
                 />
 
-            <ImageView
-                android:id="@+id/rotatePlanBackBtn"
-                android:scaleType="fitCenter"
-                android:src="@drawable/rotateplanbtn"
-                android:padding="5dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="5dp"
-                android:layout_width="30dp"
-                android:background="@color/white"
-                android:layout_marginBottom="0dp"
-                android:layout_height="30dp">
-            </ImageView>
-
-            <ImageView
-                android:id="@+id/rotatePlanBtn"
-                android:scaleType="fitCenter"
-                android:src="@drawable/rotateplanbtn"
-                android:scaleX="-1"
-                android:padding="5dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_width="30dp"
-                android:background="@color/white"
-                android:layout_marginBottom="0dp"
-                android:layout_height="30dp">
-            </ImageView>
 
             <ImageButton
                 android:id="@+id/rotateLamp"
                 android:scaleType="fitCenter"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="0dp"
                 android:layout_marginTop="5dp"
                 android:layout_width="30dp"
                 android:background="@color/white"
@@ -402,11 +401,23 @@
                 android:layout_height="30dp">
             </ImageView>
 
+            <ImageView
+                android:id="@+id/rotatePlanBtn"
+                android:scaleType="fitCenter"
+                android:src="@drawable/rotateplanbtn"
+                android:layout_width="30dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:layout_marginLeft="10dp"
+                android:padding="2dp"
+                android:layout_height="30dp">
+            </ImageView>
+
 
             <ImageButton
                 android:id="@+id/addMultipleRowsBtn"
                 android:scaleType="fitCenter"
-                android:layout_marginLeft="0dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_width="30dp"
                 android:background="@color/white"
@@ -422,7 +433,7 @@
                 android:layout_width="30dp"
                 android:layout_marginTop="5dp"
                 android:background="@color/white"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="0dp"
                 android:padding="2dp"
                 android:layout_height="30dp">
             </ImageView>
@@ -459,6 +470,19 @@
                 android:layout_width="30dp"
                 android:layout_marginTop="5dp"
                 android:background="@color/white"
+                android:layout_marginStart="10dp"
+                android:layout_height="30dp"
+                android:contentDescription="TODO">
+            </ImageButton>
+
+
+            <ImageButton
+                android:id="@+id/openFile"
+                android:scaleType="fitCenter"
+                android:src="@drawable/upload"
+                android:layout_width="30dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
                 android:layout_marginStart="0dp"
                 android:layout_height="30dp"
                 android:contentDescription="TODO">
@@ -475,7 +499,6 @@
                 android:layout_height="30dp"
                 android:contentDescription="TODO">
             </ImageButton>
-
 
             <ImageButton
                 android:id="@+id/saveFile"
@@ -502,25 +525,15 @@
                 android:contentDescription="TODO">
             </ImageButton>
 
-            <ImageButton
-                android:id="@+id/openFile"
-                android:scaleType="fitCenter"
-                android:src="@drawable/upload"
-                android:layout_width="30dp"
-                android:layout_marginTop="0dp"
-                android:background="@color/white"
-                android:layout_marginStart="0dp"
-                android:layout_height="30dp"
-                android:contentDescription="TODO">
-            </ImageButton>
             <ImageView
                 android:id="@+id/screenShotBtn"
                 android:scaleType="fitCenter"
                 android:src="@drawable/screenshot"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="0dp"
                 android:layout_width="30dp"
                 android:background="@color/white"
                 android:layout_marginBottom="5dp"
+                android:layout_marginTop="0dp"
                 android:layout_height="30dp">
             </ImageView>
             <ImageButton
@@ -550,10 +563,21 @@
                 android:id="@+id/backupBtn"
                 android:scaleType="fitCenter"
                 android:src="@drawable/backupbtn"
-                android:layout_marginLeft="0dp"
+                android:layout_marginLeft="10dp"
                 android:layout_width="30dp"
                 android:background="@color/white"
                 android:layout_marginBottom="5dp"
+                android:layout_height="30dp">
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/backupBack"
+                android:scaleType="fitCenter"
+                android:src="@drawable/backupback"
+                android:layout_marginLeft="0dp"
+                android:layout_width="30dp"
+                android:background="@color/white"
+                android:layout_marginBottom="0dp"
                 android:layout_height="30dp">
             </ImageView>
 

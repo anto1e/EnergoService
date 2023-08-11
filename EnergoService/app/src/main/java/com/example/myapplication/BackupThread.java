@@ -25,14 +25,14 @@ public class BackupThread extends Thread{
                     rotationElement.setAnimation(an);
                 });
 
-            File directory = new File(Variables.path1 + "/" + Variables.current_floor.getName());
+            File directory = new File(Variables.path1 + "/" + Variables.current_floor.getName());       //Путь к папке объекта
             if (!directory.exists()) {
                 directory.mkdir();
                 // If you require it to make the entire directory path including parents,
                 // use directory.mkdirs(); here instead.
             }
 
-           directory = new File(Variables.path1 + "/" + Variables.current_floor.getName() + "/backup");
+           directory = new File(Variables.path1 + "/" + Variables.current_floor.getName() + "/backup");     //Путь к папке с бэкапами
             if (!directory.exists()) {
                 directory.mkdir();
                 // If you require it to make the entire directory path including parents,
@@ -41,7 +41,7 @@ public class BackupThread extends Thread{
             String path = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS + "/" + Variables.current_floor.getName() + "/backup"));
             Variables.copyFile(Variables.current_floor.getImage(), path);       //Копирование файла
 
-            String[] split_path = Variables.filePath.split("/");
+            String[] split_path = Variables.filePath.split("/");        //Получаем путь к текущей папке
 
             StringBuilder builder = new StringBuilder();
             for(int i=0;i<split_path.length-1;i++) {
@@ -50,7 +50,7 @@ public class BackupThread extends Thread{
             }
             String folderPath = builder.toString();
 
-            directory = new File(folderPath  + "/backup");
+            directory = new File(folderPath  + "/backup");      //Создаем папку для бэкапов если ее нет изначально
             if (!directory.exists()) {
                 directory.mkdir();
                 // If you require it to make the entire directory path including parents,

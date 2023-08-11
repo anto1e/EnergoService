@@ -34,6 +34,7 @@ public class Variables {
     static boolean selectByClickFlag=false;
     static boolean wasUnlocked=false;
     static boolean isExpotedExcel=true;     //Флаг экспорта в эксель
+    static Vector<ImageView> multipleAddTempVector = new Vector<ImageView>();
     static ListView listView=null;          //Список светильников
     static String path1;
     static TextView lampDop;
@@ -67,6 +68,9 @@ public class Variables {
     static boolean copyFlag=false;                  //Флаг активации функции копирования
     static boolean planLayCleared=false;            //Флаг очистки плана
     static Vector<LinearLayout> FloorPanelsVec = new Vector<LinearLayout>();        //Вектор вкладок на экране
+    static Vector<String> backupBackVector = new Vector<String>();
+    static boolean getAllBackUpDataFlag=false;
+    static boolean allowRotationPlanFlag=false;
     static LinearLayout floorPanelLay;              //Layout вкладок этажей
     static ExcelExporter exporter;                  //Экспортер данных в эксель
     static RelativeLayout roomInfoView;             //Панель инфрмации о комнате
@@ -154,6 +158,7 @@ public class Variables {
     static Spinner hoursPerSundayLamp;
     static EditText lampComments;              //Поле комментариев к светильнику
     static FrameLayout photoFrame;              //Layout для отображения выбранной фотографии
+    static FrameLayout bacupBackFrame;
     static TextView lampAmountText;             //Текст количества ламп(для люстр)
     static EditText lampAmountEdit;             //Поле ввода количества ламп(для люстр)
     static Spinner placeType;                   //Спинер месторасположения светильнка(для наружного освещения)
@@ -349,6 +354,7 @@ public class Variables {
         buildingAdress = activity.findViewById(R.id.adress);
         spinRows=activity.findViewById(R.id.spinColumns);
         spinLines=activity.findViewById(R.id.spinRows);
+        bacupBackFrame = activity.findViewById(R.id.photoFrame);
         setSpinners();
         exporter = new ExcelExporter();
     }

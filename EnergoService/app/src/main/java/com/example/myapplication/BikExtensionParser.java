@@ -37,40 +37,43 @@ import java.util.Objects;
 import java.util.Vector;
 
 public class BikExtensionParser {
-    boolean buildingInfo=false;     //Флаг начала информации о здании
+    boolean buildingInfo = false;     //Флаг начала информации о здании
     boolean lampsInfo = false;      //Флаг начала информации о светильниках
     boolean roomInfo = false;       //Флаг начала информации о комнатах
-    boolean floorInfo=false;
-    boolean lastThread=false;
+    boolean floorInfo = false;
+    boolean lastThread = false;
     Vector<Thread> threads = new Vector<Thread>();
     File currentFile;
+
     public void parseFile(String path) throws FileNotFoundException {   //Парсинг файла
-        Variables.loadingFlag=true;
+        ///Отключение кнопок/////
+        Variables.loadingFlag = true;
         threads.clear();
         Variables.setAddFlag(false);
         Variables.plan.disableListenerFromPlan();
         Variables.buttons.addBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
         Variables.setMoveFlag(false);
         Variables.buttons.moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-        Variables.scalemode=false;
+        Variables.scalemode = false;
         Variables.buttons.scaleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-        Variables.rotateMode=false;
+        Variables.rotateMode = false;
         Variables.buttons.rotateLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-        Variables.removeMode=false;
+        Variables.removeMode = false;
         Variables.buttons.removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-        Variables.plan.touchedRoom=null;
-        Variables.plan.lastRoom=null;
-        if (Variables.exportingJpg){
+        Variables.plan.touchedRoom = null;
+        Variables.plan.lastRoom = null;
+        /////////////////////////////////
+        if (Variables.exportingJpg) {       //Отображение текущего этажа если это скриншот плана
             Variables.tempImage = Variables.current_floor.getImage();
         }
         Floor floor = new Floor();          //Создание нового этажа
-        floor.fillVector();
-        for (String type:Variables.roofTypes){
+        floor.fillVector();                 //Заполнение вектора высотой по умолчанию(0.0)
+        for (String type : Variables.roofTypes) {
             floor.roofHeightDefault.add("0.0");
         }
-        Variables.roofTypeDefaultText.setText("");
-        Variables.roomHeightDefaultCheck.setChecked(false);
-        if (Variables.current_floor!=null) {        //Если есть предыдущий этаж - записываем в него текущие позицию и приближение
+        Variables.roofTypeDefaultText.setText("");      //Очищаем поле высоты по умолчанию
+        Variables.roomHeightDefaultCheck.setChecked(false);     //Отключение чекбокса высоты по умолчанию
+        if (Variables.current_floor != null) {        //Если есть предыдущий этаж - записываем в него текущие позицию и приближение
             Variables.current_floor.cordX = Variables.planLay.getX();
             Variables.current_floor.cordY = Variables.planLay.getY();
             Variables.current_floor.scale = Variables.planLay.getScaleX();
@@ -79,16 +82,16 @@ public class BikExtensionParser {
         Variables.planLay.setY(floor.cordY);        //Задаем этажу позицию У
         Variables.planLay.setScaleX(floor.scale);   //Задаем этажу приближение
         Variables.planLay.setScaleY(floor.scale);   //Задаем этажу приближение
-        if (Variables.typeOpening==0 && Variables.current_floor!=null) {        //Если открываем в текущей вкладке - переназначаем текущий этаж
+        if (Variables.typeOpening == 0 && Variables.current_floor != null) {        //Если открываем в текущей вкладке - переназначаем текущий этаж
             Variables.floors.set(Variables.floors.indexOf(Variables.current_floor), floor);
-        }else {
+        } else {        //Иначе - добавляем новый этаж
             Variables.floors.add(floor);
         }
-        currentFile = new File(path);
+        currentFile = new File(path);       //Файл для чтения
         BufferedReader reader;
         BufferedWriter writer;
         try {           //Если открываем в текущей вкладке - очищаем все комнаты текущео этажа
-            if ((Variables.current_floor!=null && Variables.floors.size()>0 && Variables.typeOpening==0)) {
+            if ((Variables.current_floor != null && Variables.floors.size() > 0 && Variables.typeOpening == 0)) {
                 {
                     Variables.current_floor.rooms.clear();
                 }
@@ -100,23 +103,20 @@ public class BikExtensionParser {
                 Variables.current_floor = floor;
                 if (line.equals("///INFORMATION ABOUT BUILDING AND ROOMS///")) {        //Если информация о разметке
                     buildingInfo = true;
-                }else if (line.equals("///INFORMATION ABOUT ROOMS///")){                //Если информация о комнатах
-                    buildingInfo=false;
-                    roomInfo=true;
+                } else if (line.equals("///INFORMATION ABOUT ROOMS///")) {                //Если информация о комнатах
+                    buildingInfo = false;
+                    roomInfo = true;
+                } else if (line.equals("///INFORMATION ABOUT LAMPS///")) {             //Если информация о светильниках
+                    buildingInfo = false;
+                    roomInfo = false;
+                    lampsInfo = true;
+                } else if (line.equals("///INFORMATION ABOUT FLOOR///")) {             //Если информация о светильниках
+                    buildingInfo = false;
+                    roomInfo = false;
+                    lampsInfo = false;
+                    floorInfo = true;
                 }
-
-                else if (line.equals("///INFORMATION ABOUT LAMPS///")){             //Если информация о светильниках
-                    buildingInfo=false;
-                    roomInfo=false;
-                    lampsInfo=true;
-                }
-                else if (line.equals("///INFORMATION ABOUT FLOOR///")){             //Если информация о светильниках
-                    buildingInfo=false;
-                    roomInfo=false;
-                    lampsInfo=false;
-                    floorInfo=true;
-                }
-                if (buildingInfo){      //Если информация о здании
+                if (buildingInfo) {      //Если информация о здании
                     if (line.length() > 2 && (line.charAt(0) == 'H' || line.charAt(0) == 'S' || line.charAt(0) == 'R') && line.charAt(1) == '@') {
                         if (line.charAt(0) == 'S') {  //Если это информация о размерах изображения
                             String temp = line.substring(2);
@@ -135,11 +135,11 @@ public class BikExtensionParser {
                                 tempX[i] = arrX.getDouble(i) / floor.resizeCoeffX;
                                 tempY[i] = arrY.getDouble(i) / floor.resizeCoeffY;
                             }
-                            try{
+                            try {
                                 Room room = new Room(roomObj.getString("number"), tempX, tempY);
                                 room.buildPoligon();
                                 floor.rooms.add(room);
-                            }catch (RuntimeException ex){
+                            } catch (RuntimeException ex) {
                             }
                         } else if (line.charAt(0) == 'H') {     //Информация о зданиии
                             String temp = line.substring(2);
@@ -155,9 +155,8 @@ public class BikExtensionParser {
                             adress.setText(floor.getAdress());
                         }
                     }
-            }
-                else if (roomInfo){         //Если информация о комнатах
-                    if (line.length()>10 && line.charAt(0) != '/') {
+                } else if (roomInfo) {         //Если информация о комнатах
+                    if (line.length() > 10 && line.charAt(0) != '/') {
                         String[] split_number = line.split("%");
                         if (split_number.length > 1) {
                             String number = split_number[0];        //Номер помещения
@@ -207,11 +206,10 @@ public class BikExtensionParser {
                             }
                         }
                     }
-                }
-                else if (lampsInfo){        //Если информация о светильниках
-                    if (line.length()>20 && line.charAt(0) != '/'){
+                } else if (lampsInfo) {        //Если информация о светильниках
+                    if (line.length() > 20 && line.charAt(0) != '/') {
                         String[] split_number = line.split("%");
-                        if (split_number.length>1) {
+                        if (split_number.length > 1) {
                             String number = split_number[0];        //номер комнаты, к которому привязан
                             String[] split_room_info = split_number[1].split("@");
                             if (split_room_info.length > 18) {
@@ -286,7 +284,7 @@ public class BikExtensionParser {
                                 lamp.setHoursWork(hoursOfWork);
                                 lamp.setHoursWeekendWork(hoursOfWorkWeekend);
                                 lamp.setHoursSundayWork(hoursOfWorkSunday);
-                                Runnable myThread = () ->
+                                Runnable myThread = () ->           //После загрузки картинки светильника - проверяем куда его привязать
                                 {
 
                                     lamp.setView();
@@ -298,41 +296,41 @@ public class BikExtensionParser {
                                             //imageView.setY(cordY-imageView.getHeight());
                                             Room room = null;             //Комната, к которой привязан
                                             if (!Objects.equals(number, "-1")) {            //Если светильник привязан к какой-то комнате
-                                                room = Variables.getRoomByNumber(number, cordX+imageView.getWidth(), cordY+imageView.getHeight(), scale, Variables.current_floor);         //Поиск комнтаты к которой привязан светильник
+                                                room = Variables.getRoomByNumber(number, cordX + imageView.getWidth(), cordY + imageView.getHeight(), scale, Variables.current_floor);         //Поиск комнтаты к которой привязан светильник
                                             }
                                             if (Objects.equals(lampRoom, "-1") && !Objects.equals(usedOrNot, "used")) {  //Если светильник не привязан никуда, пытаемся привязать по координатам, если не выходит - не привязываем
                                                 Room detectedRoom = null;
                                                 for (Room temp : Variables.current_floor.rooms) {
-                                                    if (temp.detectTouch(cordX+imageView.getWidth(), cordY+imageView.getHeight())) {
+                                                    if (temp.detectTouch(cordX + imageView.getWidth(), cordY + imageView.getHeight())) {
                                                         detectedRoom = temp;
                                                     }
                                                 }
-                                                if (detectedRoom == null) {
-                                                    if (!Variables.ifUnusedContainsLamp(cordX, cordY) && !Variables.ifSomeRoomContainsLamp(cordX, cordY,floor)) {
+                                                if (detectedRoom == null) {             //Если комната, куда можно привязать не найдена - добавляем в неиспользуемые
+                                                    if (!Variables.ifUnusedContainsLamp(cordX, cordY) && !Variables.ifSomeRoomContainsLamp(cordX, cordY, floor)) {      //Если такой светильник уже есть(произошел баг) - удаляем его, иначе все ок
                                                         Variables.current_floor.unusedLamps.add(lamp);
                                                         imageView.setBackgroundResource(R.color.blue);
                                                     } else {
                                                         Variables.planLay.removeView(lamp.getImage());
                                                     }
-                                                } else {
+                                                } else {        //Если комната найдена, смотрим чтобы не было в ней такого же светильника - после чего добавляем его
                                                     if (!Variables.ifRoomContainsLamp(cordX, cordY, detectedRoom)) {
                                                         detectedRoom.lamps.add(lamp);
                                                     } else {
                                                         Variables.planLay.removeView(lamp.getImage());
                                                     }
                                                 }
-                                            } else {
-                                                if (room != null) {
-                                                    if (!Variables.ifRoomContainsLamp(cordX, cordY, room)) {
+                                            } else {        //Иначе - если комната куда привязать изначально была задана
+                                                if (room != null) {     //Если комната такая есть
+                                                    if (!Variables.ifRoomContainsLamp(cordX, cordY, room)) {        //Если в ней нет такого светильника
                                                         room.lamps.add(lamp);
-                                                    } else {
+                                                    } else {            //Иначе удаляем дублированный светильник
                                                         Variables.planLay.removeView(lamp.getImage());
                                                     }
-                                                } else {
-                                                    if (!Variables.ifUnusedContainsLamp(cordX, cordY) && !Variables.ifSomeRoomContainsLamp(cordX, cordY,floor)) {
+                                                } else {        //Иначе - неиспользуемый
+                                                    if (!Variables.ifUnusedContainsLamp(cordX, cordY) && !Variables.ifSomeRoomContainsLamp(cordX, cordY, floor)) {
                                                         Variables.current_floor.unusedLamps.add(lamp);
                                                         lamp.getImage().setBackgroundResource(R.color.blue);
-                                                    } else {
+                                                    } else {        //Если есть дублирующий - удаляем
                                                         Variables.planLay.removeView(lamp.getImage());
                                                     }
                                                 }
@@ -345,7 +343,7 @@ public class BikExtensionParser {
                                 // reference to Thread constructor
                                 //if (!lastThread) {
                                 Thread run = new Thread(myThread);
-                                threads.add(run);
+                                threads.add(run);       //Запускаем этот поток для каждого светильника
 
                                 // Starting the thread
                                 run.start();
@@ -365,42 +363,49 @@ public class BikExtensionParser {
                             }
                         }
                     }
-                }else if (floorInfo){
-                    if (line.length()>0 && line.charAt(0) != '/') {
-                        String[] split_floor_info = line.split("@");
-                        int type = Integer.parseInt(String.valueOf(split_floor_info[0]));
-                        if (type>3){
-                            type=0;
+                } else if (floorInfo) {         //Информауия об этаже
+                    if (line.length() > 0 && line.charAt(0) != '/') {
+                        try {
+                            String[] split_floor_info = line.split("@");
+                            int type = Integer.parseInt(String.valueOf(split_floor_info[0]));
+                            if (type > 3) {
+                                type = 0;
+                            }
+                            floor.setTypeFloor(type);
+                            int days = Integer.parseInt(String.valueOf(split_floor_info[1]));
+                            if (days > 8) {
+                                days = 0;
+                            }
+                            floor.setHoursWordDefault(days);
+                            ///Высота потолков по умолчанию/////
+                            floor.roofHeightDefault.set(0, split_floor_info[2]);
+                            floor.roofHeightDefault.set(1, split_floor_info[3]);
+                            floor.roofHeightDefault.set(3, split_floor_info[4]);
+                            floor.roofHeightDefault.set(4, split_floor_info[5]);
+                            ///////////////////////////
+                            Variables.typeOfBuilding.setSelection(floor.getTypeFloor());        //Тип здания
+                            Variables.roomHeight.setText(floor.roofHeightDefault.elementAt(0));     //Высота по умолчанию
+                            Variables.daysOfWorkDefault.setSelection(floor.getHoursWordDefault());      //Дни работы
+                        } catch (Exception ex) {
+
                         }
-                        floor.setTypeFloor(type);
-                        int days = Integer.parseInt(String.valueOf(split_floor_info[1]));
-                        if (days>8){
-                            days=0;
-                        }
-                        floor.setHoursWordDefault(days);
-                        floor.roofHeightDefault.set(0, split_floor_info[2]);
-                        floor.roofHeightDefault.set(1, split_floor_info[3]);
-                        floor.roofHeightDefault.set(3, split_floor_info[4]);
-                        floor.roofHeightDefault.set(4, split_floor_info[5]);
-                        Variables.typeOfBuilding.setSelection(floor.getTypeFloor());
-                        Variables.roomHeight.setText(floor.roofHeightDefault.elementAt(0));
-                        Variables.daysOfWorkDefault.setSelection(floor.getHoursWordDefault());
                     }
                 }
                 line = reader.readLine();
             }
-            buildingInfo=false;
-            roomInfo=false;
-            lampsInfo=false;
-            floorInfo=false;
-            if (Variables.exportingJpg){
+            ///Сброс флагов///
+            buildingInfo = false;
+            roomInfo = false;
+            lampsInfo = false;
+            floorInfo = false;
+            //////
+            if (Variables.exportingJpg) {
                 floor.setImage(Variables.tempImage);
                 Variables.image.setImageURI(Variables.tempImage);
-            }
-            else {
+            } else {
                 floor.setImage(Variables.selectedfile);     //Передаем картинку этажа в созданный этаж
             }
-            if (Variables.typeOpening==0){      //Если открываем в текущей вкладке - меняем вкладку
+            if (Variables.typeOpening == 0) {      //Если открываем в текущей вкладке - меняем вкладку
                 if (!Variables.exportingJpg) {
                     if (Buttons.active == null) {      //Если нужно добавить новую вкладку
                         Variables.buttons.addPanel(floor.getFloor());
@@ -410,23 +415,26 @@ public class BikExtensionParser {
                         Variables.buttons.addPanel(floor.getFloor());
                     }
                 }
-            }else{              //Если создаем новую вкладку - добавляем новую вкладку
+            } else {              //Если создаем новую вкладку - добавляем новую вкладку
                 Variables.buttons.addPanel(floor.getFloor());
             }
             reader.close();
-            if (Variables.current_floor!=null) {
+            if (Variables.current_floor != null) {
                 for (Room room : Variables.current_floor.rooms) {
                     if (room.getDays() == 0) {
                         room.setDays(Integer.parseInt(String.valueOf(Variables.daysOfWorkDefault.getSelectedItemPosition())));
                     }
                 }
             }
-            Variables.exportingJpg=false;
-            Variables.isExportingToJpg=false;
-            Variables.loadingFlag=false;
+            ///Сброс флагов////
+            Variables.exportingJpg = false;
+            Variables.isExportingToJpg = false;
+            Variables.loadingFlag = false;
+            ///////////////////
             Variables.setInfoEmpty(floor);
+            Variables.planLay.setRotation(0);
             Variables.roofTypeDefaultText.setText(floor.roofHeightDefault.elementAt(Variables.roofTypeDefault.getSelectedItemPosition()));
-            for (Thread thread:threads){
+            for (Thread thread : threads) {
                 thread.join();
             }
         } catch (IOException e) {
@@ -437,35 +445,36 @@ public class BikExtensionParser {
             throw new RuntimeException(e);
         }
     }
+
     public void saveFile(String pathFile) throws IOException {      //Сохранение файла
         String filename = pathFile;
 
-        File oldFile = new File( pathFile);
-        File newFile = new File( pathFile );
+        File oldFile = new File(pathFile);
+        File newFile = new File(pathFile);
 
         try {       //Находим информацию о комнатах и стираем все после нее
-            String str1= "\n///INFORMATION ABOUT ROOMS///";
+            String str1 = "\n///INFORMATION ABOUT ROOMS///";
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 byte[] b1 = Files.readAllBytes(Paths.get(pathFile));
                 byte[] b2 = str1.getBytes();
-                long bytesCount=0;
-                long countMatches=0;
-                for (int i=0;i<b1.length;i++){
-                    if (b1[i]==b2[0]){
-                        if (i+b2.length<=b1.length){
-                            for (int j=0;j<b2.length;j++){
-                                if (b1[i+j]==b2[j])
+                long bytesCount = 0;
+                long countMatches = 0;
+                for (int i = 0; i < b1.length; i++) {
+                    if (b1[i] == b2[0]) {
+                        if (i + b2.length <= b1.length) {
+                            for (int j = 0; j < b2.length; j++) {
+                                if (b1[i + j] == b2[j])
                                     countMatches++;
                             }
                         }
                     }
-                    if (countMatches==b2.length)
+                    if (countMatches == b2.length)
                         break;
                     bytesCount++;
-                    countMatches=0;
+                    countMatches = 0;
                 }
                 byte[] temp_ar = new byte[(int) bytesCount];
-                for (int i=0;i<temp_ar.length;i++){
+                for (int i = 0; i < temp_ar.length; i++) {
                     temp_ar[i] = b1[i];
                 }
                 FileOutputStream fos = new FileOutputStream(newFile);
@@ -473,31 +482,29 @@ public class BikExtensionParser {
                 fos.write(temp_ar);
                 fos.close();
                 //str1 = Base64.encodeBase64URLSafeString(b);
-                try(FileWriter fw = new FileWriter(pathFile, true);
-                    BufferedWriter bw = new BufferedWriter(fw);
-                    PrintWriter out = new PrintWriter(bw))
-
-                {       //Начинаем записывать информацию о комнатах
+                try (FileWriter fw = new FileWriter(pathFile, true);
+                     BufferedWriter bw = new BufferedWriter(fw);
+                     PrintWriter out = new PrintWriter(bw)) {       //Начинаем записывать информацию о комнатах
                     Floor tempFloor = Variables.current_floor;
                     out.println();
                     out.println("///INFORMATION ABOUT ROOMS///");
-                    for (int i=0;i<tempFloor.rooms.size();i++){
-                        String str12 = tempFloor.rooms.elementAt(i).getNumber()+"%"+tempFloor.rooms.elementAt(i).getHeight()+"@"+tempFloor.rooms.elementAt(i).getType_pos()+"@"+tempFloor.rooms.elementAt(i).getDays()+"@"+tempFloor.rooms.elementAt(i).getHoursPerDay()+"@"+tempFloor.rooms.elementAt(i).getHoursPerWeekend()+"@"+tempFloor.rooms.elementAt(i).getHoursPerSunday()+"@"+tempFloor.rooms.elementAt(i).getRoofType()+"@"+tempFloor.rooms.elementAt(i).getComments()+"@"+tempFloor.rooms.elementAt(i).arrayX[0]+"@"+tempFloor.rooms.elementAt(i).arrayY[0];
-                        String str2="@";
-                        if (tempFloor.rooms.elementAt(i).photoPaths.size()!=0){
-                            for (String str:tempFloor.rooms.elementAt(i).photoPaths){
-                                str2+=str;
-                                str2+="!";
+                    for (int i = 0; i < tempFloor.rooms.size(); i++) {
+                        String str12 = tempFloor.rooms.elementAt(i).getNumber() + "%" + tempFloor.rooms.elementAt(i).getHeight() + "@" + tempFloor.rooms.elementAt(i).getType_pos() + "@" + tempFloor.rooms.elementAt(i).getDays() + "@" + tempFloor.rooms.elementAt(i).getHoursPerDay() + "@" + tempFloor.rooms.elementAt(i).getHoursPerWeekend() + "@" + tempFloor.rooms.elementAt(i).getHoursPerSunday() + "@" + tempFloor.rooms.elementAt(i).getRoofType() + "@" + tempFloor.rooms.elementAt(i).getComments() + "@" + tempFloor.rooms.elementAt(i).arrayX[0] + "@" + tempFloor.rooms.elementAt(i).arrayY[0];
+                        String str2 = "@";
+                        if (tempFloor.rooms.elementAt(i).photoPaths.size() != 0) {
+                            for (String str : tempFloor.rooms.elementAt(i).photoPaths) {
+                                str2 += str;
+                                str2 += "!";
                             }
                         }
-                        out.println(str12+str2);
+                        out.println(str12 + str2);
 
                     }
 
 
                     out.println("///INFORMATION ABOUT LAMPS///");   //Начинаем записывать информацию о светильниках
-                    for (int i=0;i<tempFloor.rooms.size();i++){
-                        for (int j=0;j<tempFloor.rooms.elementAt(i).lamps.size();j++){
+                    for (int i = 0; i < tempFloor.rooms.size(); i++) {
+                        for (int j = 0; j < tempFloor.rooms.elementAt(i).lamps.size(); j++) {
                             Lamp temp = tempFloor.rooms.elementAt(i).lamps.elementAt(j);
                             float piv1 = temp.getImage().getPivotX();
                             float piv2 = temp.getImage().getPivotY();
@@ -505,37 +512,37 @@ public class BikExtensionParser {
                             //temp.getImage().setPivotY(piv2);
                             //temp.getImage().setX(temp.getImage().getX()-temp.getImage().getWidth());
                             //temp.getImage().setY(temp.getImage().getY()-temp.getImage().getHeight());
-                            String str12 = tempFloor.rooms.elementAt(i).getNumber()+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+(temp.getImage().getX())+"@"+(temp.getImage().getY())+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle()+"@"+temp.getLampRoom()+"@"+"used"+"@"+temp.getMontagneType()+"@"+temp.getPlaceType()+"@"+temp.getGroupIndex()+"@"+temp.getLampsAmount()+"@"+temp.getPositionOutside()+"@"+temp.isStolb()+"@"+temp.getTypeRoom()+"@"+temp.getDaysWork()+"@"+temp.getHoursWork()+"@"+temp.getHoursWeekendWork()+"@"+temp.getHoursSundayWork()+"@"+piv1+"@"+piv2;
-                            String str2="@";
-                            if (temp.photoPaths.size()!=0){
-                                for (String str:temp.photoPaths){
-                                    str2+=str;
-                                    str2+="!";
+                            String str12 = tempFloor.rooms.elementAt(i).getNumber() + "%" + temp.getType() + "@" + temp.getPower() + "@" + temp.getTypeImage() + "@" + temp.getComments() + "@" + (temp.getImage().getX()) + "@" + (temp.getImage().getY()) + "@" + temp.getImage().getScaleX() + "@" + temp.getRotationAngle() + "@" + temp.getLampRoom() + "@" + "used" + "@" + temp.getMontagneType() + "@" + temp.getPlaceType() + "@" + temp.getGroupIndex() + "@" + temp.getLampsAmount() + "@" + temp.getPositionOutside() + "@" + temp.isStolb() + "@" + temp.getTypeRoom() + "@" + temp.getDaysWork() + "@" + temp.getHoursWork() + "@" + temp.getHoursWeekendWork() + "@" + temp.getHoursSundayWork() + "@" + piv1 + "@" + piv2;
+                            String str2 = "@";
+                            if (temp.photoPaths.size() != 0) {
+                                for (String str : temp.photoPaths) {
+                                    str2 += str;
+                                    str2 += "!";
                                 }
                             }
-                            out.println(str12+str2);
+                            out.println(str12 + str2);
                         }
                     }
-                    for (int i=0;i<tempFloor.unusedLamps.size();i++){
-                            Lamp temp = tempFloor.unusedLamps.elementAt(i);
+                    for (int i = 0; i < tempFloor.unusedLamps.size(); i++) {
+                        Lamp temp = tempFloor.unusedLamps.elementAt(i);
                         float piv1 = temp.getImage().getPivotX();
                         float piv2 = temp.getImage().getPivotY();
-                        piv1=0;
-                        piv2=0;
+                        piv1 = 0;
+                        piv2 = 0;
                         temp.getImage().setPivotX(piv1);
                         temp.getImage().setPivotY(piv2);
-                            String str12 = "-1"+"%"+temp.getType()+"@"+temp.getPower()+"@"+temp.getTypeImage()+"@"+temp.getComments()+"@"+temp.getImage().getX()+"@"+temp.getImage().getY()+"@"+temp.getImage().getScaleX()+"@"+temp.getRotationAngle()+"@"+temp.getLampRoom()+"@"+"unused"+"@"+temp.getMontagneType()+"@"+temp.getPlaceType()+"@"+temp.getGroupIndex()+"@"+temp.getLampsAmount()+"@"+temp.getPositionOutside()+"@"+temp.isStolb()+"@"+temp.getTypeRoom()+"@"+temp.getDaysWork()+"@"+temp.getHoursWork()+"@"+temp.getHoursWeekendWork()+"@"+temp.getHoursSundayWork()+"@"+piv1+"@"+piv2;
-                             String str2="@";
-                            if (temp.photoPaths.size()!=0){
-                                for (String str:temp.photoPaths){
-                                    str2+=str;
-                                    str2+="!";
-                                }
-                         }
-                            out.println(str12+str2);
+                        String str12 = "-1" + "%" + temp.getType() + "@" + temp.getPower() + "@" + temp.getTypeImage() + "@" + temp.getComments() + "@" + temp.getImage().getX() + "@" + temp.getImage().getY() + "@" + temp.getImage().getScaleX() + "@" + temp.getRotationAngle() + "@" + temp.getLampRoom() + "@" + "unused" + "@" + temp.getMontagneType() + "@" + temp.getPlaceType() + "@" + temp.getGroupIndex() + "@" + temp.getLampsAmount() + "@" + temp.getPositionOutside() + "@" + temp.isStolb() + "@" + temp.getTypeRoom() + "@" + temp.getDaysWork() + "@" + temp.getHoursWork() + "@" + temp.getHoursWeekendWork() + "@" + temp.getHoursSundayWork() + "@" + piv1 + "@" + piv2;
+                        String str2 = "@";
+                        if (temp.photoPaths.size() != 0) {
+                            for (String str : temp.photoPaths) {
+                                str2 += str;
+                                str2 += "!";
+                            }
+                        }
+                        out.println(str12 + str2);
                     }
                     out.println("///INFORMATION ABOUT FLOOR///");   //Начинаем записывать информацию об этаже
-                    String str = Variables.current_floor.getTypeFloor()+"@"+Variables.current_floor.getHoursWordDefault()+"@"+Variables.current_floor.roofHeightDefault.elementAt(0)+"@"+Variables.current_floor.roofHeightDefault.elementAt(1)+"@"+Variables.current_floor.roofHeightDefault.elementAt(2)+"@"+Variables.current_floor.roofHeightDefault.elementAt(3);
+                    String str = Variables.current_floor.getTypeFloor() + "@" + Variables.current_floor.getHoursWordDefault() + "@" + Variables.current_floor.roofHeightDefault.elementAt(0) + "@" + Variables.current_floor.roofHeightDefault.elementAt(1) + "@" + Variables.current_floor.roofHeightDefault.elementAt(2) + "@" + Variables.current_floor.roofHeightDefault.elementAt(3);
                     out.println(str);
                 } catch (IOException e) {
                     //exception handling left as an exercise for the reader
@@ -548,5 +555,46 @@ public class BikExtensionParser {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void getAllBackUpBackData() {        //Получение данных из последнего бэкапа
+        Variables.backupBackVector.clear();     //Очистка вектора с данными бэкапа
+        String[] split_path = Variables.filePath.split("/");
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < split_path.length - 1; i++) {
+            builder.append("/");
+            builder.append(split_path[i]);
+        }
+        String folderPath = builder.toString();         //Путь к текущей папке
+        BufferedReader reader;
+        BufferedWriter writer;
+        try {           //Производим чтение
+            reader = new BufferedReader(new FileReader(folderPath + "/" + Variables.current_floor.getName() + ";" + Variables.current_floor.getFloor() + "_log.txt"));
+            String line = reader.readLine();
+            String info = "";
+            boolean startedInfo = false;
+            while (line != null) {  //Пока файл не закончился считываем строка за строкой
+                if (startedInfo) {
+                    while (!line.equals("#END#")) {     //Пока не дошли до конца - считываем
+                        info+=line;
+                        info+="/n";
+                        line = reader.readLine();
+                    }
+                }
+
+                if (line.equals("#START#")) {       //Если старт - считываем информацию из бэкапа
+                    startedInfo = true;
+                }
+                if (line.equals("#END#")){          //Если дошли до конца - сброс флага, читаем файл дальше до следующего старта
+                    Variables.backupBackVector.add(info);
+                    info = "";
+                    startedInfo = false;
+                }
+                line = reader.readLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

@@ -63,7 +63,7 @@ public class SavePlanToJpgThread extends Thread{
                         float newY = oldY * (secondHeight / firstHeight);
                         //lamp.getImage().setPivotX(0);
                         //lamp.getImage().setPivotY(0);
-                        if (secondHeight-firstWidth>1) {
+                        if (secondHeight-firstHeight>1) {
                             lamp.getImage().setScaleX(lamp.getImage().getScaleX() + (secondWidth / firstWidth) * 0.8f);
                             lamp.getImage().setScaleY(lamp.getImage().getScaleY() + (secondHeight / firstHeight) * 0.8f);
                             lamp.getImage().setX(newX);
@@ -78,7 +78,7 @@ public class SavePlanToJpgThread extends Thread{
                     float newY = oldY * (secondHeight / firstHeight);
                     //lamp.getImage().setPivotX(0);
                     //lamp.getImage().setPivotY(0);
-                    if (secondHeight-firstWidth>1) {
+                    if (secondHeight-firstHeight>1) {
                         lamp.getImage().setX(newX + lamp.getImage().getWidth() / 2);
                         lamp.getImage().setY(newY + lamp.getImage().getHeight() / 2);
                         lamp.getImage().setScaleX(lamp.getImage().getScaleX() + (secondWidth / firstWidth) * 0.8f);
@@ -321,6 +321,7 @@ public class SavePlanToJpgThread extends Thread{
                 Toast.makeText(Variables.activity.getApplicationContext(),"План экспортирован в JPG!",Toast.LENGTH_SHORT).show();
             });*/
         } catch (Exception e) {
+            System.out.println(e.toString());
             throw new RuntimeException(e);
         }
     }

@@ -164,6 +164,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Variables.multiplepos = position;
                 Variables.multiplelampType = 1;
+                if (Variables.addMultipleRowsFlag){
+                    Variables.buttons.showTempLamps();
+                }
             }
         });
 
@@ -172,12 +175,14 @@ public class MainActivity extends AppCompatActivity {
 
         myTimer.schedule(new TimerTask() {
             public void run() {
-                if (Variables.current_floor!=null && !Variables.loadingFlag && !Variables.fileBackuping) {
+                if (Variables.current_floor!=null && !Variables.loadingFlag && !Variables.fileBackuping && !Variables.getAllBackUpDataFlag) {   //Для автосохранения флаги должны быть сброшены
                     SaveFileThread thread = new SaveFileThread();
                     thread.start();
                 }
+                loggingThread threadlog = new loggingThread();
+                threadlog.start();      //Логгирование происходит без условий
             }
-        }, 0, 60*1000); // каждую 3 минуту-сохранение файла
+        }, 0, 60*1000); // каждую минуту-сохранение файла
 
 
 

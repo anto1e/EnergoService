@@ -44,7 +44,7 @@ public class Plan {
     boolean isReleased=true;    //Разрешено ли перемещение пальцем по плану(Если было приближение, функция заблокирована пока все пальцы не оторвутся от экрана)
     float pivotX=0.f;           //Пивот Х для корректного приближения плана(Не работает)
     float pivotY=0.f;           //Пивот У для корректного приближения плана(Не работает)
-    private boolean ifReleased=false;
+    private boolean ifReleased=false;       //Если один палец отпущен с экрана(блокировка движения при приближении)
 
 
 
@@ -82,6 +82,7 @@ public class Plan {
                                     tempView.post(new Runnable() {
                                         @Override
                                         public void run() {
+                                            System.out.println(event.getX()+";"+event.getY());
                                             tempView.setX(event.getX() - (tempView.getWidth()/2)*tempView.getScaleX());
                                             tempView.setY(event.getY() - (tempView.getHeight()/2)*tempView.getScaleY());
                                         }
@@ -151,6 +152,7 @@ public class Plan {
                                     selectionZone.setY(event.getY());
                                     selectionZone.getBackground().setAlpha(128);
                                     Variables.planLay.addView(selectionZone);
+                                    Variables.buttons.showTempLamps();
                                 } else {            //Иначе - изменяем размер в соответствии с положением пальца/стилуса на экране
                                     float temp1 = event.getX() - Variables.firstPointX;
                                     float temp2 = event.getY() - Variables.firstPointY;
@@ -173,6 +175,9 @@ public class Plan {
                             break;
                         case MotionEvent.ACTION_CANCEL:
                         case MotionEvent.ACTION_UP:         //Выполняем поиск светильников внутри этой зоны, убираем зону, светильники добавляем во временным вектор
+                            if (Variables.addMultipleRowsFlag){
+                                Variables.buttons.showTempLamps();
+                            }
                             if ((Variables.copyFlag && Variables.copyType == 0) || Variables.selectZoneFlag) {
                                 for (Lamp lamp : Variables.copyVector) {
                                     lamp.getImage().setBackgroundResource(0);
@@ -284,7 +289,7 @@ public class Plan {
     @SuppressLint("SetTextI18n")
     public void detectRoomTouch(float x, float y){      //Функиця определения нажатия на комнату и вывода информации о ней
         for (Room room:Variables.current_floor.rooms){
-            if (room.detectTouch(x,y)) {
+            if (room!=null && room.detectTouch(x,y)) {
                 if (room!=touchedRoom) {
                     clearInfoLamp();
                     Variables.RoomInfo.setVisibility(View.VISIBLE);     //Отображаем данные о комнате
@@ -322,12 +327,38 @@ public class Plan {
         Variables.RoomInfo.setVisibility(View.GONE);        //Если комнат по данным координатам не нашлось - убираем блок с данными о комнате
     }
 
+
+    private static final int INVALID_POINTER_ID = -1;
+    private float fX, fY, sX, sY;
+    private int ptrID1, ptrID2;
+    private float pivX1,pivY1,pivX2,pivY2;
+    private float mAngle;
+    float lastAngle = 0;
+    public float getAngle() {
+        return mAngle;
+    }
+
+    private float angleBetweenLines (float fX, float fY, float sX, float sY, float nfX, float nfY, float nsX, float nsY)
+    {
+        float angle1 = (float) Math.atan2( (fY - sY), (fX - sX) );
+        float angle2 = (float) Math.atan2( (nfY - nsY), (nfX - nsX) );
+
+        float angle = ((float)Math.toDegrees(angle1 - angle2)) % 360;
+        if (angle < -180.f) angle += 360.0f;
+        if (angle > 180.f) angle -= 360.0f;
+        return angle;
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     //Отслеживание нажатий на план для перемещения/приближения
     public void startDetecting(){     //Отслеживание нажатий на план
         Variables.planLay = Variables.activity.findViewById(R.id.planLayout);
         LinearLayout imageWrap = Variables.activity.findViewById(R.id.imageWrap);
         setListenerToImage();   //Ставим слушатель для получения информации о комнате
+        ptrID1 = INVALID_POINTER_ID;
+        ptrID2 = INVALID_POINTER_ID;
+
+
         imageWrap.setOnTouchListener(new View.OnTouchListener(){
             @Override
             public boolean onTouch(View v, MotionEvent event) {     //Отслеживание нажатий на план
@@ -339,6 +370,13 @@ public class Plan {
                             if (event.getPointerCount() > 1) {
                                 isReleased = false;
                                 prevLength = Math.sqrt(Math.pow((double) (event.getX(0)) - (double) (event.getX(1)), 2) + Math.pow((double) (event.getY(0)) - (double) (event.getY(1)), 2));
+                                if (Variables.allowRotationPlanFlag) {
+                                    sX = event.getX(0);
+                                    sY = event.getY(0);
+                                    fX = event.getX(1);
+                                    fY = event.getY(1);
+                                    lastAngle = Variables.planLay.getRotation();
+                                }
                                 //pivotX = (event.getX(0)+event.getX(1))/2.f;
                                 //pivotY = (event.getY(0)+event.getY(1))/2.f;
                                 //Variables.planLay.setPivotX(pivotX);
@@ -347,7 +385,17 @@ public class Plan {
                             break;
                         case MotionEvent.ACTION_MOVE: // движение пальцев по экрану
                             if (event.getPointerCount() > 1) {     //Задействовано два пальца - приближение
-
+                                if (Variables.allowRotationPlanFlag) {
+                                    float nfX, nfY, nsX, nsY;
+                                    nsX = event.getX(0);
+                                    nsY = event.getY(0);
+                                    nfX = event.getX(1);
+                                    nfY = event.getY(1);
+                                    mAngle = angleBetweenLines(fX, fY, sX, sY, nfX, nfY, nsX, nsY);
+                                    mAngle *= -1;
+                                    float angle = lastAngle + mAngle;
+                                    Variables.planLay.setRotation(angle);
+                                }
                                 lenght = Math.sqrt(Math.pow((double) (event.getX(0)) - (double) (event.getX(1)), 2) + Math.pow((double) (event.getY(0)) - (double) (event.getY(1)), 2));
 
                                 double dx = lenght - prevLength;
@@ -381,7 +429,7 @@ public class Plan {
                 return true;
             }
         });
-    }
+                            }
 
     public void rotateImg(float angle,ImageView imageView,String type, int resource){     //Функция поворота светильника
         if (imageView!=null) {      //Если светильник существует
@@ -1046,7 +1094,7 @@ public class Plan {
                                 Log.d("current scale:", Float.toString(imageView.getScaleX()) + " , " + Float.toString(imageView.getScaleY()));
 
                             }*/
-                                } else if (Variables.rotateMode) {      //Если режим поворота - поворачиваем
+                                } else if (Variables.rotateMode && !Variables.addMultiple_flag) {      //Если режим поворота - поворачиваем
                                     isReleased = false;
                                     float angle = getDegreesFromTouchEvent(event, imageView, x, y);
                                     if (!Variables.selectZoneFlag && touchedLamp != null) {
@@ -1259,5 +1307,44 @@ public class Plan {
             }
         }
         return null;            //Иначе - светильник не найден
+    }
+
+    public void spawnTempLamp(Integer type, int pos,String lampName,int placeType,int groupIndex,float cordX,float cordY,boolean type_spawning,float rotation,float scaleType) {
+        if (tempView != null || type_spawning) {                   //Если активная функция добавления светильника
+            ImageView imageView = new ImageView(Variables.activity);
+            Variables.multipleAddTempVector.add(imageView);
+            imageView.setPivotX(0);
+            imageView.setPivotY(0);
+            //imageView.getBackground().setAlpha(200);
+            imageView.setImageResource(type);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(Variables.lampSize, Variables.lampSize);
+            imageView.setLayoutParams(params);
+            if (type_spawning){     //Если создание светильника не по нажатию кнопки добавления - берем данные из переданных параметров
+                imageView.setScaleX(scaleType);
+                imageView.setScaleY(scaleType);
+            }else {         //Иначе берем данные из последних
+                imageView.setScaleX(Variables.lastScaletype);
+                imageView.setScaleY(Variables.lastScaletype);
+            }
+            setListener(imageView);
+            if (type_spawning){     //Если тип появления - не по нажатию кнопки добавления - берем переданные в метод параметры
+                //imageView.setPivotX(0);
+                //imageView.setPivotY(0);
+                imageView.setX(cordX);
+                imageView.setY(cordY);
+                rotateImg(rotation, imageView, lampName,-1);
+            }else {         //Иначе берем данные из маркера
+                imageView.setX(tempView.getX());
+                imageView.setY(tempView.getY());
+            }
+            if (!type_spawning) {       //Удаляем маркер если добавление светильника по нажатию кнопки добавления
+                Variables.planLay.removeView(tempView);
+            }
+            if (Variables.rotateMode){
+                rotateImg(90, imageView, lampName,-1);
+                rotation=90;
+            }
+            Variables.planLay.addView(imageView);
+        }
     }
 }

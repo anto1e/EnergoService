@@ -154,8 +154,7 @@ public class ExcelExporter {
             }
         }*/
         for (int l = 0; l < Variables.floors.size(); l++) {       //Проходимся по активным этажам
-
-            if (Objects.equals(Variables.floors.elementAt(l).getName(), Variables.current_floor.getName())) {       //Если этаж от данного здания
+            //Если этаж от данного здания
                 Variables.setInfoEmpty(Variables.floors.elementAt(l));
                 Floor temp = Variables.floors.elementAt(l);         //Временный этаж
                 //Variables.removeDuppleLamps(temp);
@@ -447,7 +446,6 @@ public class ExcelExporter {
                         count = 0;
                     }
                 }
-            }
             for (Room room:Variables.floors.elementAt(l).rooms) {
                 if (room.lamps.size() == 0) {
                     writeToFileAccessDenied(Variables.floors.elementAt(l), room);
@@ -613,8 +611,6 @@ public class ExcelExporter {
             cell = cells.get("H" + Integer.toString(rowCount));
             value = cell.getFormula();
             cell.setFormula(value);
-            cell = cells.get("O" + Integer.toString(rowCount));
-            value = cell.getFormula();
             cell.setFormula(value);
             cell = cells.get("P" + Integer.toString(rowCount));
             value = cell.getFormula();
@@ -640,6 +636,8 @@ public class ExcelExporter {
             cell = cells.get("Y" + Integer.toString(rowCount));
             value = cell.getFormula();
             cell.setFormula(value);
+            cell = cells.get("O" + Integer.toString(rowCount));
+            value = cell.getFormula();
             outsideRowCount++;
         }
 
