@@ -616,16 +616,16 @@ public class Plan {
                         //lamp.setComments("Спот");
                         escapePowerSet = true;
                         break;
-                }
-            }
-            else if(groupIndex==2) {                    //Если это лампы
-                switch (lampName) {
                     case "lampkll15":
                         lamp.setType("КЛЛ");
                         lamp.setPower("15Вт");
                         //lamp.setComments("Спот");
                         escapePowerSet = true;
                         break;
+                }
+            }
+            else if(groupIndex==2) {                    //Если это лампы
+                switch (lampName) {
                     case "lampkll18":
                         lamp.setType("КЛЛ");
                         lamp.setPower("18Вт");

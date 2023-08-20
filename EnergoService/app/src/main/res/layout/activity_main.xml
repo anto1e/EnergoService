@@ -292,31 +292,26 @@
                             android:src="@drawable/arrow"/>
 
                     </FrameLayout>
-                        <ScrollView
+                        <FrameLayout
                             android:id="@+id/BackUpFrame"
-                            android:layout_width="300dp"
+                            android:layout_width="match_parent"
+                            android:layout_marginBottom="0dp"
                             android:visibility="gone"
-                            android:layout_height="350dp"
+                            android:layout_height="match_parent"
                             >
                             <GridLayout
                                 android:visibility="visible"
                                 android:id="@+id/BackUpGrid"
                                 android:paddingStart="0dp"
                                 android:paddingEnd="30dp"
-                                android:numColumns="auto_fit"
+                                android:columnCount="9"
                                 android:horizontalSpacing="10dp"
                                 android:verticalSpacing="10dp"
                                 android:layout_marginBottom="0dp"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
-                        <TextView
-                            android:background="@drawable/txtviewborder"
-                            android:layout_width="50dp"
-                            android:layout_height="60dp"
-                            android:text="17-05-2020 19:30:30"
-                            />
                             </GridLayout>
-                        </ScrollView>
+                        </FrameLayout>
                 </LinearLayout>
         <!--Второй тул-бар -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -463,6 +458,7 @@
                 android:contentDescription="TODO">
             </ImageButton>
 
+
             <ImageButton
                 android:id="@+id/selectZone"
                 android:scaleType="fitCenter"
@@ -474,6 +470,32 @@
                 android:layout_height="30dp"
                 android:contentDescription="TODO">
             </ImageButton>
+
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_height="5dp"
+                android:layout_width="30dp"
+                android:background="@color/black"
+                />
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_height="5dp"
+                android:layout_width="40dp"
+                android:background="@color/black"
+                />
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_height="5dp"
+                android:layout_width="40dp"
+                android:background="@color/black"
+                />
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_height="5dp"
+                android:layout_width="40dp"
+                android:background="@color/black"
+                />
+
 
 
             <ImageButton
@@ -577,7 +599,7 @@
                 android:layout_marginLeft="0dp"
                 android:layout_width="30dp"
                 android:background="@color/white"
-                android:layout_marginBottom="0dp"
+                android:layout_marginBottom="5dp"
                 android:layout_height="30dp">
             </ImageView>
 

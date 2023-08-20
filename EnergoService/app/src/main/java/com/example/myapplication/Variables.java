@@ -177,15 +177,20 @@ public class Variables {
     static double currentWidth;                //Ширина плана в приложении
     static double currentHeight;                //Высота плана в приложении
     static String[] montagneOutsideTypeArr = {"Консоль","Кронштейн","Шар"};           //Типы монтажа наружного освещения
-    static String [] positionOutsideArr = {"Фасад","Крыльцо","Территория","Футбольное поле","Игровая площадка"};        //Типы расположения светильника снаружи
+    static String [] positionOutsideArr = {"Фасад","Крыльцо","Территория","Крыша","Футбольное поле","Игровая площадка"};        //Типы расположения светильника снаружи
     static String[] roofTypes = {"Бетон","Армстронг","ПВХ","Гипрок"};        //Типы потолков
     static String[] montagneTypeArr = {"Накладной","Встраиваемый","Настенный","Подвесной"};        //Типы монтажа светильника
     static String[] montagneTypeTwoArr = {"Не указано","Накладной","Встраиваемый","Настенный","Подвесной"};        //Типы монтажа светильника
     static String[] placeTypeArr = {"В здании","Наружный"};        //Типы нахождения светильника(снаружи/в здании)
     static String[] typeOfBuildingArr = {"Детский сад","Школа","Больница","Другое"};         //Тип здания
-    static String[] typesOfRoomsDetSad = {"Служебное помещение","Игровая","Гардероб", "Спальная", "Санузел", "Коридор", "Тамбур","Лестница","Кабинет","Пищеблок","Прачечная","Моечная","Кладовая","Спортзал","Актовый зал","Медкабинет","Гардероб","Техническое помещение","ГРЩ","Другое"};            //Типы помещений(детские сады)
-    static String[] typesOfRoomsSchools = {"Служебное помещение","Учебный кабинет", "Кабинет", "Санузел", "Коридор", "Тамбур","Лестница","Спортзал","Пищеблок","Актовый зал","Медкабинет","Столовая","Кладовая","Гардероб","Техническое помещение","ГРЩ","Раздевалка","Библиотека","Бассейн","Другое"};            //Типы помещений(школы)
-    static String[] typesOfRoomsHospitals = {"Служебное помещение","Кабинет врача", "Кабинет", "Санузел", "Коридор", "Тамбур","Лестница","Спортзал","Пищеблок","Актовый зал","Медкабинет","Кладовая","Столовая","Палата","Процедурная","Другое"};            //Типы помещений(больницы)
+
+    static int[] defaultHoursDetSad = {0,5,4,6,1,6,6,2,5,3,6,5,6,6,4,2,3,4,4,1,0};
+    static int[] defaultHoursSchool5Days = {0,5,6,6,4,1,6,6,6,2,5,3,6,6,4,6,6,4,1,0};
+    static int[][] defaultHoursSchool6Days = {{0,0},{5,4},{6,5},{6,0},{4,4},{1,0},{6,4},{6,0},{6,4},{2,1},{5,4},{3,3},{6,0},{6,5},{4,3},{6,5},{6,4},{4,3},{1,0},{0,0}};
+
+    static String[] typesOfRoomsDetSad = {"Служебное помещение","Актовый зал","Гардероб","Групповая","ГРЩ","Кабинет", "Коридор","Кладовая","Лестница","Моечная","Медкабинет","Музыкальный зал","Пищеблок","Прачечная","Раздевалка","Спальная", "Санузел","Спортзал",  "Тамбур","Техническое помещение","Другое"};            //Типы помещений(детские сады)
+    static String[] typesOfRoomsSchools = {"Служебное помещение","Актовый зал","Бассейн","Библиотека","Гардероб","ГРЩ","Учебный кабинет", "Кабинет", "Коридор","Кладовая","Лестница","Санузел", "Медкабинет","Пищеблок","Раздевалка","Столовая","Спортзал","Тамбур","Техническое помещение","Другое"};            //Типы помещений(школы)
+    static String[] typesOfRoomsHospitals = {"Служебное помещение","Актовый зал","Бассейн","Гардероб","ГРЩ","Кабинет врача", "Кабинет", "Санузел", "Коридор","Кладовая","Лестница", "Медкабинет","Палата","Пищеблок","Процедурная","Спортзал","Столовая","Тамбур","Другое"};            //Типы помещений(больницы)
     static String[] typesOfRoomsOthers = {"Служебное помещение","Коридор", "Кабинет", "Санузел", "Служебное помещение", "Тамбур","Лестница","Спортзал","Пищеблок","Актовый зал","Медкабинет","Кладовая","Столовая","Процедурный кабинет","Палата","Комната","Учебный кабинет","Душевая","Гардероб","Другое"};            //Типы помещений(больницы)
 
     static String[] daysPerWeekArr = {"0","1/мес","1","2","3","4","5","6","7"};         //Дней работы в неделю
@@ -200,13 +205,13 @@ public class Variables {
             R.drawable.lum4_18,R.drawable.lum2_36vstr,R.drawable.lampnakal60spot,R.drawable.lampkll15spot,R.drawable.lampgalogen35,R.drawable.lum2_18vstr,R.drawable.lum1_18vstr,R.drawable.lampnakal40spot,R.drawable.lampkll18spot,R.drawable.lampkll20spot,R.drawable.lampkll25spot,R.drawable.lampkll30spot,R.drawable.lum1_36vstr,R.drawable.lum2_58vstr,R.drawable.lum2_80vstr,R.drawable.lum4_36vstr,R.drawable.lampnakal75spot,R.drawable.lampnakal95spot,R.drawable.lum4_14
     };
     public static  final Integer[] NakladnieImageId = {              //Изображения накладных светильников
-            R.drawable.lum4_18nakl,R.drawable.lum2_36,R.drawable.lampnakal60,R.drawable.lum2_18,R.drawable.lum1_36,R.drawable.lum1_18,R.drawable.lampnakal40,R.drawable.lum2_58,R.drawable.lum2_80,R.drawable.lum4_36,R.drawable.lum4_58,R.drawable.lum4_80,R.drawable.lum1_58,R.drawable.lum1_80,R.drawable.lampnakal75,R.drawable.lampnakal95,R.drawable.lum2_14,R.drawable.lum2_28,R.drawable.lum4_14nakl
+            R.drawable.lum4_18nakl,R.drawable.lum2_36,R.drawable.lampnakal60,R.drawable.lampkll15,R.drawable.lum2_18,R.drawable.lum1_36,R.drawable.lum1_18,R.drawable.lampnakal40,R.drawable.lum2_58,R.drawable.lum2_80,R.drawable.lum4_36,R.drawable.lum4_58,R.drawable.lum4_80,R.drawable.lum1_58,R.drawable.lum1_80,R.drawable.lampnakal75,R.drawable.lampnakal95,R.drawable.lum2_14,R.drawable.lum2_28,R.drawable.lum4_14nakl
     };
     public static  final Integer[] LampsImageId = {              //Изображения ламп
-            R.drawable.lampkll15,R.drawable.lampdiod12,R.drawable.lampdiod10,R.drawable.lampkll18,R.drawable.lampkll20,R.drawable.lampkll25,R.drawable.lampkll30,R.drawable.lampdiod15,R.drawable.lampdiod50
+            R.drawable.lampdiod12,R.drawable.lampdiod10,R.drawable.lampkll18,R.drawable.lampkll20,R.drawable.lampkll25,R.drawable.lampkll30,R.drawable.lampdiod15,R.drawable.lampdiod50
     };
     public static  final Integer[] DiodsImageId = {              //Изображения светодиодных светильников
-            R.drawable.diod36vstr,R.drawable.diod36nakl,R.drawable.diod36long,R.drawable.diod18nakl,R.drawable.lampdiod12,R.drawable.lampdiodspot12,R.drawable.lustradiod,R.drawable.diod40vstr,R.drawable.diod40nakl,R.drawable.diod40long,R.drawable.lampdiodspot10,R.drawable.lampdiodspot15
+            R.drawable.diod36vstr,R.drawable.diod36nakl,R.drawable.diod36long,R.drawable.diod18nakl,R.drawable.lampdiod12,R.drawable.diod24long,R.drawable.lampdiodspot12,R.drawable.lustradiod,R.drawable.diod40vstr,R.drawable.diod40nakl,R.drawable.diod40long,R.drawable.lampdiodspot10,R.drawable.lampdiodspot15
     };
     public static  final Integer[] DoskiImageId = {              //Изображения светодиодных светильников
             R.drawable.lum1_36dosk,R.drawable.diod18dosk,R.drawable.lum1_58dosk,R.drawable.diod24dosk,R.drawable.lum1_28dosk,R.drawable.lum1_52dosk,R.drawable.lum2_36dosk,R.drawable.lum2_58dosk,R.drawable.diod20dosk
@@ -256,13 +261,13 @@ public class Variables {
             "4*18Вт","2*36Вт","ЛН 60Вт","КЛЛ 15Вт","Гал. 35Вт","2*18Вт","1*18Вт","ЛН 40Вт","КЛЛ 18Вт","КЛЛ 20Вт","КЛЛ 25Вт","КЛЛ 30Вт","1*36Вт","2*58Вт","2*80Вт","4*36Вт","ЛН 75Вт","ЛН 95Вт","4*14Вт"
     };
     public static final String[] lampNakladnieNames = {             //Названия накладных светильников
-            "4*18Вт","2*36Вт","ЛН 60Вт","2*18Вт","1*36Вт","1*18Вт","ЛН 40Вт","2*58Вт","2*80Вт","4*36Вт","4*58Вт","4*80Вт","1*58Вт","1*80Вт","ЛН 75Вт","ЛН 95Вт","2*14Вт","2*28Вт","4*14Вт"
+            "4*18Вт","2*36Вт","ЛН 60Вт","КЛЛ 15Вт","2*18Вт","1*36Вт","1*18Вт","ЛН 40Вт","2*58Вт","2*80Вт","4*36Вт","4*58Вт","4*80Вт","1*58Вт","1*80Вт","ЛН 75Вт","ЛН 95Вт","2*14Вт","2*28Вт","4*14Вт"
     };
     public static final String[] lampLampsNames = {             //Названия ламп
-            "КЛЛ 15Вт","СД 12Вт","СД 10Вт","КЛЛ 18Вт","КЛЛ 20Вт","КЛЛ 25Вт","КЛЛ 30Вт","СД 15Вт","СД 50Вт"
+            "СД 12Вт","СД 10Вт","КЛЛ 18Вт","КЛЛ 20Вт","КЛЛ 25Вт","КЛЛ 30Вт","СД 15Вт","СД 50Вт"
     };
     public static final String[] lampDiodsNames = {             //Названия светодиодных светильников
-            "4*9Вт","4*9Вт","2*18Вт","2*9Вт","12Вт","12Вт","12Вт","4*10Вт","4*10Вт","2*20Вт","10Вт","15Вт"
+            "4*9Вт","4*9Вт","2*18Вт","2*9Вт","12Вт","24Вт","12Вт","12Вт","4*10Вт","4*10Вт","2*20Вт","10Вт","15Вт"
     };
     public static final String[] lampDoskiNames = {             //Названия светодиодных светильников
             "1*36Вт","1*18Вт","1*58Вт","1*24Вт","1*28Вт","1*52Вт","2*36Вт","2*58Вт","2*10Вт"
@@ -279,9 +284,9 @@ public class Variables {
 
 
     public static  final String[] lampsVstraivaemieName = {"lum4_18","lum2_36vstr","lampnakal60spot","lampkll15spot","lampgalogen35","lum2_18vstr","lum1_18vstr","lampnakal40spot","lampkll18spot","lampkll20spot","lampkll25spot","lampkll30spot","lum1_36vstr","lum2_58vstr","lum2_80vstr","lum4_36vstr","lampnakal75spot","lampnakal95spot","lum4_14"};        //Название ресурса встраиваемых светильников
-    public static  final String[] lampsNakladnieName = {"lum4_18nakl","lum2_36","lampnakal60","lum2_18","lum1_36","lum1_18","lampnakal40","lum2_58","lum2_80","lum4_36","lum4_58","lum4_80","lum1_58","lum1_80","lampnakal75","lampnakal95","lum2_14","lum2_28","lum4_14nakl"};       //Название ресурса накладных светильников
-    public static  final String[] lampsLampsName = {"lampkll15","lampdiod12","lampdiod10","lampkll18","lampkll20","lampkll25","lampkll30","lampdiod15","lampdiod50"};        //Название ресурса ламп
-    public static  final String[] lampsDiodsName = {"diod36vstr","diod36nakl","diod36long","diod18nakl","lampdiod12","lampdiodspot12","lustradiod","diod40vstr","diod40nakl","diod40long","lampdiodspot10","lampdiodspot15"};      //Название ресурса светодиодных светильников
+    public static  final String[] lampsNakladnieName = {"lum4_18nakl","lum2_36","lampnakal60","lampkll15","lum2_18","lum1_36","lum1_18","lampnakal40","lum2_58","lum2_80","lum4_36","lum4_58","lum4_80","lum1_58","lum1_80","lampnakal75","lampnakal95","lum2_14","lum2_28","lum4_14nakl"};       //Название ресурса накладных светильников
+    public static  final String[] lampsLampsName = {"lampdiod12","lampdiod10","lampkll18","lampkll20","lampkll25","lampkll30","lampdiod15","lampdiod50"};        //Название ресурса ламп
+    public static  final String[] lampsDiodsName = {"diod36vstr","diod36nakl","diod36long","diod18nakl","lampdiod12","diod24long","lampdiodspot12","lustradiod","diod40vstr","diod40nakl","diod40long","lampdiodspot10","lampdiodspot15"};      //Название ресурса светодиодных светильников
     public static  final String[] lampsDoskiName = {"lum1_36dosk","diod18dosk","lum1_58dosk","diod24dosk","lum1_28dosk","lum1_52dosk","lum2_36dosk","lum2_58dosk","diod20dosk"};      //Название ресурса светодиодных светильников
     public static  final String[] lampsPodvesName = {"lampnakal60podves","lampkll15podves","lampdiod12podves","lampnakal40podves","lampkll18podves","lampkll20podves","lampkll25podves","lampkll30podves","lampdiod10podves","lampdiod15podves","lampnakal75podves","lampnakal95podves"};      //Название ресурса светодиодных светильников
     public static  final String[] lampsOthersName = {"diod4_18lampsvstr","diod4_18lampsnakl","diod2_36lampsnakl","diod2_18lampsnakl","diod1_36lampsnakl","diod1_18lampsnakl","lustranakal","lustrakll","unknowntype","unknowntypediod"};        //Название ресурса других светильников

@@ -27,19 +27,23 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import org.json.JSONException;
 import org.w3c.dom.Text;
 
 import java.io.File;
@@ -58,6 +62,9 @@ import java.util.Vector;
 public class Buttons {
     public static final int CAMERA_PERM_CODE = 101;     //Код доступа к камере
     public static final int CAMERA_REQUEST_CODE = 102;      //Код доступа к камере
+    static final int leftDistance = 10;
+    static final int rightDistance=60;
+    static final int durationToHover=50;
     static LinearLayout active=null;        //Активная панель этажа
 
     ImageView addBtn;       //Кнопка добавления светильника
@@ -269,24 +276,86 @@ public class Buttons {
         rotatePlanBtn = Variables.activity.findViewById(R.id.rotatePlanBtn);            //Кнопка поворота плана
 
 
-        /*backupBackBtn.setOnTouchListener(new View.OnTouchListener() {
+        backupBackBtn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (Variables.current_floor!=null) {
                     if (!Variables.getAllBackUpDataFlag) {
+                        Variables.planLay.setVisibility(View.GONE);
                         Variables.getAllBackUpDataFlag = true;
                         Variables.parser.getAllBackUpBackData();
-                        GridLayout gridBackup = Variables.activity.findViewById(R.id.BackUpFrame);
+                        FrameLayout gridBackup = Variables.activity.findViewById(R.id.BackUpFrame);
+                        GridLayout backUpLay = Variables.activity.findViewById(R.id.BackUpGrid);
                         gridBackup.setVisibility(View.VISIBLE);
-                        for (int i=Variables.backupBackVector.size()-1;i==0;i--){
-                            TextView txt = new TextView(Variables.activity);
-                            txt.setLayoutParams(new LinearLayout.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, Variables.activity.getResources().getDisplayMetrics()),(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, Variables.activity.getResources().getDisplayMetrics())));
+                        backupBackBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                        short counter=0;
+                        for (int i=Variables.backupBackVector.size()-1;i>=0;i--){
+                            counter++;
+                            if (counter<50) {
+                                TextView txt = new TextView(Variables.activity);
+                                txt.setBackgroundResource(R.drawable.txtviewborder);
+                                txt.setLayoutParams(new LinearLayout.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, Variables.activity.getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, Variables.activity.getResources().getDisplayMetrics())));
+                                String[] split_backup_data = Variables.backupBackVector.elementAt(i).split("/n");
+                                String data = split_backup_data[0];
+                                txt.setText(data);
+                                backUpLay.addView(txt);
+                                txt.setOnTouchListener(new View.OnTouchListener() {
+                                    @Override
+                                    public boolean onTouch(View v, MotionEvent event) {
+                                        if (Variables.getAllBackUpDataFlag) {
+                                            String text = txt.getText().toString();
+                                            for (int i = Variables.backupBackVector.size() - 1; i >= 0; i--) {
+                                                String[] split_backup_data = Variables.backupBackVector.elementAt(i).split("/n");
+                                                if (text.equals(split_backup_data[0])) {
+                                                    try {
+                                                        Variables.parser.applyLoadBackupBack(Variables.backupBackVector.elementAt(i));
+                                                        disableBackupBackBtn();
+                                                        break;
+                                                    } catch (JSONException e) {
+                                                        throw new RuntimeException(e);
+                                                    } catch (InterruptedException e) {
+                                                        throw new RuntimeException(e);
+                                                    } catch (Exception e) {
+
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        return false;
+                                    }
+                                });
+                            }
                         }
+                    }else{
+                        disableBackupBackBtn();
                     }
                 }
                 return false;
             }
-        });*/
+        });
+
+        //Подсказки при наведении на кнопку отката версии плана
+        backupBackBtn.setOnHoverListener(new View.OnHoverListener() {
+            int counter=0;
+            boolean flag_toast_shown=false;
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                float distance = event.getAxisValue(MotionEvent.AXIS_DISTANCE);
+                if (distance>leftDistance && distance<rightDistance){
+                    counter++;
+                }else{
+                    counter=0;
+                    flag_toast_shown=false;
+                }
+                if (counter>=durationToHover && !flag_toast_shown){
+                    Toast toast = Toast.makeText(Variables.activity,
+                            "Откат версии плана", Toast.LENGTH_LONG);
+                    toast.show();
+                    flag_toast_shown=true;
+                }
+                return false;
+            }
+        });
 
         rotatePlanBtn.setOnTouchListener(new View.OnTouchListener() {       //Кнопка поворота плана
             @Override
@@ -296,6 +365,29 @@ public class Buttons {
                     rotatePlanBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
                 }else{
                     disableRotatePlanBtn();
+                }
+                return false;
+            }
+        });
+
+        //Подсказки при наведении на кнопку вращения плана
+        rotatePlanBtn.setOnHoverListener(new View.OnHoverListener() {
+            int counter=0;
+            boolean flag_toast_shown=false;
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                float distance = event.getAxisValue(MotionEvent.AXIS_DISTANCE);
+                if (distance>leftDistance && distance<rightDistance){
+                    counter++;
+                }else{
+                    counter=0;
+                    flag_toast_shown=false;
+                }
+                if (counter>=durationToHover && !flag_toast_shown){
+                    Toast toast = Toast.makeText(Variables.activity,
+                            "Вращение плана", Toast.LENGTH_LONG);
+                    toast.show();
+                    flag_toast_shown=true;
                 }
                 return false;
             }
@@ -390,6 +482,29 @@ public class Buttons {
             }
         });
 
+        //Подсказки при наведении на кнопку резервного сохранения файла
+        backUpFile.setOnHoverListener(new View.OnHoverListener() {
+            int counter=0;
+            boolean flag_toast_shown=false;
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                float distance = event.getAxisValue(MotionEvent.AXIS_DISTANCE);
+                if (distance>leftDistance && distance<rightDistance){
+                    counter++;
+                }else{
+                    counter=0;
+                    flag_toast_shown=false;
+                }
+                if (counter>=durationToHover && !flag_toast_shown){
+                    Toast toast = Toast.makeText(Variables.activity,
+                            "Резервное сохранение файла", Toast.LENGTH_LONG);
+                    toast.show();
+                    flag_toast_shown=true;
+                }
+                return false;
+            }
+        });
+
         selectByClickBtn.setOnTouchListener(new View.OnTouchListener() {        //Выбор светильников нажатием по ним
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -414,6 +529,29 @@ public class Buttons {
             }
         });
 
+        //Подсказки при наведении на кнопку выбора по нажатию
+        selectByClickBtn.setOnHoverListener(new View.OnHoverListener() {
+            int counter=0;
+            boolean flag_toast_shown=false;
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                float distance = event.getAxisValue(MotionEvent.AXIS_DISTANCE);
+                if (distance>leftDistance && distance<rightDistance){
+                    counter++;
+                }else{
+                    counter=0;
+                    flag_toast_shown=false;
+                }
+                if (counter>=durationToHover && !flag_toast_shown){
+                    Toast toast = Toast.makeText(Variables.activity,
+                            "Выбор светильников по нажатию", Toast.LENGTH_LONG);
+                    toast.show();
+                    flag_toast_shown=true;
+                }
+                return false;
+            }
+        });
+
         screenShotBtn.setOnTouchListener(new View.OnTouchListener() {       //Активация кнопки создания скриншота
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -421,6 +559,29 @@ public class Buttons {
                 thread.start();
                 SavePlanToJpgThread thread1 = new SavePlanToJpgThread(); //Создаем новый поток для экспорта плана в JPG
                 thread1.start();     //Запускаем поток
+                return false;
+            }
+        });
+
+        //Подсказки при наведении на кнопку эксорта плана в картинку со светильниками
+        screenShotBtn.setOnHoverListener(new View.OnHoverListener() {
+            int counter=0;
+            boolean flag_toast_shown=false;
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                float distance = event.getAxisValue(MotionEvent.AXIS_DISTANCE);
+                if (distance>leftDistance && distance<rightDistance){
+                    counter++;
+                }else{
+                    counter=0;
+                    flag_toast_shown=false;
+                }
+                if (counter>=durationToHover && !flag_toast_shown){
+                    Toast toast = Toast.makeText(Variables.activity,
+                            "Экспорт плана в картинку со светильниками", Toast.LENGTH_LONG);
+                    toast.show();
+                    flag_toast_shown=true;
+                }
                 return false;
             }
         });
@@ -653,6 +814,29 @@ public class Buttons {
             }
         });
 
+        //Подсказки при наведении на кнопку вставки светильника
+        pasteBtn.setOnHoverListener(new View.OnHoverListener() {
+            int counter=0;
+            boolean flag_toast_shown=false;
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                float distance = event.getAxisValue(MotionEvent.AXIS_DISTANCE);
+                if (distance>leftDistance && distance<rightDistance){
+                    counter++;
+                }else{
+                    counter=0;
+                    flag_toast_shown=false;
+                }
+                if (counter>=durationToHover && !flag_toast_shown){
+                    Toast toast = Toast.makeText(Variables.activity,
+                            "Вставка светильника", Toast.LENGTH_LONG);
+                    toast.show();
+                    flag_toast_shown=true;
+                }
+                return false;
+            }
+        });
+
         copyToBufBtn.setOnTouchListener(new View.OnTouchListener() {        //При нажатии - копируем в буфер светильника(Выделенные ранее, либо один нажатый)
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -768,6 +952,29 @@ public class Buttons {
             }
         });
 
+        //Подсказки при наведении на кнопку копирования в буфер
+        copyToBufBtn.setOnHoverListener(new View.OnHoverListener() {
+            int counter=0;
+            boolean flag_toast_shown=false;
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                float distance = event.getAxisValue(MotionEvent.AXIS_DISTANCE);
+                if (distance>leftDistance && distance<rightDistance){
+                    counter++;
+                }else{
+                    counter=0;
+                    flag_toast_shown=false;
+                }
+                if (counter>=durationToHover && !flag_toast_shown){
+                    Toast toast = Toast.makeText(Variables.activity,
+                            "Копирование светильника", Toast.LENGTH_LONG);
+                    toast.show();
+                    flag_toast_shown=true;
+                }
+                return false;
+            }
+        });
+
         selectZone.setOnTouchListener(new View.OnTouchListener() {      //При нажатии - активируется выделение зоны
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -796,6 +1003,29 @@ public class Buttons {
                             }
                         }
                         break;
+                }
+                return false;
+            }
+        });
+
+        //Подсказки при наведении на кнопку группового выбора светильников
+        selectZone.setOnHoverListener(new View.OnHoverListener() {
+            int counter=0;
+            boolean flag_toast_shown=false;
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                float distance = event.getAxisValue(MotionEvent.AXIS_DISTANCE);
+                if (distance>leftDistance && distance<rightDistance){
+                    counter++;
+                }else{
+                    counter=0;
+                    flag_toast_shown=false;
+                }
+                if (counter>=durationToHover && !flag_toast_shown){
+                    Toast toast = Toast.makeText(Variables.activity,
+                            "Групповой выбор светильников", Toast.LENGTH_LONG);
+                    toast.show();
+                    flag_toast_shown=true;
                 }
                 return false;
             }
@@ -830,6 +1060,29 @@ public class Buttons {
                             disableConfirmBtn();
                         }
                         break;
+                }
+                return false;
+            }
+        });
+
+        //Подсказки при наведении на кнопку отмены
+        cancelBtn.setOnHoverListener(new View.OnHoverListener() {
+            int counter=0;
+            boolean flag_toast_shown=false;
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                float distance = event.getAxisValue(MotionEvent.AXIS_DISTANCE);
+                if (distance>leftDistance && distance<rightDistance){
+                    counter++;
+                }else{
+                    counter=0;
+                    flag_toast_shown=false;
+                }
+                if (counter>=durationToHover && !flag_toast_shown){
+                    Toast toast = Toast.makeText(Variables.activity,
+                            "Отмена действия", Toast.LENGTH_LONG);
+                    toast.show();
+                    flag_toast_shown=true;
                 }
                 return false;
             }
@@ -1081,6 +1334,29 @@ public class Buttons {
             }
         });
 
+        //Подсказки при наведении на кнопку подтверждения
+        confirmBtn.setOnHoverListener(new View.OnHoverListener() {
+            int counter=0;
+            boolean flag_toast_shown=false;
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                float distance = event.getAxisValue(MotionEvent.AXIS_DISTANCE);
+                if (distance>leftDistance && distance<rightDistance){
+                    counter++;
+                }else{
+                    counter=0;
+                    flag_toast_shown=false;
+                }
+                if (counter>=durationToHover && !flag_toast_shown){
+                    Toast toast = Toast.makeText(Variables.activity,
+                            "Подтверждение действия", Toast.LENGTH_LONG);
+                    toast.show();
+                    flag_toast_shown=true;
+                }
+                return false;
+            }
+        });
+
         copyBtn.setOnTouchListener(new View.OnTouchListener() {     //При нажатии - активация/деактивация копирования выбором зоны
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -1097,6 +1373,29 @@ public class Buttons {
                             disableCopyBtn();
                             Variables.copyType=0;
                         }
+                return false;
+            }
+        });
+
+        //Подсказки при наведении на кнопку копирования и дальнейшего перемещния
+        copyBtn.setOnHoverListener(new View.OnHoverListener() {
+            int counter=0;
+            boolean flag_toast_shown=false;
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                float distance = event.getAxisValue(MotionEvent.AXIS_DISTANCE);
+                if (distance>leftDistance && distance<rightDistance){
+                    counter++;
+                }else{
+                    counter=0;
+                    flag_toast_shown=false;
+                }
+                if (counter>=durationToHover && !flag_toast_shown){
+                    Toast toast = Toast.makeText(Variables.activity,
+                            "Копирование и перемещение скопированных светильников", Toast.LENGTH_LONG);
+                    toast.show();
+                    flag_toast_shown=true;
+                }
                 return false;
             }
         });
@@ -1231,6 +1530,29 @@ public class Buttons {
             }
         });
 
+        //Подсказки при наведении на кнопку добавления по рядам и линиям
+        addMultipleRows.setOnHoverListener(new View.OnHoverListener() {
+            int counter=0;
+            boolean flag_toast_shown=false;
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                float distance = event.getAxisValue(MotionEvent.AXIS_DISTANCE);
+                if (distance>leftDistance && distance<rightDistance){
+                    counter++;
+                }else{
+                    counter=0;
+                    flag_toast_shown=false;
+                }
+                if (counter>=durationToHover && !flag_toast_shown){
+                    Toast toast = Toast.makeText(Variables.activity,
+                            "Добавление по рядам и линиям", Toast.LENGTH_LONG);
+                    toast.show();
+                    flag_toast_shown=true;
+                }
+                return false;
+            }
+        });
+
         addMultipleBtn.setOnTouchListener(new View.OnTouchListener() {      //При нажатии - активация добавления множества светильников
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -1243,6 +1565,29 @@ public class Buttons {
                         }else {         //Деактивация
                             disableMultipleAddBtn();
                         }
+                return false;
+            }
+        });
+
+        //Подсказки при наведении на кнопку добавления
+        addMultipleBtn.setOnHoverListener(new View.OnHoverListener() {
+            int counter=0;
+            boolean flag_toast_shown=false;
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                float distance = event.getAxisValue(MotionEvent.AXIS_DISTANCE);
+                if (distance>leftDistance && distance<rightDistance){
+                    counter++;
+                }else{
+                    counter=0;
+                    flag_toast_shown=false;
+                }
+                if (counter>=durationToHover && !flag_toast_shown){
+                    Toast toast = Toast.makeText(Variables.activity,
+                            "Добавление по нажатию", Toast.LENGTH_LONG);
+                    toast.show();
+                    flag_toast_shown=true;
+                }
                 return false;
             }
         });
@@ -1296,6 +1641,29 @@ public class Buttons {
             }
         });
 
+        //Подсказки при наведении на кнопку удаления
+        removeLamp.setOnHoverListener(new View.OnHoverListener() {
+            int counter=0;
+            boolean flag_toast_shown=false;
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                float distance = event.getAxisValue(MotionEvent.AXIS_DISTANCE);
+                if (distance>leftDistance && distance<rightDistance){
+                    counter++;
+                }else{
+                    counter=0;
+                    flag_toast_shown=false;
+                }
+                if (counter>=durationToHover && !flag_toast_shown){
+                    Toast toast = Toast.makeText(Variables.activity,
+                            "Удаление светильников", Toast.LENGTH_LONG);
+                    toast.show();
+                    flag_toast_shown=true;
+                }
+                return false;
+            }
+        });
+
 
         saveFile.setOnTouchListener(new View.OnTouchListener() {         //При нажатии - активация функции сохранения в файл
             @Override
@@ -1310,6 +1678,29 @@ public class Buttons {
                             threadlog.start();
                         }
                         break;
+                }
+                return false;
+            }
+        });
+
+        //Подсказки при наведении на кнопку сохранения файла
+        saveFile.setOnHoverListener(new View.OnHoverListener() {
+            int counter=0;
+            boolean flag_toast_shown=false;
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                float distance = event.getAxisValue(MotionEvent.AXIS_DISTANCE);
+                if (distance>leftDistance && distance<rightDistance){
+                    counter++;
+                }else{
+                    counter=0;
+                    flag_toast_shown=false;
+                }
+                if (counter>=durationToHover && !flag_toast_shown){
+                    Toast toast = Toast.makeText(Variables.activity,
+                            "Сохранение файла", Toast.LENGTH_LONG);
+                    toast.show();
+                    flag_toast_shown=true;
                 }
                 return false;
             }
@@ -1330,6 +1721,29 @@ public class Buttons {
             }
         });
 
+        //Подсказки при наведении на кнопку изменения масштаба
+        scaleBtn.setOnHoverListener(new View.OnHoverListener() {
+            int counter=0;
+            boolean flag_toast_shown=false;
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                float distance = event.getAxisValue(MotionEvent.AXIS_DISTANCE);
+                if (distance>leftDistance && distance<rightDistance){
+                    counter++;
+                }else{
+                    counter=0;
+                    flag_toast_shown=false;
+                }
+                if (counter>=durationToHover && !flag_toast_shown){
+                    Toast toast = Toast.makeText(Variables.activity,
+                            "Изменение размера светильника", Toast.LENGTH_LONG);
+                    toast.show();
+                    flag_toast_shown=true;
+                }
+                return false;
+            }
+        });
+
         rotateLamp.setOnTouchListener(new View.OnTouchListener() {      //При нажатии - активация/деактивация функции вращения светильника
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -1344,6 +1758,29 @@ public class Buttons {
                             disableRotateBtn();
                         }
                         break;
+                }
+                return false;
+            }
+        });
+
+        //Подсказки при наведении на кнопку вращения
+        rotateLamp.setOnHoverListener(new View.OnHoverListener() {
+            int counter=0;
+            boolean flag_toast_shown=false;
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                float distance = event.getAxisValue(MotionEvent.AXIS_DISTANCE);
+                if (distance>leftDistance && distance<rightDistance){
+                    counter++;
+                }else{
+                    counter=0;
+                    flag_toast_shown=false;
+                }
+                if (counter>=durationToHover && !flag_toast_shown){
+                    Toast toast = Toast.makeText(Variables.activity,
+                            "Вращение светильников", Toast.LENGTH_LONG);
+                    toast.show();
+                    flag_toast_shown=true;
                 }
                 return false;
             }
@@ -1459,6 +1896,29 @@ public class Buttons {
             }
         });
 
+        //Подсказки при наведении на кнопку экспорта в Excel
+        exportExel.setOnHoverListener(new View.OnHoverListener() {
+            int counter=0;
+            boolean flag_toast_shown=false;
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                float distance = event.getAxisValue(MotionEvent.AXIS_DISTANCE);
+                if (distance>leftDistance && distance<rightDistance){
+                    counter++;
+                }else{
+                    counter=0;
+                    flag_toast_shown=false;
+                }
+                if (counter>=durationToHover && !flag_toast_shown){
+                    Toast toast = Toast.makeText(Variables.activity,
+                            "Экспортирование в Excel", Toast.LENGTH_LONG);
+                    toast.show();
+                    flag_toast_shown=true;
+                }
+                return false;
+            }
+        });
+
 
         Variables.lampDop.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -1556,6 +2016,29 @@ public class Buttons {
             }
         });
 
+        //Подсказки при наведении на кнопку добавления
+        addBtn.setOnHoverListener(new View.OnHoverListener() {
+            int counter=0;
+            boolean flag_toast_shown=false;
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                float distance = event.getAxisValue(MotionEvent.AXIS_DISTANCE);
+                if (distance>leftDistance && distance<rightDistance){
+                    counter++;
+                }else{
+                    counter=0;
+                    flag_toast_shown=false;
+                }
+                if (counter>=durationToHover && !flag_toast_shown){
+                    Toast toast = Toast.makeText(Variables.activity,
+                            "Добавление по маркеру", Toast.LENGTH_LONG);
+                    toast.show();
+                    flag_toast_shown=true;
+                }
+                return false;
+            }
+        });
+
         moveBtn.setOnTouchListener(new View.OnTouchListener()                       //Слушатель нажатий на кнопку активации перемещения
         {
             @Override
@@ -1608,6 +2091,29 @@ public class Buttons {
             }
         });
 
+        //Подсказки при наведении на кнопку добавления
+        moveBtn.setOnHoverListener(new View.OnHoverListener() {
+            int counter=0;
+            boolean flag_toast_shown=false;
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                float distance = event.getAxisValue(MotionEvent.AXIS_DISTANCE);
+                if (distance>leftDistance && distance<rightDistance){
+                    counter++;
+                }else{
+                    counter=0;
+                    flag_toast_shown=false;
+                }
+                if (counter>=durationToHover && !flag_toast_shown){
+                    Toast toast = Toast.makeText(Variables.activity,
+                            "Перемещение светильников", Toast.LENGTH_LONG);
+                    toast.show();
+                    flag_toast_shown=true;
+                }
+                return false;
+            }
+        });
+
         uploadBtn.setOnTouchListener(new View.OnTouchListener() {   //Кнопка загрузки файла с планом
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -1625,6 +2131,29 @@ public class Buttons {
                             Variables.activity.startActivityForResult(Intent.createChooser(intent, "Select a file"), 123);
                         }
                         break;
+                }
+                return false;
+            }
+        });
+
+        //Подсказки при наведении на кнопку открытия плана
+        uploadBtn.setOnHoverListener(new View.OnHoverListener() {
+            int counter=0;
+            boolean flag_toast_shown=false;
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                float distance = event.getAxisValue(MotionEvent.AXIS_DISTANCE);
+                if (distance>leftDistance && distance<rightDistance){
+                    counter++;
+                }else{
+                    counter=0;
+                    flag_toast_shown=false;
+                }
+                if (counter>=durationToHover && !flag_toast_shown){
+                    Toast toast = Toast.makeText(Variables.activity,
+                            "Открытие плана", Toast.LENGTH_LONG);
+                    toast.show();
+                    flag_toast_shown=true;
                 }
                 return false;
             }
@@ -1746,6 +2275,20 @@ public class Buttons {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if(Variables.plan.touchedRoom!=null) {
+                    /*if (Variables.plan.touchedRoom.getHoursPerDay() == 0){
+                        if (Variables.typeOfBuilding.getSelectedItemPosition()==0){
+                            int pos = Variables.defaultHoursDetSad[Variables.plan.touchedRoom.getType_pos()];
+                            Variables.hoursPerDay.setSelection(pos);
+                        }
+                        else if (Variables.typeOfBuilding.getSelectedItemPosition()==1 && Variables.daysOfWorkDefault.getSelectedItemPosition()==6){
+                            Variables.plan.touchedRoom.setHoursPerDay(Variables.defaultHoursSchool5Days[Variables.plan.touchedRoom.getType_pos()]);
+                            Variables.hoursPerDay.setSelection(Variables.plan.touchedRoom.getHoursPerDay());
+                        }
+                        else if (Variables.typeOfBuilding.getSelectedItemPosition()==1 && Variables.daysOfWorkDefault.getSelectedItemPosition()==7){
+                            Variables.plan.touchedRoom.setHoursPerDay(Variables.defaultHoursSchool6Days[Variables.plan.touchedRoom.getType_pos()][0]);
+                            Variables.plan.touchedRoom.setHoursPerSunday(Variables.defaultHoursSchool6Days[0][Variables.plan.touchedRoom.getType_pos()]);
+                        }
+                    }*/
                     Variables.plan.touchedRoom.setType_pos(Variables.type.getSelectedItemPosition());
                     for (Lamp lamp:Variables.plan.touchedRoom.lamps){
                         if (lamp.getTypeRoom()==lastType) {
@@ -2345,6 +2888,7 @@ public class Buttons {
         Variables.multiplepos=-1;
         Variables.multiplelampType=-1;
     }
+
     private void disableMultipleRowsAddBtn(){
         for (ImageView img:Variables.multipleAddTempVector){
             try {
@@ -2608,6 +3152,7 @@ public class Buttons {
         Variables.hoursPerSundayLamp.setVisibility(View.GONE);
     }
 
+
     private static File createImageFile(boolean type) throws IOException {          //Функция создания фотографии
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -2669,6 +3214,23 @@ public class Buttons {
         disableConfirmBtn();
         Variables.selectByClickFlag=false;
     }
+
+    private void disableBackupBackBtn(){
+        backupBackBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+        FrameLayout gridBackup = Variables.activity.findViewById(R.id.BackUpFrame);
+        GridLayout backUpLay = Variables.activity.findViewById(R.id.BackUpGrid);
+        //backUpLay.removeAllViews();
+        for (int i=0;i<backUpLay.getChildCount();i++){
+            backUpLay.getChildAt(i).setOnTouchListener(null);
+            backUpLay.removeView(backUpLay.getChildAt(i));
+        }
+        gridBackup.setVisibility(View.GONE);
+        Variables.planLay.setVisibility(View.VISIBLE);
+        Variables.getAllBackUpDataFlag = false;
+        Variables.backupBackVector.clear();
+    }
+
+
 
 
     public static void createNewPhotoRoom(File f,boolean type){     //Создание новой фотографии комнаты(светильника)
@@ -2827,6 +3389,7 @@ public class Buttons {
                 }
             }
         }
+
     }
     //Конец деактивации функций
 }
