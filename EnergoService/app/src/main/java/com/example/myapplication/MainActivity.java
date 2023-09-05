@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
                 loggingThread threadlog = new loggingThread();
                 threadlog.start();      //Логгирование происходит без условий
             }
-        }, 0, 60*1000); // каждую минуту-сохранение файла
+        }, 0, 60*1000); // каждую минуту-сохранение файла;
 
 
 

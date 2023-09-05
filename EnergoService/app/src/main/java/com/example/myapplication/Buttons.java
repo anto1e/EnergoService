@@ -143,12 +143,12 @@ public class Buttons {
             public boolean onTouch(View v, MotionEvent event) {
 
                 if (active!=v){             //Если нажата неактивная, делаем ее активной, предыдущую неактивной
-                    Variables.refreshLampsToRooms(Variables.current_floor);     //Перепривязка светильников к комнате
+                    /*Variables.refreshLampsToRooms(Variables.current_floor);     //Перепривязка светильников к комнате
                     try {
                         Variables.parser.saveFile(Variables.filePath);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
-                    }
+                    }*/
                     //Очистка флагов и полей///
                     Variables.fileSaved = true;
                     Variables.switchFlag=true;
@@ -281,11 +281,13 @@ public class Buttons {
             public boolean onTouch(View v, MotionEvent event) {
                 if (Variables.current_floor!=null) {
                     if (!Variables.getAllBackUpDataFlag) {
+                        FrameLayout gridBackup = Variables.activity.findViewById(R.id.BackUpFrame);
+                        GridLayout backUpLay = Variables.activity.findViewById(R.id.BackUpGrid);
+                        backUpLay.removeAllViews();
+                        Variables.buttons.disableBackupBackBtn();
                         Variables.planLay.setVisibility(View.GONE);
                         Variables.getAllBackUpDataFlag = true;
                         Variables.parser.getAllBackUpBackData();
-                        FrameLayout gridBackup = Variables.activity.findViewById(R.id.BackUpFrame);
-                        GridLayout backUpLay = Variables.activity.findViewById(R.id.BackUpGrid);
                         gridBackup.setVisibility(View.VISIBLE);
                         backupBackBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
                         short counter=0;
@@ -309,7 +311,13 @@ public class Buttons {
                                                 if (text.equals(split_backup_data[0])) {
                                                     try {
                                                         Variables.parser.applyLoadBackupBack(Variables.backupBackVector.elementAt(i));
-                                                        disableBackupBackBtn();
+                                                        //Variables.buttons.disableBackupBackBtn();
+                                                        backupBackBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
+                                                        gridBackup.setVisibility(View.GONE);
+                                                        Variables.planLay.setVisibility(View.VISIBLE);
+                                                        Variables.getAllBackUpDataFlag = false;
+                                                        Variables.backupBackVector.clear();
+
                                                         break;
                                                     } catch (JSONException e) {
                                                         throw new RuntimeException(e);
@@ -2275,9 +2283,17 @@ public class Buttons {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if(Variables.plan.touchedRoom!=null) {
-                    /*if (Variables.plan.touchedRoom.getHoursPerDay() == 0){
+                    Variables.plan.touchedRoom.setType_pos(Variables.type.getSelectedItemPosition());
+                    for (Lamp lamp:Variables.plan.touchedRoom.lamps){
+                        if (lamp.getTypeRoom()==lastType) {
+                            lamp.setTypeRoom(Variables.type.getSelectedItemPosition());
+                        }
+                    }
+                    lastType=Variables.plan.touchedRoom.getType_pos();
+                     if (Variables.plan.touchedRoom.getHoursPerDay() == 0 && Variables.roomHeightDefaultCheck.isChecked()){     //Автоматическое проставление режима работы
                         if (Variables.typeOfBuilding.getSelectedItemPosition()==0){
-                            int pos = Variables.defaultHoursDetSad[Variables.plan.touchedRoom.getType_pos()];
+                            Variables.plan.touchedRoom.setHoursPerDay(Variables.defaultHoursDetSad[Variables.plan.touchedRoom.getType_pos()]);
+                            int pos = Variables.plan.touchedRoom.getHoursPerDay();
                             Variables.hoursPerDay.setSelection(pos);
                         }
                         else if (Variables.typeOfBuilding.getSelectedItemPosition()==1 && Variables.daysOfWorkDefault.getSelectedItemPosition()==6){
@@ -2286,16 +2302,11 @@ public class Buttons {
                         }
                         else if (Variables.typeOfBuilding.getSelectedItemPosition()==1 && Variables.daysOfWorkDefault.getSelectedItemPosition()==7){
                             Variables.plan.touchedRoom.setHoursPerDay(Variables.defaultHoursSchool6Days[Variables.plan.touchedRoom.getType_pos()][0]);
-                            Variables.plan.touchedRoom.setHoursPerSunday(Variables.defaultHoursSchool6Days[0][Variables.plan.touchedRoom.getType_pos()]);
-                        }
-                    }*/
-                    Variables.plan.touchedRoom.setType_pos(Variables.type.getSelectedItemPosition());
-                    for (Lamp lamp:Variables.plan.touchedRoom.lamps){
-                        if (lamp.getTypeRoom()==lastType) {
-                            lamp.setTypeRoom(Variables.type.getSelectedItemPosition());
+                            Variables.hoursPerDay.setSelection(Variables.plan.touchedRoom.getHoursPerDay());
+                            Variables.plan.touchedRoom.setHoursPerWeekend(Variables.defaultHoursSchool6Days[Variables.plan.touchedRoom.getType_pos()][1]);
+                            Variables.hoursPerWeekend.setSelection(Variables.plan.touchedRoom.getHoursPerWeekend());
                         }
                     }
-                    lastType=Variables.plan.touchedRoom.getType_pos();
                 }
             }
 
@@ -2386,7 +2397,7 @@ public class Buttons {
                             lamp.setHoursWork(Variables.hoursPerDay.getSelectedItemPosition());
                         }
                     }
-                    lastHours = Variables.plan.touchedRoom.getHoursPerDay();
+                    //lastHours = Variables.plan.touchedRoom.getHoursPerDay();
                 }
             }
 
@@ -3215,15 +3226,15 @@ public class Buttons {
         Variables.selectByClickFlag=false;
     }
 
-    private void disableBackupBackBtn(){
+    void disableBackupBackBtn(){
         backupBackBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
         FrameLayout gridBackup = Variables.activity.findViewById(R.id.BackUpFrame);
         GridLayout backUpLay = Variables.activity.findViewById(R.id.BackUpGrid);
-        //backUpLay.removeAllViews();
-        for (int i=0;i<backUpLay.getChildCount();i++){
+        backUpLay.removeAllViews();
+        /*for (int i=0;i<backUpLay.getChildCount();i++){
             backUpLay.getChildAt(i).setOnTouchListener(null);
             backUpLay.removeView(backUpLay.getChildAt(i));
-        }
+        }*/
         gridBackup.setVisibility(View.GONE);
         Variables.planLay.setVisibility(View.VISIBLE);
         Variables.getAllBackUpDataFlag = false;

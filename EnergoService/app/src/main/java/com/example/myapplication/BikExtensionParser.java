@@ -555,7 +555,7 @@ public class BikExtensionParser {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            
         }
     }
 
@@ -600,10 +600,16 @@ public class BikExtensionParser {
 
     }
     public void applyLoadBackupBack(String date) throws JSONException, InterruptedException {
-        for (int i=0;i<Variables.planLay.getChildCount();i++){
-            if (Variables.planLay.getChildAt(i)!=Variables.image){
-                Variables.planLay.removeView(Variables.planLay.getChildAt(i));
+        Variables.activity.runOnUiThread(() -> {        //Включаем вращение
+            for (int i = Variables.planLay.getChildCount()-1; i >= 0; i--) {
+                View v = Variables.planLay.getChildAt(i);
+                if (v!=Variables.image) {
+                    Variables.planLay.removeView(v);
+                }
             }
+        });
+        for (Room room:Variables.current_floor.rooms){
+            room.lamps.clear();
         }
         Variables.roofTypeDefaultText.setText("");      //Очищаем поле высоты по умолчанию
         Variables.roomHeightDefaultCheck.setChecked(false);     //Отключение чекбокса высоты по умолчанию
@@ -624,47 +630,7 @@ public class BikExtensionParser {
                     roomInfo = false;
                     lampsInfo = false;
                     floorInfo = true;
-                }
-                if (buildingInfo) {      //Если информация о здании
-                    if (split_backup_data[countLine].length() > 2 && (split_backup_data[countLine].charAt(0) == 'H' || split_backup_data[countLine].charAt(0) == 'S' || split_backup_data[countLine].charAt(0) == 'R') && split_backup_data[countLine].charAt(1) == '@') {
-                        if (split_backup_data[countLine].charAt(0) == 'S') {  //Если это информация о размерах изображения
-                            String temp = split_backup_data[countLine].substring(2);
-                            String[] subStr = temp.split("/");
-                            Variables.lastHeight = Double.parseDouble(subStr[0]);
-                            Variables.lastWidth = Double.parseDouble(subStr[1]);
-                        } else if (split_backup_data[countLine].charAt(0) == 'R') {     //Иначе это информация о комнатах
-                            String temp = split_backup_data[countLine].substring(2);
-                            JSONObject roomObj = new JSONObject(temp.substring(temp.indexOf("{"), temp.lastIndexOf("}") + 1));
-                            JSONArray arrX = roomObj.getJSONArray("arrayX");
-                            JSONArray arrY = roomObj.getJSONArray("arrayY");
-                            double[] tempX = new double[arrX.length()];
-                            double[] tempY = new double[arrY.length()];
-                            Variables.current_floor.resizeCoeffs();
-                            for (int i = 0; i < arrX.length(); i++) {       //Изменяем координаты точек разметки в зависимости от размера экрана
-                                tempX[i] = arrX.getDouble(i) / Variables.current_floor.resizeCoeffX;
-                                tempY[i] = arrY.getDouble(i) / Variables.current_floor.resizeCoeffY;
-                            }
-                            try {
-                                Room room = new Room(roomObj.getString("number"), tempX, tempY);
-                                room.buildPoligon();
-                                Variables.current_floor.rooms.add(room);
-                            } catch (RuntimeException ex) {
-                            }
-                        } else if (split_backup_data[countLine].charAt(0) == 'H') {     //Информация о зданиии
-                            String temp = split_backup_data[countLine].substring(2);
-                            String[] subStr = temp.split("@");
-                            Variables.current_floor.setName(subStr[0]);
-                            Variables.current_floor.setFloor(subStr[1]);
-                            Variables.current_floor.setAdress(subStr[2]);
-                            EditText buildingName = Variables.activity.findViewById(R.id.buildingName);
-                            EditText floor1 = Variables.activity.findViewById(R.id.floorNumber);
-                            EditText adress = Variables.activity.findViewById(R.id.adress);
-                            buildingName.setText(Variables.current_floor.getName());
-                            floor1.setText(Variables.current_floor.getFloor());
-                            adress.setText(Variables.current_floor.getAdress());
-                        }
-                    }
-                } else if (roomInfo) {         //Если информация о комнатах
+                }if (roomInfo) {         //Если информация о комнатах
                     if (split_backup_data[countLine].length() > 10 && split_backup_data[countLine].charAt(0) != '/') {
                         String[] split_number = split_backup_data[countLine].split("%");
                         if (split_number.length > 1) {

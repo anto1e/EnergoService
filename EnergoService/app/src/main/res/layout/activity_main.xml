@@ -496,7 +496,55 @@
                 android:background="@color/black"
                 />
 
+            <ImageButton
+                android:id="@+id/saveFile"
+                android:scaleType="fitCenter"
+                android:src="@drawable/save"
+                android:layout_marginLeft="0dp"
+                android:layout_width="30dp"
+                android:background="@color/white"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="0dp"
+                android:layout_height="30dp"
+                android:contentDescription="TODO">
+            </ImageButton>
 
+            <ImageView
+                android:id="@+id/backupBtn"
+                android:scaleType="fitCenter"
+                android:src="@drawable/backupbtn"
+                android:layout_marginLeft="10dp"
+                android:layout_width="30dp"
+                android:background="@color/white"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="0dp"
+                android:layout_height="30dp">
+            </ImageView>
+
+            <ImageButton
+                android:id="@+id/excelExport"
+                android:scaleType="fitCenter"
+                android:src="@drawable/excel"
+                android:layout_width="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:layout_marginBottom="0dp"
+                android:layout_height="30dp"
+                android:contentDescription="TODO">
+            </ImageButton>
+
+            <ImageView
+                android:id="@+id/screenShotBtn"
+                android:scaleType="fitCenter"
+                android:src="@drawable/screenshot"
+                android:layout_marginLeft="10dp"
+                android:layout_width="30dp"
+                android:background="@color/white"
+                android:layout_marginBottom="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_height="30dp">
+            </ImageView>
 
             <ImageButton
                 android:id="@+id/openFile"
@@ -523,48 +571,12 @@
             </ImageButton>
 
             <ImageButton
-                android:id="@+id/saveFile"
-                android:scaleType="fitCenter"
-                android:src="@drawable/save"
-                android:layout_marginLeft="10dp"
-                android:layout_width="30dp"
-                android:background="@color/white"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_height="30dp"
-                android:contentDescription="TODO">
-            </ImageButton>
-            <ImageButton
-                android:id="@+id/excelExport"
-                android:scaleType="fitCenter"
-                android:src="@drawable/excel"
-                android:layout_width="30dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/white"
-                android:layout_marginBottom="5dp"
-                android:layout_height="30dp"
-                android:contentDescription="TODO">
-            </ImageButton>
-
-            <ImageView
-                android:id="@+id/screenShotBtn"
-                android:scaleType="fitCenter"
-                android:src="@drawable/screenshot"
-                android:layout_marginLeft="0dp"
-                android:layout_width="30dp"
-                android:background="@color/white"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="0dp"
-                android:layout_height="30dp">
-            </ImageView>
-            <ImageButton
                 android:id="@+id/cancelBtn"
                 android:scaleType="fitCenter"
                 android:src="@drawable/close"
                 android:layout_width="30dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="0dp"
+                android:layout_marginTop="5dp"
                 android:background="@color/grey"
                 android:layout_marginBottom="5dp"
                 android:layout_height="30dp">
@@ -575,19 +587,9 @@
                 android:src="@drawable/comfirmbtn"
                 android:layout_width="30dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="0dp"
+                android:layout_marginTop="5dp"
                 android:padding="2dp"
                 android:background="@color/grey"
-                android:layout_marginBottom="5dp"
-                android:layout_height="30dp">
-            </ImageView>
-            <ImageView
-                android:id="@+id/backupBtn"
-                android:scaleType="fitCenter"
-                android:src="@drawable/backupbtn"
-                android:layout_marginLeft="10dp"
-                android:layout_width="30dp"
-                android:background="@color/white"
                 android:layout_marginBottom="5dp"
                 android:layout_height="30dp">
             </ImageView>

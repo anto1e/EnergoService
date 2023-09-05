@@ -185,11 +185,11 @@ public class Variables {
     static String[] typeOfBuildingArr = {"Детский сад","Школа","Больница","Другое"};         //Тип здания
 
     static int[] defaultHoursDetSad = {0,5,4,6,1,6,6,2,5,3,6,5,6,6,4,2,3,4,4,1,0};
-    static int[] defaultHoursSchool5Days = {0,5,6,6,4,1,6,6,6,2,5,3,6,6,4,6,6,4,1,0};
-    static int[][] defaultHoursSchool6Days = {{0,0},{5,4},{6,5},{6,0},{4,4},{1,0},{6,4},{6,0},{6,4},{2,1},{5,4},{3,3},{6,0},{6,5},{4,3},{6,5},{6,4},{4,3},{1,0},{0,0}};
+    static int[] defaultHoursSchool5Days = {0,5,6,6,4,1,6,6,6,2,5,3,6,6,4,6,6,4,1,6,0};
+    static int[][] defaultHoursSchool6Days = {{0,0},{5,4},{6,5},{6,0},{4,4},{1,0},{6,4},{6,0},{6,4},{2,1},{5,4},{3,3},{6,0},{6,5},{4,3},{6,5},{6,4},{4,3},{1,0},{6,4},{0,0}};
 
     static String[] typesOfRoomsDetSad = {"Служебное помещение","Актовый зал","Гардероб","Групповая","ГРЩ","Кабинет", "Коридор","Кладовая","Лестница","Моечная","Медкабинет","Музыкальный зал","Пищеблок","Прачечная","Раздевалка","Спальная", "Санузел","Спортзал",  "Тамбур","Техническое помещение","Другое"};            //Типы помещений(детские сады)
-    static String[] typesOfRoomsSchools = {"Служебное помещение","Актовый зал","Бассейн","Библиотека","Гардероб","ГРЩ","Учебный кабинет", "Кабинет", "Коридор","Кладовая","Лестница","Санузел", "Медкабинет","Пищеблок","Раздевалка","Столовая","Спортзал","Тамбур","Техническое помещение","Другое"};            //Типы помещений(школы)
+    static String[] typesOfRoomsSchools = {"Служебное помещение","Актовый зал","Бассейн","Библиотека","Гардероб","ГРЩ","Учебный кабинет", "Кабинет", "Коридор","Кладовая","Лестница","Санузел", "Медкабинет","Пищеблок","Раздевалка","Столовая","Спортзал","Тамбур","Техническое помещение","Цех","Другое"};            //Типы помещений(школы)
     static String[] typesOfRoomsHospitals = {"Служебное помещение","Актовый зал","Бассейн","Гардероб","ГРЩ","Кабинет врача", "Кабинет", "Санузел", "Коридор","Кладовая","Лестница", "Медкабинет","Палата","Пищеблок","Процедурная","Спортзал","Столовая","Тамбур","Другое"};            //Типы помещений(больницы)
     static String[] typesOfRoomsOthers = {"Служебное помещение","Коридор", "Кабинет", "Санузел", "Служебное помещение", "Тамбур","Лестница","Спортзал","Пищеблок","Актовый зал","Медкабинет","Кладовая","Столовая","Процедурный кабинет","Палата","Комната","Учебный кабинет","Душевая","Гардероб","Другое"};            //Типы помещений(больницы)
 
@@ -225,7 +225,7 @@ public class Variables {
     };
 
     public static  final Integer[] OutsideImageId = {              //Изображения наружных светильников
-            R.drawable.drl250,R.drawable.dnat250,R.drawable.mgl250,R.drawable.diod50,R.drawable.shar125,R.drawable.shar250,R.drawable.drl400,R.drawable.dnat400,R.drawable.mgl400,R.drawable.drl125,R.drawable.drl700,R.drawable.drl1000,R.drawable.dnat70,R.drawable.dnat100,R.drawable.dnat150,R.drawable.mgl500,R.drawable.mgl1000,R.drawable.diod30,R.drawable.diod70,R.drawable.diod100
+            R.drawable.drl250,R.drawable.dnat250,R.drawable.mgl250,R.drawable.diod50,R.drawable.lampnakal60,R.drawable.lampkll15,R.drawable.lampdiod12,R.drawable.shar125,R.drawable.shar250,R.drawable.drl400,R.drawable.dnat400,R.drawable.mgl400,R.drawable.drl125,R.drawable.drl700,R.drawable.drl1000,R.drawable.dnat70,R.drawable.dnat100,R.drawable.dnat150,R.drawable.mgl500,R.drawable.mgl1000,R.drawable.diod30,R.drawable.diod70,R.drawable.diod100
     };
 
 
@@ -267,7 +267,7 @@ public class Variables {
             "СД 12Вт","СД 10Вт","КЛЛ 18Вт","КЛЛ 20Вт","КЛЛ 25Вт","КЛЛ 30Вт","СД 15Вт","СД 50Вт"
     };
     public static final String[] lampDiodsNames = {             //Названия светодиодных светильников
-            "4*9Вт","4*9Вт","2*18Вт","2*9Вт","12Вт","24Вт","12Вт","12Вт","4*10Вт","4*10Вт","2*20Вт","10Вт","15Вт"
+            "36Вт","36Вт","36Вт","18Вт","12Вт","24Вт","12Вт","12Вт","40Вт","40Вт","40Вт","10Вт","15Вт"
     };
     public static final String[] lampDoskiNames = {             //Названия светодиодных светильников
             "1*36Вт","1*18Вт","1*58Вт","1*24Вт","1*28Вт","1*52Вт","2*36Вт","2*58Вт","2*10Вт"
@@ -279,7 +279,7 @@ public class Variables {
             "4*9Вт","4*9Вт","2*18Вт","2*9Вт","1*18Вт","1*9Вт","ЛН 60Вт","КЛЛ 15Вт","Неизв.","Неизв. СД"
     };
     public static final String[] lampOutsideNames = {             //Названия наружных светильников
-            "ДРЛ-250Вт","ДНаТ-250Вт","МГЛ-250Вт","СД-50Вт","Шар 125Вт","Шар 250Вт","ДРЛ-400Вт","ДНаТ-400Вт","МГЛ-400Вт","ДРЛ-125Вт","ДРЛ-700Вт","ДРЛ-1000Вт","ДНаТ-70Вт","ДНаТ-100Вт","ДНаТ-150Вт","МГЛ-500Вт","МГЛ-1000Вт","СД-30Вт","СД-70Вт","СД-100Вт"
+            "ДРЛ-250Вт","ДНаТ-250Вт","МГЛ-250Вт","СД-50Вт","ЛН 60Вт","КЛЛ 15Вт","СД 12Вт","Шар 125Вт","Шар 250Вт","ДРЛ-400Вт","ДНаТ-400Вт","МГЛ-400Вт","ДРЛ-125Вт","ДРЛ-700Вт","ДРЛ-1000Вт","ДНаТ-70Вт","ДНаТ-100Вт","ДНаТ-150Вт","МГЛ-500Вт","МГЛ-1000Вт","СД-30Вт","СД-70Вт","СД-100Вт"
     };
 
 
@@ -290,7 +290,7 @@ public class Variables {
     public static  final String[] lampsDoskiName = {"lum1_36dosk","diod18dosk","lum1_58dosk","diod24dosk","lum1_28dosk","lum1_52dosk","lum2_36dosk","lum2_58dosk","diod20dosk"};      //Название ресурса светодиодных светильников
     public static  final String[] lampsPodvesName = {"lampnakal60podves","lampkll15podves","lampdiod12podves","lampnakal40podves","lampkll18podves","lampkll20podves","lampkll25podves","lampkll30podves","lampdiod10podves","lampdiod15podves","lampnakal75podves","lampnakal95podves"};      //Название ресурса светодиодных светильников
     public static  final String[] lampsOthersName = {"diod4_18lampsvstr","diod4_18lampsnakl","diod2_36lampsnakl","diod2_18lampsnakl","diod1_36lampsnakl","diod1_18lampsnakl","lustranakal","lustrakll","unknowntype","unknowntypediod"};        //Название ресурса других светильников
-    public static  final String[] lampsOutsideName = {"drl250","dnat250","mgl250","diod50","shar125","shar250","drl400","dnat400","mgl400","drl125","drl700","drl1000","dnat70","dnat100","dnat150","mgl500","mgl1000","diod30","diod70","diod100"};       //Название ресурса наружных светильников
+    public static  final String[] lampsOutsideName = {"drl250","dnat250","mgl250","diod50","lampnakal60","lampkll15","lampdiod12","shar125","shar250","drl400","dnat400","mgl400","drl125","drl700","drl1000","dnat70","dnat100","dnat150","mgl500","mgl1000","diod30","diod70","diod100"};       //Название ресурса наружных светильников
 
 
 
