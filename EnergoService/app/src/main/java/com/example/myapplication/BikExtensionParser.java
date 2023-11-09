@@ -400,6 +400,7 @@ public class BikExtensionParser {
             roomInfo = false;
             lampsInfo = false;
             floorInfo = false;
+            Variables.switchFlag = false;
             //////
             if (Variables.exportingJpg) {
                 floor.setImage(Variables.tempImage);
@@ -544,7 +545,7 @@ public class BikExtensionParser {
                         out.println(str12 + str2);
                     }
                     out.println("///INFORMATION ABOUT FLOOR///");   //Начинаем записывать информацию об этаже
-                    String str = Variables.current_floor.getTypeFloor() + "@" + Variables.current_floor.getHoursWordDefault() + "@" + Variables.current_floor.roofHeightDefault.elementAt(0) + "@" + Variables.current_floor.roofHeightDefault.elementAt(1) + "@" + Variables.current_floor.roofHeightDefault.elementAt(2) + "@" + Variables.current_floor.roofHeightDefault.elementAt(3);
+                    String str = Variables.typeOfBuilding.getSelectedItemPosition() + "@" + Variables.daysOfWorkDefault.getSelectedItemPosition() + "@" + Variables.current_floor.roofHeightDefault.elementAt(0) + "@" + Variables.current_floor.roofHeightDefault.elementAt(1) + "@" + Variables.current_floor.roofHeightDefault.elementAt(2) + "@" + Variables.current_floor.roofHeightDefault.elementAt(3);
                     out.println(str);
                 } catch (IOException e) {
                     //exception handling left as an exercise for the reader

@@ -66,6 +66,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -258,8 +259,37 @@ public class MainActivity extends AppCompatActivity {
                 File f;
                 if (Variables.takePhotoFlag) {
                     f = new File(String.valueOf(Variables.plan.touchedRoom.photoPaths.elementAt(Variables.plan.touchedRoom.photoPaths.size() - 1)));
+                    try {
+                        File newFile = new File(Variables.path1+"/"+Variables.current_floor.getName()+"/"+Variables.fileName);
+                        newFile.createNewFile();
+                        Variables.copyFileUsingStream(f,newFile);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        try {
+                            Files.move(f.toPath(), new File(Variables.path1+"/"+Variables.current_floor.getName()+"/"+Variables.fileName).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }*/
+                    f.delete();
+                    Variables.plan.touchedRoom.photoPaths.remove(Variables.plan.touchedRoom.photoPaths.size() - 1);
+                    Variables.plan.touchedRoom.photoPaths.add(Variables.path1+"/"+Variables.current_floor.getName()+"/"+Variables.fileName);
+                    f = new File(String.valueOf(Variables.plan.touchedRoom.photoPaths.elementAt(Variables.plan.touchedRoom.photoPaths.size() - 1)));
                     Buttons.createNewPhotoRoom(f, true);      //Создание мини-изображение в layout помещения
                 }else {
+                    f = new File(String.valueOf(Variables.plan.touchedLamp.photoPaths.elementAt(Variables.plan.touchedLamp.photoPaths.size() - 1)));
+                    try {
+                        File newFile = new File(Variables.path1+"/"+Variables.current_floor.getName()+"/"+Variables.fileName);
+                        newFile.createNewFile();
+                        Variables.copyFileUsingStream(f,newFile);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    f.delete();
+                    Variables.plan.touchedLamp.photoPaths.remove(Variables.plan.touchedLamp.photoPaths.size()-1);
+                    Variables.plan.touchedLamp.photoPaths.add(Variables.path1+"/"+Variables.current_floor.getName()+"/"+Variables.fileName);
                     f = new File(String.valueOf(Variables.plan.touchedLamp.photoPaths.elementAt(Variables.plan.touchedLamp.photoPaths.size() - 1)));
                     Buttons.createNewPhotoRoom(f, false);      //Создание мини-изображение в layout помещения
                 }
@@ -269,6 +299,7 @@ public class MainActivity extends AppCompatActivity {
                 Uri contentUri = Uri.fromFile(f);
                 mediaScanIntent.setData(contentUri);
                 this.sendBroadcast(mediaScanIntent);
+
             }
         }
         else {

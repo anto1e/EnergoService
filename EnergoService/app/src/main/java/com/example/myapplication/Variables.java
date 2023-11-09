@@ -26,6 +26,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Objects;
 import java.util.Vector;
 
@@ -118,6 +120,7 @@ public class Variables {
     static Spinner spinRows;                //Спиннер столбцов(создание множества светильников по рядам и столбцам)
     static Spinner spinLines;               //Спиннер строк(создание множества светильников по рядам и столбцам)
     static Spinner roofTypeDefault;         //Спинер типа потолка по умолчанию
+    static String fileName="";
     static EditText roofTypeDefaultText;        //Поле для ввода высоты по умолчанию
     static Vector<VerticalTextView> lampsPanels = new Vector<VerticalTextView>();       //Вектор панелей с типами светильников
     static RelativeLayout planLay;          //Layout плана
@@ -306,7 +309,14 @@ public class Variables {
         hoursLamp = activity.findViewById(R.id.roomHoursLamp);
         daysLamp = activity.findViewById(R.id.roomDaysLamp);
         typeLamp = activity.findViewById(R.id.spinTypesLamp);
-        path1 = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
+        File directory = new File("/storage/emulated/0/Documents/EnergoserviceApp");
+        if (!directory.exists()) {
+            directory.mkdir();
+            // If you require it to make the entire directory path including parents,
+            // use directory.mkdirs(); here instead.
+        }
+        path1 = "/storage/emulated/0/Documents/EnergoserviceApp";
+        //path1 = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
         montagneTypeTwo = activity.findViewById(R.id.montagneTypeTwo);
         montagneTypeTxtTwo = activity.findViewById(R.id.montagneTypeTxtTwo);
         imageWrap = activity.findViewById(R.id.imageWrap);
@@ -855,6 +865,23 @@ public class Variables {
         }
         //RelativeLayout r = (RelativeLayout) ((ViewGroup) lamp.getImage().getParent()).getParent();
         //lamp.setView();
+    }
+
+    public static void copyFileUsingStream(File source, File dest) throws IOException {
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            is = new FileInputStream(source);
+            os = new FileOutputStream(dest);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        } finally {
+            is.close();
+            os.close();
+        }
     }
 
  /*   public static boolean planLayIfChild(ImageView img){

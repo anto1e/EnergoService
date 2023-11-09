@@ -55,7 +55,7 @@ public class ExcelExporter {
             // If you require it to make the entire directory path including parents,
             // use directory.mkdirs(); here instead.
         }
-        path = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS + "/" + Variables.current_floor.getName()));
+        path = Variables.path1 + "/" + Variables.current_floor.getName();
         init();
         lastIndex=Variables.current_floor.getTypeFloor();
  /*           for (Room room:Variables.current_floor.rooms) {
@@ -589,6 +589,15 @@ public class ExcelExporter {
             cell.setValue(type);
             cell = cells.get("G" + Integer.toString(outsideRowCount));
             cell.setValue(amount);
+            cell = cells.get("F" + Integer.toString(outsideRowCount));
+            String value = cell.getFormula();
+            cell.setFormula(value);
+            cell = cells.get("H" + Integer.toString(rowCount));
+            value = cell.getFormula();
+            cell.setFormula(value);
+            cell = cells.get("O" + Integer.toString(outsideRowCount));
+            value = cell.getFormula();
+            cell.setFormula(value);
             cell = cells.get("I" + Integer.toString(outsideRowCount));
             if (Objects.equals(montagneType, "Консоль")) {
                 cell.setValue("Светильник");
@@ -606,9 +615,6 @@ public class ExcelExporter {
             cell = cells.get("L" + Integer.toString(outsideRowCount));
             cell.setValue(comments);
             cell = cells.get("F" + Integer.toString(rowCount));
-            String value = cell.getFormula();
-            cell.setFormula(value);
-            cell = cells.get("H" + Integer.toString(rowCount));
             value = cell.getFormula();
             cell.setFormula(value);
             cell.setFormula(value);
@@ -636,8 +642,6 @@ public class ExcelExporter {
             cell = cells.get("Y" + Integer.toString(rowCount));
             value = cell.getFormula();
             cell.setFormula(value);
-            cell = cells.get("O" + Integer.toString(rowCount));
-            value = cell.getFormula();
             outsideRowCount++;
         }
 

@@ -38,7 +38,7 @@ public class BackupThread extends Thread{
                 // If you require it to make the entire directory path including parents,
                 // use directory.mkdirs(); here instead.
             }
-            String path = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS + "/" + Variables.current_floor.getName() + "/backup"));
+            String path = Variables.path1 + "/" + Variables.current_floor.getName() + "/backup";
             Variables.copyFile(Variables.current_floor.getImage(), path);       //Копирование файла
 
             String[] split_path = Variables.filePath.split("/");        //Получаем путь к текущей папке

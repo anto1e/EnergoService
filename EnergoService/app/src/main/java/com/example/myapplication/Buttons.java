@@ -52,6 +52,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.security.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -162,14 +164,17 @@ public class Buttons {
                     Variables.current_floor.scale = Variables.planLay.getScaleX();
                     ////////////////////
                     v.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
-                    for (int i = Variables.planLay.getChildCount()-1; i >= 0; i--) {
+                    
+                    /*for (int i = Variables.planLay.getChildCount()-1; i >= 0; i--) {
                         View view = Variables.planLay.getChildAt(i);
                         if (view!=Variables.image) {                //Очищаем светильники с экрана
                             Variables.activity.runOnUiThread(() -> {
                                 Variables.planLay.removeView(view);
                             });
                         }
-                    }
+                    }*/
+                    Variables.planLay.removeAllViews();
+                    Variables.planLay.addView(Variables.image);
                     active= (LinearLayout) v;
                     Variables.loadingFlag=true;
                     Variables.current_floor = Variables.floors.elementAt(Variables.FloorPanelsVec.indexOf(active));     //Получаем текущий этаж
@@ -224,6 +229,19 @@ public class Buttons {
                         Variables.image.setImageResource(0);
                         Variables.planLayCleared=false;
                         Variables.image.setImageURI(Variables.selectedfile);
+                         //Variables.switchFlag = false;
+                        /*
+                        if (Variables.current_floor.getTypeFloor()>3){
+                            Variables.typeOfBuilding.setSelection(0);
+                        }else {
+                            Variables.typeOfBuilding.setSelection(Variables.current_floor.getTypeFloor());
+                        }
+                        //Variables.typeOfBuilding.setSelection(15);
+                        if (Variables.current_floor.getTypeFloor()>8){
+                            Variables.daysOfWorkDefault.setSelection(0);
+                        }else {
+                            Variables.daysOfWorkDefault.setSelection(Variables.current_floor.getHoursWordDefault());
+                        }*/
                     }
                 }
                 return false;
@@ -3170,34 +3188,40 @@ public class Buttons {
         String imageFileName="temp";
         if (type) {
             if (Variables.plan.touchedRoom != null) {
-                imageFileName = Variables.current_floor.getFloor() + ";Помещение:" + Variables.plan.touchedRoom.getNumber() + ";";
+                imageFileName = Variables.current_floor.getFloor() + ";Помещение " + Variables.plan.touchedRoom.getNumber() + ";";
             }
         }else{
             if (Variables.plan.touchedLamp != null) {
                 if (Variables.plan.touchedRoom!=null) {
-                    imageFileName = Variables.current_floor.getFloor() + ";Помещение:" + Variables.plan.touchedRoom.getNumber() + ";" + Variables.plan.touchedLamp.getType() + " " + Variables.plan.touchedLamp.getPower() + ";";
+                    imageFileName = Variables.current_floor.getFloor() + ";Помещение " + Variables.plan.touchedRoom.getNumber() + ";" + Variables.plan.touchedLamp.getType() + " " + Variables.plan.touchedLamp.getPower() + ";";
                 }else{
-                    imageFileName = Variables.current_floor.getFloor() + ";Наружное освещение:"+Variables.plan.touchedLamp.getType()+" "+Variables.plan.touchedLamp.getPower()+";";
+                    imageFileName = Variables.current_floor.getFloor() + ";Наружное освещение "+Variables.plan.touchedLamp.getType()+" "+Variables.plan.touchedLamp.getPower()+";";
                 }
                 }
         }
 //        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        String path = String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
         //String.valueOf(Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
-        File directory = new File(path+"/"+Variables.current_floor.getName());
+        File directory = new File(Variables.path1+"/"+Variables.current_floor.getName());
         if (! directory.exists()){
             directory.mkdir();
             // If you require it to make the entire directory path including parents,
             // use directory.mkdirs(); here instead.
         }
-        File storageDir = Variables.activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS+"/"+Variables.current_floor.getName());
+        File tempStorage = Variables.activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = new File(Variables.path1+"/"+Variables.current_floor.getName());
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
-                storageDir      /* directory */
+                tempStorage      /* directory */
         );
+        Variables.fileName = imageFileName+System.currentTimeMillis()+".jpg";
 
         // Save a file: path for use with ACTION_VIEW intents
+        /*if (type)
+            Variables.plan.touchedRoom.photoPaths.add(storageDir+"/"+imageFileName+".jpg");
+        else
+            Variables.plan.touchedLamp.photoPaths.add(storageDir+"/"+imageFileName+".jpg");*/
+
         if (type)
         Variables.plan.touchedRoom.photoPaths.add(image.getAbsolutePath());
         else
