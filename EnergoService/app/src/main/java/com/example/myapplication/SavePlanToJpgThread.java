@@ -1,7 +1,10 @@
 package com.example.myapplication;
 
+import static com.example.myapplication.MainActivity.maxSize;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Environment;
 import android.util.Log;
@@ -17,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -112,7 +116,20 @@ public class SavePlanToJpgThread extends Thread{
                     Variables.typeOpening=0;
                     Variables.image.setImageResource(0);
                 Variables.planLayCleared=false;
-                Variables.image.setImageURI(Variables.selectedfile);
+                try {
+                    InputStream is = Variables.activity.getContentResolver().openInputStream(Variables.selectedfile);
+                    Bitmap bm = BitmapFactory.decodeStream(is);
+                    if (bm.getWidth()>maxSize || bm.getHeight()>maxSize){
+                        ByteArrayOutputStream out = new ByteArrayOutputStream();
+                        Bitmap resizedBitmap = Bitmap.createScaledBitmap(
+                                bm, maxSize, maxSize, false);
+                        Variables.image.setImageBitmap(resizedBitmap);
+                    }else{
+                        Variables.image.setImageURI(Variables.selectedfile);
+                    }
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
             });
             Variables.activity.runOnUiThread(() -> {           //Выключаем вращение и выводим текст об удачном экспорте в эксель
                 rotationElement.clearAnimation();

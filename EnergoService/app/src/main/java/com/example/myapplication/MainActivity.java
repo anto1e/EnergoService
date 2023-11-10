@@ -53,6 +53,8 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -60,6 +62,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.math.*;
 import java.nio.charset.Charset;
@@ -74,6 +77,7 @@ import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_STORAGE = 101;
+    public static int maxSize = 4000;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -250,9 +254,36 @@ public class MainActivity extends AppCompatActivity {
                 //final String[] split = Variables.selectedfile.getPath().split(":");//split the path.
                 // Variables.filePath = split[1];
                 Variables.filePath = FileHelper.getRealPathFromURI(this, Variables.selectedfile);
-                Variables.image.setImageURI(Variables.selectedfile);
+                try {
+                    InputStream is = getContentResolver().openInputStream(Variables.selectedfile);
+                    Bitmap bm = BitmapFactory.decodeStream(is);
+                    if (bm.getWidth()>maxSize || bm.getHeight()>maxSize){
+                        ByteArrayOutputStream out = new ByteArrayOutputStream();
+                        Bitmap resizedBitmap = Bitmap.createScaledBitmap(
+                                bm, maxSize, maxSize, false);
+                        Variables.image.setImageBitmap(resizedBitmap);
+                    }else{
+                        Variables.image.setImageURI(Variables.selectedfile);
+                    }
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
             }else{
-                Variables.image.setImageURI(Variables.selectedfile);
+
+                try {
+                    InputStream is = getContentResolver().openInputStream(Variables.selectedfile);
+                    Bitmap bm = BitmapFactory.decodeStream(is);
+                    if (bm.getWidth()>maxSize || bm.getHeight()>maxSize){
+                        ByteArrayOutputStream out = new ByteArrayOutputStream();
+                        Bitmap resizedBitmap = Bitmap.createScaledBitmap(
+                                bm, maxSize, maxSize, false);
+                        Variables.image.setImageBitmap(resizedBitmap);
+                    }else{
+                        Variables.image.setImageURI(Variables.selectedfile);
+                    }
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
             }
         } else if(requestCode == CAMERA_REQUEST_CODE){      //Если был запрос на использование камеры - сохраняем картинку
             if(resultCode == Activity.RESULT_OK){
@@ -303,7 +334,21 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         else {
-            Variables.image.setImageURI(Variables.selectedfile);
+
+            try {
+                InputStream is = getContentResolver().openInputStream(Variables.selectedfile);
+                Bitmap bm = BitmapFactory.decodeStream(is);
+                if (bm.getWidth()>maxSize || bm.getHeight()>maxSize){
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    Bitmap resizedBitmap = Bitmap.createScaledBitmap(
+                            bm, maxSize, maxSize, false);
+                    Variables.image.setImageBitmap(resizedBitmap);
+                }else{
+                    Variables.image.setImageURI(Variables.selectedfile);
+                }
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
             Variables.filePath = FileHelper.getRealPathFromURI(Variables.activity,Variables.current_floor.getImage());
             Variables.notSelected=true;
         }

@@ -1,6 +1,10 @@
 package com.example.myapplication;
 
+import static com.example.myapplication.MainActivity.maxSize;
+
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Environment;
 import android.view.View;
@@ -21,6 +25,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -28,6 +33,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -404,7 +410,21 @@ public class BikExtensionParser {
             //////
             if (Variables.exportingJpg) {
                 floor.setImage(Variables.tempImage);
-                Variables.image.setImageURI(Variables.tempImage);
+                try {
+                    InputStream is = Variables.activity.getContentResolver().openInputStream(Variables.tempImage);
+                    Bitmap bm = BitmapFactory.decodeStream(is);
+                    if (bm.getWidth()>maxSize || bm.getHeight()>maxSize){
+                        ByteArrayOutputStream out = new ByteArrayOutputStream();
+                        Bitmap resizedBitmap = Bitmap.createScaledBitmap(
+                                bm, maxSize, maxSize, false);
+                        Variables.image.setImageBitmap(resizedBitmap);
+                    }else{
+                        Variables.image.setImageURI(Variables.tempImage);
+                    }
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+
             } else {
                 floor.setImage(Variables.selectedfile);     //Передаем картинку этажа в созданный этаж
             }
