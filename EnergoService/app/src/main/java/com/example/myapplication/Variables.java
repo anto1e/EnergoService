@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -19,6 +20,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -28,6 +30,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 import java.util.Vector;
 
@@ -193,7 +197,7 @@ public class Variables {
 
     static String[] typesOfRoomsDetSad = {"Служебное помещение","Актовый зал","Гардероб","Групповая","ГРЩ","Кабинет", "Коридор","Кладовая","Лестница","Моечная","Медкабинет","Музыкальный зал","Пищеблок","Прачечная","Раздевалка","Спальная", "Санузел","Спортзал",  "Тамбур","Техническое помещение","Другое"};            //Типы помещений(детские сады)
     static String[] typesOfRoomsSchools = {"Служебное помещение","Актовый зал","Бассейн","Библиотека","Гардероб","ГРЩ","Учебный кабинет", "Кабинет", "Коридор","Кладовая","Лестница","Санузел", "Медкабинет","Пищеблок","Раздевалка","Столовая","Спортзал","Тамбур","Техническое помещение","Цех","Другое"};            //Типы помещений(школы)
-    static String[] typesOfRoomsHospitals = {"Служебное помещение","Актовый зал","Бассейн","Гардероб","ГРЩ","Кабинет врача", "Кабинет", "Санузел", "Коридор","Кладовая","Лестница", "Медкабинет","Палата","Пищеблок","Процедурная","Спортзал","Столовая","Тамбур","Другое"};            //Типы помещений(больницы)
+    static String[] typesOfRoomsHospitals = {"Служебное помещение","Актовый зал","Бассейн","Гардероб","ГРЩ","Душевая","Кабинет врача", "Кабинет", "Санузел", "Коридор","Кладовая","Лестница", "Медкабинет","Палата","Пищеблок","Процедурная","Операционная","Спортзал","Столовая","Тамбур","Другое"};            //Типы помещений(больницы)
     static String[] typesOfRoomsOthers = {"Служебное помещение","Коридор", "Кабинет", "Санузел", "Служебное помещение", "Тамбур","Лестница","Спортзал","Пищеблок","Актовый зал","Медкабинет","Кладовая","Столовая","Процедурный кабинет","Палата","Комната","Учебный кабинет","Душевая","Гардероб","Другое"};            //Типы помещений(больницы)
 
     static String[] daysPerWeekArr = {"0","1/мес","1","2","3","4","5","6","7"};         //Дней работы в неделю
@@ -592,6 +596,12 @@ public class Variables {
         }
     }
 
+    public static void copy(File origin, File dest) throws IOException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Files.copy(origin.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+
     public static void copyFile(Uri pathOld, String pathNew){           //Копирование файла в папку
         String pathOldFile = FileHelper.getRealPathFromURI(activity, pathOld);
         String[] pathOldSplitted =  pathOldFile.split("/");
@@ -616,8 +626,7 @@ public class Variables {
                 System.err.println( "IOException occurred!" );
                 exception.printStackTrace();
             }
-            finally
-            {
+            finally{
                 fis.close();
                 fos.close();
                 System.out.println( "Copied file!" );

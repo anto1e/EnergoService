@@ -194,7 +194,7 @@ public class Buttons {
                             Variables.typeOfBuilding.setSelection(Variables.current_floor.getTypeFloor());
                         }
                         //Variables.typeOfBuilding.setSelection(15);
-                        if (Variables.current_floor.getTypeFloor()>8){
+                        if (Variables.current_floor.getHoursWordDefault()>8){
                             Variables.daysOfWorkDefault.setSelection(0);
                         }else {
                             Variables.daysOfWorkDefault.setSelection(Variables.current_floor.getHoursWordDefault());
@@ -2340,7 +2340,7 @@ public class Buttons {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if(Variables.plan.touchedLamp!=null && !Variables.selectZoneFlag) {
                     Variables.plan.touchedLamp.setTypeRoom(Variables.typeLamp.getSelectedItemPosition());
-                    Variables.current_floor.setTypeFloor(Variables.typeLamp.getSelectedItemPosition());
+                    //Variables.current_floor.setTypeFloor(Variables.typeLamp.getSelectedItemPosition());
                 }
             }
 
@@ -3189,13 +3189,16 @@ public class Buttons {
         if (type) {
             if (Variables.plan.touchedRoom != null) {
                 imageFileName = Variables.current_floor.getFloor() + ";Помещение " + Variables.plan.touchedRoom.getNumber() + ";";
+                imageFileName = imageFileName.replaceAll("[\\\\/:*?\"<>|]", "_");
             }
         }else{
             if (Variables.plan.touchedLamp != null) {
                 if (Variables.plan.touchedRoom!=null) {
                     imageFileName = Variables.current_floor.getFloor() + ";Помещение " + Variables.plan.touchedRoom.getNumber() + ";" + Variables.plan.touchedLamp.getType() + " " + Variables.plan.touchedLamp.getPower() + ";";
+                    imageFileName = imageFileName.replaceAll("[\\\\/:*?\"<>|]", "_");
                 }else{
                     imageFileName = Variables.current_floor.getFloor() + ";Наружное освещение "+Variables.plan.touchedLamp.getType()+" "+Variables.plan.touchedLamp.getPower()+";";
+                    imageFileName = imageFileName.replaceAll("[\\\\/:*?\"<>|]", "_");
                 }
                 }
         }

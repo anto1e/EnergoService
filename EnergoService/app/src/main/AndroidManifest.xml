@@ -27,6 +27,8 @@
                 android:resource="@xml/file_path" />
         </provider>
         <activity
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan"
             android:name=".MainActivity"
             android:exported="true">

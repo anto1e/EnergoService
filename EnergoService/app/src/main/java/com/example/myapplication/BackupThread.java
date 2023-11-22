@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.os.Environment;
+import android.os.FileUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.nio.file.StandardCopyOption;
 
 public class BackupThread extends Thread{
     public void run() {
@@ -38,14 +40,19 @@ public class BackupThread extends Thread{
                 // If you require it to make the entire directory path including parents,
                 // use directory.mkdirs(); here instead.
             }
-            String path = Variables.path1 + "/" + Variables.current_floor.getName() + "/backup";
-            Variables.copyFile(Variables.current_floor.getImage(), path);       //Копирование файла
+
+            String path = Variables.path1 + "/" + Variables.current_floor.getName() + "/backup/"+Variables.current_floor.getName()+"_"+Variables.current_floor.getFloor()+"_"+System.currentTimeMillis()+"_backup.bik";
+            //Variables.copyFile(Variables.current_floor.getImage(), path);       //Копирование файла
+            Variables.copy(new File(FileHelper.getRealPathFromURI(Variables.activity,Variables.current_floor.getImage())),new File(path));
+
 
             String[] split_path = Variables.filePath.split("/");        //Получаем путь к текущей папке
 
             StringBuilder builder = new StringBuilder();
             for(int i=0;i<split_path.length-1;i++) {
-                builder.append("/");
+                if (i!=0) {
+                    builder.append("/");
+                }
                 builder.append(split_path[i]);
             }
             String folderPath = builder.toString();
@@ -56,8 +63,12 @@ public class BackupThread extends Thread{
                 // If you require it to make the entire directory path including parents,
                 // use directory.mkdirs(); here instead.
             }
-            path = String.valueOf(folderPath  + "/backup");
-            Variables.copyFile(Variables.current_floor.getImage(), path);       //Копирование файла
+
+            path = String.valueOf(folderPath  + "/backup/"+Variables.current_floor.getName()+"_"+Variables.current_floor.getFloor()+"_"+System.currentTimeMillis()+"_backup.bik");
+            //Variables.copyFile(Variables.current_floor.getImage(), path);       //Копирование файла
+
+            Variables.copy(new File(FileHelper.getRealPathFromURI(Variables.activity,Variables.current_floor.getImage())),new File(path));
+
 
             Variables.fileBackuping=false;
 
@@ -67,8 +78,8 @@ public class BackupThread extends Thread{
                     rotationElement.setVisibility(View.GONE);
                     Toast.makeText(Variables.activity.getApplicationContext(), "Копия файла сохранена!", Toast.LENGTH_SHORT).show();
                 });
-        } catch (Exception ignored) {
-
+        } catch (Exception ex) {
+            System.out.println(ex);
         }
     }
 }
