@@ -264,7 +264,7 @@ public class Plan {
             Variables.RoomInfo.setVisibility(View.VISIBLE);     //Отображаем данные о комнате
             Variables.roomNumber.setText(touchedRoom.getNumber());
             Variables.roomHeight.setText(touchedRoom.getHeight());
-            Variables.type.setSelection(touchedRoom.getType_pos());
+                Variables.type.setSelection(touchedRoom.getType_pos());
             Variables.daysPerWeek.setSelection(touchedRoom.getDays());
             Variables.hoursPerDay.setSelection(touchedRoom.getHoursPerDay());
             Variables.hoursPerSunday.setSelection(touchedRoom.getHoursPerSunday());
@@ -301,7 +301,7 @@ public class Plan {
                     Variables.buttons.lastHoursSunday=touchedRoom.getHoursPerSunday();
                     Variables.roomNumber.setText(touchedRoom.getNumber());
                     Variables.roomHeight.setText(touchedRoom.getHeight());
-                    Variables.type.setSelection(touchedRoom.getType_pos());
+                        Variables.type.setSelection(touchedRoom.getType_pos());
                     Variables.daysPerWeek.setSelection(touchedRoom.getDays());
                     Variables.hoursPerDay.setSelection(touchedRoom.getHoursPerDay());
                     Variables.hoursPerSunday.setSelection(touchedRoom.getHoursPerSunday());

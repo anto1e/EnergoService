@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import static com.example.myapplication.MainActivity.maxSize;
+
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -8,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -46,9 +49,12 @@ import androidx.core.content.FileProvider;
 import org.json.JSONException;
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -178,8 +184,23 @@ public class Buttons {
                     active= (LinearLayout) v;
                     Variables.loadingFlag=true;
                     Variables.current_floor = Variables.floors.elementAt(Variables.FloorPanelsVec.indexOf(active));     //Получаем текущий этаж
+                    Variables.selectedfile = Variables.current_floor.getImage();
                     Variables.filePath = FileHelper.getRealPathFromURI(Variables.activity,Variables.current_floor.getImage());      //Запоминаем путь к текущему файлу
-                    Variables.image.setImageURI(Variables.current_floor.getImage());        //Устанавливаем картинку плана
+                    try {
+                        InputStream is = Variables.activity.getContentResolver().openInputStream(Variables.selectedfile);
+                        Bitmap bm = BitmapFactory.decodeStream(is);
+                        if (bm.getWidth()>maxSize || bm.getHeight()>maxSize){
+                            ByteArrayOutputStream out = new ByteArrayOutputStream();
+                            Bitmap resizedBitmap = Bitmap.createScaledBitmap(
+                                    bm, maxSize, maxSize, false);
+                            Variables.image.setImageBitmap(resizedBitmap);
+                        }else{
+                            Variables.image.setImageURI(Variables.selectedfile);
+                        }
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                    //Variables.image.setImageURI(Variables.current_floor.getImage());        //Устанавливаем картинку плана
                     try {           //Задаем координаты, приближение, тип, режимы работы и высоту по умолчанию
                         Variables.planLay.setX(Variables.current_floor.cordX);
                         Variables.planLay.setY(Variables.current_floor.cordY);
