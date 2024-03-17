@@ -138,8 +138,8 @@ public class BikExtensionParser {
                             double[] tempY = new double[arrY.length()];
                             floor.resizeCoeffs();
                             for (int i = 0; i < arrX.length(); i++) {       //Изменяем координаты точек разметки в зависимости от размера экрана
-                                tempX[i] = arrX.getDouble(i) / floor.resizeCoeffX;
-                                tempY[i] = arrY.getDouble(i) / floor.resizeCoeffY;
+                                    tempX[i] = arrX.getDouble(i) / floor.resizeCoeffX;
+                                    tempY[i] = arrY.getDouble(i) / floor.resizeCoeffY;
                             }
                             try {
                                 Room room = new Room(roomObj.getString("number"), tempX, tempY);
@@ -290,6 +290,13 @@ public class BikExtensionParser {
                                 lamp.setHoursWork(hoursOfWork);
                                 lamp.setHoursWeekendWork(hoursOfWorkWeekend);
                                 lamp.setHoursSundayWork(hoursOfWorkSunday);
+                                /*for (Room room:Variables.current_floor.rooms){
+                                    if (room.getNumber().equals(lamp.getLampRoom())){
+                                        room.lamps.add(lamp);
+                                        lamp.setTypeRoom(room.getType_pos());
+                                        break;
+                                    }
+                                }*/
                                 Runnable myThread = () ->           //После загрузки картинки светильника - проверяем куда его привязать
                                 {
 
@@ -301,6 +308,9 @@ public class BikExtensionParser {
                                             //imageView.setX(cordX-imageView.getWidth());
                                             //imageView.setY(cordY-imageView.getHeight());
                                             Room room = null;             //Комната, к которой привязан
+                                            if (lamp.getLampRoom().equals("18")){
+                                                System.out.println("123");
+                                            }
                                             if (!Objects.equals(number, "-1")) {            //Если светильник привязан к какой-то комнате
                                                 room = Variables.getRoomByNumber(number, cordX + imageView.getWidth(), cordY + imageView.getHeight(), scale, Variables.current_floor);         //Поиск комнтаты к которой привязан светильник
                                             }
@@ -456,6 +466,52 @@ public class BikExtensionParser {
             ///////////////////
             Variables.setInfoEmpty(floor);
             Variables.planLay.setRotation(0);
+            /*for (Lamp lamp:Variables.current_floor.unusedLamps) {//Если светильник не привязан никуда, пытаемся привязать по координатам, если не выходит - не привязываем
+                    Room detectedRoom = null;
+                    for (Room temp : Variables.current_floor.rooms) {
+                        if (temp.detectTouch(lamp.getImage().getX() + lamp.getImage().getWidth(), lamp.getImage().getY() + lamp.getImage().getHeight())) {
+                            detectedRoom = temp;
+                        }
+                    }
+                    if (detectedRoom == null) {             //Если комната, куда можно привязать не найдена - добавляем в неиспользуемые
+                        if (!Variables.ifUnusedContainsLamp(lamp.getImage().getX(), lamp.getImage().getY()) && !Variables.ifSomeRoomContainsLamp(lamp.getImage().getX(), lamp.getImage().getY(), floor)) {      //Если такой светильник уже есть(произошел баг) - удаляем его, иначе все ок
+                            Variables.current_floor.unusedLamps.add(lamp);
+                            lamp.getImage().setBackgroundResource(R.color.blue);
+                        } else {
+                            Variables.planLay.removeView(lamp.getImage());
+                        }
+                    } else {        //Если комната найдена, смотрим чтобы не было в ней такого же светильника - после чего добавляем его
+                        if (!Variables.ifRoomContainsLamp(lamp.getImage().getX(), lamp.getImage().getY(), detectedRoom)) {
+                            detectedRoom.lamps.add(lamp);
+                        } else {
+                            Variables.planLay.removeView(lamp.getImage());
+                        }
+                    }
+            }
+            for (Room room:Variables.current_floor.rooms){
+                for (Lamp lamp: room.lamps){
+                    Room detectedRoom = null;
+                    for (Room temp : Variables.current_floor.rooms) {
+                        if (temp.detectTouch(lamp.getImage().getX() + lamp.getImage().getWidth(), lamp.getImage().getY() + lamp.getImage().getHeight())) {
+                            detectedRoom = temp;
+                        }
+                    }
+                    if (detectedRoom == null) {             //Если комната, куда можно привязать не найдена - добавляем в неиспользуемые
+                        if (!Variables.ifUnusedContainsLamp(lamp.getImage().getX(), lamp.getImage().getY()) && !Variables.ifSomeRoomContainsLamp(lamp.getImage().getX(), lamp.getImage().getY(), floor)) {      //Если такой светильник уже есть(произошел баг) - удаляем его, иначе все ок
+                            Variables.current_floor.unusedLamps.add(lamp);
+                            lamp.getImage().setBackgroundResource(R.color.blue);
+                        } else {
+                            Variables.planLay.removeView(lamp.getImage());
+                        }
+                    } else {        //Если комната найдена, смотрим чтобы не было в ней такого же светильника - после чего добавляем его
+                        if (!Variables.ifRoomContainsLamp(lamp.getImage().getX(), lamp.getImage().getY(), detectedRoom)) {
+                            detectedRoom.lamps.add(lamp);
+                        } else {
+                            Variables.planLay.removeView(lamp.getImage());
+                        }
+                    }
+                }
+            }*/
             Variables.roofTypeDefaultText.setText(floor.roofHeightDefault.elementAt(Variables.roofTypeDefault.getSelectedItemPosition()));
             for (Thread thread : threads) {
                 thread.join();

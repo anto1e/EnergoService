@@ -250,7 +250,12 @@ public class Buttons {
                         Variables.image.setImageResource(0);
                         Variables.planLayCleared=false;
                         Variables.image.setImageURI(Variables.selectedfile);
-                         //Variables.switchFlag = false;
+                    try {
+                        Variables.parser.parseFile(Variables.filePath);
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                    //Variables.switchFlag = false;
                         /*
                         if (Variables.current_floor.getTypeFloor()>3){
                             Variables.typeOfBuilding.setSelection(0);
@@ -1867,9 +1872,24 @@ public class Buttons {
                             Variables.floors.remove(Variables.current_floor);
                             if (active != null) {       //Если в текущий момент не открыта как минимум одна вкладка
                                 Variables.current_floor = Variables.floors.elementAt(Variables.FloorPanelsVec.indexOf(active));
+                                Variables.selectedfile = Variables.current_floor.getImage();
                                 Variables.loadingFlag=true;
                                 Variables.filePath = FileHelper.getRealPathFromURI(Variables.activity,Variables.current_floor.getImage());
-                                Variables.image.setImageURI(Variables.current_floor.getImage());
+                                try {
+                                    InputStream is = Variables.activity.getContentResolver().openInputStream(Variables.selectedfile);
+                                    Bitmap bm = BitmapFactory.decodeStream(is);
+                                    if (bm.getWidth()>maxSize || bm.getHeight()>maxSize){
+                                        ByteArrayOutputStream out = new ByteArrayOutputStream();
+                                        Bitmap resizedBitmap = Bitmap.createScaledBitmap(
+                                                bm, maxSize, maxSize, false);
+                                        Variables.image.setImageBitmap(resizedBitmap);
+                                    }else{
+                                        Variables.image.setImageURI(Variables.selectedfile);
+                                    }
+                                } catch (FileNotFoundException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                //Variables.image.setImageURI(Variables.current_floor.getImage());
                                 Variables.planLay.setX(Variables.current_floor.cordX);
                                 Variables.planLay.setY(Variables.current_floor.cordY);
                                 Variables.planLay.setScaleX(Variables.current_floor.scale);

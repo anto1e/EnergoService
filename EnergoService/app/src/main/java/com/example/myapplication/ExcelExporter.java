@@ -589,16 +589,16 @@ public class ExcelExporter {
             cell.setValue(type);
             cell = cells.get("G" + Integer.toString(outsideRowCount));
             cell.setValue(amount);
-            cell = cells.get("F" + Integer.toString(outsideRowCount));
-            String value = cell.getFormula();
-            cell.setFormula(value);
-            cell = cells.get("H" + Integer.toString(rowCount));
-            value = cell.getFormula();
-            cell.setFormula(value);
-            cell = cells.get("O" + Integer.toString(outsideRowCount));
-            value = cell.getFormula();
-            cell.setFormula(value);
-            cell = cells.get("I" + Integer.toString(outsideRowCount));
+            //cell = cells.get("F" + Integer.toString(outsideRowCount));
+            //String value = cell.getFormula();
+            //cell.setFormula(value);
+            //cell = cells.get("H" + Integer.toString(rowCount));
+            //String value = cell.getFormula();
+            //cell.setFormula(value);
+            //cell = cells.get("O" + Integer.toString(outsideRowCount));
+            //value = cell.getFormula();
+            //cell.setFormula(value);
+            cell = cells.get("H" + Integer.toString(outsideRowCount));
             if (Objects.equals(montagneType, "Консоль")) {
                 cell.setValue("Светильник");
             } else if (Objects.equals(montagneType, "Кронштейн")) {
@@ -606,40 +606,43 @@ public class ExcelExporter {
             }else if (Objects.equals(montagneType, "Шар")){
                 cell.setValue("Шар");
             }
-            cell = cells.get("J" + Integer.toString(outsideRowCount));
+            cell = cells.get("I" + Integer.toString(outsideRowCount));
             if (isStolb) {
                 cell.setValue("Столб");
             }
-            cell = cells.get("K" + Integer.toString(outsideRowCount));
+            cell = cells.get("J" + Integer.toString(outsideRowCount));
             cell.setValue(montagneType);
-            cell = cells.get("L" + Integer.toString(outsideRowCount));
+            cell = cells.get("K" + Integer.toString(outsideRowCount));
             cell.setValue(comments);
-            cell = cells.get("F" + Integer.toString(rowCount));
+            cell = cells.get("L" + Integer.toString(outsideRowCount));
+            String value = cell.getFormula();
+            cell.setFormula(value);
+            cell = cells.get("F" + Integer.toString(outsideRowCount));
             value = cell.getFormula();
             cell.setFormula(value);
             cell.setFormula(value);
-            cell = cells.get("P" + Integer.toString(rowCount));
+            cell = cells.get("P" + Integer.toString(outsideRowCount));
             value = cell.getFormula();
             cell.setFormula(value);
-            cell = cells.get("S" + Integer.toString(rowCount));
+            cell = cells.get("S" + Integer.toString(outsideRowCount));
             value = cell.getFormula();
             cell.setFormula(value);
-            cell = cells.get("T" + Integer.toString(rowCount));
+            cell = cells.get("T" + Integer.toString(outsideRowCount));
             value = cell.getFormula();
             cell.setFormula(value);
-            cell = cells.get("U" + Integer.toString(rowCount));
+            cell = cells.get("U" + Integer.toString(outsideRowCount));
             value = cell.getFormula();
             cell.setFormula(value);
-            cell = cells.get("V" + Integer.toString(rowCount));
+            cell = cells.get("V" + Integer.toString(outsideRowCount));
             value = cell.getFormula();
             cell.setFormula(value);
-            cell = cells.get("W" + Integer.toString(rowCount));
+            cell = cells.get("W" + Integer.toString(outsideRowCount));
             value = cell.getFormula();
             cell.setFormula(value);
-            cell = cells.get("X" + Integer.toString(rowCount));
+            cell = cells.get("X" + Integer.toString(outsideRowCount));
             value = cell.getFormula();
             cell.setFormula(value);
-            cell = cells.get("Y" + Integer.toString(rowCount));
+            cell = cells.get("Y" + Integer.toString(outsideRowCount));
             value = cell.getFormula();
             cell.setFormula(value);
             outsideRowCount++;

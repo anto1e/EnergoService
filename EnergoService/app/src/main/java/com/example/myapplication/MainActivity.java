@@ -78,6 +78,7 @@ import java.util.Vector;
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_STORAGE = 101;
     public static int maxSize = 4000;
+    public static Timer myTimer;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -174,21 +175,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-        Timer myTimer;
         myTimer = new Timer();
-
-        myTimer.schedule(new TimerTask() {
-            public void run() {
-                if (Variables.current_floor!=null && !Variables.loadingFlag && !Variables.fileBackuping && !Variables.getAllBackUpDataFlag) {   //Для автосохранения флаги должны быть сброшены
-                    SaveFileThread thread = new SaveFileThread();
-                    thread.start();
-                }
-                loggingThread threadlog = new loggingThread();
-                threadlog.start();      //Логгирование происходит без условий
-            }
-        }, 0, 60*1000); // каждую минуту-сохранение файла;
-
+        setSchedule();
 
 
         Variables.image.addOnLayoutChangeListener( new View.OnLayoutChangeListener()        //В момент изменения размеров изображения
@@ -368,6 +356,18 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Camera Permission is Required to Use camera.", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+    public static void setSchedule(){
+        myTimer.schedule(new TimerTask() {
+            public void run() {
+                if (Variables.current_floor!=null && !Variables.loadingFlag && !Variables.fileBackuping && !Variables.getAllBackUpDataFlag) {   //Для автосохранения флаги должны быть сброшены
+                    SaveFileThread thread = new SaveFileThread();
+                    thread.start();
+                }
+                loggingThread threadlog = new loggingThread();
+                threadlog.start();      //Логгирование происходит без условий
+            }
+        }, 0, 60*1000); // каждую минуту-сохранение файла;
     }
 }
 
