@@ -77,7 +77,7 @@ import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_STORAGE = 101;
-    public static int maxSize = 4000;
+    public static int maxSize = 5000;
     public static Timer myTimer;
 
 
@@ -91,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
         //PermissionUtils.requestPermissions(MainActivity.this, PERMISSION_STORAGE);
         Variables.activity = MainActivity.this;         //Сохранение activity
         Variables.init();                               //Инициализация переменныъ
+        Variables.buildingInfoHeight = Variables.buildingInfoView.getHeight();
+        Variables.roomInfoHeight = Variables.roomInfoView.getHeight();
         Variables.plan.startDetecting(); //Начало отслеживания перемещения на плане
         Variables.listView=(ListView)findViewById(R.id.LampsListView);           //Лист со списком светильников
         Variables.lampsList = new LampsList(this, Variables.lampVstraivaemieNames, Variables.VstraivaemieImageId);        //Заполнение списка светильников
@@ -141,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }else if (Variables.addMultiple_flag || Variables.addMultipleRowsFlag){
                 Variables.resetListColor();
-                view.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                view.setBackgroundColor(Variables.activity.getResources().getColor(R.color.button_blue));
                 switch (Variables.currentLampsPanelIndex){
                     case 0:
                         Variables.multipleType = Variables.VstraivaemieImageId[position];
@@ -248,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
                     if (bm.getWidth()>maxSize || bm.getHeight()>maxSize){
                         ByteArrayOutputStream out = new ByteArrayOutputStream();
                         Bitmap resizedBitmap = Bitmap.createScaledBitmap(
-                                bm, maxSize, maxSize, false);
+                                bm, maxSize, maxSize, true);
                         Variables.image.setImageBitmap(resizedBitmap);
                     }else{
                         Variables.image.setImageURI(Variables.selectedfile);
@@ -322,7 +324,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         else {
-
             try {
                 InputStream is = getContentResolver().openInputStream(Variables.selectedfile);
                 Bitmap bm = BitmapFactory.decodeStream(is);
@@ -360,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
     public static void setSchedule(){
         myTimer.schedule(new TimerTask() {
             public void run() {
-                if (Variables.current_floor!=null && !Variables.loadingFlag && !Variables.fileBackuping && !Variables.getAllBackUpDataFlag) {   //Для автосохранения флаги должны быть сброшены
+                if (Variables.current_floor!=null && !Variables.loadingFlag && !Variables.fileBackuping && !Variables.getAllBackUpDataFlag && !Variables.blocked && !Variables.savingFlag && !Variables.exportingJpg) {   //Для автосохранения флаги должны быть сброшены
                     SaveFileThread thread = new SaveFileThread();
                     thread.start();
                 }

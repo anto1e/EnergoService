@@ -14,4 +14,6 @@
     <color name="blue">#79DCF4</color>
     <color name="bc_btn">#009688</color>
     <color name="bc_layout">#388881</color>
+    <color name="panel_active_color_blue">#2F67A2</color>
+    <color name="button_blue">#2F67A2</color>
 </resources>

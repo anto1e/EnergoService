@@ -8,8 +8,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal" >
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
         <ImageView
             android:id="@+id/LoadingImage"
             android:layout_gravity="bottom|right"
@@ -22,144 +22,144 @@
             android:layout_height="40dp"
             android:src="@drawable/loading"/>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="200dp"
-        android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:id="@+id/firstToolbar"
-        android:orientation="horizontal"
-        android:backgroundTint="@color/bc_layout"
-        android:background="@drawable/toolbarborder">
-        <LinearLayout
-            android:id="@+id/lampTypesPanelsLayout"
-            android:orientation="vertical"
-            android:layout_width="20dp"
-            android:background="@color/blue"
-            android:layout_height="match_parent">
-            <LinearLayout
-                android:id="@+id/VstraivaemieLayout"
-                android:layout_width="match_parent"
-                android:background="@color/white"
-                android:layout_weight=".16"
-                android:layout_height="65dp">
-                <com.example.myapplication.VerticalTextView
-                    android:id="@+id/VstraivaemiePanel"
-                    android:layout_width="65dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="left|center_vertical"
-                    android:padding="4dp"
-                    android:text="  Встраив."
-                    android:textSize="12sp" />
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/NakladnieLayout"
-                android:layout_width="match_parent"
-                android:background="@color/grey"
-                android:layout_height="65dp">
-                <com.example.myapplication.VerticalTextView
-                    android:id="@+id/NakladniePanel"
-                    android:layout_width="65dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="left|center_vertical"
-                    android:padding="4dp"
-                    android:text="Накладные"
-                    android:textSize="12sp" />
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/LampsLayout"
-                android:layout_width="match_parent"
-                android:background="@color/grey"
-                android:layout_height="65dp">
-                <com.example.myapplication.VerticalTextView
-                    android:id="@+id/LampsPanel"
-                    android:layout_width="65dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity=""
-                    android:padding="4dp"
-                    android:text="     Лампы"
-                    android:textSize="12sp" />
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/DiodsLayout"
-                android:layout_width="match_parent"
-                android:background="@color/grey"
-                android:layout_height="65dp">
-                <com.example.myapplication.VerticalTextView
-                    android:id="@+id/DiodsPanel"
-                    android:layout_width="65dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="left|center_vertical"
-                    android:padding="4dp"
-                    android:text="Светодиод."
-                    android:textSize="12sp" />
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/DoskiLayout"
-                android:layout_width="match_parent"
-                android:background="@color/grey"
-                android:layout_height="65dp">
-                <com.example.myapplication.VerticalTextView
-                    android:id="@+id/DoskiPanel"
-                    android:layout_width="65dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="left|center_vertical"
-                    android:padding="4dp"
-                    android:text="     Доски"
-                    android:textSize="12sp" />
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/PodvesLayout"
-                android:layout_width="match_parent"
-                android:background="@color/grey"
-                android:layout_height="65dp">
-                <com.example.myapplication.VerticalTextView
-                    android:id="@+id/PodvesPanel"
-                    android:layout_width="65dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="left|center_vertical"
-                    android:padding="4dp"
-                    android:text="Подвесные"
-                    android:textSize="12sp" />
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/OthersLayout"
-                android:layout_width="match_parent"
-                android:background="@color/grey"
-                android:layout_height="65dp">
-                <com.example.myapplication.VerticalTextView
-                    android:id="@+id/OthersPanel"
-                    android:layout_width="65dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="left|center_vertical"
-                    android:padding="4dp"
-                    android:text="     Другие"
-                    android:textSize="12sp" />
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/OutsideLayout"
-                android:layout_width="match_parent"
-                android:background="@color/grey"
-                android:layout_height="65dp">
-                <com.example.myapplication.VerticalTextView
-                    android:id="@+id/OutsidePanel"
-                    android:layout_width="65dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="left|center_vertical"
-                    android:padding="4dp"
-                    android:text="  Наружное"
-                    android:textSize="12sp" />
-            </LinearLayout>
-        </LinearLayout>
-        <ListView
-            android:background="@color/white"
-            android:layout_width="match_parent"
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="200dp"
             android:layout_height="match_parent"
-            android:id="@+id/LampsListView"
-            >
-        </ListView>
+            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/firstToolbar"
+            android:orientation="horizontal"
+            android:backgroundTint="@color/bc_layout"
+            android:background="@drawable/toolbarborder">
+            <LinearLayout
+                android:id="@+id/lampTypesPanelsLayout"
+                android:orientation="vertical"
+                android:layout_width="20dp"
+                android:background="@color/blue"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:id="@+id/VstraivaemieLayout"
+                    android:layout_width="match_parent"
+                    android:background="@color/white"
+                    android:layout_weight=".16"
+                    android:layout_height="65dp">
+                    <com.example.myapplication.VerticalTextView
+                        android:id="@+id/VstraivaemiePanel"
+                        android:layout_width="65dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="left|center_vertical"
+                        android:padding="4dp"
+                        android:text="  Встраив."
+                        android:textSize="12sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/NakladnieLayout"
+                    android:layout_width="match_parent"
+                    android:background="@color/grey"
+                    android:layout_height="65dp">
+                    <com.example.myapplication.VerticalTextView
+                        android:id="@+id/NakladniePanel"
+                        android:layout_width="65dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="left|center_vertical"
+                        android:padding="4dp"
+                        android:text="Накладные"
+                        android:textSize="12sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/LampsLayout"
+                    android:layout_width="match_parent"
+                    android:background="@color/grey"
+                    android:layout_height="65dp">
+                    <com.example.myapplication.VerticalTextView
+                        android:id="@+id/LampsPanel"
+                        android:layout_width="65dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity=""
+                        android:padding="4dp"
+                        android:text="     Лампы"
+                        android:textSize="12sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/DiodsLayout"
+                    android:layout_width="match_parent"
+                    android:background="@color/grey"
+                    android:layout_height="65dp">
+                    <com.example.myapplication.VerticalTextView
+                        android:id="@+id/DiodsPanel"
+                        android:layout_width="65dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="left|center_vertical"
+                        android:padding="4dp"
+                        android:text="Светодиод."
+                        android:textSize="12sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/DoskiLayout"
+                    android:layout_width="match_parent"
+                    android:background="@color/grey"
+                    android:layout_height="65dp">
+                    <com.example.myapplication.VerticalTextView
+                        android:id="@+id/DoskiPanel"
+                        android:layout_width="65dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="left|center_vertical"
+                        android:padding="4dp"
+                        android:text="     Доски"
+                        android:textSize="12sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/PodvesLayout"
+                    android:layout_width="match_parent"
+                    android:background="@color/grey"
+                    android:layout_height="65dp">
+                    <com.example.myapplication.VerticalTextView
+                        android:id="@+id/PodvesPanel"
+                        android:layout_width="65dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="left|center_vertical"
+                        android:padding="4dp"
+                        android:text="Подвесные"
+                        android:textSize="12sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/OthersLayout"
+                    android:layout_width="match_parent"
+                    android:background="@color/grey"
+                    android:layout_height="65dp">
+                    <com.example.myapplication.VerticalTextView
+                        android:id="@+id/OthersPanel"
+                        android:layout_width="65dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="left|center_vertical"
+                        android:padding="4dp"
+                        android:text="     Другие"
+                        android:textSize="12sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/OutsideLayout"
+                    android:layout_width="match_parent"
+                    android:background="@color/grey"
+                    android:layout_height="65dp">
+                    <com.example.myapplication.VerticalTextView
+                        android:id="@+id/OutsidePanel"
+                        android:layout_width="65dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="left|center_vertical"
+                        android:padding="4dp"
+                        android:text="  Наружное"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+            <ListView
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/LampsListView"
+                >
+            </ListView>
 
 
-    </LinearLayout>
+        </LinearLayout>
         <!-- Панель с вкладками этажей-->
         <LinearLayout
             android:id="@+id/floorPanelLay"
@@ -204,1110 +204,1110 @@
             </LinearLayout>
         </LinearLayout>
         <!--Блок с планом здания -->
-                <LinearLayout
-                    android:id="@+id/imageWrap"
-                    android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/imageWrap"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            app:layout_constraintTop_toBottomOf="@id/floorPanelLay"
+            app:layout_constraintLeft_toRightOf="@id/firstToolbar"
+            app:layout_constraintRight_toLeftOf="@id/secondToolbar"
+            tools:ignore="Deprecated">
+
+
+            <RelativeLayout
+                android:layout_margin="0dp"
+                android:padding="0dp"
+                android:layout_width="wrap_content"
+                android:id="@+id/planLayout"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:adjustViewBounds="true"
+                    android:id="@+id/imageView"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="0dp"
-                    app:layout_constraintTop_toBottomOf="@id/floorPanelLay"
-                    app:layout_constraintLeft_toRightOf="@id/firstToolbar"
-                    app:layout_constraintRight_toLeftOf="@id/secondToolbar"
-                    tools:ignore="Deprecated">
+                    android:cropToPadding="false"
+                    />
+
+
+            </RelativeLayout>
+            <FrameLayout
+                android:id="@+id/photoFrame"
+                android:visibility="gone"
+                android:layout_marginBottom="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/photoImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
+                    />
+
+                <ImageView
+                    android:id="@+id/photoClose"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:scaleType="fitCenter"
+                    android:alpha="0.6"
+                    android:layout_marginEnd="0dp"
+                    android:background="@drawable/txtviewborder"
+                    android:layout_gravity="top|right"
+                    android:src="@drawable/close"/>
+                <ImageView
+                    android:id="@+id/photoDelete"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:scaleType="fitCenter"
+                    android:layout_marginEnd="40dp"
+                    android:alpha="0.6"
+                    android:padding="4dp"
+                    android:background="@drawable/txtviewborder"
+                    android:layout_gravity="top|right"
+                    android:src="@drawable/delete"/>
+                <ImageView
+                    android:id="@+id/photoArrowRight"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:scaleType="fitCenter"
+                    android:alpha="0.6"
+                    android:layout_marginLeft="20dp"
+                    android:padding="4dp"
+                    android:background="@drawable/txtviewborder"
+                    android:layout_gravity="bottom|center"
+                    android:src="@drawable/arrow"/>
+                <ImageView
+                    android:id="@+id/photoArrowLeft"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:scaleType="fitCenter"
+                    android:alpha="0.6"
+                    android:layout_marginRight="40dp"
+                    android:padding="4dp"
+                    android:rotation="180"
+                    android:background="@drawable/txtviewborder"
+                    android:layout_gravity="bottom|center"
+                    android:src="@drawable/arrow"/>
+
+            </FrameLayout>
+            <FrameLayout
+                android:id="@+id/BackUpFrame"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="0dp"
+                android:visibility="gone"
+                android:layout_height="match_parent"
+                >
+                <GridLayout
+                    android:visibility="visible"
+                    android:id="@+id/BackUpGrid"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="30dp"
+                    android:columnCount="9"
+                    android:horizontalSpacing="10dp"
+                    android:verticalSpacing="10dp"
+                    android:layout_marginBottom="0dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </GridLayout>
+            </FrameLayout>
+        </LinearLayout>
+        <!--Второй тул-бар -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/secondToolbar"
+            android:backgroundTint="@color/bc_layout"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/toolbarborder"
+            tools:layout_editor_absoluteY="0dp">
+            <!--Здесь будут располагаться кнопки-->
+            <GridLayout
+                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/toolsGrid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="4"
+                android:orientation="horizontal"
+                tools:ignore="MissingConstraints">
+                <!--Кнопка добавления светильника -->
+                <ImageView
+                    android:id="@+id/addBtn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/addbtn"
+                    android:background="@color/white"
+                    android:padding="2dp"
+                    />
+                <ImageView
+                    android:id="@+id/addMultipleBtn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/addmultiplebtn"
+                    android:background="@color/white"
+                    android:padding="2dp"
+                    />
+                <!--Кнопка включения/выключения перемещения светильников -->
+                <ImageView
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/moveBtn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:padding="5dp"
+                    android:background="@color/white"
+                    android:src="@drawable/movebtn"
+                    />
+
+                <ImageView
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/scaleBtn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:padding="1dp"
+                    android:background="@color/white"
+                    android:src="@drawable/scalebtn"
+                    />
+
+
+                <ImageButton
+                    android:id="@+id/rotateLamp"
+                    android:scaleType="fitCenter"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="30dp"
+                    android:background="@color/white"
+                    android:src="@drawable/rotate"
+                    android:layout_height="30dp"
+                    android:contentDescription="TODO">
+                </ImageButton>
+
+                <ImageView
+                    android:id="@+id/removeLamp"
+                    android:padding="5dp"
+                    android:src="@drawable/delete"
+                    android:scaleType="fitCenter"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="30dp"
+                    android:background="@color/white"
+                    android:layout_marginTop="5dp"
+                    android:layout_height="30dp">
+                </ImageView>
+
+                <ImageView
+                    android:id="@+id/rotatePlanBtn"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/rotateplanbtn"
+                    android:layout_width="30dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/white"
+                    android:layout_marginLeft="10dp"
+                    android:padding="2dp"
+                    android:layout_height="30dp">
+                </ImageView>
+
+
+                <ImageButton
+                    android:id="@+id/addMultipleRowsBtn"
+                    android:scaleType="fitCenter"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="30dp"
+                    android:background="@color/white"
+                    android:src="@drawable/addmultiplerowbtn"
+                    android:layout_height="30dp"
+                    android:contentDescription="TODO">
+                </ImageButton>
+
+                <ImageView
+                    android:id="@+id/copyBtn"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/copynmove"
+                    android:layout_width="30dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/white"
+                    android:layout_marginLeft="0dp"
+                    android:padding="2dp"
+                    android:layout_height="30dp">
+                </ImageView>
+
+                <ImageButton
+                    android:id="@+id/copyToBuf"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/copybtn"
+                    android:padding="2dp"
+                    android:layout_width="30dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/grey"
+                    android:layout_marginLeft="10dp"
+                    android:layout_height="30dp"
+                    android:contentDescription="TODO">
+                </ImageButton>
+
+                <ImageButton
+                    android:id="@+id/pasteBtn"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/pastebtn"
+                    android:layout_width="30dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/grey"
+                    android:layout_marginLeft="10dp"
+                    android:layout_height="30dp"
+                    android:contentDescription="TODO">
+                </ImageButton>
+
+
+                <ImageButton
+                    android:id="@+id/selectZone"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/selectzone"
+                    android:layout_width="30dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/white"
+                    android:layout_marginStart="10dp"
+                    android:layout_height="30dp"
+                    android:contentDescription="TODO">
+                </ImageButton>
+
+                <View
+                    android:layout_marginTop="5dp"
+                    android:layout_height="5dp"
+                    android:layout_width="30dp"
+                    android:background="@color/black"
+                    />
+                <View
+                    android:layout_marginTop="5dp"
+                    android:layout_height="5dp"
+                    android:layout_width="40dp"
+                    android:background="@color/black"
+                    />
+                <View
+                    android:layout_marginTop="5dp"
+                    android:layout_height="5dp"
+                    android:layout_width="40dp"
+                    android:background="@color/black"
+                    />
+                <View
+                    android:layout_marginTop="5dp"
+                    android:layout_height="5dp"
+                    android:layout_width="40dp"
+                    android:background="@color/black"
+                    />
+
+                <ImageButton
+                    android:id="@+id/saveFile"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/save"
+                    android:layout_marginLeft="0dp"
+                    android:layout_width="30dp"
+                    android:background="@color/white"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="0dp"
+                    android:layout_height="30dp"
+                    android:contentDescription="TODO">
+                </ImageButton>
+
+                <ImageView
+                    android:id="@+id/backupBtn"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/backupbtn"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="30dp"
+                    android:background="@color/white"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="0dp"
+                    android:layout_height="30dp">
+                </ImageView>
+
+                <ImageButton
+                    android:id="@+id/excelExport"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/excel"
+                    android:layout_width="30dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/white"
+                    android:layout_marginBottom="0dp"
+                    android:layout_height="30dp"
+                    android:contentDescription="TODO">
+                </ImageButton>
+
+                <ImageView
+                    android:id="@+id/screenShotBtn"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/screenshot"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="30dp"
+                    android:background="@color/white"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_height="30dp">
+                </ImageView>
+
+                <ImageButton
+                    android:id="@+id/openFile"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/upload"
+                    android:layout_width="30dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/white"
+                    android:layout_marginStart="0dp"
+                    android:layout_height="30dp"
+                    android:contentDescription="TODO">
+                </ImageButton>
+
+                <ImageButton
+                    android:id="@+id/selectByTouch"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/selectbyclickbtn"
+                    android:layout_width="30dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/white"
+                    android:layout_marginStart="10dp"
+                    android:layout_height="30dp"
+                    android:contentDescription="TODO">
+                </ImageButton>
+
+                <ImageButton
+                    android:id="@+id/cancelBtn"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/close"
+                    android:layout_width="30dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/grey"
+                    android:layout_marginBottom="5dp"
+                    android:layout_height="30dp">
+                </ImageButton>
+                <ImageView
+                    android:id="@+id/confirmBtn"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/comfirmbtn"
+                    android:layout_width="30dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:padding="2dp"
+                    android:background="@color/grey"
+                    android:layout_marginBottom="5dp"
+                    android:layout_height="30dp">
+                </ImageView>
+
+                <ImageView
+                    android:id="@+id/backupBack"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/backupback"
+                    android:layout_marginLeft="0dp"
+                    android:layout_width="30dp"
+                    android:background="@color/white"
+                    android:layout_marginBottom="5dp"
+                    android:layout_height="30dp">
+                </ImageView>
+
+            </GridLayout>
+
+            <ScrollView
+                android:id="@+id/globalScroll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolsGrid">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RelativeLayout
+                        android:id="@+id/multipleRowsInfo"
+                        android:layout_width="match_parent"
+                        android:visibility="gone"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/txtviewborder"
+                        app:layout_constraintTop_toTopOf="parent">
+                        <GridLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:columnCount="3"
+                            android:orientation="horizontal"
+                            tools:ignore="UselessParent">
+                            <TextView
+                                android:text="Рядов:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+                            <Spinner
+                                android:verticalScrollbarPosition="right"
+                                android:id="@+id/spinColumns"
+                                android:layout_marginLeft="-60dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_width="80dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <EditText
+                                android:layout_marginLeft="-30dp"
+                                android:layout_width="wrap_content"
+                                android:textSize="12dp"
+                                android:id="@+id/columnAmount"
+                                />
+                            <TextView
+                                android:text="Линий:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+                            <Spinner
+                                android:verticalScrollbarPosition="right"
+                                android:id="@+id/spinRows"
+                                android:layout_marginLeft="-60dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_width="80dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <EditText
+                                android:layout_marginLeft="-30dp"
+                                android:layout_width="wrap_content"
+                                android:textSize="12dp"
+                                android:id="@+id/rowsAmount"
+                                />
+                            <TextView
+                                android:text="Развернуть на 90:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+                            <CheckBox
+                                android:id="@+id/angleCheckbox"
+                                />
+                            <TextView/>
+                            <Button
+                                android:id="@+id/multipleRowsSubmit"
+                                android:layout_height="30dp"
+                                android:text="Подтвердить"
+                                android:textSize="8sp"
+                                android:layout_marginLeft="10dp"
+                                android:textColor="@color/black"
+                                android:backgroundTint="@color/grey"
+                                />
+                        </GridLayout>
+                    </RelativeLayout>
+
+
+                    <TextView
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="5dp"
+                        android:id="@id/buildingInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@+id/multipleRowsInfo"
+                        android:text="Информация о плане"
+                        android:background="@drawable/txtviewborder"
+                        />
+
+                    <RelativeLayout
+                        android:background="@color/white"
+                        android:id="@+id/BuildingInfoView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true"
+                        app:layout_constraintTop_toBottomOf="@+id/buildingInfo"
+                        tools:layout_editor_absoluteX="10dp">
+
+                        <GridLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:columnCount="2"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:text="@string/name_standart"
+                                android:textColor="@color/black"
+                                android:textSize="12sp"
+                                />
+                            <EditText
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:textSize="12dp"
+                                android:id="@+id/buildingName"
+                                />
+                            <TextView
+                                android:text="Этаж:"
+                                android:textColor="@color/black"
+                                android:textSize="12sp"
+                                />
+                            <EditText
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:textSize="12dp"
+                                android:id="@+id/floorNumber"
+                                />
+                            <TextView
+                                android:text="@string/adres_standart"
+                                android:textColor="@color/black"
+                                android:textSize="12sp"
+                                />
+
+                            <EditText
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:textSize="12dp"
+                                android:id="@+id/adress"
+                                />
+                            <TextView
+                                android:text="Тип здания:"
+                                android:textColor="@color/black"
+                                android:textSize="12sp"
+                                />
+                            <Spinner
+                                android:verticalScrollbarPosition="right"
+                                android:id="@+id/typeOfBuilding"
+                                android:layout_marginLeft="-70dp"
+                                android:layout_width="90dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <TextView
+                                android:text="Дни работы"
+                                android:textColor="@color/black"
+                                android:textSize="12sp"
+                                />
+                            <Spinner
+                                android:verticalScrollbarPosition="right"
+                                android:id="@+id/daysOfWorkDefault"
+                                android:layout_marginLeft="-70dp"
+                                android:layout_width="90dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <TextView
+                                android:text="Высота по умолчанию:"
+                                android:textColor="@color/black"
+                                android:textSize="12sp"
+                                />
+                            <CheckBox
+                                android:id="@+id/roomHeightDefaultCheck"
+                                android:layout_marginLeft="-20dp"
+                                />
+                            <Spinner
+                                android:verticalScrollbarPosition="right"
+                                android:id="@+id/roofTypeDefault"
+                                android:layout_marginLeft="0dp"
+                                android:layout_width="100dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <EditText
+                                android:text="0.0"
+                                android:layout_marginTop="-8dp"
+                                android:layout_marginLeft="-10dp"
+                                android:layout_width="wrap_content"
+                                android:textSize="12dp"
+                                android:id="@+id/roofTypeDefaultText"
+                                />
+                            <Button
+                                android:id="@+id/submitHeightFloor"
+                                android:layout_height="30dp"
+                                android:layout_width="150dp"
+                                android:textSize="8sp"
+                                android:text="Сохранить высоту"
+                                android:textColor="@color/black"
+                                android:backgroundTint="@color/grey"
+                                />
+
+                        </GridLayout>
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:id="@id/roomInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@+id/BuildingInfoView"
+                        android:text="Информация о помещении"
+                        android:background="@drawable/txtviewborder"
+                        />
 
 
                     <RelativeLayout
-                        android:layout_margin="0dp"
-                        android:padding="0dp"
-                        android:layout_width="wrap_content"
-                        android:id="@+id/planLayout"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:adjustViewBounds="true"
-                            android:id="@+id/imageView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:cropToPadding="false"
-                            />
-
-
-                </RelativeLayout>
-                    <FrameLayout
-                        android:id="@+id/photoFrame"
-                        android:visibility="gone"
-                        android:layout_marginBottom="0dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <ImageView
-                            android:id="@+id/photoImage"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:scaleType="fitCenter"
-                            />
-
-                        <ImageView
-                            android:id="@+id/photoClose"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:scaleType="fitCenter"
-                            android:alpha="0.6"
-                            android:layout_marginEnd="0dp"
-                            android:background="@drawable/txtviewborder"
-                            android:layout_gravity="top|right"
-                            android:src="@drawable/close"/>
-                        <ImageView
-                            android:id="@+id/photoDelete"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:scaleType="fitCenter"
-                            android:layout_marginEnd="40dp"
-                            android:alpha="0.6"
-                            android:padding="4dp"
-                            android:background="@drawable/txtviewborder"
-                            android:layout_gravity="top|right"
-                            android:src="@drawable/delete"/>
-                        <ImageView
-                            android:id="@+id/photoArrowRight"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:scaleType="fitCenter"
-                            android:alpha="0.6"
-                            android:layout_marginLeft="20dp"
-                            android:padding="4dp"
-                            android:background="@drawable/txtviewborder"
-                            android:layout_gravity="bottom|center"
-                            android:src="@drawable/arrow"/>
-                        <ImageView
-                            android:id="@+id/photoArrowLeft"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:scaleType="fitCenter"
-                            android:alpha="0.6"
-                            android:layout_marginRight="40dp"
-                            android:padding="4dp"
-                            android:rotation="180"
-                            android:background="@drawable/txtviewborder"
-                            android:layout_gravity="bottom|center"
-                            android:src="@drawable/arrow"/>
-
-                    </FrameLayout>
-                        <FrameLayout
-                            android:id="@+id/BackUpFrame"
-                            android:layout_width="match_parent"
-                            android:layout_marginBottom="0dp"
-                            android:visibility="gone"
-                            android:layout_height="match_parent"
-                            >
-                            <GridLayout
-                                android:visibility="visible"
-                                android:id="@+id/BackUpGrid"
-                                android:paddingStart="0dp"
-                                android:paddingEnd="30dp"
-                                android:columnCount="9"
-                                android:horizontalSpacing="10dp"
-                                android:verticalSpacing="10dp"
-                                android:layout_marginBottom="0dp"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-                            </GridLayout>
-                        </FrameLayout>
-                </LinearLayout>
-        <!--Второй тул-бар -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/secondToolbar"
-                    android:backgroundTint="@color/bc_layout"
-                    android:layout_width="200dp"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:background="@drawable/toolbarborder"
-                    tools:layout_editor_absoluteY="0dp">
-        <!--Здесь будут располагаться кнопки-->
-        <GridLayout
-            app:layout_constraintTop_toTopOf="parent"
-            android:id="@+id/toolsGrid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="4"
-            android:orientation="horizontal"
-            tools:ignore="MissingConstraints">
-            <!--Кнопка добавления светильника -->
-            <ImageView
-                android:id="@+id/addBtn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/addbtn"
-                android:background="@color/white"
-                android:padding="2dp"
-                />
-            <ImageView
-                android:id="@+id/addMultipleBtn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/addmultiplebtn"
-                android:background="@color/white"
-                android:padding="2dp"
-                />
-            <!--Кнопка включения/выключения перемещения светильников -->
-            <ImageView
-                android:layout_marginLeft="10dp"
-                android:id="@+id/moveBtn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:padding="5dp"
-                android:background="@color/white"
-                android:src="@drawable/movebtn"
-                />
-
-            <ImageView
-                android:layout_marginLeft="10dp"
-                android:id="@+id/scaleBtn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:padding="1dp"
-                android:background="@color/white"
-                android:src="@drawable/scalebtn"
-                />
-
-
-            <ImageButton
-                android:id="@+id/rotateLamp"
-                android:scaleType="fitCenter"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="5dp"
-                android:layout_width="30dp"
-                android:background="@color/white"
-                android:src="@drawable/rotate"
-                android:layout_height="30dp"
-                android:contentDescription="TODO">
-            </ImageButton>
-
-            <ImageView
-                android:id="@+id/removeLamp"
-                android:padding="5dp"
-                android:src="@drawable/delete"
-                android:scaleType="fitCenter"
-                android:layout_marginLeft="10dp"
-                android:layout_width="30dp"
-                android:background="@color/white"
-                android:layout_marginTop="5dp"
-                android:layout_height="30dp">
-            </ImageView>
-
-            <ImageView
-                android:id="@+id/rotatePlanBtn"
-                android:scaleType="fitCenter"
-                android:src="@drawable/rotateplanbtn"
-                android:layout_width="30dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/white"
-                android:layout_marginLeft="10dp"
-                android:padding="2dp"
-                android:layout_height="30dp">
-            </ImageView>
-
-
-            <ImageButton
-                android:id="@+id/addMultipleRowsBtn"
-                android:scaleType="fitCenter"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_width="30dp"
-                android:background="@color/white"
-                android:src="@drawable/addmultiplerowbtn"
-                android:layout_height="30dp"
-                android:contentDescription="TODO">
-            </ImageButton>
-
-            <ImageView
-                android:id="@+id/copyBtn"
-                android:scaleType="fitCenter"
-                android:src="@drawable/copynmove"
-                android:layout_width="30dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/white"
-                android:layout_marginLeft="0dp"
-                android:padding="2dp"
-                android:layout_height="30dp">
-            </ImageView>
-
-            <ImageButton
-                android:id="@+id/copyToBuf"
-                android:scaleType="fitCenter"
-                android:src="@drawable/copybtn"
-                android:padding="2dp"
-                android:layout_width="30dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/grey"
-                android:layout_marginLeft="10dp"
-                android:layout_height="30dp"
-                android:contentDescription="TODO">
-            </ImageButton>
-
-            <ImageButton
-                android:id="@+id/pasteBtn"
-                android:scaleType="fitCenter"
-                android:src="@drawable/pastebtn"
-                android:layout_width="30dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/grey"
-                android:layout_marginLeft="10dp"
-                android:layout_height="30dp"
-                android:contentDescription="TODO">
-            </ImageButton>
-
-
-            <ImageButton
-                android:id="@+id/selectZone"
-                android:scaleType="fitCenter"
-                android:src="@drawable/selectzone"
-                android:layout_width="30dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/white"
-                android:layout_marginStart="10dp"
-                android:layout_height="30dp"
-                android:contentDescription="TODO">
-            </ImageButton>
-
-            <View
-                android:layout_marginTop="5dp"
-                android:layout_height="5dp"
-                android:layout_width="30dp"
-                android:background="@color/black"
-                />
-            <View
-                android:layout_marginTop="5dp"
-                android:layout_height="5dp"
-                android:layout_width="40dp"
-                android:background="@color/black"
-                />
-            <View
-                android:layout_marginTop="5dp"
-                android:layout_height="5dp"
-                android:layout_width="40dp"
-                android:background="@color/black"
-                />
-            <View
-                android:layout_marginTop="5dp"
-                android:layout_height="5dp"
-                android:layout_width="40dp"
-                android:background="@color/black"
-                />
-
-            <ImageButton
-                android:id="@+id/saveFile"
-                android:scaleType="fitCenter"
-                android:src="@drawable/save"
-                android:layout_marginLeft="0dp"
-                android:layout_width="30dp"
-                android:background="@color/white"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="0dp"
-                android:layout_height="30dp"
-                android:contentDescription="TODO">
-            </ImageButton>
-
-            <ImageView
-                android:id="@+id/backupBtn"
-                android:scaleType="fitCenter"
-                android:src="@drawable/backupbtn"
-                android:layout_marginLeft="10dp"
-                android:layout_width="30dp"
-                android:background="@color/white"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="0dp"
-                android:layout_height="30dp">
-            </ImageView>
-
-            <ImageButton
-                android:id="@+id/excelExport"
-                android:scaleType="fitCenter"
-                android:src="@drawable/excel"
-                android:layout_width="30dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/white"
-                android:layout_marginBottom="0dp"
-                android:layout_height="30dp"
-                android:contentDescription="TODO">
-            </ImageButton>
-
-            <ImageView
-                android:id="@+id/screenShotBtn"
-                android:scaleType="fitCenter"
-                android:src="@drawable/screenshot"
-                android:layout_marginLeft="10dp"
-                android:layout_width="30dp"
-                android:background="@color/white"
-                android:layout_marginBottom="0dp"
-                android:layout_marginTop="5dp"
-                android:layout_height="30dp">
-            </ImageView>
-
-            <ImageButton
-                android:id="@+id/openFile"
-                android:scaleType="fitCenter"
-                android:src="@drawable/upload"
-                android:layout_width="30dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/white"
-                android:layout_marginStart="0dp"
-                android:layout_height="30dp"
-                android:contentDescription="TODO">
-            </ImageButton>
-
-            <ImageButton
-                android:id="@+id/selectByTouch"
-                android:scaleType="fitCenter"
-                android:src="@drawable/selectbyclickbtn"
-                android:layout_width="30dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/white"
-                android:layout_marginStart="10dp"
-                android:layout_height="30dp"
-                android:contentDescription="TODO">
-            </ImageButton>
-
-            <ImageButton
-                android:id="@+id/cancelBtn"
-                android:scaleType="fitCenter"
-                android:src="@drawable/close"
-                android:layout_width="30dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/grey"
-                android:layout_marginBottom="5dp"
-                android:layout_height="30dp">
-            </ImageButton>
-            <ImageView
-                android:id="@+id/confirmBtn"
-                android:scaleType="fitCenter"
-                android:src="@drawable/comfirmbtn"
-                android:layout_width="30dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:padding="2dp"
-                android:background="@color/grey"
-                android:layout_marginBottom="5dp"
-                android:layout_height="30dp">
-            </ImageView>
-
-            <ImageView
-                android:id="@+id/backupBack"
-                android:scaleType="fitCenter"
-                android:src="@drawable/backupback"
-                android:layout_marginLeft="0dp"
-                android:layout_width="30dp"
-                android:background="@color/white"
-                android:layout_marginBottom="5dp"
-                android:layout_height="30dp">
-            </ImageView>
-
-        </GridLayout>
-
-        <ScrollView
-            android:id="@+id/globalScroll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolsGrid">
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <RelativeLayout
-                    android:id="@+id/multipleRowsInfo"
-                    android:layout_width="match_parent"
-                    android:visibility="gone"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/txtviewborder"
-                    app:layout_constraintTop_toTopOf="parent">
-                    <GridLayout
+                        android:background="@color/white"
+                        android:id="@+id/RoomInfoView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:columnCount="3"
-                        android:orientation="horizontal"
-                        tools:ignore="UselessParent">
+                        android:animateLayoutChanges="true"
+                        app:layout_constraintTop_toBottomOf="@+id/roomInfo"
+                        tools:layout_editor_absoluteX="10dp">
+
+                        <GridLayout
+                            android:id="@+id/gridRoomInfo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:columnCount="2"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:text="@string/s"
+                                android:textColor="@color/black"
+                                android:textSize="12sp"
+                                />
+                            <EditText
+                                android:layout_marginStart="-15dp"
+                                android:text="@string/_0"
+                                android:textSize="12sp"
+                                android:id="@+id/roomNumber"
+                                android:layout_width="wrap_content"
+                                />
+                            <TextView
+                                android:text="@string/hight_standart"
+                                android:textColor="@color/black"
+                                android:textSize="12sp"
+                                />
+                            <EditText
+                                android:layout_marginStart="-15dp"
+                                android:text="@string/_0_0"
+                                android:textSize="12sp"
+                                android:id="@+id/roomHigh"
+                                android:layout_width="wrap_content"
+                                />
+                            <TextView
+                                android:text="Тип:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+
+                            <Spinner
+                                android:verticalScrollbarPosition="right"
+                                android:id="@+id/spinTypes"
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <TextView
+                                android:text="Дней:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+
+                            <Spinner
+                                android:verticalScrollbarPosition="right"
+                                android:id="@+id/roomDays"
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <TextView
+                                android:text="Часы:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+
+                            <Spinner
+                                android:verticalScrollbarPosition="right"
+                                android:id="@+id/roomHours"
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <TextView
+                                android:text="Суббота:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+
+                            <Spinner
+                                android:verticalScrollbarPosition="right"
+                                android:id="@+id/roomHoursWeekends"
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <TextView
+                                android:text="Воскресенье:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+
+                            <Spinner
+                                android:verticalScrollbarPosition="right"
+                                android:id="@+id/roomHoursSunday"
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <TextView
+                                android:text="Потолок:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+
+                            <Spinner
+                                android:verticalScrollbarPosition="right"
+                                android:id="@+id/roofType"
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <TextView
+                                android:text="Комментарии:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+
+                            <EditText
+                                android:id="@+id/roomComments"
+                                android:layout_marginLeft="-60dp"
+                                android:layout_width="80dp"
+                                android:textSize="12dp"
+                                />
+                            <TextView
+                                android:text="Cветильников:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+                            <EditText
+                                android:text="0"
+                                android:textSize="12dp"
+                                android:id="@+id/roomLamps"
+                                android:layout_width="wrap_content"
+                                />
+                            <Button
+                                android:visibility="invisible"
+                                android:id="@+id/submit"
+                                android:layout_height="20dp"
+                                android:text="Подтвердить"
+                                android:textColor="@color/black"
+                                android:backgroundTint="@color/grey"
+                                />
+                            <TextView/>
+                            <ImageView
+                                android:id="@+id/takePicBtn"
+                                android:layout_width="40dp"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginBottom="5dp"
+                                android:src="@drawable/camera"
+                                android:background="@drawable/txtviewborder"
+                                android:layout_height="40dp"/>
+                        </GridLayout>
+                        <GridLayout
+                            android:layout_below="@+id/gridRoomInfo"
+                            android:id="@+id/roomGrid"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:columnCount="3"
+                            android:useDefaultMargins="true"
+                            android:orientation="horizontal">
+                        </GridLayout>
+
+                    </RelativeLayout>
+
                     <TextView
-                        android:text="Рядов:"
-                        android:textColor="@color/black"
-                        android:textSize="12dp"
+                        android:layout_marginTop="10dp"
+                        android:id="@id/lampInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/RoomInfoView"
+                        android:text="Информация о светильнике"
+                        android:background="@drawable/txtviewborder"
                         />
-                        <Spinner
-                            android:verticalScrollbarPosition="right"
-                            android:id="@+id/spinColumns"
-                            android:layout_marginLeft="-60dp"
-                            android:layout_marginTop="5dp"
-                            android:layout_width="80dp"
-                            android:layout_height="30dp"
-                            android:background="@android:drawable/btn_dropdown"
-                            android:spinnerMode="dropdown" />
-                    <EditText
-                        android:layout_marginLeft="-30dp"
-                        android:layout_width="wrap_content"
-                        android:textSize="12dp"
-                        android:id="@+id/columnAmount"
-                        />
-                        <TextView
-                            android:text="Линий:"
-                            android:textColor="@color/black"
-                            android:textSize="12dp"
-                            />
-                        <Spinner
-                            android:verticalScrollbarPosition="right"
-                            android:id="@+id/spinRows"
-                            android:layout_marginLeft="-60dp"
-                            android:layout_marginTop="5dp"
-                            android:layout_width="80dp"
-                            android:layout_height="30dp"
-                            android:background="@android:drawable/btn_dropdown"
-                            android:spinnerMode="dropdown" />
-                        <EditText
-                            android:layout_marginLeft="-30dp"
+                    <RelativeLayout
+                        android:background="@color/white"
+                        android:id="@+id/lampInfoView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true"
+                        android:layout_marginBottom="100dp"
+                        app:layout_constraintTop_toBottomOf="@+id/lampInfo"
+                        tools:layout_editor_absoluteX="10dp">
+
+                        <GridLayout
+                            android:id="@+id/gridLampInfo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:columnCount="2"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:text="Привязан к:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+                            <EditText
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:textSize="12dp"
+                                android:id="@+id/lampRoom"
+                                />
+                            <TextView
+                                android:text="Тип:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+                            <EditText
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:textSize="12dp"
+                                android:id="@+id/lampType"
+                                />
+                            <TextView
+                                android:text="Мощность:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+                            <EditText
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:textSize="12dp"
+                                android:id="@+id/lampPower"
+                                />
+                            <TextView
+                                android:visibility="gone"
+                                android:id="@+id/lampAmountText"
+                                android:text="Ламп:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+                            <EditText
+                                android:visibility="gone"
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:textSize="12dp"
+                                android:id="@+id/lampAmountEdit"
+                                />
+                            <TextView
+                                android:id="@+id/montagneTypeTxt"
+                                android:text="Монтаж:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+                            <Spinner
+                                android:verticalScrollbarPosition="right"
+                                android:id="@+id/montagneType"
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <TextView
+                                android:id="@+id/montagneTypeTxtTwo"
+                                android:visibility="gone"
+                                android:text="Монтаж:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+                            <Spinner
+                                android:verticalScrollbarPosition="right"
+                                android:visibility="gone"
+                                android:id="@+id/montagneTypeTwo"
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <TextView
+                                android:text="Место:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+                            <Spinner
+                                android:verticalScrollbarPosition="right"
+                                android:id="@+id/placeType"
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <TextView
+                                android:visibility="gone"
+                                android:id="@+id/montagneOutsideTypeTxt"
+                                android:text="Крепление:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+                            <Spinner
+                                android:visibility="gone"
+                                android:verticalScrollbarPosition="right"
+                                android:id="@+id/montagneOutsideType"
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <TextView
+                                android:visibility="gone"
+                                android:id="@+id/positionOutsideTxt"
+                                android:text="Где:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+                            <Spinner
+                                android:visibility="gone"
+                                android:verticalScrollbarPosition="right"
+                                android:id="@+id/positionOutside"
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <TextView
+                                android:visibility="gone"
+                                android:id="@+id/isStolbTxt"
+                                android:text="Столб:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+                            <CheckBox
+                                android:layout_marginLeft="-50dp"
+                                android:id="@+id/isStolbCheck"
+                                android:visibility="gone"
+                                />
+                            <TextView
+                                android:text="Комментарии:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+
+                            <EditText
+                                android:id="@+id/lampComments"
+                                android:layout_marginLeft="-60dp"
+                                android:layout_width="80dp"
+                                android:textSize="12dp"
+                                /><TextView android:layout_width="0dp"/><TextView
+                            android:id="@+id/lampDop"
+                            android:text="Доп."
+                            android:layout_marginLeft="-20dp"
                             android:layout_width="wrap_content"
-                            android:textSize="12dp"
-                            android:id="@+id/rowsAmount"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/txtviewborder"
                             />
-                        <TextView
-                            android:text="Развернуть на 90:"
-                            android:textColor="@color/black"
-                            android:textSize="12dp"
-                            />
-                        <CheckBox
-                            android:id="@+id/angleCheckbox"
-                            />
-                        <TextView/>
-                        <Button
-                            android:id="@+id/multipleRowsSubmit"
-                            android:layout_height="30dp"
-                            android:text="Подтвердить"
-                            android:textSize="8sp"
-                            android:layout_marginLeft="10dp"
-                            android:textColor="@color/black"
-                            android:backgroundTint="@color/grey"
-                            />
-                    </GridLayout>
-                </RelativeLayout>
+
+                            <TextView
+                                android:id="@+id/typeLampTxt"
+                                android:text="Тип:"
+                                android:visibility="gone"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+
+                            <Spinner
+                                android:visibility="gone"
+                                android:verticalScrollbarPosition="right"
+                                android:id="@+id/spinTypesLamp"
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <TextView
+                                android:id="@+id/daysLampTxt"
+                                android:visibility="gone"
+                                android:text="Дней:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+
+                            <Spinner
+                                android:visibility="gone"
+                                android:verticalScrollbarPosition="right"
+                                android:id="@+id/roomDaysLamp"
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <TextView
+                                android:id="@+id/hoursLampTxt"
+                                android:visibility="gone"
+                                android:text="Часы:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+
+                            <Spinner
+                                android:visibility="gone"
+                                android:verticalScrollbarPosition="right"
+                                android:id="@+id/roomHoursLamp"
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <TextView
+                                android:id="@+id/hoursWeekendLampTxt"
+                                android:visibility="gone"
+                                android:text="Суббота:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+
+                            <Spinner
+                                android:visibility="gone"
+                                android:verticalScrollbarPosition="right"
+                                android:id="@+id/roomHoursWeekendsLamp"
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <TextView
+                                android:id="@+id/hoursSundayLampTxt"
+                                android:visibility="gone"
+                                android:text="Воскресенье:"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                />
+                            <Spinner
+                                android:visibility="gone"
+                                android:verticalScrollbarPosition="right"
+                                android:id="@+id/roomHoursSundayLamp"
+                                android:layout_marginLeft="-80dp"
+                                android:layout_width="100dp"
+                                android:layout_height="30dp"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown" />
+                            <Button
+                                android:layout_height="20dp"
+                                android:visibility="invisible"
+                                android:id="@+id/submitLamp"
+                                android:text="Подтвердить"
+                                android:textColor="@color/black"
+                                android:backgroundTint="@color/grey"
+                                /><TextView/>
+                            <ImageView
+                                android:id="@+id/takePicLampBtn"
+                                android:layout_width="40dp"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginBottom="5dp"
+                                android:src="@drawable/camera"
+                                android:background="@drawable/txtviewborder"
+                                android:layout_height="40dp"/>
+                        </GridLayout>
+                        <GridLayout
+                            android:layout_marginBottom="215dp"
+                            android:layout_below="@+id/gridLampInfo"
+                            android:id="@+id/lampGrid"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:columnCount="3"
+                            android:useDefaultMargins="true"
+                            android:orientation="horizontal">
+                        </GridLayout>
+                    </RelativeLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </ScrollView>
 
 
-            <TextView
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="5dp"
-                android:id="@id/buildingInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/multipleRowsInfo"
-                android:text="Информация о плане"
-                android:background="@drawable/txtviewborder"
-                />
-
-        <RelativeLayout
-            android:background="@color/white"
-            android:id="@+id/BuildingInfoView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
-            app:layout_constraintTop_toBottomOf="@+id/buildingInfo"
-            tools:layout_editor_absoluteX="10dp">
-
-            <GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:columnCount="2"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:text="@string/name_standart"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"
-                    />
-                <EditText
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:textSize="12dp"
-                    android:id="@+id/buildingName"
-                    />
-                <TextView
-                    android:text="Этаж:"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"
-                    />
-                <EditText
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:textSize="12dp"
-                    android:id="@+id/floorNumber"
-                    />
-                <TextView
-                    android:text="@string/adres_standart"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"
-                    />
-
-                <EditText
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:textSize="12dp"
-                    android:id="@+id/adress"
-                    />
-                <TextView
-                    android:text="Тип здания:"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"
-                    />
-                <Spinner
-                    android:verticalScrollbarPosition="right"
-                    android:id="@+id/typeOfBuilding"
-                    android:layout_marginLeft="-70dp"
-                    android:layout_width="90dp"
-                    android:layout_height="30dp"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
-                <TextView
-                    android:text="Дни работы"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"
-                    />
-                <Spinner
-                    android:verticalScrollbarPosition="right"
-                    android:id="@+id/daysOfWorkDefault"
-                    android:layout_marginLeft="-70dp"
-                    android:layout_width="90dp"
-                    android:layout_height="30dp"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
-                <TextView
-                    android:text="Высота по умолчанию:"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"
-                    />
-                <CheckBox
-                    android:id="@+id/roomHeightDefaultCheck"
-                    android:layout_marginLeft="-20dp"
-                    />
-                <Spinner
-                    android:verticalScrollbarPosition="right"
-                    android:id="@+id/roofTypeDefault"
-                    android:layout_marginLeft="0dp"
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
-                <EditText
-                    android:text="0.0"
-                    android:layout_marginTop="-8dp"
-                    android:layout_marginLeft="-10dp"
-                    android:layout_width="wrap_content"
-                    android:textSize="12dp"
-                    android:id="@+id/roofTypeDefaultText"
-                    />
-                <Button
-                android:id="@+id/submitHeightFloor"
-                android:layout_height="30dp"
-                android:layout_width="150dp"
-                android:textSize="8sp"
-                android:text="Сохранить высоту"
-                android:textColor="@color/black"
-                android:backgroundTint="@color/grey"
-                />
-
-            </GridLayout>
-
-        </RelativeLayout>
-
-        <TextView
-            android:layout_marginTop="10dp"
-            android:id="@id/roomInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/BuildingInfoView"
-            android:text="Информация о помещении"
-            android:background="@drawable/txtviewborder"
-            />
-
-
-        <RelativeLayout
-            android:background="@color/white"
-            android:id="@+id/RoomInfoView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
-            app:layout_constraintTop_toBottomOf="@+id/roomInfo"
-            tools:layout_editor_absoluteX="10dp">
-
-            <GridLayout
-                android:id="@+id/gridRoomInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:columnCount="2"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:text="@string/s"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"
-                    />
-                <EditText
-                    android:layout_marginStart="-15dp"
-                    android:text="@string/_0"
-                    android:textSize="12sp"
-                    android:id="@+id/roomNumber"
-                    android:layout_width="wrap_content"
-                    />
-                <TextView
-                    android:text="@string/hight_standart"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"
-                    />
-                <EditText
-                    android:layout_marginStart="-15dp"
-                    android:text="@string/_0_0"
-                    android:textSize="12sp"
-                    android:id="@+id/roomHigh"
-                    android:layout_width="wrap_content"
-                    />
-                <TextView
-                    android:text="Тип:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-
-                <Spinner
-                    android:verticalScrollbarPosition="right"
-                    android:id="@+id/spinTypes"
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
-                <TextView
-                    android:text="Дней:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-
-                <Spinner
-                    android:verticalScrollbarPosition="right"
-                    android:id="@+id/roomDays"
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
-                <TextView
-                    android:text="Часы:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-
-                <Spinner
-                    android:verticalScrollbarPosition="right"
-                    android:id="@+id/roomHours"
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
-                <TextView
-                    android:text="Суббота:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-
-                <Spinner
-                    android:verticalScrollbarPosition="right"
-                    android:id="@+id/roomHoursWeekends"
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
-                <TextView
-                    android:text="Воскресенье:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-
-                <Spinner
-                    android:verticalScrollbarPosition="right"
-                    android:id="@+id/roomHoursSunday"
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
-                <TextView
-                    android:text="Потолок:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-
-                <Spinner
-                    android:verticalScrollbarPosition="right"
-                    android:id="@+id/roofType"
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
-                <TextView
-                    android:text="Комментарии:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-
-                <EditText
-                    android:id="@+id/roomComments"
-                    android:layout_marginLeft="-60dp"
-                    android:layout_width="80dp"
-                    android:textSize="12dp"
-                    />
-                <TextView
-                    android:text="Cветильников:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-                <EditText
-                    android:text="0"
-                    android:textSize="12dp"
-                    android:id="@+id/roomLamps"
-                    android:layout_width="wrap_content"
-                    />
-                <Button
-                    android:visibility="invisible"
-                    android:id="@+id/submit"
-                    android:layout_height="20dp"
-                    android:text="Подтвердить"
-                    android:textColor="@color/black"
-                    android:backgroundTint="@color/grey"
-                    />
-                <TextView/>
-                <ImageView
-                    android:id="@+id/takePicBtn"
-                    android:layout_width="40dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="5dp"
-                    android:src="@drawable/camera"
-                    android:background="@drawable/txtviewborder"
-                    android:layout_height="40dp"/>
-            </GridLayout>
-            <GridLayout
-                android:layout_below="@+id/gridRoomInfo"
-                android:id="@+id/roomGrid"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:columnCount="3"
-                android:useDefaultMargins="true"
-                android:orientation="horizontal">
-            </GridLayout>
-
-        </RelativeLayout>
-
-        <TextView
-            android:layout_marginTop="10dp"
-            android:id="@id/lampInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/RoomInfoView"
-            android:text="Информация о светильнике"
-            android:background="@drawable/txtviewborder"
-            />
-        <RelativeLayout
-            android:background="@color/white"
-            android:id="@+id/lampInfoView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
-            android:layout_marginBottom="100dp"
-            app:layout_constraintTop_toBottomOf="@+id/lampInfo"
-            tools:layout_editor_absoluteX="10dp">
-
-            <GridLayout
-                android:id="@+id/gridLampInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:columnCount="2"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:text="Привязан к:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-                <EditText
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:textSize="12dp"
-                    android:id="@+id/lampRoom"
-                    />
-                <TextView
-                    android:text="Тип:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-                <EditText
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:textSize="12dp"
-                    android:id="@+id/lampType"
-                    />
-                <TextView
-                    android:text="Мощность:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-                <EditText
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:textSize="12dp"
-                    android:id="@+id/lampPower"
-                    />
-                <TextView
-                    android:visibility="gone"
-                    android:id="@+id/lampAmountText"
-                    android:text="Ламп:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-                <EditText
-                    android:visibility="gone"
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:textSize="12dp"
-                    android:id="@+id/lampAmountEdit"
-                    />
-                <TextView
-                    android:id="@+id/montagneTypeTxt"
-                    android:text="Монтаж:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-                <Spinner
-                    android:verticalScrollbarPosition="right"
-                    android:id="@+id/montagneType"
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
-                <TextView
-                    android:id="@+id/montagneTypeTxtTwo"
-                    android:visibility="gone"
-                    android:text="Монтаж:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-                <Spinner
-                    android:verticalScrollbarPosition="right"
-                    android:visibility="gone"
-                    android:id="@+id/montagneTypeTwo"
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
-                <TextView
-                    android:text="Место:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-                <Spinner
-                    android:verticalScrollbarPosition="right"
-                    android:id="@+id/placeType"
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
-                <TextView
-                    android:visibility="gone"
-                    android:id="@+id/montagneOutsideTypeTxt"
-                    android:text="Крепление:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-                <Spinner
-                    android:visibility="gone"
-                    android:verticalScrollbarPosition="right"
-                    android:id="@+id/montagneOutsideType"
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
-                <TextView
-                    android:visibility="gone"
-                    android:id="@+id/positionOutsideTxt"
-                    android:text="Где:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-                <Spinner
-                    android:visibility="gone"
-                    android:verticalScrollbarPosition="right"
-                    android:id="@+id/positionOutside"
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
-                <TextView
-                    android:visibility="gone"
-                    android:id="@+id/isStolbTxt"
-                    android:text="Столб:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-                <CheckBox
-                    android:layout_marginLeft="-50dp"
-                    android:id="@+id/isStolbCheck"
-                    android:visibility="gone"
-                    />
-                <TextView
-                    android:text="Комментарии:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-
-                <EditText
-                    android:id="@+id/lampComments"
-                    android:layout_marginLeft="-60dp"
-                    android:layout_width="80dp"
-                    android:textSize="12dp"
-                    /><TextView android:layout_width="0dp"/><TextView
-                    android:id="@+id/lampDop"
-                    android:text="Доп."
-                    android:layout_marginLeft="-20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/txtviewborder"
-                    />
-
-                <TextView
-                    android:id="@+id/typeLampTxt"
-                    android:text="Тип:"
-                    android:visibility="gone"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-
-                <Spinner
-                    android:visibility="gone"
-                    android:verticalScrollbarPosition="right"
-                    android:id="@+id/spinTypesLamp"
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
-                <TextView
-                    android:id="@+id/daysLampTxt"
-                    android:visibility="gone"
-                    android:text="Дней:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-
-                <Spinner
-                    android:visibility="gone"
-                    android:verticalScrollbarPosition="right"
-                    android:id="@+id/roomDaysLamp"
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
-                <TextView
-                    android:id="@+id/hoursLampTxt"
-                    android:visibility="gone"
-                    android:text="Часы:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-
-                <Spinner
-                    android:visibility="gone"
-                    android:verticalScrollbarPosition="right"
-                    android:id="@+id/roomHoursLamp"
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
-                <TextView
-                    android:id="@+id/hoursWeekendLampTxt"
-                    android:visibility="gone"
-                    android:text="Суббота:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-
-                <Spinner
-                    android:visibility="gone"
-                    android:verticalScrollbarPosition="right"
-                    android:id="@+id/roomHoursWeekendsLamp"
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
-                <TextView
-                    android:id="@+id/hoursSundayLampTxt"
-                    android:visibility="gone"
-                    android:text="Воскресенье:"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"
-                    />
-                <Spinner
-                    android:visibility="gone"
-                    android:verticalScrollbarPosition="right"
-                    android:id="@+id/roomHoursSundayLamp"
-                    android:layout_marginLeft="-80dp"
-                    android:layout_width="100dp"
-                    android:layout_height="30dp"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
-                <Button
-                    android:layout_height="20dp"
-                    android:visibility="invisible"
-                    android:id="@+id/submitLamp"
-                    android:text="Подтвердить"
-                    android:textColor="@color/black"
-                    android:backgroundTint="@color/grey"
-                    /><TextView/>
-                <ImageView
-                    android:id="@+id/takePicLampBtn"
-                    android:layout_width="40dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="5dp"
-                    android:src="@drawable/camera"
-                    android:background="@drawable/txtviewborder"
-                    android:layout_height="40dp"/>
-            </GridLayout>
-            <GridLayout
-                android:layout_marginBottom="215dp"
-                android:layout_below="@+id/gridLampInfo"
-                android:id="@+id/lampGrid"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:columnCount="3"
-                android:useDefaultMargins="true"
-                android:orientation="horizontal">
-            </GridLayout>
-        </RelativeLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

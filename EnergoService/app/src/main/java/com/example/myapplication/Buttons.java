@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -45,6 +46,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.core.content.res.ResourcesCompat;
 
 import org.json.JSONException;
 import org.w3c.dom.Text;
@@ -133,7 +135,8 @@ public class Buttons {
         txt.setTextSize(15);
         txt.setGravity(Gravity.CENTER);
         txt.setTextColor(Variables.activity.getResources().getColor(R.color.black));
-        lay.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
+        //txt.setTextColor(Variables.activity.getResources().getColor(R.color.panel_active_color_blue));
+        lay.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
         txt.setText(txt1);
         lay.addView(txt);
         Variables.floorsPanels.addView(lay);        //Присоединяем панель к layout
@@ -149,8 +152,10 @@ public class Buttons {
         lay.setOnTouchListener(new View.OnTouchListener() {         //Обработчик нажатий на панели
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                if (!Variables.savingFlag){
+                    Variables.blocked = true;
 
-                if (active!=v){             //Если нажата неактивная, делаем ее активной, предыдущую неактивной
+                if (active != v) {             //Если нажата неактивная, делаем ее активной, предыдущую неактивной
                     /*Variables.refreshLampsToRooms(Variables.current_floor);     //Перепривязка светильников к комнате
                     try {
                         Variables.parser.saveFile(Variables.filePath);
@@ -159,8 +164,9 @@ public class Buttons {
                     }*/
                     //Очистка флагов и полей///
                     Variables.fileSaved = true;
-                    Variables.switchFlag=true;
-                    Variables.planLayCleared=true;
+                    Variables.switchFlag = true;
+                    Variables.planLayCleared = true;
+
                     Variables.clearFields();
                     active.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
                     ///////////////////
@@ -181,23 +187,24 @@ public class Buttons {
                     }*/
                     Variables.planLay.removeAllViews();
                     Variables.planLay.addView(Variables.image);
-                    active= (LinearLayout) v;
-                    Variables.loadingFlag=true;
+                    active = (LinearLayout) v;
+                    Variables.loadingFlag = true;
                     Variables.current_floor = Variables.floors.elementAt(Variables.FloorPanelsVec.indexOf(active));     //Получаем текущий этаж
                     Variables.selectedfile = Variables.current_floor.getImage();
-                    Variables.filePath = FileHelper.getRealPathFromURI(Variables.activity,Variables.current_floor.getImage());      //Запоминаем путь к текущему файлу
+                    Variables.filePath = FileHelper.getRealPathFromURI(Variables.activity, Variables.current_floor.getImage());      //Запоминаем путь к текущему файлу
                     try {
                         InputStream is = Variables.activity.getContentResolver().openInputStream(Variables.selectedfile);
                         Bitmap bm = BitmapFactory.decodeStream(is);
-                        if (bm.getWidth()>maxSize || bm.getHeight()>maxSize){
+                        if (bm.getWidth() > maxSize || bm.getHeight() > maxSize) {
                             ByteArrayOutputStream out = new ByteArrayOutputStream();
                             Bitmap resizedBitmap = Bitmap.createScaledBitmap(
                                     bm, maxSize, maxSize, false);
                             Variables.image.setImageBitmap(resizedBitmap);
-                        }else{
+                        } else {
                             Variables.image.setImageURI(Variables.selectedfile);
                         }
                     } catch (FileNotFoundException e) {
+                        Variables.blocked = false;
                         throw new RuntimeException(e);
                     }
                     //Variables.image.setImageURI(Variables.current_floor.getImage());        //Устанавливаем картинку плана
@@ -209,15 +216,15 @@ public class Buttons {
                         Variables.buildingName.setText(Variables.current_floor.getName());
                         Variables.buidlingFloor.setText(Variables.current_floor.getFloor());
                         Variables.buildingAdress.setText(Variables.current_floor.getAdress());
-                        if (Variables.current_floor.getTypeFloor()>3){
+                        if (Variables.current_floor.getTypeFloor() > 3) {
                             Variables.typeOfBuilding.setSelection(0);
-                        }else {
+                        } else {
                             Variables.typeOfBuilding.setSelection(Variables.current_floor.getTypeFloor());
                         }
                         //Variables.typeOfBuilding.setSelection(15);
-                        if (Variables.current_floor.getHoursWordDefault()>8){
+                        if (Variables.current_floor.getHoursWordDefault() > 8) {
                             Variables.daysOfWorkDefault.setSelection(0);
-                        }else {
+                        } else {
                             Variables.daysOfWorkDefault.setSelection(Variables.current_floor.getHoursWordDefault());
                         }
                         Variables.roofTypeDefaultText.setText(Variables.current_floor.roofHeightDefault.elementAt(Variables.roofTypeDefault.getSelectedItemPosition()));
@@ -239,23 +246,28 @@ public class Buttons {
                         Variables.selectedfile = Variables.current_floor.getImage();
                         Variables.switchFlag = false;
                         Variables.planLay.setRotation(0);
+                        Variables.blocked = false;
                         /////////////////
-                    }catch (Exception ex){  //Если произошел баг - открываем заного план
-                        Variables.isExportingToJpg=true;
+                    } catch (Exception ex) {  //Если произошел баг - открываем заного план
+                        ex.printStackTrace();
+                        Variables.isExportingToJpg = true;
                         Variables.planLayCleared = true;
-                        Variables.exportingJpg=true;
+                        Variables.exportingJpg = true;
                         Variables.planLay.removeAllViews();
                         Variables.planLay.addView(Variables.image);
-                        Variables.typeOpening=0;
+                        Variables.typeOpening = 0;
                         Variables.image.setImageResource(0);
-                        Variables.planLayCleared=false;
+                        Variables.planLayCleared = false;
                         Variables.image.setImageURI(Variables.selectedfile);
-                    try {
-                        Variables.parser.parseFile(Variables.filePath);
-                    } catch (FileNotFoundException e) {
-                        throw new RuntimeException(e);
-                    }
-                    //Variables.switchFlag = false;
+                        Variables.blocked = false;
+                        try {
+                            Variables.parser.parseFile(Variables.filePath);
+                            Variables.blocked = false;
+                        } catch (FileNotFoundException e) {
+                            Variables.blocked = false;
+                            throw new RuntimeException(e);
+                        }
+                        //Variables.switchFlag = false;
                         /*
                         if (Variables.current_floor.getTypeFloor()>3){
                             Variables.typeOfBuilding.setSelection(0);
@@ -269,6 +281,7 @@ public class Buttons {
                             Variables.daysOfWorkDefault.setSelection(Variables.current_floor.getHoursWordDefault());
                         }*/
                     }
+                }
                 }
                 return false;
             }
@@ -333,7 +346,7 @@ public class Buttons {
                         Variables.getAllBackUpDataFlag = true;
                         Variables.parser.getAllBackUpBackData();
                         gridBackup.setVisibility(View.VISIBLE);
-                        backupBackBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                        backupBackBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.button_blue));
                         short counter=0;
                         for (int i=Variables.backupBackVector.size()-1;i>=0;i--){
                             counter++;
@@ -414,7 +427,7 @@ public class Buttons {
             public boolean onTouch(View v, MotionEvent event) {
                 if (!Variables.allowRotationPlanFlag){          //Если не активирован - активируем, иначе - деактивируем
                     Variables.allowRotationPlanFlag=true;
-                    rotatePlanBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                    rotatePlanBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.button_blue));
                 }else{
                     disableRotatePlanBtn();
                 }
@@ -565,7 +578,7 @@ public class Buttons {
                         if (!Variables.selectByClickFlag) {
                             Variables.plan.touchedLamp=null;
                             disableSelectZone();
-                            selectByClickBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                            selectByClickBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.button_blue));
                             Variables.selectByClickFlag = true;
                             clearFieldsSelectZone();
                             activateCancelBtn();
@@ -1036,7 +1049,7 @@ public class Buttons {
                             Variables.selectZoneFlag=true;
                             Variables.plan.touchedLamp=null;
                             disableSelectByTouch();
-                            selectZone.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                            selectZone.setBackgroundColor(Variables.activity.getResources().getColor(R.color.button_blue));
                             Variables.plan.setListenerToPlan();
                             clearFieldsSelectZone();
                             activateCancelBtn();
@@ -1095,7 +1108,7 @@ public class Buttons {
                             Variables.copyVector.clear();
                             Variables.tempCopiedLamp=null;
                             if (Variables.getMoveFlag())
-                                moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                                moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.button_blue));
                             else
                                 moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                         }else
@@ -1170,7 +1183,7 @@ public class Buttons {
                             Variables.tempCopiedLamp.getImage().setBackgroundResource(0);
                             Variables.tempCopiedLamp=null;
                             if (Variables.getMoveFlag())
-                            moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                            moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.button_blue));
                             else
                                 moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
                             if (!Variables.moveOnlySelectedZone) {  //Выключение функцию выделения и подтверждающей кнопки
@@ -1415,7 +1428,7 @@ public class Buttons {
                         if (!Variables.copyFlag) {      //Активация
                             Variables.copyFlag=true;
                             Variables.copyType = 0;
-                            copyBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                            copyBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.button_blue));
                             activateConfirmBtn();
                             activateCancelBtn();
                             Variables.plan.setListenerToPlan();
@@ -1572,7 +1585,7 @@ public class Buttons {
                             disableMultipleAddBtn();
                             Variables.plan.setListenerToPlan();
                             Variables.disableMovingPlan=true;
-                            addMultipleRows.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                            addMultipleRows.setBackgroundColor(Variables.activity.getResources().getColor(R.color.button_blue));
                         } else {            //Деактивация
                             disableMultipleRowsAddBtn();
                         }
@@ -1613,7 +1626,7 @@ public class Buttons {
                             disableAddBtn();
                             disableMultipleRowsAddBtn();
                             Variables.plan.setListenerToPlan();
-                            addMultipleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                            addMultipleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.button_blue));
                         }else {         //Деактивация
                             disableMultipleAddBtn();
                         }
@@ -1683,7 +1696,7 @@ public class Buttons {
                     } else
                         if (!Variables.removeMode){     //Активация
                             Variables.removeMode=true;
-                            removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                            removeLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.button_blue));
                             disableScaleBtn();
                             disableRotateBtn();
                         }else{          //Деактивация
@@ -1723,6 +1736,12 @@ public class Buttons {
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_UP:
                         if (Variables.fileSaved && Variables.current_floor!=null) {      //Если файл не сохраняется  в данный момент
+                            Variables.loadingFlag=false;
+                            Variables.fileBackuping=false;
+                            Variables.getAllBackUpDataFlag=false;
+                            Variables.blocked=false;
+                            Variables.savingFlag=false;
+                            Variables.exportingJpg=false;
                             Variables.fileSaved = false;
                             SaveFileThread thread = new SaveFileThread(); //Создаем новый поток для сохранения файла
                             thread.start();     //Запускаем поток
@@ -1763,7 +1782,7 @@ public class Buttons {
             public boolean onTouch(View v, MotionEvent event) {
                         if (!Variables.scalemode) {     //Активация изменения размера
                             Variables.scalemode = true;
-                            scaleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                            scaleBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.button_blue));
                             disableRemoveBtn();
                             disableRotateBtn();
                         }else{      //Деактивация изменения размера
@@ -1803,7 +1822,7 @@ public class Buttons {
                     case MotionEvent.ACTION_UP:
                         if (!Variables.rotateMode){         //Активация поворота светильника
                             Variables.rotateMode=true;
-                            rotateLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                            rotateLamp.setBackgroundColor(Variables.activity.getResources().getColor(R.color.button_blue));
                             disableScaleBtn();
                             disableRemoveBtn();
                         }else{          //Деактивация поворота светильника
@@ -1842,9 +1861,11 @@ public class Buttons {
         removePanel.setOnTouchListener(new View.OnTouchListener() {     //Обработчик нажатий на кнопку удаления вкладки
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                if (!Variables.savingFlag){
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_UP:
-                        if (Variables.floors.size()>0) {
+                        Variables.blocked = true;
+                        if (Variables.floors.size() > 0) {
                             int index = Variables.FloorPanelsVec.indexOf(active);
                             LinearLayout lay = Variables.FloorPanelsVec.get(index);
                             if (Variables.FloorPanelsVec.size() > 1) {        //Если на экране больше одной вкладки
@@ -1873,17 +1894,17 @@ public class Buttons {
                             if (active != null) {       //Если в текущий момент не открыта как минимум одна вкладка
                                 Variables.current_floor = Variables.floors.elementAt(Variables.FloorPanelsVec.indexOf(active));
                                 Variables.selectedfile = Variables.current_floor.getImage();
-                                Variables.loadingFlag=true;
-                                Variables.filePath = FileHelper.getRealPathFromURI(Variables.activity,Variables.current_floor.getImage());
+                                Variables.loadingFlag = true;
+                                Variables.filePath = FileHelper.getRealPathFromURI(Variables.activity, Variables.current_floor.getImage());
                                 try {
                                     InputStream is = Variables.activity.getContentResolver().openInputStream(Variables.selectedfile);
                                     Bitmap bm = BitmapFactory.decodeStream(is);
-                                    if (bm.getWidth()>maxSize || bm.getHeight()>maxSize){
+                                    if (bm.getWidth() > maxSize || bm.getHeight() > maxSize) {
                                         ByteArrayOutputStream out = new ByteArrayOutputStream();
                                         Bitmap resizedBitmap = Bitmap.createScaledBitmap(
                                                 bm, maxSize, maxSize, false);
                                         Variables.image.setImageBitmap(resizedBitmap);
-                                    }else{
+                                    } else {
                                         Variables.image.setImageURI(Variables.selectedfile);
                                     }
                                 } catch (FileNotFoundException e) {
@@ -1905,14 +1926,16 @@ public class Buttons {
                             } else {            //Иначе удаляем все вкладки
                                 Variables.floors.clear();
                                 Variables.floorsPanels.removeAllViews();
-                                Variables.planLayCleared=true;
+                                Variables.planLayCleared = true;
                                 Variables.image.setImageResource(0);
-                                Variables.current_floor=null;
-                                Variables.filePath="";
+                                Variables.current_floor = null;
+                                Variables.filePath = "";
                             }
                         }
+                        Variables.blocked = false;
                         break;
                 }
+            }
                 return false;
             }
         });
@@ -1922,12 +1945,14 @@ public class Buttons {
             @SuppressLint("ResourceAsColor")
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                if (!Variables.savingFlag){
+                    Variables.blocked = true;
                 switch (event.getActionMasked() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_UP:
-                        Variables.planLayCleared=false;
-                        if (Variables.FloorPanelsVec.size()==0 || active==null){
-                            Variables.typeOpening=0;
-                        }else {
+                        Variables.planLayCleared = false;
+                        if (Variables.FloorPanelsVec.size() == 0 || active == null) {
+                            Variables.typeOpening = 0;
+                        } else {
                             Variables.typeOpening = 1;
                         }
                         if (!Variables.opened) {            //Открываем меню выбора файла
@@ -1941,6 +1966,8 @@ public class Buttons {
                         }
                         break;
                 }
+                Variables.blocked = false;
+            }
                 return false;
             }
         });
@@ -2017,7 +2044,7 @@ public class Buttons {
                         } else {
                             Variables.roomInfoView.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                             int height = Variables.roomInfoView.getMeasuredHeight();
-                            animateHeightTo(Variables.roomInfoView,height);
+                            animateHeightTo(Variables.roomInfoView,(int)Variables.roomInfoHeight);
                         }
                         break;
                 }
@@ -2053,7 +2080,7 @@ public class Buttons {
                         } else {
                             Variables.buildingInfoView.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                             int height = Variables.buildingInfoView.getMeasuredHeight();
-                            animateHeightTo(Variables.buildingInfoView,height);
+                            animateHeightTo(Variables.buildingInfoView,(int)Variables.buildingInfoHeight);
                         }
                         break;
                 }
@@ -2067,9 +2094,9 @@ public class Buttons {
             {
                    Variables.invertAddFlag();
                    if (Variables.getAddFlag()){                                 //Активация добавления
-                       addBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                       addBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.button_blue));
                        if (Variables.copyBuffer.size()>0) {
-                           pasteBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                           pasteBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.button_blue));
                        }else{
                            pasteBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
                        }
@@ -2114,7 +2141,7 @@ public class Buttons {
                 if (!Variables.selectZoneFlag && !Variables.selectByClickFlag) {
                     Variables.invertMoveFlag();
                     if (Variables.getMoveFlag()) {                                       //Активация перемещения
-                        moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+                        moveBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.button_blue));
                         Variables.setMoveFlag(true);
                     } else {                                                              //Деактивация перемещения
                         disableMoveBtn();
@@ -2904,7 +2931,7 @@ public class Buttons {
     private void animateHeightTo(@NonNull View view, int height) {      //Функция анимирования изменения высота элемента
         final int currentHeight = view.getHeight();
         ObjectAnimator animator = ObjectAnimator.ofInt(view, new HeightProperty(), currentHeight, height);
-        animator.setDuration(200);
+        animator.setDuration(1);
         animator.setInterpolator(new DecelerateInterpolator());
         animator.start();
     }
@@ -2929,20 +2956,29 @@ public class Buttons {
     //Деактивации функций
 
     public void drawLamps(){            //Функция отрисовки ламп на экране
+        Variables.activity.runOnUiThread(() -> {        //Отрисовка ламп
         for (int i=0;i<Variables.current_floor.rooms.size();i++){
             for (int j=0;j<Variables.current_floor.rooms.elementAt(i).lamps.size();j++){
-                ImageView img = Variables.current_floor.rooms.elementAt(i).lamps.elementAt(j).getImage();
-                Variables.activity.runOnUiThread(() -> {        //Отрисовка ламп
+                try {
+                    ImageView img = Variables.current_floor.rooms.elementAt(i).lamps.elementAt(j).getImage();
                     Variables.planLay.addView(img);
-                });
+                }catch (Exception ex){
+                }
                 }
         }
-        for (int i=0;i<Variables.current_floor.unusedLamps.size();i++){
-            ImageView img = Variables.current_floor.unusedLamps.elementAt(i).getImage();
-            Variables.activity.runOnUiThread(() -> {        //Отрисовка ламп
+        });
+        Variables.activity.runOnUiThread(() -> {        //Отрисовка ламп
+        for (int i=0;i<Variables.current_floor.unusedLamps.size();i++) {
+            try {
+                ImageView img = Variables.current_floor.unusedLamps.elementAt(i).getImage();
                 Variables.planLay.addView(img);
-            });
+            } catch (Exception ex) {
+                Variables.activity.runOnUiThread(() -> {           //Выключаем вращение и выводим текст об удачном экспорте в эксель
+                    Toast.makeText(Variables.activity.getApplicationContext(), "Баг!", Toast.LENGTH_SHORT).show();
+                });
+            }
         }
+        });
     }
     private void disableAddBtn(){
         addBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
@@ -3005,15 +3041,15 @@ public class Buttons {
     }
     private void activateCancelBtn(){
         Variables.cancelBtnActive=true;
-        cancelBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.red));
+        cancelBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.button_blue));
     }
     private void disableConfirmBtn(){
         Variables.confirmBtnActive=false;
-        confirmBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
+        confirmBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
     }
     private void disableCancelBtn(){
         Variables.cancelBtnActive=false;
-        cancelBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.grey));
+        cancelBtn.setBackgroundColor(Variables.activity.getResources().getColor(R.color.white));
     }
 
     private void disableRotatePlanBtn(){

@@ -851,22 +851,36 @@ public class Plan {
             }else if (groupIndex==7){           //Если это наружное освещение
                 escapePowerSet=true;
                 switch (lampName){
+                    case "lum2_36":
+                        lamp.setType("Люминесцентный");
+                        lamp.setPower("2*36Вт");
+                        //lamp.setComments("Спот");
+                        lamp.setPositionOutside(1);
+                        lamp.setMontagneType(3);
+                        escapePowerSet = true;
+                        break;
                     case "lampnakal60":
                         lamp.setType("Лампа накаливания");
                         lamp.setPower("60Вт");
                         //lamp.setComments("Спот");
+                        lamp.setPositionOutside(1);
+                        lamp.setMontagneType(3);
                         escapePowerSet = true;
                         break;
                     case "lampkll15":
                         lamp.setType("КЛЛ");
                         lamp.setPower("15Вт");
                         //lamp.setComments("Спот");
+                        lamp.setPositionOutside(1);
+                        lamp.setMontagneType(3);
                         escapePowerSet = true;
                         break;
                     case "lampdiod12":
                         lamp.setType("Лампа светодиодная");
                         lamp.setPower("12Вт");
                         //lamp.setComments("Спот");
+                        lamp.setPositionOutside(1);
+                        lamp.setMontagneType(3);
                         escapePowerSet = true;
                         break;
                     case "drl250":

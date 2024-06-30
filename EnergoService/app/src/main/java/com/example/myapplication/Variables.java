@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -21,6 +22,8 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.w3c.dom.Text;
 
@@ -165,6 +168,8 @@ public class Variables {
     static Spinner hoursPerSundayLamp;
     static EditText lampComments;              //Поле комментариев к светильнику
     static FrameLayout photoFrame;              //Layout для отображения выбранной фотографии
+    static boolean blocked=false;
+    static boolean savingFlag=false;
     static FrameLayout bacupBackFrame;
     static TextView lampAmountText;             //Текст количества ламп(для люстр)
     static EditText lampAmountEdit;             //Поле ввода количества ламп(для люстр)
@@ -177,13 +182,15 @@ public class Variables {
     static Vector<Floor> floors= new Vector<Floor>();       //Вектор, хранящий открытые этаж
 
     static Floor current_floor=null;            //Текущий открытый этаж
+    static double buildingInfoHeight=0;
+    static double roomInfoHeight=0;
 
     static double lastWidth;                //Ширина плана, при разметке на сайте
     static double lastHeight;                //Высота плана, при разметке на сайте
     static boolean isExportingToJpg=false;
     static double currentWidth;                //Ширина плана в приложении
     static double currentHeight;                //Высота плана в приложении
-    static String[] montagneOutsideTypeArr = {"Консоль","Кронштейн","Шар"};           //Типы монтажа наружного освещения
+    static String[] montagneOutsideTypeArr = {"Консоль","Кронштейн","Шар","Плафон"};           //Типы монтажа наружного освещения
     static String [] positionOutsideArr = {"Фасад","Крыльцо","Территория","Крыша","Футбольное поле","Игровая площадка"};        //Типы расположения светильника снаружи
     static String[] roofTypes = {"Бетон","Армстронг","ПВХ","Гипрок"};        //Типы потолков
     static String[] montagneTypeArr = {"Накладной","Встраиваемый","Настенный","Подвесной"};        //Типы монтажа светильника
@@ -191,7 +198,23 @@ public class Variables {
     static String[] placeTypeArr = {"В здании","Наружный"};        //Типы нахождения светильника(снаружи/в здании)
     static String[] typeOfBuildingArr = {"Детский сад","Школа","Больница","Другое"};         //Тип здания
 
-    static int[] defaultHoursDetSad =      {0,4,4,4,6,1,6,5,2,2,5,3,6,4,6,6,2,4,2,3,6,2,3,1,0};
+    static int[] defaultHoursDetSad =      {0,4,4,3,4,6,1,1,6,6,1,6,2,4,2,6,4,6,6,2,6,1,4,6,3,5,1,2,1,0};
+    static int[] defaultHoursSchool5Days = {0,4,6,1,6,3,4,1,6,6,6,1,6,2,3,2,2,6,2,6,1,4,6,6,1,4,2,6,1,0};
+    static int[][] defaultHoursSchool6Days = {{0,0},{4,3},{6,4},{1,1},{6,0},{3,3},{4,2},{1,1},{6,4},{6,4},{6,4},{1,1},{6,4},{2,1},{4,2},{2,1},{2,2},{6,4},{2,1},{6,6},{1,1},{4,4},{6,4},{6,4},{1,1},{6,4},{2,2},{6,6},{1,1},{0,0}};
+
+    //static String[] typesOfRoomsDetSad = {"Служебное помещение","Актовый зал","Гардероб","Групповая","ГРЩ","Кабинет", "Коридор","Кладовая","Лестница","Моечная","Медкабинет","Музыкальный зал","Пищеблок","Прачечная","Раздевалка","Спальная", "Санузел","Спортзал",  "Тамбур","Техническое помещение","Другое","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp" ,"temptemp","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp"};            //Типы помещений(детские сады)
+
+    static String[] typesOfRoomsDetSad = {"Служебное помещение","Актовый зал","Буфет","Вестибюль","Гардероб","Групповая","Душ","ГРЩ","Кабинет", "Коридор","Кладовая","Комната персонала","Лаборантская","Лестница","Моечная","Медкабинет","Музыкальный зал","Пищеблок","Прачечная","Процедурный","ЦСО","Подсобное помещение","Раздевалка","Спальная", "Санузел","Спортзал",  "Тамбур","Умывальная","Техническое помещение","Другое"};            //Типы помещений(детские сады)
+    //static String[] typesOfRoomsSchools = {"Служебное помещение","Актовый зал","Бассейн","Библиотека","Гардероб","ГРЩ","Учебный кабинет", "Кабинет", "Коридор","Кладовая","Лестница","Санузел", "Медкабинет","Пищеблок","Раздевалка","Столовая","Спортзал","Тамбур","Техническое помещение","Цех","Другое","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp" ,"temptemp","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp"};            //Типы помещений(школы)
+    static String[] typesOfRoomsSchools = {"Служебное помещение","Актовый зал","Бассейн","Душ","Библиотека","Вестибюль","Гардероб","ГРЩ","Учебный кабинет", "Кабинет", "Коридор","Кладовая","Комната персонала","Лаборантская","Лестница", "Моечная","Санузел", "Медкабинет","Процедурная","Пищеблок","Подсобное помещение","Раздевалка","Столовая","Спортзал","Тамбур","Тренерская","Умывальная","Учительская","Техническое помещение","Другое"};            //Типы помещений(школы)
+
+    //static String[] typesOfRoomsHospitals = {"Служебное помещение","Гардероб","Душевая","Кабинет","Кабинет Врача","Кладовая","Коридор","Лаборатория","Лестница","Палата","Процедурный кабинет","Раздевалка","Санузел","Смотровой кабинет","Тамбур","Автоклавная","Актовый зал","Аптека","Архив","Буфет","Ванная","Вахта","Гипсовая","Диспетчерская","Игровая","Кабинет Администрации","Кухня","Лифтовой холл","Моечная","Наркозная","Операционная","Перевязочная","Пищеблок","Регистратура","Стерилизационная","Столовая","Щитовая","Другое"};
+    static String[] typesOfRoomsHospitals = {"Служебное помещение","Актовый зал","Бассейн","Буфет","Вестибюль","Гардероб","ГРЩ","Душевая","Кабинет врача", "Кабинет", "Санузел", "Коридор","Кладовая","Комната персонала","Лестница", "Медкабинет","Моечная","Палата","Пищеблок","Процедурная","Подсобное помещение","Прачечнеая","Операционная","ЛФК","Столовая","Сестринская","Тамбур","Умывальная","ЦСО","Другое"};            //Типы помещений(больницы)
+    //static String[] typesOfRoomsHospitals = {"Служебное помещение","Кабинет врача","Кабинет","Палата","Палата реанимации","Процедурная","Операционная","Реанимация","Моечная","Ординаторская","Перевязочная","Подсобное помещение","Регистратура","Сестринская","Смотровая","Стериализационная","Коридор","Лестница","Кладовая","Гардероб","Санузел","Пищеблок","Лаборатория","Аптека","Архив","Буфет","Столовая","Тамбур","Спортзал","Техническое помещение","ГРЩ","Лифтовой холл","Другое"};
+    //static String[] typesOfRoomsOthers = {"Служебное помещение","Коридор", "Кабинет", "Санузел", "Служебное помещение", "Тамбур","Лестница","Спортзал","Пищеблок","Актовый зал","Медкабинет","Кладовая","Столовая","Процедурный кабинет","Палата","Комната","Учебный кабинет","Душевая","Гардероб","Другое","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp" ,"temptemp","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp"};            //Типы помещений(больницы)
+    static String[] typesOfRoomsOthers = {"Служебное помещение","Буфет","Комната персонала","Душ","Техническое помещение","Моечная","Вестибюль","Коридор", "Кабинет","Моечная", "Санузел", "Служебное помещение", "Тамбур","Лестница","Спортзал","Пищеблок","Подсобное помещение","Актовый зал","Медкабинет","Кладовая","Лаборантская","Столовая","Процедурный кабинет","Палата","Комната","Учебный кабинет","Душевая","Гардероб","Умывальная","Другое"};            //Типы помещений(больницы)
+
+    /*static int[] defaultHoursDetSad =      {0,4,4,4,6,1,6,5,2,2,5,3,6,4,6,6,2,4,2,3,6,2,3,1,0};
     static int[] defaultHoursSchool5Days = {0,4,6,6,4,4,1,6,6,5,2,2,4,3,3,6,6,2,4,6,6,2,3,1,0};
     static int[][] defaultHoursSchool6Days = {{0,0},{4,3},{6,4},{6,0},{4,3},{4,3},{1,0},{6,4},{6,0},{5,4},{2,1},{2,1},{4,3},{3,2},{3,2},{6,0},{6,6},{2,1},{4,3},{6,4},{6,4},{2,1},{3,2},{1,0},{0,0}};
 
@@ -206,6 +229,8 @@ public class Variables {
     //static String[] typesOfRoomsHospitals = {"Служебное помещение","Кабинет врача","Кабинет","Палата","Палата реанимации","Процедурная","Операционная","Реанимация","Моечная","Ординаторская","Перевязочная","Подсобное помещение","Регистратура","Сестринская","Смотровая","Стериализационная","Коридор","Лестница","Кладовая","Гардероб","Санузел","Пищеблок","Лаборатория","Аптека","Архив","Буфет","Столовая","Тамбур","Спортзал","Техническое помещение","ГРЩ","Лифтовой холл","Другое"};
     //static String[] typesOfRoomsOthers = {"Служебное помещение","Коридор", "Кабинет", "Санузел", "Служебное помещение", "Тамбур","Лестница","Спортзал","Пищеблок","Актовый зал","Медкабинет","Кладовая","Столовая","Процедурный кабинет","Палата","Комната","Учебный кабинет","Душевая","Гардероб","Другое","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp" ,"temptemp","temptemp","temptemp","temptemp","temptemp","temptemp","temptemp"};            //Типы помещений(больницы)
     static String[] typesOfRoomsOthers = {"Служебное помещение","Вестибюль","Коридор", "Кабинет","Моечная", "Санузел", "Служебное помещение", "Тамбур","Лестница","Спортзал","Пищеблок","Подсобное помещение","Актовый зал","Медкабинет","Кладовая","Лаборантская","Столовая","Процедурный кабинет","Палата","Комната","Учебный кабинет","Душевая","Гардероб","Умывальная","Другое"};            //Типы помещений(больницы)
+
+*/
 
 
 
@@ -241,7 +266,7 @@ public class Variables {
     };
 
     public static  final Integer[] OutsideImageId = {              //Изображения наружных светильников
-            R.drawable.drl250,R.drawable.dnat250,R.drawable.mgl250,R.drawable.diod50,R.drawable.lampnakal60,R.drawable.lampkll15,R.drawable.lampdiod12,R.drawable.shar125,R.drawable.shar250,R.drawable.drl400,R.drawable.dnat400,R.drawable.mgl400,R.drawable.drl125,R.drawable.drl700,R.drawable.drl1000,R.drawable.dnat70,R.drawable.dnat100,R.drawable.dnat150,R.drawable.mgl500,R.drawable.mgl1000,R.drawable.diod30,R.drawable.diod70,R.drawable.diod100
+            R.drawable.drl250,R.drawable.dnat250,R.drawable.mgl250,R.drawable.diod50,R.drawable.lampnakal60,R.drawable.lampkll15,R.drawable.lampdiod12,R.drawable.shar125,R.drawable.shar250,R.drawable.drl400,R.drawable.dnat400,R.drawable.mgl400,R.drawable.drl125,R.drawable.drl700,R.drawable.drl1000,R.drawable.dnat70,R.drawable.dnat100,R.drawable.dnat150,R.drawable.mgl500,R.drawable.mgl1000,R.drawable.diod30,R.drawable.diod70,R.drawable.diod100,R.drawable.lum2_36
     };
 
 
@@ -295,7 +320,7 @@ public class Variables {
             "4*9Вт","4*9Вт","2*18Вт","2*9Вт","1*18Вт","1*9Вт","ЛН 60Вт","КЛЛ 15Вт","Неизв.","Неизв. СД"
     };
     public static final String[] lampOutsideNames = {             //Названия наружных светильников
-            "ДРЛ-250Вт","ДНаТ-250Вт","МГЛ-250Вт","СД-50Вт","ЛН 60Вт","КЛЛ 15Вт","СД 12Вт","Шар 125Вт","Шар 250Вт","ДРЛ-400Вт","ДНаТ-400Вт","МГЛ-400Вт","ДРЛ-125Вт","ДРЛ-700Вт","ДРЛ-1000Вт","ДНаТ-70Вт","ДНаТ-100Вт","ДНаТ-150Вт","МГЛ-500Вт","МГЛ-1000Вт","СД-30Вт","СД-70Вт","СД-100Вт"
+            "ДРЛ-250Вт","ДНаТ-250Вт","МГЛ-250Вт","СД-50Вт","ЛН 60Вт","КЛЛ 15Вт","СД 12Вт","Шар 125Вт","Шар 250Вт","ДРЛ-400Вт","ДНаТ-400Вт","МГЛ-400Вт","ДРЛ-125Вт","ДРЛ-700Вт","ДРЛ-1000Вт","ДНаТ-70Вт","ДНаТ-100Вт","ДНаТ-150Вт","МГЛ-500Вт","МГЛ-1000Вт","СД-30Вт","СД-70Вт","СД-100Вт","2*36Вт"
     };
 
 
@@ -306,7 +331,7 @@ public class Variables {
     public static  final String[] lampsDoskiName = {"lum1_36dosk","diod18dosk","lum1_58dosk","diod24dosk","lum1_28dosk","lum1_52dosk","lum2_36dosk","lum2_58dosk","diod20dosk"};      //Название ресурса светодиодных светильников
     public static  final String[] lampsPodvesName = {"lampnakal60podves","lampkll15podves","lampdiod12podves","lampnakal40podves","lampkll18podves","lampkll20podves","lampkll25podves","lampkll30podves","lampdiod10podves","lampdiod15podves","lampnakal75podves","lampnakal95podves"};      //Название ресурса светодиодных светильников
     public static  final String[] lampsOthersName = {"diod4_18lampsvstr","diod4_18lampsnakl","diod2_36lampsnakl","diod2_18lampsnakl","diod1_36lampsnakl","diod1_18lampsnakl","lustranakal","lustrakll","unknowntype","unknowntypediod"};        //Название ресурса других светильников
-    public static  final String[] lampsOutsideName = {"drl250","dnat250","mgl250","diod50","lampnakal60","lampkll15","lampdiod12","shar125","shar250","drl400","dnat400","mgl400","drl125","drl700","drl1000","dnat70","dnat100","dnat150","mgl500","mgl1000","diod30","diod70","diod100"};       //Название ресурса наружных светильников
+    public static  final String[] lampsOutsideName = {"drl250","dnat250","mgl250","diod50","lampnakal60","lampkll15","lampdiod12","shar125","shar250","drl400","dnat400","mgl400","drl125","drl700","drl1000","dnat70","dnat100","dnat150","mgl500","mgl1000","diod30","diod70","diod100","lum2_36"};       //Название ресурса наружных светильников
 
 
 
@@ -333,7 +358,6 @@ public class Variables {
         montagneTypeTwo = activity.findViewById(R.id.montagneTypeTwo);
         montagneTypeTxtTwo = activity.findViewById(R.id.montagneTypeTxtTwo);
         imageWrap = activity.findViewById(R.id.imageWrap);
-        montagneTypeTxt = activity.findViewById(R.id.montagneTypeTxt);
         isStolbCheck = activity.findViewById(R.id.isStolbCheck);
         isStolbTxt = activity.findViewById(R.id.isStolbTxt);
         positionOutside = activity.findViewById(R.id.positionOutside);
@@ -362,6 +386,7 @@ public class Variables {
         loadingImage = activity.findViewById(R.id.LoadingImage);
         loadingImage.bringToFront();
         roomInfoView = activity.findViewById(R.id.RoomInfoView);
+        montagneTypeTxt = activity.findViewById(R.id.montagneTypeTxt);
         buildingInfoView = activity.findViewById(R.id.BuildingInfoView);
         lampInfoView = activity.findViewById(R.id.lampInfoView);
         lampType = activity.findViewById(R.id.lampType);

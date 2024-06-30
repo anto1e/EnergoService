@@ -606,6 +606,9 @@ public class ExcelExporter {
             }else if (Objects.equals(montagneType, "Шар")){
                 cell.setValue("Шар");
             }
+            else if (Objects.equals(montagneType, "Плафон")){
+                cell.setValue("Плафон");
+            }
             cell = cells.get("I" + Integer.toString(outsideRowCount));
             if (isStolb) {
                 cell.setValue("Столб");
@@ -625,6 +628,9 @@ public class ExcelExporter {
             value = cell.getFormula();
             cell.setFormula(value);
             cell = cells.get("S" + Integer.toString(outsideRowCount));
+            value = cell.getFormula();
+            cell.setFormula(value);
+            cell = cells.get("O" + Integer.toString(outsideRowCount));
             value = cell.getFormula();
             cell.setFormula(value);
             cell = cells.get("T" + Integer.toString(outsideRowCount));

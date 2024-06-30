@@ -23,6 +23,7 @@ public class SaveFileThread extends Thread {
     public void run() {
         try {
             if (!Variables.isExportingToJpg) {
+                Variables.savingFlag=true;
                 ImageView rotationElement = Variables.loadingImage;     //Колесо вращения
                 Animation an = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f); //Анимация
                 an.setDuration(1000);               // duration in ms
@@ -58,9 +59,36 @@ public class SaveFileThread extends Thread {
                     rotationElement.setVisibility(View.GONE);
                     Toast.makeText(Variables.activity.getApplicationContext(), "Файл сохранен!", Toast.LENGTH_SHORT).show();
                 });
+
+
+
+
+                String[] split_path = Variables.filePath.split("/");        //Получаем путь к текущей папке
+
+                StringBuilder builder = new StringBuilder();
+                for(int i=0;i<split_path.length-1;i++) {
+                    if (i!=0) {
+                        builder.append("/");
+                    }
+                    builder.append(split_path[i]);
+                }
+                String folderPath = builder.toString();
+
+                File directory = new File(folderPath  + "/saves");      //Создаем папку для бэкапов если ее нет изначально
+                if (!directory.exists()) {
+                    directory.mkdir();
+                    // If you require it to make the entire directory path including parents,
+                    // use directory.mkdirs(); here instead.
+                }
+
+                String path = String.valueOf(folderPath  + "/saves/"+Variables.current_floor.getName()+"_"+Variables.current_floor.getFloor()+"_"+System.currentTimeMillis()+"_save.bik");
+                //Variables.copyFile(Variables.current_floor.getImage(), path);       //Копирование файла
+
+                Variables.copy(new File(FileHelper.getRealPathFromURI(Variables.activity,Variables.current_floor.getImage())),new File(path));
+                Variables.savingFlag=false;
             }
             } catch (IOException ex) {
-            throw new RuntimeException(ex);
+            Variables.savingFlag=false;
         }
 
     }

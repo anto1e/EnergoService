@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
     <ImageView
-
         android:layout_rowSpan="2"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -14,13 +13,14 @@
         android:layout_column="0" />
 
     <TextView
+        android:id="@+id/textViewName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_row="1"
+        android:layout_column="1"
         android:layout_columnWeight="1"
         android:layout_marginLeft="10dp"
-        android:textSize="20dp"
+        android:fontFamily="@font/dm_sans"
         android:textColor="#4B0082"
-        android:id="@+id/textViewName"
-        android:layout_row="1"
-        android:layout_column="1" />
+        android:textSize="20dp" />
 </GridLayout>
